@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: strchop.man,v 1.2 1999/03/25 15:08:31 rk Exp $
+.\" RCSID @(#)$Id: strchop.man,v 1.3 2002/02/08 23:10:22 rk Exp $
 .\" LIBDIR
 .TH "STRCHOP" "3rko" "05 Nov 1995"
 .SH NAME
@@ -6,7 +6,7 @@ strchop \- chops a string at the spaces (as determined by isspace())
 and behaves in a similar manner to strtok in some aspects.
 .SH SYNOPSIS
 
- #include "librko.h"
+ #include "strchop.h"
  char *strchop(const char *string, int chop_len,
 	size_t *str_len, char **next);
 

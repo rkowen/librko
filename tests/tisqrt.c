@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <limits.h>
+#include "isqrt.h"
 
 #define TESTOUT(NM, TYPE, arg) \
 tot++; if((res1 = (long) NM((TYPE) arg)) != (res2 = tsqrt((unsigned long) arg))) {\
@@ -44,7 +45,6 @@ int main() {
 	int err=0, tot = 0, errsum=0;
 	long res1, res2;
 	unsigned long i;
-	unsigned long lo, hi;
 
 	(void) setvbuf(stdout, (char *)NULL, _IOLBF, 0);
 

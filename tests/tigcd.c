@@ -3,7 +3,8 @@
  * for a number of integer types.
  */
 
-#include "librko.h"
+#include <stdio.h>
+#include "gcd.h"
 
 #define TESTOUT(NM,TYPE,arg1,arg2,result) \
 if((res = NM(arg1,arg2)) != result) {\
@@ -53,7 +54,7 @@ int main() {
 	if (err)
 		printf("%d test failures out of %d\n", err, tot);
 	else
-		printf("no test failures out of %d\n", err, tot);
+		printf("no test failures out of %d\n", tot);
 
 	return 0;
 }

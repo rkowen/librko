@@ -1,7 +1,7 @@
 #ifndef _LIBRKO_H_
 #  define _LIBRKO_H_
 /* 
- * RCSID @(#)$Id: librko.h,v 1.18 2002/02/08 16:26:01 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.19 2002/02/08 23:10:22 rk Exp $
  */
 /*
  *********************************************************************
@@ -48,7 +48,12 @@ extern "C" {
 
 #  include "rkoerror.h"
 #  include "strmalloc.h"
+#  include "strchop.h"
 #  include "uvec.h"
+#  include "gcd.h"
+#  include "isqrt.h"
+#  include "iprime.h"
+#  include "memdebug.h"
 
 FILE * invoke(char ** argv);
 FILE * prefilter(FILE *instream, char ** argv);
@@ -62,8 +67,6 @@ int dirtree(int sort, int dirlvl, int lnklvl, const char *dir,
 	int (dirfn)(const char *), int (filefn)(const char *),
 	int (direnter)(const char *), int (dirleave)(const char *));
 
-char *strchop(const char *string, int chop_len,
-        size_t *str_len, char **next);
 int strmemalloc(char **ChArSpAcE, char ***charspace,
 		size_t numstr, size_t maxstrlen);
 void strmemfree(char **ChArSpAcE, char ***charspace);
@@ -80,46 +83,6 @@ PRECISION foptim(int iopt, PRECISION ax, PRECISION bx,
 PRECISION fzeroin(PRECISION ax, PRECISION bx,
 	PRECISION y0, PRECISION (*f)(PRECISION), PRECISION tol);
 int istext(int c);
-
-/* useful integer functions */
-/* GCD - greatest common divisor */
-#define __GCD(NM, TYPE) TYPE NM(TYPE a, TYPE b);
-__GCD(chgcd,char)
-__GCD(scgcd,signed char)
-__GCD(ucgcd,unsigned char)
-__GCD(hgcd,short)
-__GCD(uhgcd,unsigned short)
-__GCD(igcd,int)
-__GCD(ugcd,unsigned int)
-__GCD(lgcd,long)
-__GCD(ulgcd,unsigned long)
-#undef __GCD
-
-/* integer sqrt */
-#define __ISQRT(NM, TYPE) TYPE NM(TYPE a);
-__ISQRT(chsqrt,char)
-__ISQRT(scsqrt,signed char)
-__ISQRT(ucsqrt,unsigned char)
-__ISQRT(hsqrt,short)
-__ISQRT(uhsqrt,unsigned short)
-__ISQRT(isqrt,int)
-__ISQRT(usqrt,unsigned int)
-__ISQRT(lsqrt,long)
-__ISQRT(ulsqrt,unsigned long)
-#undef __ISQRT
-
-/* integer prime */
-#define __IPRIME(NM, TYPE) TYPE NM(TYPE a);
-__IPRIME(chprime,char)
-__IPRIME(scprime,signed char)
-__IPRIME(ucprime,unsigned char)
-__IPRIME(hprime,short)
-__IPRIME(uhprime,unsigned short)
-__IPRIME(iprime,int)
-__IPRIME(uprime,unsigned int)
-__IPRIME(lprime,long)
-__IPRIME(ulprime,unsigned long)
-#undef __IPRIME
 
 /* clock timer */
 typedef clock_t clocker_t;
@@ -260,31 +223,6 @@ int list_del(list *lst, char const *tag, ...);
 int list_push(list *lst, char const *tag, ...);
 int list_pop(list *lst, char const *tag, ...);
 
-/* memory - provides a front-end for the memory allocation routines to
- *	help find memory leaks.  Supports only the ANSI-C routines:
- *		  calloc,   free,   malloc,   realloc
- *	call with the following names:
- *		m_calloc, m_free, m_malloc, m_realloc
- *	the output goes to stderr.
- */
-
-#  ifdef MEMDEBUG
-#    ifndef _MEMORY_H_
-#      define _MEMORY_H_
-
-
-void *m_calloc(size_t nelem, size_t size, char *file, int line);
-void m_free(void *ptr, char *file, int line);
-void *m_malloc(size_t size, char *file, int line);
-void *m_realloc(void *rptr, size_t size, char *file, int line);
-
-#      define   calloc(a,b)	m_calloc((a),(b),	__FILE__, __LINE__)
-#      define     free(a)	m_free((a),		__FILE__, __LINE__)
-#      define   malloc(a)	m_malloc((a),		__FILE__, __LINE__)
-#      define  realloc(a,b)	m_realloc((a),(b),	__FILE__, __LINE__)
-
-#    endif /* _MEMORY_H_ */
-#  endif /* MEMDEBUG */
 #  ifdef __cplusplus
 	}
 #  endif

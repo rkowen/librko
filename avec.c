@@ -1,5 +1,5 @@
-static const char RCSID[]="@(#)$Id: avec.c,v 1.1 2002/02/08 16:27:21 rk Exp $";
-static const char AUTHOR[]="@(#)avec 1.0 09/09/99 R.K.Owen,Ph.D.";
+static const char RCSID[]="@(#)$Id: avec.c,v 1.2 2002/02/08 23:10:22 rk Exp $";
+static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
  * confined to C so that it can be maximally portable.
@@ -10,7 +10,7 @@ static const char AUTHOR[]="@(#)avec 1.0 09/09/99 R.K.Owen,Ph.D.";
 /*
  *********************************************************************
  *
- *     This software is copyrighted by R.K.Owen,Ph.D. 1999
+ *     This software is copyrighted by R.K.Owen,Ph.D. 2002
  *
  * The author, R.K.Owen, of this software is not liable for any
  * problems WHATSOEVER which may result from use  or  abuse  of
@@ -31,36 +31,140 @@ static const char AUTHOR[]="@(#)avec 1.0 09/09/99 R.K.Owen,Ph.D.";
 #include <stdarg.h>
 #include <string.h>
 #include <time.h>
-#include "librko.h"
+#include "avec.h"
+#include "iprime.h"
+#ifdef HAVE_STRMALLOC
+#  include "strmalloc.h"
+#endif
+#ifdef RKOERROR
+#  include "rkoerror.h"
+#endif
 
-#define HASH(ss,v) {for(s=ss,i=0; *s; s++) i=131 * i + *s;v=i % LibHashSize;}
+/* make these as macros so they can be "inlined" when used */
+/* must use the SETUP macro to define the need variables
+ *  ... don't use _i,_s,_t otherwise.
+ */
+#define SETUP	\
+unsigned int _i;
+char const *_s, *_t;
+
+#define HASH(ss,v,Size) \
+	{for(_s=ss,_i=0; *_s; _s++) _i=131 * _i + *_s;v=_i % Size;}
+
+#define STRCMP(ss,tt,v) {v=0; _s=ss; _t=tt; while(*_s & *_t){\
+			if(*_s==*_t){_s++;_t++;} else {v = 1; break;}}}
+
 
 static char TAG[5] = "AVEC";
 
-/* ---------------------------------------------------------------------- */
-/* avec_ctor - construct hash array to at least capacity cap
- * returns NULL if an error, else the memory location  if OK.
- * avec_ctor will call avec_init() to set things up.
- */
-avec *avec_ctor(int cap) {
-	avec *ha = (avec *) NULL;
+#define 	AVECNEXTCAP(x)	(((x)*3)/2)
+#define 	AVECPREVCAP(x)	(((x)*2)/3)
 
-	if (!(ha = (avec *) malloc(sizeof(avec)))) {
-#ifdef RKOERROR
-		(void) rkocpyerror("avec_ctor : avec malloc error!");
-		rkoerrno = RKOMEMERR;
-#endif
-		return ha;
+/* ---------------------------------------------------------------------- */
+/* wrappers for the StdC string functions
+ */
+int stdc_malloc (void **data, va_list ap) {
+	char const *str = va_arg(ap,char *);
+	/* fprintf(stderr, "stdc malloc\n"); */
+	if((data = calloc((strlen(str)+1),sizeof(char)))) {
+		(void) strcpy((char *) *data, str);
+		return 0;
 	}
-	if (avec_init(ha,cap)) {
-#ifdef RKOERROR
-		(void) rkopsterror("avec_ctor : ");
-#endif
-		free(ha);
-		ha = (avec *) NULL;
-	}
-	return ha;
+	return -1;
 }
+int stdc_free (void **data, va_list ap) {
+	/* fprintf(stderr, "stdc free\n"); */
+	free(*data);
+	*data = (char *) NULL;
+	return 0;
+}
+
+avec_fns stdc_fns = {
+	AVEC_STDC,
+	stdc_malloc,
+	stdc_free
+};
+
+/* ---------------------------------------------------------------------- */
+#ifdef HAVE_STRMALLOC
+/* ---------------------------------------------------------------------- */
+/* wrappers for the strmalloc string functions
+ */
+int str_malloc (void **data, va_list ap) {
+	char const *str = va_arg(ap,char *);
+	/* fprintf(stderr, "str_malloc\n"); */
+	if((data = (void *) strmalloc(str))) return 0;
+	return -1;
+}
+
+int str_free (void **data, va_list ap) {
+	/* fprintf(stderr, "str_free\n"); */
+	strfree((char **) data);
+	return 0;
+}
+
+avec_fns strmalloc_fns = {
+	AVEC_STRMALLOC,
+	str_malloc,
+	str_free
+};
+
+avec_fns default_fns = {
+	AVEC_STRMALLOC,
+	str_malloc,
+	str_free
+};
+#else
+avec_fns default_fns = {
+	AVEC_STDC,
+	stdc_malloc,
+	stdc_free
+};
+#endif
+/* set the default set of string functions to use
+ */
+int avec_set_fns(enum avec_def_fns type, avec_fns *fns) {
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	if (type == AVEC_DEFAULT) {
+#ifdef HAVE_STRMALLOC
+		type = AVEC_STRMALLOC;
+#else
+		type = AVEC_STDC;
+#endif
+	}
+	if (type == AVEC_STDC) {
+		default_fns.data_add = stdc_fns.data_add;
+		default_fns.data_del = stdc_fns.data_del;
+#ifdef HAVE_STRMALLOC
+	} else if (type == AVEC_STRMALLOC) {
+		default_fns.data_add = stdc_fns.data_add;
+		default_fns.data_del = stdc_fns.data_del;
+#endif
+	} else if (type == AVEC_USER) {
+		if (fns == (avec_fns*) NULL
+		|| fns->data_add == NULL
+		|| fns->data_del == NULL) {
+#ifdef RKOERROR
+			(void) rkocpyerror(
+				"avec_set_fns : null data functions!");
+			rkoerrno = RKOUSEERR;
+#endif
+			return -1;
+		}
+		default_fns.data_add = fns->data_add;
+		default_fns.data_del = fns->data_del;
+	}
+	default_fns.type = type;
+	return 0;
+}
+/* return what type of data functions are currently default
+ */
+enum avec_def_fns avec_get_fns(void) {
+	return default_fns.type;
+}
+
 /* ---------------------------------------------------------------------- */
 /* avec_hash_cap - returns the next largest prime to the given value
  */
@@ -70,12 +174,77 @@ static int avec_hash_cap(int cap) {
 	return cap;
 }
 
+/* ---------------------------------------------------------------------- */
+/* avec_ctor_ - construct Unix vector to capacity cap and use the
+ * given data functions.
+ * returns NULL if an error, else the memory location  if OK.
+ * avec_ctor_ will call avec_init_() to set things up.
+ */
+avec *avec_ctor_(int cap, avec_fns fns) {
+	avec *av = (avec *) NULL;
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
 
-/* avec_init - construct Unix vector to at least capacity cap
+	if ((avec *) NULL == (av = avec_alloc_(fns))) {
+#ifdef RKOERROR
+		if (rkoerrno == RKO_OK) rkoerrno = RKOGENERR;
+		(void) rkopsterror("avec_ctor_ : ");
+#endif
+		return av;
+	}
+	if (avec_init_(av,cap,fns)) {
+#ifdef RKOERROR
+		if (rkoerrno == RKO_OK) rkoerrno = RKOGENERR;
+		(void) rkopsterror("avec_ctor_ : ");
+#endif
+		(void) avec_dealloc(&av);
+		av = (avec *) NULL;
+	}
+	return av;
+}
+
+/* avec_ctor - construct Unix vector to capacity cap
+ * avec_ctor will call avec_ctor_() to set things up.
+ */
+avec *avec_ctor(int cap) {
+	return avec_ctor_(cap, default_fns);
+}
+
+/* ---------------------------------------------------------------------- */
+/* avec_alloc_ - allocate an unitialized avec object and use the
+ * given data functions.
+ * returns NULL if an error, else the memory location  if OK.
+ */
+avec *avec_alloc_(avec_fns fns) {
+	avec *av = (avec *) NULL;
+
+	if (!(av = (avec *) malloc(sizeof(avec)))) {
+#ifdef RKOERROR
+		(void) rkocpyerror("avec_alloc_ : avec malloc error!");
+		rkoerrno = RKOMEMERR;
+#endif
+		return av;
+	}
+	av->fns.data_add = fns.data_add;
+	av->fns.data_del = fns.data_del;
+	return av;
+}
+/* avec_alloc - allocate an unitialized avec object
+ * set to use the default string functions
+ * avec_alloc will call avec_alloc_() to set things up.
+ */
+avec *avec_alloc(void) {
+	return avec_alloc_(default_fns);
+}
+/* ---------------------------------------------------------------------- */
+/* avec_init_ - construct associative vector to capacity cap use the
+ * given data functions.
  * returns <0 if an error, else 0 if OK as well as all the other functions
  */
-int avec_init(avec *ha, int cap) {
-	if (ha == (avec *) NULL) {
+int avec_init_(avec *av, int cap, avec_fns fns) {
+	int newcap;
+	if (av == (avec *) NULL) {
 #ifdef RKOERROR
 		(void) rkocpyerror("avec_init : null pointer!");
 		rkoerrno = RKOUSEERR;
@@ -83,7 +252,7 @@ int avec_init(avec *ha, int cap) {
 		return -1;
 	}
 /* can't guarantee that struct will be initialized to 0 hence use "tag" */
-	if (!strncmp(ha->tag,TAG, 5)) {
+	if (!strncmp(av->tag,TAG, 5)) {
 #ifdef RKOERROR
 		(void) rkocpyerror("avec_init : already initialized!");
 		rkoerrno = RKOUSEERR;
@@ -97,50 +266,72 @@ int avec_init(avec *ha, int cap) {
 #endif
 		return -3;
 	}
-	if (!(ha->vector = (char **) calloc(cap, sizeof(char *)))) {
+
+	newcap = avec_hash_cap(cap);
+
+	if (!(av->hash = (avec_element **)
+		calloc(newcap, sizeof(avec_element)))) {
 #ifdef RKOERROR
 		(void) rkocpyerror("avec_init : malloc error!");
 		rkoerrno = RKOMEMERR;
 #endif
 		return -4;
 	}
-	(void) strcpy(ha->tag, TAG);
-	ha->capacity = cap;
-	ha->number = 0;
+	(void) strcpy(av->tag, TAG);
+	av->capacity = newcap;
+	av->number = 0;
+	av->fns.data_add = fns.data_add;
+	av->fns.data_del = fns.data_del;
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
 	return 0;
 }
+/* avec_init_ - construct associative vector to capacity cap
+ * use the default string functions
+ * avec_init will call avec_init_() to set things up.
+ */
+int avec_init(avec *av, int cap) {
+	return avec_init_(av, cap, default_fns);
+}
 /* ---------------------------------------------------------------------- */
 /* avec_dtor - destroy the avec (calls avec_close also) */
-int avec_dtor(avec **ha) {
+int avec_dtor(avec **av, ...) {
 	int retval = 0;
-	if ((retval = avec_close(*ha))) return retval;
-	free (*ha);
+	if ((retval = avec_close(*av))) return retval;
+	if ((retval = avec_dealloc(av))) return retval;
+	return retval;
+}
+/* ---------------------------------------------------------------------- */
+/* avec_dealloc - deallocate the unitialized avec  */
+int avec_dealloc(avec **av) {
+	int retval = 0;
+	free (*av);
+	*av = (avec *) NULL;
 	return retval;
 }
 /* ---------------------------------------------------------------------- */
 /* avec_close - destroy the avec contents */
-int avec_close(avec *ha) {
+int avec_close(avec *av, ...) {
 	int i;
+	va_list args;
 
-	if (ha == (avec *) NULL) {
+	if (av == (avec *) NULL) {
 #ifdef RKOERROR
 		(void) rkocpyerror("avec_dtor : null pointer!");
 		rkoerrno = RKOUSEERR;
 #endif
 		return -1;
 	}
-	*(ha->tag) = '\0';
-	for (i = 0; i < ha->number; ++i) {
-		strfree(&(ha->vector[i]));
-		ha->vector[i] = (char *) NULL;
+	*(av->tag) = '\0';
+	for (i = 0; i < av->number; ++i) {
+		(av->fns.data_del)(&(av->hash[i]), args);
+		av->hash[i] = (char *) NULL;
 	}
-	free(ha->vector);
-	ha->vector = (char **) NULL;
-	ha->capacity = 0;
-	ha->number = 0;
+	free(av->hash);
+	av->hash = (avec_element **) NULL;
+	av->capacity = 0;
+	av->number = 0;
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
@@ -150,12 +341,11 @@ int avec_close(avec *ha) {
 /* avec_increase - internal function to increase the size of vector
  * if newcap <= 0 then increase by default size else compute  new capacity
  */
-static int avec_increase(avec *ha, int newcap) {
+int avec_increase(avec *av, int newcap) {
 	int i;
 
-	newcap = (newcap <= 0 ? AVECNEXTLENGTH(ha->capacity) : newcap);
-	newcap = avec_hash_cap(newcap);
-	if (!(ha->vector = (char **) realloc(ha->vector,
+	newcap = (newcap <= 0 ? AVECNEXTCAP(av->capacity) : newcap);
+	if (!(av->hash = (avec_element **) realloc(av->hash,
 		newcap*sizeof(char *)))) {
 #ifdef RKOERROR
 		(void) rkocpyerror("avec_increase : realloc error!");
@@ -163,10 +353,10 @@ static int avec_increase(avec *ha, int newcap) {
 #endif
 		return -1;
 	}
-	ha->capacity = newcap;
+	av->capacity = newcap;
 	/* zero out extra capacity */
-	for (i = ha->number; i < ha->capacity; ++i)
-		ha->vector[i] = (char *) NULL;
+	for (i = av->number; i < av->capacity; ++i)
+		av->hash[i] = (avec_element *) NULL;
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
@@ -176,11 +366,10 @@ static int avec_increase(avec *ha, int newcap) {
 /* avec_decrease - internal function to decrease the size of vector
  * if newcap <= 0 then decrease by default size else compute  new capacity
  */
-static int avec_decrease(avec *ha, int newcap) {
-	int i;
+int avec_decrease(avec *av, int newcap) {
 
-	newcap = (newcap <= 0 ? AVECPREVLENGTH(ha->capacity) : newcap);
-	if (!(ha->vector = (char **) realloc(ha->vector,
+	newcap = (newcap <= 0 ? AVECPREVCAP(av->capacity) : newcap);
+	if (!(av->hash = (avec_element **) realloc(av->hash,
 		newcap*sizeof(char *)))) {
 #ifdef RKOERROR
 		(void) rkocpyerror("avec_decrease : realloc error!");
@@ -188,126 +377,25 @@ static int avec_decrease(avec *ha, int newcap) {
 #endif
 		return -1;
 	}
-	ha->capacity = newcap;
+	av->capacity = newcap;
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
 	return 0;
 }
 
-/* avec_malloc - malloc & copy a string to element "place"
- * assume no element exists there yet and you have the capacity.
- */
-static int avec_malloc(avec *ha, char const *str, int place) {
-	if (place < 0 || place >= ha->capacity) {
-#ifdef RKOERROR
-		(void) rkocpyerror("avec_malloc : invalid place!");
-		rkoerrno = RKOUSEERR;
-#endif
-		return -1;
-	}
-	if (!(ha->vector[place] = strmalloc(str))) {
-#ifdef RKOERROR
-		(void) rkopsterror("avec_malloc : ");
-#endif
-		return -2;
-	}
-#ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#endif
-	return 0;
-}
-
-/* avec_shift - internal function to shift part of the vector */
-/* if start <= 0, then set start=0  (start of vector)
- * if end   <= 0, then set end=number (end of vector)
- * newstart = where to put the range of vector
- * everything between start & newstart is zeroed and assumed to be
- *
- * note 'end' = first element after the last element to move
- */
-static int avec_shift(avec *ha, int start, int end, int newstart) {
-	register int i;
-	int n;
-	int rstat;
-
-	if (start <= 0) start = 0;
-	if (end <= 0) end = ha->number;
-	if (newstart < 0) {
-#ifdef RKOERROR
-		(void) rkocpyerror("avec_shift : invalid newstart!");
-		rkoerrno = RKOUSEERR;
-#endif
-		return -1;
-	}
-	if (start > ha->number) {
-#ifdef RKOERROR
-		(void) rkocpyerror("avec_shift : invalid start!");
-		rkoerrno = RKOUSEERR;
-#endif
-		return -2;
-	}
-	if (end > ha->number || end < start) {
-#ifdef RKOERROR
-		(void) rkocpyerror("avec_shift : invalid end!");
-		rkoerrno = RKOUSEERR;
-#endif
-		return -3;
-	}
-	if (newstart == start) {	/* do nothing */
-#ifdef RKOERROR
-		rkoerrno = RKO_OK;
-#endif
-		return 0;
-	}
-	if (newstart < start) {			/* shift upwards */
-		for (i = newstart; i < start; ++i) {
-			strfree(&(ha->vector[i]));	/* dealloc elements */
-			ha->vector[i] = (char *) NULL;
-		}
-		for (i = start; i < end; ++i) {
-			ha->vector[newstart++] = ha->vector[i];
-			ha->vector[i] = (char *) NULL;
-		}
-	} else {				/* shift downwards */
-		n = newstart + end - start;
-		if (n >= ha->capacity) {
-			/* increase capacity */
-			if (rstat = avec_increase(ha,
-				(n>AVECNEXTLENGTH(ha->capacity)
-				? n :  AVECNEXTLENGTH(ha->capacity)))) {
-#ifdef RKOERROR
-				(void) rkopsterror("avec_shift : ");
-#endif
-				return rstat - 128;
-			}
-		}
-		for (i = end; i < n; ++i) {
-			strfree(&(ha->vector[i]));	/* dealloc elements */
-			ha->vector[i] = (char *) NULL;
-		}
-		for (i = end - 1; i >= start; --i) {
-			ha->vector[--n] = ha->vector[i];
-			ha->vector[i] = (char *) NULL;
-		}
-	}
-#ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#endif
-	return 0;
-}
 /* ---------------------------------------------------------------------- */
 /* accessor functions */
-int avec_exists(avec const *ha) {
+int avec_exists(avec const *av) {
 	int retval = 0;
-	if (ha == (avec *) NULL) {
+	if (av == (avec *) NULL) {
 #ifdef RKOERROR
 		(void) rkocpyerror("avec_exists : null pointer!");
 		rkoerrno = RKOUSEERR;
 #endif
 		retval = 0;
 	} else {
-		if (strncmp(ha->tag,TAG, 5)) {
+		if (strncmp(av->tag,TAG, 5)) {
 #ifdef RKOERROR
 			(void) rkocpyerror("avec_exists : avec doesn't exist!");
 			rkoerrno = RKOUSEERR;
@@ -323,12 +411,12 @@ int avec_exists(avec const *ha) {
 	return retval;
 }
 
-int avec_capacity(avec const *ha) {
-	if (avec_exists(ha)) {
+int avec_capacity(avec const *av) {
+	if (avec_exists(av)) {
 #ifdef RKOERROR
 		rkoerrno = RKO_OK;
 #endif
-		return ha->capacity;
+		return av->capacity;
 	} else {
 #ifdef RKOERROR
 		(void) rkopsterror("avec_capacity : ");
@@ -337,12 +425,12 @@ int avec_capacity(avec const *ha) {
 	}
 }
 
-int avec_number(avec const *ha) {
-	if (avec_exists(ha)) {
+int avec_number(avec const *av) {
+	if (avec_exists(av)) {
 #ifdef RKOERROR
 		rkoerrno = RKO_OK;
 #endif
-		return ha->number;
+		return av->number;
 	} else {
 #ifdef RKOERROR
 		(void) rkopsterror("avec_number : ");
@@ -351,97 +439,55 @@ int avec_number(avec const *ha) {
 	}
 }
 
-int avec_end(avec const *ha) {
-	if (avec_exists(ha)) {
-#ifdef RKOERROR
-		rkoerrno = RKO_OK;
-#endif
-		return ha->number - 1;
-	} else {
-#ifdef RKOERROR
-		(void) rkopsterror("avec_end : ");
-#endif
-		return -1;
-	}
-}
-
-char ** avec_vector(avec const *ha) {
-	if (avec_exists(ha)) {
-#ifdef RKOERROR
-		rkoerrno = RKO_OK;
-#endif
-		return ha->vector;
-	} else {
-#ifdef RKOERROR
-		(void) rkopsterror("avec_vector : ");
-#endif
-		return (char **) NULL;
-	}
-}
-
 /* ---------------------------------------------------------------------- */
 /* avec_insert - insert an element before element "place"
  */
-int avec_insert(avec *ha, char const *str, int place) {
-	int rstat;
+int avec_insert(avec *av, char const *str, ...) {
+	va_list args;
 
-	if (place < 0 || place > ha->number) {
+	if (! str ) {
 #ifdef RKOERROR
-		(void) rkocpyerror("avec_insert : invalid place!");
+		(void) rkocpyerror("avec_insert : NULL string!");
 		rkoerrno = RKOUSEERR;
 #endif
 		return -1;
 	}
-	if (rstat = avec_shift(ha, place, 0, place + 1)) {
-#ifdef RKOERROR
-		(void) rkopsterror("avec_insert : ");
-#endif
-		return rstat - 128;
-	}
-	if (rstat = avec_malloc(ha, str, place)) {
-#ifdef RKOERROR
-		(void) rkopsterror("avec_insert : ");
-#endif
-		return rstat - 128;
-	}
-#ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#endif
-	++(ha->number);
-	return 0;
+	return avec_ninsert(av, str, strlen(str), place);
 }
+
 /* ---------------------------------------------------------------------- */
 /* avec_delete - delete an element at element "place"
  */
-int avec_delete(avec *ha, int place) {
+int avec_delete(avec *av, ...) {
 	int rstat;
+	va_list args;
 
-	if (ha->number <= 0) {
+	if (av->number <= 0) {
 #ifdef RKOERROR
 		(void) rkocpyerror("avec_delete : empty vector!");
 		rkoerrno = RKOUSEERR;
 #endif
 		return -1;
 	}
-	if (place < 0 || place > ha->number - 1) {
+	if (place < 0 || place > av->number - 1) {
 #ifdef RKOERROR
 		(void) rkocpyerror("avec_delete : invalid place!");
 		rkoerrno = RKOUSEERR;
 #endif
 		return -2;
 	}
-	if (rstat = avec_shift(ha, place + 1, 0, place)) {
+	if ((rstat = avec_shift_vec(av, place + 1, 0, place))) {
 #ifdef RKOERROR
 		(void) rkopsterror("avec_delete : ");
 #endif
 		return rstat - 128;
 	}
-	--(ha->number);
-	strfree(&(ha->vector[ha->number]));
-	ha->vector[ha->number] = (char *) NULL;
+	--(av->number);
+	(av->fns.data_del)(&(av->hash[av->number]),args);
+	av->hash[av->number] = (char *) NULL;
 
-	if (ha->number < ha->capacity/2) {
-		if (rstat = avec_decrease(ha, 0)) {
+	if (av->number < av->capacity/2) {
+		if ((rstat = avec_decrease(av, 0))) {
 #ifdef RKOERROR
 			(void) rkopsterror("avec_delete : ");
 #endif
@@ -453,292 +499,17 @@ int avec_delete(avec *ha, int place) {
 #endif
 	return 0;
 }
-/* ---------------------------------------------------------------------- */
-/* avec_add - add 1 element to end of vector */
-int avec_add(avec *ha, char const *str) {
-	int rstat;
-	if (rstat = avec_insert(ha, str, ha->number)) {
-#ifdef RKOERROR
-		(void) rkopsterror("avec_add : ");
-#endif
-		return rstat - 128;
-	}
 
-#ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#endif
+/* rudimentary test code */
+
+#include <stdio.h>
+
+int main () {
+	avec u,v, *x, *y;
+
+	x = avec_ctor(100);
+	printf ("=%d\n", avec_number(x));
+	printf ("num=%d\n", avec_number(x));
+	printf ("cap=%d\n", avec_capacity(x));
 	return 0;
-}
-/* ---------------------------------------------------------------------- */
-/* avec_addl - add a variable number of elements (terminated by a NULL
- *	argument) to end of vector
- */
-int avec_addl(avec *ha, ...) {
-	int rstat;
-	const char *str;
-	va_list ap;
-
-	va_start(ap, ha);
-	while (str = va_arg(ap, const char *)) {
-		if (rstat = avec_add(ha, str)) {
-#ifdef RKOERROR
-			(void) rkopsterror("avec_addl : ");
-#endif
-			return rstat - 128;
-		}
-	}
-	va_end(ap);
-#ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#endif
-	return 0;
-}
-/* ---------------------------------------------------------------------- */
-/* avec_pop - pop off 1 element at end of vector */
-int avec_pop(avec *ha) {
-	int rstat;
-	if (rstat = avec_delete(ha, ha->number - 1)) {
-#ifdef RKOERROR
-		(void) rkopsterror("avec_pop : ");
-#endif
-		return rstat - 128;
-	}
-
-#ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#endif
-	return 0;
-}
-/* ---------------------------------------------------------------------- */
-/* some useful functions ...
- * note that all these use no direct access to the structure
- * and form an example set of how to use avec */
-/* ---------------------------------------------------------------------- */
-
-/* avec_copy_vec - copy an existing vector to an unitialized avec */
-int avec_copy_vec(avec *u, char **vec, int number) {
-	int rstat;
-	char  **ptr = vec;
-	int num = 0;
-	if (number <= 0) {
-/* count number in vector (add 1) */
-		while (*ptr++) ++num;
-		number = ++num;
-	}
-
-	if (rstat = avec_init(u, number)) {
-#ifdef RKOERROR
-		(void) rkopsterror("avec_copy_vec : ");
-		return rstat - 128;
-#endif
-	}
-	for (ptr = vec; *ptr != (char *)NULL; ++ptr) {
-		if (rstat = avec_add(u, *ptr)) {
-#ifdef RKOERROR
-			(void) rkopsterror("avec_copy_vec : ");
-			return rstat - 128;
-#endif
-		}
-	}
-	return 0;
-}
-
-/* avec_copy - copy one avec to another unitialized one */
-int avec_copy(avec *u, avec const *v) {
-	int rstat;
-
-	if (rstat = avec_copy_vec(u, avec_vector(v), avec_capacity(v))) {
-#ifdef RKOERROR
-		(void) rkopsterror("avec_copy : ");
-		return rstat - 128;
-#endif
-	}
-	return 0;
-}
-/* ---------------------------------------------------------------------- */
-/* avec_sort - sort the vector */
-
-static int avec_sort_cmp_ascend(const void *a, const void *b) {
-	return strcmp(*(char **) a, *(char **) b);
-}
-
-static int avec_sort_cmp_descend(const void *a, const void *b) {
-	return strcmp(*(char **) b, *(char **) a);
-}
-
-#ifndef NO_STRCASECMP
-static int avec_sort_cmp_case_ascend(const void *a, const void *b) {
-	return strcasecmp(*(char **) a, *(char **) b);
-}
-
-static int avec_sort_cmp_case_descend(const void *a, const void *b) {
-	return strcasecmp(*(char **) b, *(char **) a);
-}
-#endif /* NO_STRCASECMP */
-
-int avec_sort(avec *ha, enum avec_order type) {
-	int (*cmp)(const void *, const void *);
-	if (!avec_exists(ha)) {
-#ifdef RKOERROR
-		(void) rkopsterror("avec_sort : ");
-		rkoerrno = RKOUSEERR;
-#endif
-		return -1;
-	}
-	if (avec_number(ha) > 0) {
-		switch (type) {
-		case AVEC_ASCEND:
-			cmp = avec_sort_cmp_ascend;
-			break;
-		case AVEC_DESCEND:
-			cmp = avec_sort_cmp_descend;
-			break;
-#ifndef NO_STRCASECMP
-		case AVEC_CASE_ASCEND:
-			cmp = avec_sort_cmp_case_ascend;
-			break;
-		case AVEC_CASE_DESCEND:
-			cmp = avec_sort_cmp_case_descend;
-			break;
-#endif /* NO_STRCASECMP */
-		default:
-#ifdef RKOERROR
-			(void) rkocpyerror("avec_sort : invalid ordering type!");
-			rkoerrno = RKOUSEERR;
-#endif
-			return -2;
-		}
-	}
-	qsort((void *) avec_vector(ha), (size_t) avec_number(ha),
-		sizeof(char *), cmp);
-#ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#endif
-	return 0;
-}
-/* ---------------------------------------------------------------------- */
-/* avec_uniq - remove all adjacent duplicate elements
- *	type = avec sorting type ... the import information is whether
- *	to use a caseless comparison or not.
- */
-int avec_uniq(avec *ha, enum avec_order type) {
-	int i = 1;
-	char **vec;
-	int (*cmp)(const char *, const char *);
-
-	if (!avec_exists(ha)) {
-#ifdef RKOERROR
-		(void) rkopsterror("avec_uniq : ");
-		rkoerrno = RKOUSEERR;
-#endif
-		return -1;
-	}
-	if (avec_number(ha) > 1) {
-		switch (type) {
-		case AVEC_ASCEND:
-			cmp = strcmp;
-			break;
-		case AVEC_DESCEND:
-			cmp = strcmp;
-			break;
-#ifndef NO_STRCASECMP
-		case AVEC_CASE_ASCEND:
-			cmp = strcasecmp;
-			break;
-		case AVEC_CASE_DESCEND:
-			cmp = strcasecmp;
-			break;
-#endif /* NO_STRCASECMP */
-		default:
-#ifdef RKOERROR
-			(void) rkocpyerror("avec_uniq : invalid ordering type!");
-			rkoerrno = RKOUSEERR;
-#endif
-			return -2;
-		}
-		while (*(vec = (avec_vector(ha) + i))) {
-			if ((*cmp)(*vec, *(vec - 1))) {
-				i++;			/* go to next */
-			} else {
-				avec_delete(ha,i);	/* found match */
-			}
-		}
-	}
-#ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#endif
-	return 0;
-}
-/* ---------------------------------------------------------------------- */
-/* avec_reverse - reverses the element order of the vector */
-int avec_reverse(avec const *ha) {
-	int num;
-	char **ptrstart, **ptrend;
-	char *swap;
-	if (!avec_exists(ha)) {
-#ifdef RKOERROR
-		(void) rkopsterror("avec_reverse : ");
-		rkoerrno = RKOUSEERR;
-		return -1;
-#endif
-	}
-	num = avec_number(ha);
-	if (num > 1) {		/* do reversal */
-		ptrstart = avec_vector(ha);
-		ptrend = ptrstart + avec_end(ha);
-		while (ptrstart < ptrend) {
-			swap = *ptrend;
-			*ptrend-- = *ptrstart;
-			*ptrstart++ = swap;
-		}
-	}
-#ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#endif
-	return 0;
-}
-#ifndef NO_URAND
-/* ---------------------------------------------------------------------- */
-/* avec_randomize - randomizes the vector  - will be deterministic if
- * use the same seed, However, if seed<=0 then will "randomly"
- * choose one.
- */
-int avec_randomize(avec const *ha, int seed) {
-	char *swap;
-	char **vec, **ptr1, **ptr2;
-	int num, i;
-
-	if (!avec_exists(ha)) {
-#  ifdef RKOERROR
-		(void) rkopsterror("avec_randomize : ");
-		rkoerrno = RKOUSEERR;
-		return -1;
-#  endif
-	}
-	if (seed <=0) {
-		seed = (int) time(NULL);
-	}
-	if (seed < 0) {
-#  ifdef RKOERROR
-		(void) rkocpyerror("avec_randomize : seed making error!");
-		rkoerrno = RKOUSEERR;
-		return -2;
-#  endif
-	}
-	setseed((INTEGER) seed);
-	num = avec_number(ha);
-	vec = avec_vector(ha);
-	/* make 3*number of swaps */
-	for (i = 0; i < 3*num; ++i) {
-		ptr1 = vec + (int) (num*urand());
-		ptr2 = vec + (int) (num*urand());
-		swap = *ptr1;
-		*ptr1 = *ptr2;
-		*ptr2 = swap;
-	}
-#  ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#  endif
-	return 0;
-}
-#endif /* NO_URAND */
+};

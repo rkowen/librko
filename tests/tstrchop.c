@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "librko.h"
+#include "strchop.h"
+#ifdef RKOERROR
+#  include "rkoerror.h"
+#endif
 
 void testfn(const char *test, int len) {
 	const char *ptr;

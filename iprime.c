@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: iprime.c,v 1.1 1999/09/11 08:02:07 rk Exp $";
+static const char RCSID[]="@(#)$Id: iprime.c,v 1.2 2002/02/08 23:10:22 rk Exp $";
 static const char AUTHOR[]="@(#)iprime 1.0 09/09/99 R.K.Owen,Ph.D.";
 /* iprime.c -
  * a simple minded routine to find out whether a positive number is prime.
@@ -23,6 +23,8 @@ static const char AUTHOR[]="@(#)iprime 1.0 09/09/99 R.K.Owen,Ph.D.";
  *
  *********************************************************************
  */
+
+#include "isqrt.h"
 
 /* a look-up table of the first few primes */
 static unsigned char lut[54] = {

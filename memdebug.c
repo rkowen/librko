@@ -1,5 +1,5 @@
-static const char RCSID[]="@(#)$Id: memdebug.c,v 1.4 1999/09/09 21:30:44 rk Exp $";
-static char AUTHOR[]="@(#)memory 1.0 02/10/95 R.K.Owen,PhD";
+static const char RCSID[]="@(#)$Id: memdebug.c,v 1.5 2002/02/08 23:10:22 rk Exp $";
+static const char AUTHOR[]="@(#)memdebug 1.0 02/10/95 R.K.Owen,PhD";
 
 /* memory - provides a front-end for the memory allocation routines to
  *	help find memory leaks.  Supports only the ANSI-C routines:

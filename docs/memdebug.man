@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: memdebug.man,v 1.2 1999/03/25 15:08:31 rk Exp $
+.\" RCSID @(#)$Id: memdebug.man,v 1.3 2002/02/08 23:10:22 rk Exp $
 .\" LIBDIR
 .TH "MEMORY" "3rko" "12 May 1995"
 .SH NAME
@@ -10,11 +10,11 @@ routines to help find memory leaks.  Supports only the ANSI-C routines:
 
  \.\.\. usual standard headers
  #define MEMDEBUG
- #include "librko.h"
+ #include "memdebug.h"
  \.\.\. code that calls the memory allocation routines
 
 .SH DESCRIPTION
-.I librko
+.I memdebug
 provides several front-end routines for the ANSI-C memory allocation
 routines.  It outputs the routine name, pointer(s), file name,
 and line number to stderr.  This can be analyzed to see that allocations
@@ -25,7 +25,7 @@ are matched with deallocations.
 calloc(3), free(3), malloc(3), realloc(3)
 
 .SH NOTES
-Must define the macro MEMDEBUG before include the librko.h header.
+Must define the macro MEMDEBUG before include the memdebug.h header.
 This header should be included after the standard headers, particularly
 stdlib.h which may be included in some of the other standard headers also.
 

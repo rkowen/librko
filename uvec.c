@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: uvec.c,v 1.12 2002/02/08 16:26:01 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec.c,v 1.13 2002/02/08 23:10:22 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 /* uvec.c -
  * This could have easily been made a C++ class, but is
@@ -32,6 +32,7 @@ static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include <time.h>
 #include "uvec.h"
 #ifdef HAVE_STRMALLOC
 #  include "strmalloc.h"
@@ -146,7 +147,7 @@ enum uvec_def_str_fns uvec_get_strfns(void) {
 /* uvec_ctor_ - construct Unix vector to capacity cap and use the
  * given string functions.
  * returns NULL if an error, else the memory location  if OK.
- * uvec_ctor_ will call uvec_init() to set things up.
+ * uvec_ctor_ will call uvec_init_() to set things up.
  */
 uvec *uvec_ctor_(int cap, uvec_str str_fns) {
 	uvec *uv = (uvec *) NULL;
@@ -161,7 +162,7 @@ uvec *uvec_ctor_(int cap, uvec_str str_fns) {
 #endif
 		return uv;
 	}
-	if (uvec_init(uv,cap)) {
+	if (uvec_init_(uv,cap,str_fns)) {
 #ifdef RKOERROR
 		if (rkoerrno == RKO_OK) rkoerrno = RKOGENERR;
 		(void) rkopsterror("uvec_ctor_ : ");
@@ -287,7 +288,7 @@ int uvec_close(uvec *uv) {
 	}
 	*(uv->tag) = '\0';
 	for (i = 0; i < uv->number; ++i) {
-		strfree(&(uv->vector[i]));
+		(uv->str_fns.str_free)(&(uv->vector[i]));
 		uv->vector[i] = (char *) NULL;
 	}
 	free(uv->vector);
@@ -371,6 +372,8 @@ static int uvec_nmalloc(uvec *uv, char const *str, size_t n, int place) {
 
 /* uvec_malloc - calls uvec_nmalloc given a null terminated string
  */
+#if 0
+/* Not used in uvec.c */
 static int uvec_malloc(uvec *uv, char const *str, int place) {
 
 	if (! str ) {
@@ -382,6 +385,7 @@ static int uvec_malloc(uvec *uv, char const *str, int place) {
 	}
 	return uvec_nmalloc(uv, str, strlen(str), place);
 }
+#endif
 
 /* uvec_shift_vec - internal function to shift part of the vector */
 /* if start <= 0, then set start=0  (start of vector)
@@ -1143,7 +1147,6 @@ int uvec_randomize(uvec const *uv, int seed) {
  */
 uvec *str2uvec(char const *token, char const *string) {
 	int num = uvec_count_tok(token,string);
-	int toklen = strlen(token);
 	uvec *tmp = (uvec *) NULL;
 
 	if (num < 0) {

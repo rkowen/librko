@@ -4,6 +4,12 @@
 include ../Makefile.inc
 .SUFFIXES: .c .o
 
+CC	=gcc
+LD	=gcc -o
+LEX	=flex
+YACC	=yacc
+YYFLAGS	=-v -d -t
+RM	=rm
 YYSED	=../etc/yy-sed
 #
 #MSHFLAGS=-I.. -DTEST

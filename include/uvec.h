@@ -1,7 +1,7 @@
 #ifndef _UVEC_H_
 #  define _UVEC_H_
 /* 
- * RCSID @(#)$Id: uvec.h,v 1.1 2002/02/08 16:26:01 rk Exp $
+ * RCSID @(#)$Id: uvec.h,v 1.2 2002/02/08 23:10:22 rk Exp $
  */
 /*
  *********************************************************************
@@ -62,49 +62,49 @@ typedef struct {
 	uvec_str  str_fns;		/* which string functions to use */
 } uvec;
 
-int uvec_set_strfns(enum uvec_def_str_fns type, uvec_str *strfns);
-enum uvec_def_str_fns uvec_get_strfns(void);
+int    uvec_set_strfns(enum uvec_def_str_fns type, uvec_str *strfns);
+enum   uvec_def_str_fns uvec_get_strfns(void);
 
-uvec *uvec_ctor_(int cap, uvec_str strfns);
-uvec *uvec_ctor(int cap);
-int uvec_dtor(uvec **uv);
-uvec *uvec_alloc_(uvec_str strfns);
-uvec *uvec_alloc(void);
-int uvec_dealloc(uvec **uv);
-int uvec_init_(uvec *uv, int cap, uvec_str strfns);
-int uvec_init(uvec *uv, int cap);
-int uvec_close(uvec *uv);
+uvec  *uvec_ctor_(int cap, uvec_str strfns);
+uvec  *uvec_ctor(int cap);
+int    uvec_dtor(uvec **uv);
+uvec  *uvec_alloc_(uvec_str strfns);
+uvec  *uvec_alloc(void);
+int    uvec_dealloc(uvec **uv);
+int    uvec_init_(uvec *uv, int cap, uvec_str strfns);
+int    uvec_init(uvec *uv, int cap);
+int    uvec_close(uvec *uv);
 
-int uvec_exists(uvec const *uv);
-int uvec_capacity(uvec const *uv);
-int uvec_number(uvec const *uv);
-int uvec_end(uvec const *uv);
-char ** uvec_vector(uvec const *uv);
+int    uvec_exists(uvec const *uv);
+int    uvec_capacity(uvec const *uv);
+int    uvec_number(uvec const *uv);
+int    uvec_end(uvec const *uv);
+char **uvec_vector(uvec const *uv);
 
-int uvec_ninsert(uvec *uv, char const *str, size_t n, int place);
-int uvec_insert(uvec *uv, char const *str, int place);
-int uvec_delete(uvec *uv, int place);
-int uvec_nadd(uvec *uv, char const *str, size_t n);
-int uvec_add(uvec *uv, char const *str);
-int uvec_addl(uvec *uv, ...);
-int uvec_push(uvec *uv, char const *str);
-int uvec_pop(uvec *uv);
-int uvec_unshift(uvec *uv, char const *str);
-int uvec_shift(uvec *uv);
+int    uvec_ninsert(uvec *uv, char const *str, size_t n, int place);
+int    uvec_insert(uvec *uv, char const *str, int place);
+int    uvec_delete(uvec *uv, int place);
+int    uvec_nadd(uvec *uv, char const *str, size_t n);
+int    uvec_add(uvec *uv, char const *str);
+int    uvec_addl(uvec *uv, ...);
+int    uvec_push(uvec *uv, char const *str);
+int    uvec_pop(uvec *uv);
+int    uvec_unshift(uvec *uv, char const *str);
+int    uvec_shift(uvec *uv);
 
-int uvec_count_tok(char const *token, char const *string);
-int uvec_copy_str(uvec *u, char const *token, char const *string);
-int uvec_copy_vec(uvec *u, char const * const *vec, int number);
-int uvec_copy(uvec *u, uvec const *v);
-int uvec_sort(uvec *uv, enum uvec_order type);
-int uvec_find(uvec *uv, char const *str, enum uvec_order type);
-int uvec_uniq(uvec *uv, enum uvec_order type);
-int uvec_reverse(uvec const *uv);
-int uvec_randomize(uvec const *uv, int seed);
-uvec *str2uvec(char const *token, char const *string);
-uvec *vec2uvec(char const * const *vec, int num);
-uvec *uvec2uvec(uvec const *uv);
-char *uvec2str(uvec const *uv, char const *token);
+int    uvec_count_tok(char const *token, char const *string);
+int    uvec_copy_str(uvec *u, char const *token, char const *string);
+int    uvec_copy_vec(uvec *u, char const * const *vec, int number);
+int    uvec_copy(uvec *u, uvec const *v);
+int    uvec_sort(uvec *uv, enum uvec_order type);
+int    uvec_find(uvec *uv, char const *str, enum uvec_order type);
+int    uvec_uniq(uvec *uv, enum uvec_order type);
+int    uvec_reverse(uvec const *uv);
+int    uvec_randomize(uvec const *uv, int seed);
+uvec  *str2uvec(char const *token, char const *string);
+uvec  *vec2uvec(char const * const *vec, int num);
+uvec  *uvec2uvec(uvec const *uv);
+char  *uvec2str(uvec const *uv, char const *token);
 
 #  ifdef __cplusplus
 	}

@@ -1,7 +1,18 @@
 #ifndef lint
-static char yysccsid[] = "@(#)yaccpar	1.8 (Berkeley) 01/20/90";
+static char const 
+yyrcsid[] = "$FreeBSD: src/usr.bin/yacc/skeleton.c,v 1.28 2000/01/17 02:04:06 bde Exp $";
 #endif
+#include <stdlib.h>
 #define YYBYACC 1
+#define YYMAJOR 1
+#define YYMINOR 9
+#define YYLEX minish_yylex()
+#define YYEMPTY -1
+#define yyclearin (minish_yychar=(YYEMPTY))
+#define yyerrok (minish_yyerrflag=0)
+#define YYRECOVERING() (minish_yyerrflag!=0)
+static int yygrowstack();
+#define YYPREFIX "yy"
 #line 13 "minish.yacc"
 #ifdef YACCTEST
 #  define _MAIN_
@@ -52,87 +63,92 @@ void dump_uvec(char *string, uvec *m_uvec) {
 }
 #endif /* YACCTEST */
 
-#line 56 "y.tab.c"
-#define COMMAND 257
-#define EOC 258
-#define EOL 259
-#define AMPER_AMPER 260
-#define BAR_BAR 261
-#define GREATER_AMPER_CLOSE 262
-#define GREATER_AMPER 263
-#define GREATER_GREATER 264
-#define GREATER_THAN 265
-#define LESS_AMPER 266
-#define LESS_THAN 267
-#define LESS_GREATER 268
-#define NUMBER 269
-#define WORD 270
+#line 67 "y.tab.c"
 #define YYERRCODE 256
-short yylhs[] = {                                        -1,
+#define COMMAND 257
+#define LPAREN 258
+#define RPAREN 259
+#define EOC 260
+#define EOL 261
+#define AMPER_AMPER 262
+#define BAR_BAR 263
+#define BAR 264
+#define BAR_AMPER 265
+#define GREATER_AMPER_CLOSE 266
+#define GREATER_AMPER 267
+#define GREATER_GREATER 268
+#define GREATER_THAN 269
+#define LESS_AMPER 270
+#define LESS_THAN 271
+#define LESS_GREATER 272
+#define NUMBER 273
+#define WORD 274
+const short yylhs[] = {                                        -1,
     0,    0,    0,    1,    2,    3,    3,    3,    5,    5,
     5,    7,    7,   10,   10,   10,   10,    8,   13,    9,
     9,    9,   11,    4,    4,    4,    4,   12,    6,   14,
 };
-short yylen[] = {                                         2,
+const short yylen[] = {                                         2,
     1,    1,    2,    3,    1,    0,    2,    2,    1,    1,
     1,    2,    3,    1,    1,    1,    1,    3,    1,    1,
     1,    2,    1,    1,    1,    1,    1,    1,    1,    1,
 };
-short yydefred[] = {                                      0,
+const short yydefred[] = {                                      0,
     5,    1,    0,    2,    6,    3,    0,   25,   30,   27,
    26,   21,   15,   14,   20,   16,   17,   28,   29,    4,
     7,    8,    9,   10,   11,    0,    0,   24,   23,   12,
    22,   19,    0,    0,   13,   18,
 };
-short yydgoto[] = {                                       3,
+const short yydgoto[] = {                                       3,
     4,    5,    7,   20,   21,   29,   23,   24,   25,   26,
    30,   27,   34,   28,
 };
-short yysindex[] = {                                   -237,
-    0,    0, -252,    0,    0,    0, -258,    0,    0,    0,
+const short yysindex[] = {                                   -238,
+    0,    0, -253,    0,    0,    0, -260,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0, -253, -249,    0,    0,    0,
-    0,    0, -253, -248,    0,    0,
+    0,    0,    0,    0,    0, -269, -251,    0,    0,    0,
+    0,    0, -269, -266,    0,    0,
 };
-short yyrindex[] = {                                      0,
+const short yyrindex[] = {                                      0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,
 };
-short yygindex[] = {                                      0,
-   20,    0,    0,    0,    0,   17,    0,    0,    0,   -2,
+const short yygindex[] = {                                      0,
+   19,    0,    0,    0,    0,   17,    0,    0,    0,   -2,
    -7,   -6,    0,    0,
 };
 #define YYTABLESIZE 28
-short yytable[] = {                                       8,
-    9,   10,   11,   12,    1,   13,   14,   15,   16,   17,
-   18,   19,   31,   32,   13,   14,   19,   16,   17,    1,
-   18,    2,    6,   22,   33,   35,    0,   36,
+const short yytable[] = {                                       8,
+    9,   10,   11,    1,   19,   12,   18,   13,   14,   15,
+   16,   17,   18,   19,   31,   32,   13,   14,    1,   16,
+   17,    6,    2,   22,   33,   35,    0,   36,
 };
-short yycheck[] = {                                     258,
-  259,  260,  261,  262,  257,  264,  265,  266,  267,  268,
-  269,  270,  262,  263,  264,  265,  270,  267,  268,  257,
-  269,  259,    3,    7,   27,   33,   -1,   34,
+const short yycheck[] = {                                     260,
+  261,  262,  263,  257,  274,  266,  273,  268,  269,  270,
+  271,  272,  273,  274,  266,  267,  268,  269,  257,  271,
+  272,    3,  261,    7,   27,   33,   -1,   34,
 };
 #define YYFINAL 3
 #ifndef YYDEBUG
 #define YYDEBUG 1
 #endif
-#define YYMAXTOKEN 270
+#define YYMAXTOKEN 274
 #if YYDEBUG
-char *yyname[] = {
+const char * const yyname[] = {
 "end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"COMMAND","EOC","EOL",
-"AMPER_AMPER","BAR_BAR","GREATER_AMPER_CLOSE","GREATER_AMPER","GREATER_GREATER",
-"GREATER_THAN","LESS_AMPER","LESS_THAN","LESS_GREATER","NUMBER","WORD",
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"COMMAND","LPAREN","RPAREN","EOC",
+"EOL","AMPER_AMPER","BAR_BAR","BAR","BAR_AMPER","GREATER_AMPER_CLOSE",
+"GREATER_AMPER","GREATER_GREATER","GREATER_THAN","LESS_AMPER","LESS_THAN",
+"LESS_GREATER","NUMBER","WORD",
 };
-char *yyrule[] = {
+const char * const yyrule[] = {
 "$accept : statements",
 "statements : EOL",
 "statements : statement",
@@ -169,20 +185,21 @@ char *yyrule[] = {
 #ifndef YYSTYPE
 typedef int YYSTYPE;
 #endif
-#define yyclearin (minish_yychar=(-1))
-#define yyerrok (minish_yyerrflag=0)
-#ifdef YYSTACKSIZE
-#ifndef YYMAXDEPTH
-#define YYMAXDEPTH YYSTACKSIZE
+#if YYDEBUG
+#include <stdio.h>
 #endif
+#ifdef YYSTACKSIZE
+#undef YYMAXDEPTH
+#define YYMAXDEPTH YYSTACKSIZE
 #else
 #ifdef YYMAXDEPTH
 #define YYSTACKSIZE YYMAXDEPTH
 #else
-#define YYSTACKSIZE 500
-#define YYMAXDEPTH 500
+#define YYSTACKSIZE 10000
+#define YYMAXDEPTH 10000
 #endif
 #endif
+#define YYINITSTACKSIZE 200
 int minish_yydebug;
 int minish_yynerrs;
 int minish_yyerrflag;
@@ -191,10 +208,11 @@ short *yyssp;
 YYSTYPE *yyvsp;
 YYSTYPE minish_yyval;
 YYSTYPE minish_yylval;
-short yyss[YYSTACKSIZE];
-YYSTYPE yyvs[YYSTACKSIZE];
-#define yystacksize YYSTACKSIZE
-#line 388 "minish.yacc"
+short *yyss;
+short *yysslim;
+YYSTYPE *yyvs;
+int yystacksize;
+#line 387 "minish.yacc"
  /* start of programs */
 
 #undef input()		/* eliminates a useless warning */
@@ -220,19 +238,73 @@ int main(void) {
 	return minish_yyparse();
 }
 #endif /* YACCTEST */
-#line 224 "y.tab.c"
+#line 242 "y.tab.c"
+/* allocate initial stack or double stack size, up to YYMAXDEPTH */
+static int yygrowstack()
+{
+    int newsize, i;
+    short *newss;
+    YYSTYPE *newvs;
+
+    if ((newsize = yystacksize) == 0)
+        newsize = YYINITSTACKSIZE;
+    else if (newsize >= YYMAXDEPTH)
+        return -1;
+    else if ((newsize *= 2) > YYMAXDEPTH)
+        newsize = YYMAXDEPTH;
+    i = yyssp - yyss;
+    newss = yyss ? (short *)realloc(yyss, newsize * sizeof *newss) :
+      (short *)malloc(newsize * sizeof *newss);
+    if (newss == NULL)
+        return -1;
+    yyss = newss;
+    yyssp = newss + i;
+    newvs = yyvs ? (YYSTYPE *)realloc(yyvs, newsize * sizeof *newvs) :
+      (YYSTYPE *)malloc(newsize * sizeof *newvs);
+    if (newvs == NULL)
+        return -1;
+    yyvs = newvs;
+    yyvsp = newvs + i;
+    yystacksize = newsize;
+    yysslim = yyss + newsize - 1;
+    return 0;
+}
+
 #define YYABORT goto yyabort
+#define YYREJECT goto yyabort
 #define YYACCEPT goto yyaccept
 #define YYERROR goto yyerrlab
+
+#ifndef YYPARSE_PARAM
+#if defined(__cplusplus) || __STDC__
+#define YYPARSE_PARAM_ARG void
+#define YYPARSE_PARAM_DECL
+#else	/* ! ANSI-C/C++ */
+#define YYPARSE_PARAM_ARG
+#define YYPARSE_PARAM_DECL
+#endif	/* ANSI-C/C++ */
+#else	/* YYPARSE_PARAM */
+#ifndef YYPARSE_PARAM_TYPE
+#define YYPARSE_PARAM_TYPE void *
+#endif
+#if defined(__cplusplus) || __STDC__
+#define YYPARSE_PARAM_ARG YYPARSE_PARAM_TYPE YYPARSE_PARAM
+#define YYPARSE_PARAM_DECL
+#else	/* ! ANSI-C/C++ */
+#define YYPARSE_PARAM_ARG YYPARSE_PARAM
+#define YYPARSE_PARAM_DECL YYPARSE_PARAM_TYPE YYPARSE_PARAM;
+#endif	/* ANSI-C/C++ */
+#endif	/* ! YYPARSE_PARAM */
+
 int
-minish_yyparse()
+minish_yyparse (YYPARSE_PARAM_ARG)
+    YYPARSE_PARAM_DECL
 {
     register int yym, yyn, minish_yystate;
 #if YYDEBUG
-    register char *minish_yys;
-    extern char *getenv();
+    register const char *minish_yys;
 
-    if (minish_yys = getenv("YYDEBUG"))
+    if ((minish_yys = getenv("YYDEBUG")))
     {
         yyn = *minish_yys;
         if (yyn >= '0' && yyn <= '9')
@@ -244,12 +316,13 @@ minish_yyparse()
     minish_yyerrflag = 0;
     minish_yychar = (-1);
 
+    if (yyss == NULL && yygrowstack()) goto yyoverflow;
     yyssp = yyss;
     yyvsp = yyvs;
     *yyssp = minish_yystate = 0;
 
 yyloop:
-    if (yyn = yydefred[minish_yystate]) goto yyreduce;
+    if ((yyn = yydefred[minish_yystate])) goto yyreduce;
     if (minish_yychar < 0)
     {
         if ((minish_yychar = minish_yylex()) < 0) minish_yychar = 0;
@@ -259,8 +332,8 @@ yyloop:
             minish_yys = 0;
             if (minish_yychar <= YYMAXTOKEN) minish_yys = yyname[minish_yychar];
             if (!minish_yys) minish_yys = "illegal-symbol";
-            printf("minish_yydebug: state %d, reading %d (%s)\n", minish_yystate,
-                    minish_yychar, minish_yys);
+            printf("%sdebug: state %d, reading %d (%s)\n",
+                    YYPREFIX, minish_yystate, minish_yychar, minish_yys);
         }
 #endif
     }
@@ -269,10 +342,10 @@ yyloop:
     {
 #if YYDEBUG
         if (minish_yydebug)
-            printf("minish_yydebug: state %d, shifting to state %d\n",
-                    minish_yystate, yytable[yyn]);
+            printf("%sdebug: state %d, shifting to state %d\n",
+                    YYPREFIX, minish_yystate, yytable[yyn]);
 #endif
-        if (yyssp >= yyss + yystacksize - 1)
+        if (yyssp >= yysslim && yygrowstack())
         {
             goto yyoverflow;
         }
@@ -289,12 +362,12 @@ yyloop:
         goto yyreduce;
     }
     if (minish_yyerrflag) goto yyinrecovery;
-#ifdef lint
+#if defined(lint) || defined(__GNUC__)
     goto yynewerror;
 #endif
 yynewerror:
     minish_yyerror("syntax error");
-#ifdef lint
+#if defined(lint) || defined(__GNUC__)
     goto yyerrlab;
 #endif
 yyerrlab:
@@ -310,10 +383,10 @@ yyinrecovery:
             {
 #if YYDEBUG
                 if (minish_yydebug)
-                    printf("minish_yydebug: state %d, error recovery shifting\
- to state %d\n", *yyssp, yytable[yyn]);
+                    printf("%sdebug: state %d, error recovery shifting\
+ to state %d\n", YYPREFIX, *yyssp, yytable[yyn]);
 #endif
-                if (yyssp >= yyss + yystacksize - 1)
+                if (yyssp >= yysslim && yygrowstack())
                 {
                     goto yyoverflow;
                 }
@@ -325,8 +398,8 @@ yyinrecovery:
             {
 #if YYDEBUG
                 if (minish_yydebug)
-                    printf("minish_yydebug: error recovery discarding state %d\n",
-                            *yyssp);
+                    printf("%sdebug: error recovery discarding state %d\n",
+                            YYPREFIX, *yyssp);
 #endif
                 if (yyssp <= yyss) goto yyabort;
                 --yyssp;
@@ -343,8 +416,8 @@ yyinrecovery:
             minish_yys = 0;
             if (minish_yychar <= YYMAXTOKEN) minish_yys = yyname[minish_yychar];
             if (!minish_yys) minish_yys = "illegal-symbol";
-            printf("minish_yydebug: state %d, error recovery discards token %d (%s)\n",
-                    minish_yystate, minish_yychar, minish_yys);
+            printf("%sdebug: state %d, error recovery discards token %d (%s)\n",
+                    YYPREFIX, minish_yystate, minish_yychar, minish_yys);
         }
 #endif
         minish_yychar = (-1);
@@ -353,8 +426,8 @@ yyinrecovery:
 yyreduce:
 #if YYDEBUG
     if (minish_yydebug)
-        printf("minish_yydebug: state %d, reducing by rule %d (%s)\n",
-                minish_yystate, yyn, yyrule[yyn]);
+        printf("%sdebug: state %d, reducing by rule %d (%s)\n",
+                YYPREFIX, minish_yystate, yyn, yyrule[yyn]);
 #endif
     yym = yylen[yyn];
     minish_yyval = yyvsp[1-yym];
@@ -365,12 +438,11 @@ case 4:
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("statement: %d\n", ++statnum);
-	dbgstop();
 #endif
 		}
 break;
 case 5:
-#line 85 "minish.yacc"
+#line 84 "minish.yacc"
 {
 			fdnum = -1;
 #if defined(YACCTEST) || defined(DEBUG)
@@ -391,7 +463,7 @@ case 5:
 		}
 break;
 case 8:
-#line 108 "minish.yacc"
+#line 107 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("option:%s\n", minish_yytext);
@@ -401,7 +473,7 @@ case 8:
 		}
 break;
 case 12:
-#line 125 "minish.yacc"
+#line 124 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("redirect:stdin/out:%s\n", minish_yytext);
@@ -418,7 +490,7 @@ case 12:
 		}
 break;
 case 13:
-#line 140 "minish.yacc"
+#line 139 "minish.yacc"
 {
 			fdnum = yyvsp[-2];
 #if defined(YACCTEST) || defined(DEBUG)
@@ -430,7 +502,7 @@ case 13:
 		}
 break;
 case 14:
-#line 152 "minish.yacc"
+#line 151 "minish.yacc"
 {
 			fdnum = STDOUT_FILENO;
 			action = MINISH_FD_WRITE;
@@ -442,7 +514,7 @@ case 14:
 		}
 break;
 case 15:
-#line 162 "minish.yacc"
+#line 161 "minish.yacc"
 {
 			fdnum = STDOUT_FILENO;
 			action = MINISH_FD_APPEND;
@@ -454,7 +526,7 @@ case 15:
 		}
 break;
 case 16:
-#line 172 "minish.yacc"
+#line 171 "minish.yacc"
 {
 			fdnum = STDIN_FILENO;
 			action = MINISH_FD_READ;
@@ -466,7 +538,7 @@ case 16:
 		}
 break;
 case 17:
-#line 182 "minish.yacc"
+#line 181 "minish.yacc"
 {
 			fdnum = STDIN_FILENO;
 			action = MINISH_FD_READWRITE;
@@ -478,7 +550,7 @@ case 17:
 		}
 break;
 case 18:
-#line 194 "minish.yacc"
+#line 193 "minish.yacc"
 {
 			fdnum = yyvsp[-2];
 			fdnum2 = yyvsp[0];
@@ -491,14 +563,14 @@ case 18:
 		}
 break;
 case 19:
-#line 207 "minish.yacc"
+#line 206 "minish.yacc"
 {
 			if (uvec_add(statement,minish_yytext))
 				rkoperror("minish : yacc : fd-red");
 		}
 break;
 case 20:
-#line 214 "minish.yacc"
+#line 213 "minish.yacc"
 {
 			fdnum = STDIN_FILENO;
 #if defined(YACCTEST) || defined(DEBUG)
@@ -511,7 +583,7 @@ case 20:
 		}
 break;
 case 21:
-#line 225 "minish.yacc"
+#line 224 "minish.yacc"
 {
 			fdnum = STDOUT_FILENO;
 #if defined(YACCTEST) || defined(DEBUG)
@@ -524,7 +596,7 @@ case 21:
 		}
 break;
 case 22:
-#line 236 "minish.yacc"
+#line 235 "minish.yacc"
 {
 			fdnum = yyvsp[-1];
 #if defined(YACCTEST) || defined(DEBUG)
@@ -537,7 +609,7 @@ case 22:
 		}
 break;
 case 23:
-#line 249 "minish.yacc"
+#line 248 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("file:%s\n", minish_yytext);
@@ -546,7 +618,7 @@ case 23:
 		}
 break;
 case 25:
-#line 258 "minish.yacc"
+#line 257 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("eoc:%s\n", minish_yytext);
@@ -574,7 +646,7 @@ case 25:
 		}
 break;
 case 26:
-#line 284 "minish.yacc"
+#line 283 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("eoc:%s\n", minish_yytext);
@@ -602,7 +674,7 @@ case 26:
 		}
 break;
 case 27:
-#line 310 "minish.yacc"
+#line 309 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("eoc:%s\n", minish_yytext);
@@ -630,7 +702,7 @@ case 27:
 		}
 break;
 case 28:
-#line 338 "minish.yacc"
+#line 337 "minish.yacc"
 {
 			minish_yyval = yyvsp[0];
 #if defined(YACCTEST) || defined(DEBUG)
@@ -644,7 +716,7 @@ case 28:
 		}
 break;
 case 29:
-#line 351 "minish.yacc"
+#line 350 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("word:%s\n", minish_yytext);
@@ -654,7 +726,7 @@ case 29:
 		}
 break;
 case 30:
-#line 360 "minish.yacc"
+#line 359 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			dump_uvec("<argv>", minish_argv);
@@ -682,7 +754,7 @@ case 30:
 				rkoperror("minish : yacc : eol : fd : dtor");
 		}
 break;
-#line 686 "y.tab.c"
+#line 758 "y.tab.c"
     }
     yyssp -= yym;
     minish_yystate = *yyssp;
@@ -692,8 +764,8 @@ break;
     {
 #if YYDEBUG
         if (minish_yydebug)
-            printf("minish_yydebug: after reduction, shifting from state 0 to\
- state %d\n", YYFINAL);
+            printf("%sdebug: after reduction, shifting from state 0 to\
+ state %d\n", YYPREFIX, YYFINAL);
 #endif
         minish_yystate = YYFINAL;
         *++yyssp = YYFINAL;
@@ -707,8 +779,8 @@ break;
                 minish_yys = 0;
                 if (minish_yychar <= YYMAXTOKEN) minish_yys = yyname[minish_yychar];
                 if (!minish_yys) minish_yys = "illegal-symbol";
-                printf("minish_yydebug: state %d, reading %d (%s)\n",
-                        YYFINAL, minish_yychar, minish_yys);
+                printf("%sdebug: state %d, reading %d (%s)\n",
+                        YYPREFIX, YYFINAL, minish_yychar, minish_yys);
             }
 #endif
         }
@@ -722,10 +794,10 @@ break;
         minish_yystate = yydgoto[yym];
 #if YYDEBUG
     if (minish_yydebug)
-        printf("minish_yydebug: after reduction, shifting from state %d \
-to state %d\n", *yyssp, minish_yystate);
+        printf("%sdebug: after reduction, shifting from state %d \
+to state %d\n", YYPREFIX, *yyssp, minish_yystate);
 #endif
-    if (yyssp >= yyss + yystacksize - 1)
+    if (yyssp >= yysslim && yygrowstack())
     {
         goto yyoverflow;
     }
