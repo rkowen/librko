@@ -37,9 +37,6 @@ DOCSL	=librko.3 $(DOCS)
 .man.3 :
 	$(NROFF) $(MAN) $< > $@
 
-avec.x : avec.c
-	$(CC) $(CFLAGS) -g -o avec.x $< -I. -L. -lrko
-
 all : $(LIB) $(DOCSL)
 	-@for d in $(DIRS); do \
 		$(ECHO) "making $$d"; \

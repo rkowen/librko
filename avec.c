@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec.c,v 1.6 2002/02/14 21:11:58 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec.c,v 1.7 2002/02/15 05:30:55 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -137,15 +137,18 @@ int avec_set_fns(enum avec_def_fns type, avec_fns *fns) {
 	if (type == AVEC_STDC) {
 		default_fns.data_add = stdc_fns.data_add;
 		default_fns.data_del = stdc_fns.data_del;
+		default_fns.data_rm = stdc_fns.data_rm;
 #ifdef HAVE_STRMALLOC
 	} else if (type == AVEC_STRMALLOC) {
 		default_fns.data_add = stdc_fns.data_add;
 		default_fns.data_del = stdc_fns.data_del;
+		default_fns.data_rm = stdc_fns.data_rm;
 #endif
 	} else if (type == AVEC_USER) {
 		if (fns == (avec_fns*) NULL
 		|| fns->data_add == NULL
-		|| fns->data_del == NULL) {
+		|| fns->data_del == NULL
+		|| fns->data_rm == NULL) {
 #ifdef RKOERROR
 			(void) rkocpyerror(
 				"avec_set_fns : null data functions!");
@@ -155,6 +158,7 @@ int avec_set_fns(enum avec_def_fns type, avec_fns *fns) {
 		}
 		default_fns.data_add = fns->data_add;
 		default_fns.data_del = fns->data_del;
+		default_fns.data_rm = fns->data_rm;
 	}
 	default_fns.type = type;
 	return 0;
@@ -384,7 +388,8 @@ avec *avec_alloc_(avec_fns fns) {
 		return av;
 	}
 	av->fns.data_add = fns.data_add;
-	av->fns.data_add = fns.data_add;
+	av->fns.data_del = fns.data_del;
+	av->fns.data_rm = fns.data_rm;
 	*(av->tag) = '\0';
 	av->number = 0;
 	av->capacity = 0;
@@ -441,6 +446,7 @@ int avec_init_(avec *av, int cap, avec_fns fns) {
 	av->number = 0;
 	av->fns.data_add = fns.data_add;
 	av->fns.data_del = fns.data_del;
+	av->fns.data_rm = fns.data_rm;
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
@@ -457,40 +463,97 @@ int avec_init(avec *av, int cap) {
 /* avec_dtor - destroy the avec (calls avec_close also) */
 int avec_dtor(avec **av, ...) {
 	int retval = 0;
-	if ((retval = avec_close(*av))) return retval;
-	if ((retval = avec_dealloc(av))) return retval;
+	if ((retval = avec_close(*av))) {
+#ifdef RKOERROR
+		(void) rkopsterror("avec_dtor : ");
+#endif
+		return retval;
+	}
+	if ((retval = avec_dealloc(av))) {
+#ifdef RKOERROR
+		(void) rkopsterror("avec_dtor : ");
+#endif
+		return retval;
+	}
 	return retval;
 }
 /* ---------------------------------------------------------------------- */
-/* avec_dealloc - deallocate the unitialized avec  */
+/* avec_dealloc - 
+ * Deallocate the avec object (hash array data elements are not touched)
+ * but the avec_element's are deallocated hence losing the keys and
+ * pointers to the data.  The user should have collected these pointers
+ * prior to this call, else there will be a massive memory leak.
+ */
 int avec_dealloc(avec **av) {
 	int retval = 0;
+	avec_element **aeptr = (avec_element **) NULL;
+
+	/* walk through hash and free elements (not data) */
+	while ((aeptr = avec_walk_r(*av,aeptr))) {
+		if ((retval = avec_dealloc_element(aeptr))) {
+#ifdef RKOERROR
+			(void) rkopsterror("avec_dealloc : ");
+			rkoerrno = RKOMEMERR;
+#endif
+			return retval;
+		}
+	}
+	/* free hash */
+	free ((*av)->hash);
+	(*av)->hash = (avec_element **) NULL;
+
+	/* clear tag to prevent accidental re-aquisition */
+	*((*av)->tag) = '\0';
+
+	/* free avec object */
 	free (*av);
 	*av = (avec *) NULL;
 	return retval;
 }
 /* ---------------------------------------------------------------------- */
-/* avec_close - destroy the avec contents */
+/* avec_close - destroy the avec contents - data and keys */
 int avec_close(avec *av, ...) {
-	int i;
-	va_list args;
+	int retval = 0;
+	va_list vargs;
+	avec_element **aeptr = (avec_element **) NULL;
 
 	if (av == (avec *) NULL) {
 #ifdef RKOERROR
-		(void) rkocpyerror("avec_dtor : null pointer!");
+		(void) rkocpyerror("avec_close : null pointer!");
 		rkoerrno = RKOUSEERR;
 #endif
 		return -1;
 	}
-	*(av->tag) = '\0';
-	for (i = 0; i < av->number; ++i) {
-		(av->fns.data_del)(&(av->hash[i]->data), args);
-		av->hash[i]->data = (char *) NULL;
+
+	/* get variable arg pointer */
+	va_start(vargs,av);
+
+	/* walk through hash and free elements, first destroy data */
+	while ((aeptr = avec_walk_r(av,aeptr))) {
+		/* destroy data with data_rm */
+		if ((retval = (av->fns.data_rm)(&((*aeptr)->data), vargs))) {
+#ifdef RKOERROR
+			if (rkostrerror()) {
+				(void) rkopsterror("avec_close : ");
+			} else {
+				(void) rkocpyerror("avec_close : "
+				" unspecified data_rm error");
+				rkoerrno = RKOMEMERR;
+			}
+#endif
+			return retval;
+		}
+		/* destroy the hash elements */
+		if ((retval = avec_dealloc_element(aeptr))) {
+#ifdef RKOERROR
+			(void) rkopsterror("avec_close : ");
+			rkoerrno = RKOMEMERR;
+#endif
+			return retval;
+		}
 	}
-	free(av->hash);
-	av->hash = (avec_element **) NULL;
-	av->capacity = 0;
 	av->number = 0;
+
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
@@ -986,260 +1049,3 @@ avec_element const * const *avec_hash(avec *av) {
 	return (avec_element const * const *) av->hash;
 }
 
-/* rudimentary test code */
-
-#include <stdio.h>
-#include "uvec.h"
-
-char testbuf[512];
-
-int printout(avec *av, char const *head, int err, char const *ans) {
-	char const * const * vec;
-	uvec *uv;
-	sprintf(testbuf,"e:%d c:%d n:%d",
-		err, avec_capacity(av), avec_number(av));
-	if (avec_exists(av)) {
-		strcat(testbuf," k:");
-		vec = avec_keys(av);
-		uv = uvec_alloc();
-		uvec_copy_vec(uv, vec, 0);
-		strcat(testbuf, uvec2str(uv, "|"));
-		free((void *)vec);
-		uvec_dealloc(&uv);
-
-		strcat(testbuf," v:");
-		vec = (char const * const *) avec_values(av);
-		uv = uvec_alloc();
-		uvec_copy_vec(uv, vec, 0);
-		strcat(testbuf, uvec2str(uv, "|"));
-		free((void *)vec);
-		uvec_dealloc(&uv);
-	}
-	if (strcmp(testbuf, ans)) {
-		printf("FAIL:%-20s=\n    <\t%s\n    >\t%s\n",head,testbuf,ans);
-		return 1;
-	} else {
-		printf("OK  :%-20s=\n\t%s\n",head,testbuf);
-		return 0;
-	}
-# ifdef RKOERROR
-	if (rkoerrno != RKO_OK) {
-		printf("%s\n", rkostrerror());
-	}
-# endif
-}
-
-int verify(avec *av, char const *head) {
-	int    retval = 0;
-	avec_element **aeptr;
-	char **ptr;
-	int    index;
-	char  *keys[] = {
-		"first",
-		"second",
-		"third",
-		"fourth",
-		"fifth",
-		"sixth",
-		"seventh",
-		(char *) NULL
-	};
-	char  *values[] = {
-		"=1=",
-		(char *) NULL,
-		"=3=",
-		"=4=",
-		"=5=",
-		"=6=",
-		(char *) NULL,
-		(char *) NULL
-	};
-	char *key, *val;
-
-	printf("========================\n%s\n========================\n",
-		head);
-	aeptr = avec_walk(av);
-	do {
-		key = (char *)(*aeptr)->key;
-		val = (char *)(*aeptr)->data;
-		ptr = keys;
-		index = 0;
-		while (*ptr) {	/* find the associatiate value */
-			if (!strcmp(*ptr, key)) break;
-			ptr++;
-			index++;
-		}
-		if (!strcmp(values[index], val)) {
-			printf("OK  >");
-		} else {
-			printf("FAIL>");
-			retval = 1;
-		}
-		printf("\tkey: %s val: %s\n", key, val);
-	} while ((aeptr = avec_walk(NULL)));
-
-	ptr = keys;
-	index = 0;
-	while (*ptr) {
-		key = *ptr;
-		val = avec_lookup(av, *ptr);
-		if (values[index] == (char *)NULL
-		||  val == (char *) NULL) {
-			if (values[index] == (char *)NULL
-			&&  val == (char *) NULL) {
-				printf("OK  >");
-				val = "(NULL)";
-			} else {
-				printf("FAIL>");
-				retval = 1;
-			}
-		} else if (!strcmp(values[index], val)) {
-			printf("OK  >");
-		} else {
-			printf("FAIL>");
-			retval = 1;
-		}
-		printf("\t%s -> %s\n", *ptr, val);
-		ptr++;
-		index++;
-	}
-	printf("========================\n");
-	return retval;
-}
-
-#define _CHECK(c, v, a) \
-	count++; estat = c; \
-	results += printout(&(v), #c, estat, a);
-
-int str_Xmalloc (void **data, va_list ap) {
-	char *newstr;
-	char const *str = va_arg(ap,char *);
-	if (!data) return -1;
-	if (*data) {
-		newstr = strnmalloc((char const *)*data,
-			strlen((char const *)*data) + strlen(str) + 1);
-		strcat(newstr, str);
-		strfree((char **)data);
-		*data = (void *) newstr;
-		return 1;
-	}
-	if((*data = (void *) strmalloc(str))) return 0;
-	return -2;
-}
-
-avec_fns user_fns = {
-	AVEC_USER,
-	str_Xmalloc,
-	str_free
-};
-
-int main () {
-	avec *x, *y;
-	int count=0, results=0;
-	int estat;
-
-	x = avec_ctor(10);
-	_CHECK(avec_number(x),*x,
-		"e:0 c:11 n:0 k: v:");
-	_CHECK(avec_capacity(x),*x,
-		"e:11 c:11 n:0 k: v:");
-	_CHECK(avec_resize_percentage(x,0),*x,
-		"e:0 c:11 n:0 k: v:");
-	_CHECK(avec_resize_percentage(x,40),*x,
-		"e:0 c:11 n:0 k: v:");
-	_CHECK(avec_resize_percentage(x,0),*x,
-		"e:40 c:11 n:0 k: v:");
-	_CHECK(avec_insert(x,"first","=1="),*x,
-		"e:0 c:11 n:1 k:first v:=1=");
-	_CHECK(avec_insert(x,"second","=2="),*x,
-		"e:0 c:11 n:2 k:second|first v:=2=|=1=");
-	_CHECK(avec_insert(x,"second","#2#"),*x,
-		"e:1 c:11 n:2 k:second|first v:=2=|=1=");
-	_CHECK(avec_insert(x,"third","=3="),*x,
-		"e:0 c:11 n:3 k:second|third|first v:=2=|=3=|=1=");
-	_CHECK(avec_delete(x,"second"),*x,
-		"e:0 c:11 n:2 k:third|first v:=3=|=1=");
-	_CHECK(avec_insert(x,"second","=2="),*x,
-		"e:0 c:11 n:3 k:second|third|first v:=2=|=3=|=1=");
-	_CHECK(avec_insert(x,"fourth","=4="),*x,
-	"e:0 c:11 n:4 k:second|third|first|fourth v:=2=|=3=|=1=|=4=");
-	_CHECK(avec_insert(x,"fifth","=5="),*x,
-	"e:0 c:23 n:5 k:first|second|third|fourth|fifth v:=1=|=2=|=3=|=4=|=5=");
-	_CHECK(avec_insert(x,"sixth","=6="),*x,
-	"e:0 c:23 n:6 k:first|sixth|second|third|fourth|fifth v:=1=|=6=|=2=|=3=|=4=|=5=");
-	_CHECK(avec_delete(x,"forth"),*x,
-	"e:-1 c:23 n:6 k:first|sixth|second|third|fourth|fifth v:=1=|=6=|=2=|=3=|=4=|=5=");
-	_CHECK(avec_delete(x,"second"),*x,
-	"e:0 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
-	_CHECK(avec_resize(x,4),*x,
-	"e:-3 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
-	_CHECK(avec_increase(x,4),*x,
-	"e:-2 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
-	_CHECK(avec_decrease(x,4),*x,
-	"e:-3 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
-	_CHECK(avec_decrease(x,25),*x,
-	"e:-2 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
-	_CHECK(avec_resize(x,14),*x,
-	"e:0 c:17 n:5 k:fourth|first|third|fifth|sixth v:=4=|=1=|=3=|=5=|=6=");
-	_CHECK(avec_resize(x,6),*x,
-	"e:0 c:7 n:5 k:first|fourth|fifth|third|sixth v:=1=|=4=|=5=|=3=|=6=");
-
-	count++;
-	results += verify(x, "Default avec_fns");
-
-	y = avec_ctor_(10, user_fns);
-	_CHECK(avec_number(y),*y,
-		"e:0 c:11 n:0 k: v:");
-	_CHECK(avec_capacity(y),*y,
-		"e:11 c:11 n:0 k: v:");
-	_CHECK(avec_resize_percentage(y,0),*y,
-		"e:0 c:11 n:0 k: v:");
-	_CHECK(avec_resize_percentage(y,40),*y,
-		"e:0 c:11 n:0 k: v:");
-	_CHECK(avec_resize_percentage(y,0),*y,
-		"e:40 c:11 n:0 k: v:");
-	_CHECK(avec_insert(y,"first","=1="),*y,
-		"e:0 c:11 n:1 k:first v:=1=");
-	_CHECK(avec_insert(y,"second","=2="),*y,
-		"e:0 c:11 n:2 k:second|first v:=2=|=1=");
-	_CHECK(avec_insert(y,"second","#2#"),*y,
-		"e:1 c:11 n:2 k:second|first v:=2=#2#|=1=");
-	_CHECK(avec_insert(y,"third","=3="),*y,
-		"e:0 c:11 n:3 k:second|third|first v:=2=#2#|=3=|=1=");
-	_CHECK(avec_delete(y,"second"),*y,
-		"e:0 c:11 n:2 k:third|first v:=3=|=1=");
-	_CHECK(avec_insert(y,"second","=2="),*y,
-		"e:0 c:11 n:3 k:second|third|first v:=2=|=3=|=1=");
-	_CHECK(avec_insert(y,"fourth","=4="),*y,
-	"e:0 c:11 n:4 k:second|third|first|fourth v:=2=|=3=|=1=|=4=");
-	_CHECK(avec_insert(y,"fifth","=5="),*y,
-	"e:0 c:23 n:5 k:first|second|third|fourth|fifth v:=1=|=2=|=3=|=4=|=5=");
-	_CHECK(avec_insert(y,"sixth","=6="),*y,
-	"e:0 c:23 n:6 k:first|sixth|second|third|fourth|fifth v:=1=|=6=|=2=|=3=|=4=|=5=");
-	_CHECK(avec_delete(y,"forth"),*y,
-	"e:-1 c:23 n:6 k:first|sixth|second|third|fourth|fifth v:=1=|=6=|=2=|=3=|=4=|=5=");
-	_CHECK(avec_delete(y,"second"),*y,
-	"e:0 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
-	_CHECK(avec_resize(y,4),*y,
-	"e:-3 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
-	_CHECK(avec_increase(y,4),*y,
-	"e:-2 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
-	_CHECK(avec_decrease(y,4),*y,
-	"e:-3 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
-	_CHECK(avec_decrease(y,25),*y,
-	"e:-2 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
-	_CHECK(avec_resize(y,14),*y,
-	"e:0 c:17 n:5 k:fourth|first|third|fifth|sixth v:=4=|=1=|=3=|=5=|=6=");
-	_CHECK(avec_resize(y,6),*y,
-	"e:0 c:7 n:5 k:first|fourth|fifth|third|sixth v:=1=|=4=|=5=|=3=|=6=");
-
-	count++;
-	results += verify(y, "User avec_fns");
-
-	if (results) {
-		printf("There were %d failures in %d tests\n", results, count);
-	} else {
-		printf("There were no failures in %d tests\n", count);
-	}
-	return results;
-}

@@ -1,7 +1,7 @@
 #ifndef _AVEC_H_
 #  define _AVEC_H_
 /* 
- * RCSID @(#)$Id: avec.h,v 1.5 2002/02/14 21:11:58 rk Exp $
+ * RCSID @(#)$Id: avec.h,v 1.6 2002/02/15 05:30:55 rk Exp $
  */
 /*
  *********************************************************************
@@ -85,11 +85,12 @@ int    avec_insert(avec *av, char const *key, ...);
 int    avec_delete(avec *av, char const *key, ...);
 void  *avec_lookup(avec *av, char const *key);
 
-avec_element  **avec_walk_r(avec *av, avec_element **ptrptr);
-avec_element  **avec_walk(avec *av);
-char const * const *avec_keys(avec *av);
-void **avec_values(avec *av);
-avec_element const * const *avec_hash(avec *av);
+avec_element             **avec_walk_r(avec *av, avec_element **ptrptr);
+avec_element             **avec_walk(avec *av);
+char const * const        *avec_keys(avec *av);
+void                     **avec_values(avec *av);
+avec_element const *const *avec_hash(avec *av);
+
 
 #  ifdef __cplusplus
 	}
