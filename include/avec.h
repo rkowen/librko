@@ -1,7 +1,7 @@
 #ifndef _AVEC_H_
 #  define _AVEC_H_
 /* 
- * RCSID @(#)$Id: avec.h,v 1.3 2002/02/12 23:00:26 rk Exp $
+ * RCSID @(#)$Id: avec.h,v 1.4 2002/02/13 23:00:59 rk Exp $
  */
 /*
  *********************************************************************
@@ -51,6 +51,9 @@ typedef struct {
 	avec_element	**hash;		/* container for keys & data */
 	int		  number;	/* current number of hash */
 	int		  capacity;	/* the possible capacity of hash */
+	int		  percentage;	/* percentage of capacity that
+					   forces a resize larger 
+					   (< 0 = no resizeing )*/
 	avec_fns	  fns;		/* which alloc fns to use */
 } avec;
 
@@ -71,7 +74,9 @@ int    avec_close(avec *av, ...);
 int    avec_exists(avec const *av);
 int    avec_capacity(avec const *av);
 int    avec_number(avec const *av);
+int    avec_resize_percentage(avec *av, int percentage);
  
+int    avec_resize(avec *av, int newcap);
 int    avec_increase(avec *av, int newcap);
 int    avec_decrease(avec *av, int newcap);
 

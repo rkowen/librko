@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec.c,v 1.4 2002/02/12 23:00:26 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec.c,v 1.5 2002/02/13 23:00:59 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -174,6 +174,35 @@ static int avec_hash_cap(int cap) {
 /* next larger prime */
 	while (iprime(cap) != 1) ++cap;
 	return cap;
+}
+
+/* avec_do_resize - returns 1 if a avec_resize should be done,
+ * else 0;
+ */
+static int avec_do_resize(avec const *av) {
+	if (av->percentage < 0) return 0;
+	if (av->percentage * av->capacity < 100 * av->number) return 1;
+	return 0;
+}
+
+
+/* avec_alloc_hash - does the memory allocation of the hash array
+ * returns NULL if an error
+ */
+static avec_element **avec_alloc_hash(int cap) {
+	avec_element **hash = (avec_element **) NULL;
+
+	if (cap < 0) return hash;
+
+	if (!(hash = (avec_element **)
+		calloc(cap, sizeof(avec_element)))) {
+#ifdef RKOERROR
+		(void) rkocpyerror("avec_alloc_hash : malloc error!");
+		rkoerrno = RKOMEMERR;
+#endif
+		return hash;
+	}
+	return hash;
 }
 
 /* avec_dealloc_element - deallocates the memory for an element and returns 0
@@ -401,11 +430,9 @@ int avec_init_(avec *av, int cap, avec_fns fns) {
 
 	newcap = avec_hash_cap(cap);
 
-	if (!(av->hash = (avec_element **)
-		calloc(newcap, sizeof(avec_element)))) {
+	if (!(av->hash = avec_alloc_hash(newcap))) {
 #ifdef RKOERROR
-		(void) rkocpyerror("avec_init : malloc error!");
-		rkoerrno = RKOMEMERR;
+		(void) rkopsterror("avec_init : ");
 #endif
 		return -4;
 	}
@@ -469,52 +496,6 @@ int avec_close(avec *av, ...) {
 #endif
 	return 0;
 }
-/* ---------------------------------------------------------------------- */
-/* avec_increase - internal function to increase the size of vector
- * if newcap <= 0 then increase by default size else compute  new capacity
- */
-int avec_increase(avec *av, int newcap) {
-	int i;
-
-	newcap = (newcap <= 0 ? AVECNEXTCAP(av->capacity) : newcap);
-	if (!(av->hash = (avec_element **) realloc(av->hash,
-		newcap*sizeof(char *)))) {
-#ifdef RKOERROR
-		(void) rkocpyerror("avec_increase : realloc error!");
-		rkoerrno = RKOMEMERR;
-#endif
-		return -1;
-	}
-	av->capacity = newcap;
-	/* zero out extra capacity */
-	for (i = av->number; i < av->capacity; ++i)
-		av->hash[i] = (avec_element *) NULL;
-#ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#endif
-	return 0;
-}
-/* ---------------------------------------------------------------------- */
-/* avec_decrease - internal function to decrease the size of vector
- * if newcap <= 0 then decrease by default size else compute  new capacity
- */
-int avec_decrease(avec *av, int newcap) {
-
-	newcap = (newcap <= 0 ? AVECPREVCAP(av->capacity) : newcap);
-	if (!(av->hash = (avec_element **) realloc(av->hash,
-		newcap*sizeof(char *)))) {
-#ifdef RKOERROR
-		(void) rkocpyerror("avec_decrease : realloc error!");
-		rkoerrno = RKOMEMERR;
-#endif
-		return -1;
-	}
-	av->capacity = newcap;
-#ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#endif
-	return 0;
-}
 
 /* ---------------------------------------------------------------------- */
 /* accessor functions */
@@ -571,6 +552,41 @@ int avec_number(avec const *av) {
 	}
 }
 
+/* avec_resize_percentage - sets/gets the percentage size of number/capacity
+ *	that will cause an automatic resize larger.
+ *
+ *	Set percentage 0 to return the current value.
+ *	It will return 0 if no resizing is done.
+ *	Set percentage < 0 to disable resizing.
+ *	And don't set less than 10 or more than 70.
+ *
+ *	An automatic resize will approximately double the capacity.
+ */
+
+int avec_resize_percentage(avec *av, int percentage) {
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	if (!avec_exists(av)) {
+#ifdef RKOERROR
+		(void) rkopsterror("avec_resize_percentage : ");
+#endif
+		return -1;
+	}
+	if (percentage == 0) {
+		return (av->percentage < 0 ? 0 : av->percentage);
+	} else if (percentage < 10 || percentage > 70) {
+#ifdef RKOERROR
+		(void) rkocaterror("avec_resize_percentage : out of range");
+		rkoerrno = RKOUSEERR;
+#endif
+		return -2;
+	} else {
+		av->percentage = percentage;
+	}
+	return 0;
+}
+
 /* ---------------------------------------------------------------------- */
 /* avec_insert - insert an element into the hash table,
  * returns 0 if the insert was successful.
@@ -613,6 +629,14 @@ int avec_insert(avec *av, char const *key, ...) {
 			return retval;
 		}
 		av->number++;
+		if (avec_do_resize(av)) {
+			if ((retval = avec_resize(av,0)) < 0) {
+#ifdef RKOERROR
+				rkopsterror("avec_insert : ");
+#endif
+				return retval;
+			}
+		}
 		return 0;
 	} else { /* value already exists - pass off to data_add anyways */
 		retval = (av->fns.data_add)(&((*elem)->data), vargs);
@@ -668,6 +692,131 @@ int avec_delete(avec *av, char const *key, ...) {
 	rkoerrno = RKO_OK;
 #endif
 	return 0;
+}
+
+/* ---------------------------------------------------------------------- */
+/* avec_resize - expands the hash array to the new capacity.
+ * If the capacity is given as 0, then will automatically set it about
+ * twice the current capacity.
+ * Returns 0 if successful else returns < 0 if an error
+ */
+int avec_resize(avec *av, int newcap) {
+	int		  oldcap;	/* old capacity */
+	avec_element	**hash,		/* hash to store elements */
+			**ptrptr,	/* marching ptr */
+			**elem;		/* the new place for the element */
+
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	if (!avec_exists(av)) {
+#ifdef RKOERROR
+		(void) rkopsterror("avec_resize : ");
+#endif
+		return -1;
+	}
+
+	/* keep the old hash here */
+	hash = av->hash;
+	oldcap = av->capacity;
+
+	/* determine the new capacity */
+	if (newcap <= 0) {
+		newcap = avec_hash_cap(2*av->capacity);
+	} else if (newcap < av->number) {
+#ifdef RKOERROR
+		(void) rkocpyerror("avec_resize : "
+			"new capacity can not handle current data");
+#endif
+		return -2;
+	}
+
+	/* set up new hash */
+	if (!(av->hash = avec_alloc_hash(newcap))) {
+#ifdef RKOERROR
+		(void) rkopsterror("avec_resize : ");
+#endif
+		return -3;
+	}
+	av->capacity = newcap;
+
+	/* start walk through old hash and reassign to new hash */
+	ptrptr = hash;
+	ptrptr--;	/* backup one */
+	while ((++ptrptr - hash) < oldcap) {
+		if (ptrptr && *ptrptr) {	/* found an element */
+			if (!(elem = avec_hash_search(AVEC_NEXT, av,
+				(*ptrptr)->key))) {
+#ifdef RKOERROR
+				rkopsterror("avec_resize : ");
+#endif
+				return -4;
+			} else {		/* got a place */
+				*elem = *ptrptr;
+			}
+		}
+	}
+
+	return 0;
+}
+
+/* ---------------------------------------------------------------------- */
+/* avec_increase - increase the size of the hash
+ * if newcap <= 0 then increase by default size else compute  new capacity
+ * returns 0 if OK, else < 0
+ */
+int avec_increase(avec *av, int newcap) {
+
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	if (!avec_exists(av)) {
+#ifdef RKOERROR
+		(void) rkopsterror("avec_increase : ");
+#endif
+		return -1;
+	}
+
+	if (0 < newcap && newcap <= av->capacity) {
+#ifdef RKOERROR
+		rkoerrno = RKOUSEERR;
+		(void) rkocpyerror("avec_increase : can not decrease capacity");
+#endif
+		return -2;
+	}
+	return avec_resize(av, newcap);
+}
+
+/* ---------------------------------------------------------------------- */
+/* avec_decrease - decrease the size of the hash
+ * returns 0 if OK, else < 0
+ */
+int avec_decrease(avec *av, int newcap) {
+
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	if (!avec_exists(av)) {
+#ifdef RKOERROR
+		(void) rkopsterror("avec_decrease : ");
+#endif
+		return -1;
+	}
+
+	if (newcap >= av->capacity) {
+#ifdef RKOERROR
+		rkoerrno = RKOUSEERR;
+		(void) rkocpyerror("avec_decrease : can not decrease capacity");
+#endif
+		return -2;
+	} else if (newcap <= 0) {
+#ifdef RKOERROR
+		rkoerrno = RKOUSEERR;
+		(void) rkocpyerror("avec_decrease : no default capacity");
+#endif
+		return -2;
+	}
+	return avec_resize(av, newcap);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -751,7 +900,7 @@ char const * const *avec_keys(avec *av) {
 		return retval;
 	}
 	if (!(retval = (char const * const *)
-			calloc(av->capacity, sizeof(char const *)))) {
+			calloc(av->number + 1, sizeof(char const *)))) {
 #ifdef RKOERROR
 		(void) rkocpyerror("avec_keys : malloc error!");
 		rkoerrno = RKOMEMERR;
@@ -759,7 +908,7 @@ char const * const *avec_keys(avec *av) {
 		return retval;
 	}
 
-	if (!av->capacity) return retval;	/* empty vector */
+	if (!av->number) return retval;	/* empty vector */
 	aeptr = avec_walk_r(av, NULL);
 	ptr = (char const **) retval;
 	do {
@@ -788,7 +937,7 @@ void **avec_values(avec *av) {
 #endif
 		return retval;
 	}
-	if (!(retval = (void **) calloc(av->capacity, sizeof(void *)))) {
+	if (!(retval = (void **) calloc(av->number + 1, sizeof(void *)))) {
 #ifdef RKOERROR
 		(void) rkocpyerror("avec_values : malloc error!");
 		rkoerrno = RKOMEMERR;
@@ -796,7 +945,7 @@ void **avec_values(avec *av) {
 		return retval;
 	}
 
-	if (!av->capacity) return retval;	/* empty vector */
+	if (!av->number) return retval;	/* empty vector */
 	aeptr = avec_walk_r(av, NULL);
 	ptr = retval;
 	do {
@@ -859,6 +1008,11 @@ int printout(avec *av, char const *head, int err, char const *ans) {
 		printf("OK  :%-20s=\n\t%s\n",head,testbuf);
 		return 0;
 	}
+# ifdef RKOERROR
+	if (rkoerrno != RKO_OK) {
+		printf("%s\n", rkostrerror());
+	}
+# endif
 }
 
 #define _CHECK(c, v, a) \
@@ -866,23 +1020,35 @@ int printout(avec *av, char const *head, int err, char const *ans) {
 	results += printout(&(v), #c, estat, a);
 
 int main () {
-	avec u,v, *x, *y;
+	avec *x, *y;
 	int count=0, results=0;
 	int estat;
 	avec_element **aeptr;
 	char const * const *vec;
-	uvec *uvk, *uvd;
+	uvec *uv;
 	char **ptr;
 	char *keys[] = {
 		"first",
 		"second",
 		"third",
+		"fourth",
+		"fifth",
+		"sixth",
+		"seventh",
 		(char *) NULL
 	};
 
 	x = avec_ctor(10);
-	printf ("num=%d\n", avec_number(x));
-	printf ("cap=%d\n", avec_capacity(x));
+	_CHECK(avec_number(x),*x,
+		"e:0 c:11 n:0 k: v:");
+	_CHECK(avec_capacity(x),*x,
+		"e:11 c:11 n:0 k: v:");
+	_CHECK(avec_resize_percentage(x,0),*x,
+		"e:0 c:11 n:0 k: v:");
+	_CHECK(avec_resize_percentage(x,40),*x,
+		"e:0 c:11 n:0 k: v:");
+	_CHECK(avec_resize_percentage(x,0),*x,
+		"e:40 c:11 n:0 k: v:");
 	_CHECK(avec_insert(x,"first","=1="),*x,
 		"e:0 c:11 n:1 k:first v:=1=");
 	_CHECK(avec_insert(x,"second","=2="),*x,
@@ -893,6 +1059,28 @@ int main () {
 		"e:0 c:11 n:3 k:second|third|first v:=2=|=3=|=1=");
 	_CHECK(avec_delete(x,"second"),*x,
 		"e:0 c:11 n:2 k:third|first v:=3=|=1=");
+	_CHECK(avec_insert(x,"second","=2="),*x,
+		"e:0 c:11 n:3 k:second|third|first v:=2=|=3=|=1=");
+	_CHECK(avec_insert(x,"fourth","=4="),*x,
+	"e:0 c:11 n:4 k:second|third|first|fourth v:=2=|=3=|=1=|=4=");
+	_CHECK(avec_insert(x,"fifth","=5="),*x,
+	"e:0 c:23 n:5 k:first|second|third|fourth|fifth v:=1=|=2=|=3=|=4=|=5=");
+	_CHECK(avec_insert(x,"sixth","=6="),*x,
+	"e:0 c:23 n:6 k:first|sixth|second|third|fourth|fifth v:=1=|=6=|=2=|=3=|=4=|=5=");
+	_CHECK(avec_delete(x,"forth"),*x,
+	"e:-1 c:23 n:6 k:first|sixth|second|third|fourth|fifth v:=1=|=6=|=2=|=3=|=4=|=5=");
+	_CHECK(avec_delete(x,"second"),*x,
+	"e:0 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
+	_CHECK(avec_resize(x,4),*x,
+	"e:-2 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
+	_CHECK(avec_increase(x,4),*x,
+	"e:-2 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
+	_CHECK(avec_decrease(x,4),*x,
+	"e:-2 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
+	_CHECK(avec_decrease(x,25),*x,
+	"e:-2 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
+	_CHECK(avec_resize(x,14),*x,
+	"xxx");
 
 	aeptr = avec_walk(x);
 	do {
@@ -901,12 +1089,17 @@ int main () {
 	} while ((aeptr = avec_walk(NULL)));
 
 	vec = avec_keys(x);
-	uvec_copy_vec(uvk, vec, 0);
-	printf("keys=%s\n", uvec2str(uvk, " | "));
+	uv = uvec_alloc();
+	uvec_copy_vec(uv, vec, 0);
+	printf("keys=%s\n", uvec2str(uv, " | "));
+	free((void *) vec);
+	uvec_dealloc(&uv);
 
 	vec = (char const * const *) avec_values(x);
-	uvec_copy_vec(uvd, vec, 0);
-	printf("values=%s\n", uvec2str(uvd, " | "));
+	uvec_copy_vec(uv, vec, 0);
+	printf("values=%s\n", uvec2str(uv, " | "));
+	free((void *) vec);
+	uvec_dealloc(&uv);
 
 	ptr = keys;
 	while (*ptr) {
