@@ -10,6 +10,9 @@
 #ifdef RKOERROR
 #  include "rkoerror.h"
 #endif
+#ifdef MEMDEBUG
+#  include "memdebug.h"
+#endif
 
 FILE *output;
 
@@ -102,7 +105,7 @@ int main() {
 	output = stdout;
 
 #ifdef MEMDEBUG
-	memdbg_output(output);
+	memdebug_output(output);
 #endif
 
 	_CHECK(uvec_init(&u,30), u,
@@ -281,8 +284,9 @@ int main() {
 	"e:0 c:3 n:2 r:a\\:ababc")
 	_CHECK(uvec_close(&v), v,
 	"e:0 c:-1 n:-1 r:")
+	_CHECK(uvec_close(&u), u,
+	"e:0 c:-1 n:-1 r:")
 
-	/* intentional memory leak in this section */
 	_CHECK((x = str2uvec(":", "a:ab:abc"),rkoerrno), *x,
 	"e:0 c:4 n:3 r:aababc")
 	_CHECK(uvec_dtor(&x), *x, "e:0 c:-1 n:-1 r:")
@@ -295,7 +299,7 @@ int main() {
 	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
 	if(strfree(&vec)) fprintf(output,">>> strfree error\n");;
 	_CHECK(uvec_dtor(&x), *x, "e:0 c:-1 n:-1 r:")
-	_CHECK((x = str2uvec(":", uvec2str(y,";")),rkoerrno), *x,
+	_CHECK((x = str2uvec(":", vec=uvec2str(y,";")),rkoerrno), *x,
 	"e:0 c:11 n:10 r:xyz;ABC;aaa;bbb;XYZ;AAA;bb;abc;ABC")
 	if(strfree(&vec)) fprintf(output,">>> strfree error\n");;
 	_CHECK(uvec_dtor(&x), *x, "e:0 c:-1 n:-1 r:")
