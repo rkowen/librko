@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: invoke.man,v 1.3 1999/03/25 15:08:31 rk Exp $
+.\" RCSID @(#)$Id: invoke.man,v 1.4 2002/03/01 05:23:28 rk Exp $
 .\" LIBDIR
 .TH "INVOKE" "3rko" "2 Jun 1995"
 .SH NAME
@@ -9,7 +9,7 @@ for the process is returned.
 
 .nf
 #include <stdio.h>
-#include "librko.h"
+#include "coexec.h"
 
 FILE *invoke(char **argv);
 .fi
@@ -27,7 +27,8 @@ This is a better \`\`system( \.\.\. )\'\' function since the output
 is returned directly as a FILE stream.
 
 .SH SEE ALSO
-execvp(2),fork(2),pipe(2),fclose(3),wait(2),system(3),uvec(3rko)
+coexec(3rko),spawn(3rko),uvec(3rko),
+execvp(2),fork(2),pipe(2),fclose(3),wait(2),system(3)
 
 .SH NOTES
 
@@ -43,7 +44,9 @@ close the file stream and wait for the child process.
 
 .SH DIAGNOSTICS
 
-Any errors are output to stderr.
+The errors are handled by rkoperror() (if RKOERROR is defined),
+else it goes to stderr.
+In either case, all child process errors go to stderr.
 
 .SH BUGS
 None discovered yet.

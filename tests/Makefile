@@ -5,7 +5,7 @@ SRCS = \
 	tansi_seq.c tfoptim.c tfzeroin.c tmacrosub.c \
 	tmemdbg.c tmemory.c tnameread.c tstrchop.c tstrmem.c \
 	ttfgets.c twcstrcmp.c tuvec.c tavec.c tstrdbecpy.c tlist.c \
-	tdirtree.c tinvoke.c tspawn.c tgcd.c tisqrt.c tiprime.c \
+	tdirtree.c tinvoke.c tspawn.c tfilter.c tgcd.c tisqrt.c tiprime.c \
 	tstrmalloc.c tclocker.c
 
 XEXES = birdy kitty doggy
@@ -74,5 +74,5 @@ clean :
 	-$(RM) *.o *_m.o a.out core
 
 clobber : clean
-	-$(RM) *.x *.m
+	-$(RM) *.x *.m $(XEXES)
 	-$(RM) -rf tdir

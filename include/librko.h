@@ -1,7 +1,7 @@
 #ifndef _LIBRKO_H_
 #  define _LIBRKO_H_
 /* 
- * RCSID @(#)$Id: librko.h,v 1.22 2002/02/27 22:29:53 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.23 2002/03/01 05:23:28 rk Exp $
  */
 /*
  *********************************************************************
@@ -60,11 +60,12 @@ extern "C" {
 #  include "avec.h"
 #  include "urand.h"
 
-FILE * invoke(char ** argv);
-int    spawn(FILE **childin, FILE **childout, char ** argv);
-FILE * prefilter(FILE *instream, char ** argv);
-FILE * postfilter(FILE *outstream, char ** argv);
-int closefilter(FILE *filterstream);
+FILE *invoke(char ** argv);
+int   spawn(FILE **childin, FILE **childout, char ** argv);
+FILE *prefilter(FILE *instream, char ** argv);
+FILE *postfilter(FILE *outstream, char ** argv);
+int   closefilter(FILE *filterstream);
+
 int timedfgets(char *buf, int size, FILE *stream, int seconds);
 struct hostent *gethostbyX(char *hostX);
 int tcp_connect(char *hostname, int port_num);

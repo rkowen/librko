@@ -36,5 +36,4 @@ LEX	=flex
 LEXFLAGS=
 YACC	=yacc
 YYFLAGS	=-v -d -t
-YYSED	=../etc/yy-sed
 #

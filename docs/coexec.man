@@ -1,8 +1,8 @@
-.\" RCSID @(#)$Id: spawn.man,v 1.2 2002/03/01 05:23:28 rk Exp $
+.\" RCSID @(#)$Id: coexec.man,v 1.1 2002/03/01 05:23:28 rk Exp $
 .\" LIBDIR
-.TH "SPAWN" "3rko" "2 Jun 1995"
+.TH "COEXEC" "3rko" "28 Feb 2002"
 .SH NAME
-spawn \- spawn a child process with stdin and stdout stream communication.
+coexec \- a collection of routines communication to other executables.
 
 .SH SYNOPSIS
 
@@ -10,28 +10,34 @@ spawn \- spawn a child process with stdin and stdout stream communication.
 #include <stdio.h>
 #include "coexec.h"
 
-int spawn(FILE **childin, FILE **childout, char **argv);
+FILE *preprocess(FILE *instream, char **argv, int fd);
+FILE *postprocess(FILE *outstream, char **argv, int fd);
+
+FILE *prefilter(FILE *instream, char **argv);
+FILE *postfilter(FILE *outstream, char **argv);
+int   closefilter(FILE *filterstream);
+
+FILE *invoke(char **argv);
+int   spawn(FILE **childin, FILE **childout, char **argv);
+
 .fi
 
 .SH DESCRIPTION
+.I invoke
+returns a file pointer to the stdout of the child process, unless
+there is an error, then it returns (FILE *) NULL.
+.br
 .I spawn
 sets up a child process and communications to the process via the
 stdin and stdout FILE streams.
+.br
 .I argv
 is a command vector, where argv[0] is the executable to run, and
 argv[1],... are the commandline options.
 Must have the last one argv[N] = NULL to terminate the vector.
 
-.I spawn
-returns 0 if successful, else < 0 an error.
-Pass in the address to the FILE streams
-.I childin
-and
-.I childout
-for communication to the spawned process.
-
 .SH SEE ALSO
-coexec(3rko),invoke(3rko),uvec(3rko),
+coexec(3rko),invoke(3rko),spawn(3rko),uvec(3rko),
 execvp(2),fork(2),pipe(2),fclose(3),wait(2),system(3)
 
 .SH NOTES
@@ -39,14 +45,11 @@ execvp(2),fork(2),pipe(2),fclose(3),wait(2),system(3)
 After the output is read and an EOF is received, the calling program should
 close the file stream and wait for the child process.
 
- FILE *childin, *childout;
+ FILE *childoutput;
  ...
- if (spawn(&childin, &childout, argv) < 0) {
-	fprintf(stderr,"failed to spawn '%s'\n", *argv);
- }
+ childoutput = invoke(argv);
  ...
- fclose(childin);
- fclose(childout);
+ fclose(childoutput);
  wait(NULL);
 
 .SH DIAGNOSTICS

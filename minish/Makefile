@@ -6,12 +6,6 @@ include ../Makefile.inc
 .SUFFIXES:
 .SUFFIXES: .c .o _m.o
 
-CC	=gcc
-LD	=gcc -o
-LEX	=flex
-YACC	=yacc
-YYFLAGS	=-v -d -t
-RM	=rm
 YYSED	=../etc/yy-sed
 MEMDBG	=../memdbg
 #
@@ -84,7 +78,6 @@ exectest_m : mshexec.c fdlist_m.o
 		-ll -L.. -lrko
 	-$(RM) mshexec_m.o
 
-#yacctest : y.tab.c lex.yy.c fdlist.o
 yacctest : minish-yacc.c minish-lex.c fdlist.o
 	$(CC) $(MSHFLAGS) $(CFLAGS) -o yacctest \
 		-DYACCTEST minish-yacc.c fdlist.o \
@@ -104,14 +97,30 @@ minish-yacc_m.o : minish-yacc.c minish-lex.c minish-tab.h
 	$(CC) -o minish-yacc_m.o -c $(MSHFLAGS) $(CFLAGS) -DMEMDEBUG \
 		-DFLEX_STRING $<
 
-minish-yacc.c : y.tab.c
-	$(YYSED) --prefix minish_yy < $< > minish-yacc.c
+# more direct targets
+minish-yacc.c minish-tab.h : minish.yacc
+	# creates y.tab.c y.tab.h
+	$(YACC) $(YYFLAGS) minish.yacc
+	$(YYSED) --prefix minish_yy < y.tab.c > minish-yacc.c
+	$(CP) y.tab.h minish-tab.h
+	-$(RM) y.tab.c y.tab.h
 
-minish-lex.c : lex.yy.c
-	$(YYSED) --prefix minish_yy < $< > minish-lex.c
+minish-lex.c : minish.lex
+	$(LEX) $(LEXFLAGS) minish.lex
+	# creates lex.yy.c
+	$(YYSED) --prefix minish_yy < lex.yy.c > minish-lex.c
+	-$(RM) lex.yy.c
 
-minish-tab.h : y.tab.h
-	$(CP) $< minish-tab.h
+# explicit targets
+#minish-yacc.c : y.tab.c
+#	$(YYSED) --prefix minish_yy < $< > minish-yacc.c
+
+#minish-lex.c : lex.yy.c
+#	$(LEX) $(LEXFLAGS) minish.lex
+#	$(YYSED) --prefix minish_yy < $< > minish-lex.c
+
+#minish-tab.h : y.tab.h
+#	$(CP) $< minish-tab.h
 
 y.tab.c y.tab.h : minish.yacc
 	$(YACC) $(YYFLAGS) minish.yacc

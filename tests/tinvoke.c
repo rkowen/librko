@@ -1,8 +1,10 @@
 /* tinvoke - test invoke.c, uses testtext */
 
 #include <stdio.h>
+#include <string.h>
 #include <sys/wait.h>
-#include "librko.h"
+#include "coexec.h"
+#include "uvec.h"
 #ifdef RKOERROR
 extern int rkoerrno;
 #endif
@@ -20,7 +22,7 @@ int main(int argc, char *argv[]) {
 	char *prgname = *argv++;
 	char buffer[MAXBUFF];
 	char *str[MAXTEST];
-	int i, err = 0;
+	int i=0, err = 0;
 
 	HACK("BOL: BOF :EOL")
 	HACK("BOL: This is a test :EOL")
@@ -60,5 +62,5 @@ int main(int argc, char *argv[]) {
 	wait(NULL);
 	(void) uvec_dtor(&subargv);
 
-	return 0;
+	return err;
 }

@@ -6,12 +6,13 @@
 
 include Makefile.inc
 
-SRCS	=invoke.c timedfgets.c rkoerror.c memdebug.c strmem.c wcstrcmp.c \
+SRCS	=coexec.c timedfgets.c rkoerror.c memdebug.c strmem.c wcstrcmp.c \
 	 nameread.c foptim.c fzeroin.c divdiff.c strchop.c \
 	 ansi_seq.c gethostbyX.c tcp_connect.c macrosub.c uvec.c avec.c \
-	 strdbecpy.c istext.c list.c dirtree.c spawn.c gcd.c isqrt.c iprime.c \
+	 strdbecpy.c istext.c list.c dirtree.c gcd.c isqrt.c iprime.c \
 	 strmalloc.c clocker.c
 DIRS	= minish urand
+XDOCS	= librko.3 spawn.3 invoke.3
 
 # requires a GNU "make" for the following
 LIBOBJS		=$(SRCS:%.c=$(LIB)(%.o))
@@ -19,7 +20,7 @@ MLIBOBJS	=$(SRCS:%.c=$(MLIB)(%_m.o))
 
 OBJS	=$(SRCS:.c=.o)
 DOCS	=$(SRCS:.c=.3)
-DOCSL	=librko.3 $(DOCS)
+DOCSL	=$(XDOCS) $(DOCS)
 
 .SUFFIXES:
 .SUFFIXES: .c _m.o _m.a .o .a .3 .man
