@@ -1,5 +1,5 @@
 static char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: macrosub.c,v 1.2 1998/10/14 15:16:09 rk Exp $";
+static const char RCSID[]="@(#)$Id: macrosub.c,v 1.3 1998/11/07 00:20:57 rk Exp $";
 static char AUTHOR[]="@(#)macrosub.c 1.0 08/30/94 R.K.Owen,PhD";
 
 /* macstrncpy(string1,string2,n) - Macro string copy
@@ -147,7 +147,7 @@ int n;
 					break;
 				}
 				/* start processing at macro */
-				if (++macrolevel > MACRODEPTH) {
+				if (++macrolevel >= MACRODEPTH) {
 #ifdef RKOERROR
 					rkoerrno = RKOUSEERR;
 					(void) sprintf(msgbuf,

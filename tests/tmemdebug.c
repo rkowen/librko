@@ -2,6 +2,7 @@
  * :OK: a.out
  * :OK: && echo ran OK
  * :OK:END:
+ */
 /* :*: cc -c memory.c
  * :*: cc -DMEMDEBUG tmemory.c memory.o
  * :*: a.out
