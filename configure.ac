@@ -1,6 +1,6 @@
 dnl
 dnl File:	configure.ac
-dnl Revision:	$Id: configure.ac,v 1.6 2002/10/21 19:42:16 rk Exp $
+dnl Revision:	$Id: configure.ac,v 1.7 2002/10/21 19:46:44 rk Exp $
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl You need autoconf 2.52 or better
@@ -11,7 +11,7 @@ dnl ---------------------------------------------------------------------------
 AC_INIT(librko, @VERSION@, [librko(at)kooz.sj.ca.us])
 AC_CONFIG_AUX_DIR(config)
 AM_INIT_AUTOMAKE(librko,1.0.0)
-AC_CONFIG_SRCDIR([version.c])
+AC_CONFIG_SRCDIR([version.c.in])
 AM_CONFIG_HEADER([config.h])
 AM_PROG_CC_C_O
 AC_PREREQ(2.52)

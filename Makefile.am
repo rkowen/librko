@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.14 2002/10/21 19:42:16 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.15 2002/10/21 19:46:44 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -123,7 +123,7 @@ librko_a_SOURCES	=	\
 	$(strfns) 		\
 	$(urand_srcs) 		\
 	$(uvec_srcs) 		\
-	version.c
+	version.c.in
 
 man3_MANS =  \
 	docs/ansi_seq.man docs/avec.man docs/clocker.man 		\
