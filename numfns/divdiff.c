@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: divdiff.c,v 1.5 2002/02/15 23:01:55 rk Exp $";
+static const char RCSID[]="@(#)$Id: divdiff.c,v 1.6 2002/06/27 20:09:07 rk Exp $";
 const char AUTHOR[]="@(#)divdiff 1.1 05/12/94 R.K.Owen,Ph.D.";
 /*
  * divdiffcoef(opt,N,t,g,c) computes the divided difference coefficients
@@ -90,26 +90,16 @@ const char AUTHOR[]="@(#)divdiff 1.1 05/12/94 R.K.Owen,Ph.D.";
  *		Springer-Verlag, (c)1978
  * for more information and theory on the divided difference method.
  *
- * by R.K.Owen,Ph.D.  05/12/94
+ * by R.K.Owen,Ph.D.  1994/05/12
  */
-/*
- *********************************************************************
- *
- *     This software is copyrighted by R.K.Owen,Ph.D. 1997
- *
- * The author, R.K.Owen, of this software is not liable for any
- * problems WHATSOEVER which may result from use  or  abuse  of
- * this software. The author, R.K.Owen, grants unlimited rights
- * to anyone who uses and modifies this  software  for  private
- * non-commercial  use  as  long  as  this copyright and rights
- * notice remains in this software and is made available to all
- * recipients of this software.
- *
- * last known email: librko@kooz.sj.ca.us
- *                   rk@owen.sj.ca.us
- *
- *********************************************************************
- */
+/** ** Copyright *********************************************************** **
+ ** 									     **
+ ** Copyright 1997 by R.K.Owen,Ph.D.		                      	     **
+ ** last known email: librko@kooz.sj.ca.us				     **
+ **                   rk@owen.sj.ca.us					     **
+ ** see LICENSE.LGPL, which must be provided, for details		     **
+ ** 									     **
+ ** ************************************************************************ **/
 
 #include <stdio.h>
 #include <stdlib.h>

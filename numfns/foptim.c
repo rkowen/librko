@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: foptim.c,v 1.4 1999/09/09 21:30:43 rk Exp $";
+static const char RCSID[]="@(#)$Id: foptim.c,v 1.5 2002/06/27 20:09:07 rk Exp $";
 static const char AUTHOR[]="@(#)foptim 1.1 05/12/94 R.K.Owen,Ph.D.";
 /*
  * foptim() finds the minimum or maximum of f(x) within the interval [ax,bx].
@@ -23,26 +23,16 @@ static const char AUTHOR[]="@(#)foptim 1.1 05/12/94 R.K.Owen,Ph.D.";
  * given by Richard Brent, "Algorithms for Minimization without Derivatives",
  * Prentice-Hall, Inc. (1973).
  *
- * by R.K.Owen,Ph.D.  05/12/94
+ * by R.K.Owen,Ph.D.  1994/05/12
  */
-/*
- *********************************************************************
- *
- *     This software is copyrighted by R.K.Owen,Ph.D. 1997
- *
- * The author, R.K.Owen, of this software is not liable for any
- * problems WHATSOEVER which may result from use  or  abuse  of
- * this software. The author, R.K.Owen, grants unlimited rights
- * to anyone who uses and modifies this  software  for  private
- * non-commercial  use  as  long  as  this copyright and rights
- * notice remains in this software and is made available to all
- * recipients of this software.
- *
- * last known email: rk@owen.sj.ca.us
- *                   librko@kooz.sj.ca.us
- *
- *********************************************************************
- */
+/** ** Copyright *********************************************************** **
+ ** 									     **
+ ** Copyright 1997 by R.K.Owen,Ph.D.		                      	     **
+ ** last known email: librko@kooz.sj.ca.us				     **
+ **                   rk@owen.sj.ca.us					     **
+ ** see LICENSE.LGPL, which must be provided, for details		     **
+ ** 									     **
+ ** ************************************************************************ **/
 
 #ifdef TEST
 #  include <stdio.h>
@@ -66,7 +56,7 @@ extern "C" {
 #endif
 
 static PRECISION _F_a_D_d_(PRECISION ad1, PRECISION ad2) {
-        static PRECISION tmp;
+        volatile /* static */ PRECISION tmp;
         tmp = (ad1 + ad2);      /* force the value out of the registers */
         return tmp;
 }
