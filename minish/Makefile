@@ -14,7 +14,7 @@ CFLAGS=-g -DRKOERROR -I.. -DTEST
 .c.o :
 	$(CC) -c $(CFLAGS) $<
 
-shtest : minish.c minish-yacc.o mshexec.o fdlist.o
+shtest : minish.c minish-yacc.o mshexec.o fdlist.o minish-tab.h
 	$(CC) $(CFLAGS) -o shtest -DSHTEST minish.c \
 		minish-yacc.o mshexec.o fdlist.o \
 		-ll -L.. -lrko
@@ -30,7 +30,7 @@ yacctest : minish-yacc.c minish-lex.c fdlist.o
 		-ll -L.. -lrko
 	-$(RM) minish-yacc.o
 
-minish-yacc.o : minish-yacc.c minish-lex.c
+minish-yacc.o : minish-yacc.c minish-lex.c minish-tab.h
 	$(CC) -c $(CFLAGS) -DFLEX_STRING $<
 
 minish-yacc.c : y.tab.c
@@ -105,4 +105,4 @@ clobber: wipe
 	-$(RM) -f lex.yy.c y.tab.c
 
 distclean: clobber
-	-$(RM) -f minish-lex.c minish-yacc.c
+	-$(RM) -f minish-lex.c minish-yacc.c minish-tab.h y.tab.h
