@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: dirtree.c,v 1.6 1998/11/12 22:26:23 rk Exp $";
+static const char RCSID[]="@(#)$Id: dirtree.c,v 1.7 1998/11/23 15:55:12 rk Exp $";
 static const char AUTHOR[]="@(#)dirtree 1.0 10/31/98 R.K.Owen,Ph.D.";
 /* dirtree - recurses through a directory tree and executes
  *	four user functions
@@ -143,11 +143,13 @@ int dirtree(int sort, int dirlvl, int lnklvl, const char *dir,
 		return -4;
 	}
 
-	(void) readdir(dr);	/* skip .  */
-
 	/* Read the directory */
 	while ((de = readdir(dr)) != (struct dirent *) NULL) {
-		if (!strcmp("..",de->d_name)) continue;	/* skip .. */
+		if (*(de->d_name) == '.') {	/* check for dot files */
+			if (de->d_name[1] == '\0')	continue; /* skip . */
+			if (de->d_name[1] == '.'
+			&&  de->d_name[2] == '\0')	continue; /* skip .. */
+		}
 		(void) strcpy(nextlevel, thislevel);
 		(void) strcat(nextlevel, "/");	/* posix defined */
 		(void) strcat(nextlevel, de->d_name);
