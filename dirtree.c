@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: dirtree.c,v 1.2 1998/11/02 05:54:39 rk Exp $";
+static const char RCSID[]="@(#)$Id: dirtree.c,v 1.3 1998/11/04 04:32:53 rk Exp $";
 static const char AUTHOR[]="@(#)dirtree 1.0 10/31/98 R.K.Owen,Ph.D.";
 /* dirtree - recurses through a directory tree and executes
  *	four user functions
@@ -116,20 +116,18 @@ int dirtree(int sort, const char *dir,
 #endif
 		return -2;
 	}
-	if (sort) {
-		/* setup vectors for dirs & files */
-		if ((dirvec = uvec_ctor(10)) == (uvec *) NULL) {
+	/* setup vectors for dirs & files */
+	if ((dirvec = uvec_ctor(10)) == (uvec *) NULL) {
 #ifdef RKOERROR
-			rkopsterror("dirtree : dirvec error : ");
+		rkopsterror("dirtree : dirvec error : ");
 #endif
-			return -3;
-		}
-		if ((regvec = uvec_ctor(10)) == (uvec *) NULL) {
+		return -3;
+	}
+	if ((regvec = uvec_ctor(10)) == (uvec *) NULL) {
 #ifdef RKOERROR
-			rkopsterror("dirtree : regvec error : ");
+		rkopsterror("dirtree : regvec error : ");
 #endif
-			return -4;
-		}
+		return -4;
 	}
 
 	(void) readdir(dr);	/* skip .  */
@@ -137,7 +135,10 @@ int dirtree(int sort, const char *dir,
 	/* Read the directory */
 	while ((de = readdir(dr)) != (struct dirent *) NULL) {
 		if (!strcmp("..",de->d_name)) continue;	/* skip .. */
-		if((err = lstat(de->d_name, &sbuf))) {
+		(void) strcpy(nextlevel, thislevel);
+		(void) strcat(nextlevel, "/");	/* posix defined */
+		(void) strcat(nextlevel, de->d_name);
+		if((err = lstat(nextlevel, &sbuf))) {
 			continue;
 		}
 		/* put directory entries into a list */
@@ -159,17 +160,19 @@ int dirtree(int sort, const char *dir,
 		}
 	}
 	/* sort dir & file vectors */
-	if (uvec_sort(dirvec, UVEC_ASCEND)) {
+	if (sort) {
+		if (uvec_sort(dirvec, UVEC_ASCEND)) {
 #ifdef RKOERROR
-		rkopsterror("dirtree : dirvec error : ");
+			rkopsterror("dirtree : dirvec error : ");
 #endif
-		return -7;
-	}
-	if (uvec_sort(regvec, UVEC_ASCEND)) {
+			return -7;
+		}
+		if (uvec_sort(regvec, UVEC_ASCEND)) {
 #ifdef RKOERROR
-		rkopsterror("dirtree : regvec error : ");
+			rkopsterror("dirtree : regvec error : ");
 #endif
-		return -8;
+			return -8;
+		}
 	}
 
 	/* perform action on files */
@@ -179,7 +182,11 @@ int dirtree(int sort, const char *dir,
 	if (filefn != (int (*)(const char *)) NULL) {
 		for (vecptr = uvec_vector(regvec);
 		*vecptr != (char *) NULL; ++vecptr) {
-			if ((err = filefn(*vecptr)) != 0) {
+			(void) strcpy(nextlevel, thislevel);
+			(void) strcat(nextlevel, "/");
+			(void) strcat(nextlevel, *vecptr);
+
+			if ((err = filefn(nextlevel)) != 0) {
 #ifdef RKOERROR
 				rkopsterror(")");
 				rkopsterror(*vecptr);
@@ -196,13 +203,13 @@ int dirtree(int sort, const char *dir,
 #endif
 	for (vecptr = uvec_vector(dirvec);
 	*vecptr != (char *) NULL; ++vecptr) {
-		/* execute user function on dir */
-		if (dirfn != (int (*)(const char *)) NULL) {
-			(void) dirfn(*vecptr);
-		}
 		(void) strcpy(nextlevel, thislevel);
 		(void) strcat(nextlevel, "/");		/* posix defined */
 		(void) strcat(nextlevel, *vecptr);
+		/* execute user function on dir */
+		if (dirfn != (int (*)(const char *)) NULL) {
+			(void) dirfn(nextlevel);
+		}
 		if ((err = dirtree(sort, nextlevel,
 		dirfn, filefn, direnter, dirleave)) != 0) {
 #ifdef RKOERROR
