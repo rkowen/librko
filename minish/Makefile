@@ -64,7 +64,12 @@ mtest/wrong : mtest/wrong.c
 mtest/rsignal : mtest/rsignal.c
 	$(CC) $(CFLAGS) -o mtest/rsignal $<
 
-runtest : runfdtest runlextest runyacctest runexectest
+runtest : runfdtest runlextest runyacctest runexectest runshtest
+
+runshtest : shtest mtest
+	-@./shtest
+	-@if diff shtest.out cmp/shtest.cmp ; then \
+		echo shtest OK ; else echo shtest FAILED ; fi
 
 runexectest : exectest mtest
 	-@./exectest

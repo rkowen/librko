@@ -1,0 +1,10 @@
+ 0  0 mtest/right this is the '"right"' line of text > shtest.out
+ 1  0 mtest/wrong this is the '"wrong"' line of text >> shtest.out
+ 0  0 mtest/rsignal SIGCONT a '"right signal"' line of text >> shtest.out
+-1  1 mtest/rsignal SIGHUP a '"right signal"' line of text >> shtest.out
+-1  2 mtest/rsignal SIGINT a '"right signal"' line of text >> shtest.out
+ 1  0 mtest/right right6 1>>shtest.out && mtest/wrong wrong6 >>shtest.out || mtest/right right6 again >>shtest.out
+ 1  0 mtest/right right7 1>>shtest.out || mtest/wrong wrong7 >>shtest.out && mtest/right right7 again >>shtest.out
+ 1  0 mtest/wrong wrong8 1>>shtest.out && mtest/wrong wrong8 again >>shtest.out || mtest/right right8 >>shtest.out
+-1  2 mtest/rsignal SIGINT rsignal9 first one only because of "&&" >> shtest.out && mtest/rsignal SIGHUP rsignal9 "don't get here" >>shtest.out
+-1  1 mtest/rsignal SIGINT rsignal10 first one >> shtest.out || mtest/rsignal SIGHUP rsignal10 here because of "||" >>shtest.out

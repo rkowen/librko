@@ -1,0 +1,32 @@
+this is the "right" line of text 
+ret=  0 sig=  0
+this is the "wrong" line of text 
+ret=  1 sig=  0
+a "right signal" line of text 
+SIGCONT=18
+exit normally with SIGCONT
+ret=  0 sig=  0
+a "right signal" line of text 
+SIGHUP=1
+ret= -1 sig=  1
+a "right signal" line of text 
+SIGINT=2
+ret= -1 sig=  2
+right6 
+wrong6 
+right6 again 
+ret=  0 sig=  0
+right7 
+right7 again 
+ret=  0 sig=  0
+wrong8 
+right8 
+ret=  0 sig=  0
+rsignal9 first one only because of && 
+SIGINT=2
+ret= -1 sig=  2
+rsignal10 first one 
+SIGINT=2
+rsignal10 here because of || 
+SIGHUP=1
+ret= -1 sig=  1

@@ -37,15 +37,15 @@ WS	[ \t]*
 %%
 	/* mini-sh rules */
 
-;		{
+<INITIAL,OPT>;	{
 			BEGIN START_COMMAND;
 			RETURN(EOC);
 		}
-"||"		{
+<OPT>"||"	{
 			BEGIN START_COMMAND;
 			RETURN(BAR_BAR);
 		}
-"&&"		{
+<OPT>"&&"	{
 			BEGIN START_COMMAND;
 			RETURN(AMPER_AMPER);
 		}
