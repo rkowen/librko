@@ -5,7 +5,7 @@ SRCS = \
 	tansi_seq.c tfoptim.c tfzeroin.c tmacrosub.c \
 	tmemory.c tnameread.c tstrchop.c tstrmem.c \
 	ttfgets.c twcstrcmp.c tuvec.c tstrdbecpy.c tlist.c \
-	tdirtree.c tinvoke.c tspawn.c tftp.c
+	tdirtree.c tinvoke.c tspawn.c tgcd.c tisqrt.c
 
 XEXES = birdy kitty doggy
 

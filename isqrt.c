@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: isqrt.c,v 1.1 1998/11/24 05:57:03 rk Exp $";
+static const char RCSID[]="@(#)$Id: isqrt.c,v 1.2 1998/11/24 19:29:34 rk Exp $";
 static const char AUTHOR[]="@(#)isqrt 1.0 11/26/98 R.K.Owen,Ph.D.";
 /* isqrt.c -
  * finds the the integer sqrt of the given integer.
@@ -23,7 +23,7 @@ static const char AUTHOR[]="@(#)isqrt 1.0 11/26/98 R.K.Owen,Ph.D.";
  *********************************************************************
  */
 
-/* a look-up table of lut[i] = 256*sqrt(i/256) */
+/* a look-up table lut[i] = 256*sqrt(i/256) */
 static unsigned char lut[256] = {
     0,   16,   22,   27,   32,   35,   39,   42,
    45,   48,   50,   53,   55,   57,   59,   61,
@@ -58,122 +58,64 @@ static unsigned char lut[256] = {
   247,  248,  248,  249,  249,  250,  250,  251,
   251,  252,  252,  253,  253,  254,  254,  255};
 
-#define _ISQRT(NM, TYPE, OP) \
+/* this assumes that the type is larger than unsigned char */
+#define _ISQRT(NM, TYPE) \
 TYPE NM(TYPE a) { \
-	TYPE t = a, i=0,r; if (a OP 0) return 0; \
+	TYPE t = a, i=0,r; if (a <= 0) return 0; \
 	while (t & ~((TYPE) 0xFF)) { t >>=2; i++; } \
 	r = lut[t]; if (i < 4) r >>= (4-i); else r <<= (i-4); \
 	while ((t = r*r, (t > a) || ((a - 2*r - 1) >= t))) { \
 	r+=(a/r); r>>=1; } return r; }
 
-unsigned int uisqrt(unsigned int a) {
-	unsigned int t = a, i=0,r;
+/* need to use the sign bit when near 0, hence the call to the signed
+ * version; however if near unsigned maximum value, the signed version
+ * sees it as negative and returns 0, then the unsigned version can
+ * safely care on. */
+
+#define _USQRT(NM, TYPE, SNM, STYPE) \
+TYPE NM(TYPE a) { \
+	TYPE t = a, i=0,r; STYPE rr; \
+	if (a == 0) return 0; \
+	if ((rr = SNM(a)) > 0) return rr; \
+	while (t & ~((TYPE) 0xFF)) { t >>=2; i++; } \
+	r = lut[t]; if (i < 4) r >>= (4-i); else r <<= (i-4); \
+	while ((t = r*r, (t > a) || ((a - 2*r - 1) >= t))) { \
+	r+=(a/r); r>>=1; } return r; }
+
+/* must handle the char versions special and can optimize because the
+ * LUT is "exact"
+ */
+signed char scsqrt(signed char a) {
+	unsigned char r;
+	if (a <= 0) return 0;
+	r = lut[a];
+	r >>= 4;
+	return r;
+}
+
+unsigned char ucsqrt(unsigned char a) {
+	unsigned char r;
+	signed char rr;
 	if (a == 0) return 0;
-	while (t & ~((unsigned int) 0xFF)) {
-		t >>=2;
-		i++;
-	}
-	r = lut[t];
-	if (i < 4) r >>= (4-i);
-	else r <<= (i-4);
-	while ((t = r*r, (t > a) || ((a - 2*r - 1) >= t))) {
-		r+=(a/r);
-		r>>=1;
-	}
+	if ((rr = scsqrt(a)) > 0) return rr;
+	r = lut[a];
+	r >>= 4;
+	return r;
+}
+
+char chsqrt(char a) {
+	unsigned char r;
+	if (a <= 0) return 0;
+	r = lut[a];
+	r >>= 4;
 	return r;
 }
 
 /* just like templates - almost */
-_ISQRT(hsqrt, short, <=)
-_ISQRT(isqrt, int, <=)
-_ISQRT(lsqrt, long, <=)
-#ifdef _UISQRT
-_ISQRT(chsqrt, char, <=)
-_ISQRT(scsqrt, signed char, <=)
-_ISQRT(ucsqrt, unsigned char, ==)
-_ISQRT(uhsqrt, unsigned short, ==)
-_ISQRT(uisqrt, unsigned int, ==)
-_ISQRT(ulsqrt, unsigned long, ==)
-#endif
+_ISQRT(hsqrt, short)
+_ISQRT(isqrt, int)
+_ISQRT(lsqrt, long)
+_USQRT(uhsqrt, unsigned short, hsqrt, short)
+_USQRT(uisqrt, unsigned int, isqrt, int)
+_USQRT(ulsqrt, unsigned long, lsqrt, long)
 
-#include <stdio.h>
-#include <math.h>
-#include <limits.h>
-
-#define TESTOUT(NM, TYPE, arg) \
-tot++; if((res1 = (long) NM(arg)) != (res2 = (long) sqrt((double) arg))) {\
-	printf("FAIL:" #NM "(%ld)\t= %ld != %ld\n", (long) arg, res1, res2);\
-	err++; } else \
-	printf("OK  :" #NM "(%ld)\t= %ld\n", (long) arg, res1);
-
-#define STESTOUT(NM, TYPE, arg) \
-tot++; if((res1 = (long) NM(arg)) != (long) 0) { \
-	printf("FAIL:" #NM "(%ld)\t= %ld != %ld\n", (long) arg, res1, (long) 0);\
-	err++; } else \
-	printf("OK  :" #NM "(%ld)\t= %ld\n", (long) arg, res1);
-
-#define TESTRANGE(NM, TYPE, lo, hi) \
-for (errsum = 0, i = (long) lo; i <= (long) hi; ++i, ++tot) { \
-	if(((long) NM(i)) != ((long) sqrt((double) i))) errsum++; }\
-	if (errsum) {\
-	printf("FAIL:" #NM "(%ld:%ld)\t=> %d errs\n", (long) lo, (long) hi);\
-	err+=errsum; } else \
-	printf("OK  :" #NM "(%ld:%ld)\t=> no errs\n", (long) lo, (long) hi);
-
-
-#define MTESTOUT(NM, TYPE) \
-	TESTOUT(NM, TYPE, 0)\
-	TESTOUT(NM, TYPE, 1)\
-	TESTOUT(NM, TYPE, 2)\
-	TESTOUT(NM, TYPE, 99)\
-	TESTOUT(NM, TYPE, 100)\
-	TESTOUT(NM, TYPE, 101)
-
-int main() {
-	int err=0, tot = 0, errsum=0;
-	long i, res1, res2;
-
-	(void) setvbuf(stdout, (char *)NULL, _IOLBF, 0);
-
-#ifdef _UISQRT
-	TESTRANGE(chsqrt, char, 0, 127)
-	TESTOUT(chsqrt, char, CHAR_MAX)
-	STESTOUT(scsqrt, signed char, -64)
-	TESTRANGE(scsqrt, signed char, 0, 127)
-	TESTOUT(scsqrt, signed char, SCHAR_MAX)
-	TESTRANGE(ucsqrt, unsigned char, 0, 255)
-	TESTOUT(ucsqrt, unsigned char, UCHAR_MAX)
-#endif
-
-	STESTOUT(hsqrt, short, -64)
-	TESTRANGE(hsqrt, short, 0, 32767)
-	TESTOUT(hsqrt, short, SHRT_MAX)
-#ifdef _UISQRT
-	TESTRANGE(uhsqrt, unsigned short, 0, 65535)
-	TESTOUT(uhsqrt, unsigned short, SHRT_MAX)
-#endif
-
-	STESTOUT(isqrt, int, -64)
-	TESTRANGE(isqrt, int, 0, 32767)
-	TESTOUT(isqrt, int, INT_MAX)
-#ifdef _UISQRT
-	TESTRANGE(uisqrt, unsigned int, 0, 65535)
-	TESTOUT(uisqrt, unsigned int, UINT_MAX)
-#endif
-
-	MTESTOUT(lsqrt, long)
-	STESTOUT(lsqrt, long, -64)
-	TESTRANGE(lsqrt, long, 0, 32767)
-	TESTOUT(lsqrt, long, LONG_MAX)
-#ifdef _UISQRT
-	TESTRANGE(ulsqrt, unsigned long, 0, 65535)
-	TESTOUT(ulsqrt, unsigned long, ULONG_MAX)
-#endif
-
-	if (err)
-		printf("%d test failures out of %d\n", err, tot);
-	else
-		printf("no test failures out of %d\n", tot);
-
-	return 0;
-}
