@@ -6,7 +6,7 @@ SRCS = \
 	tmemory.c tnameread.c tstrchop.c tstrmem.c \
 	ttfgets.c twcstrcmp.c tuvec.c tstrdbecpy.c tlist.c \
 	tdirtree.c tinvoke.c tspawn.c tgcd.c tisqrt.c tiprime.c \
-	tstrmalloc.c
+	tstrmalloc.c tclocker.c
 
 XEXES = birdy kitty doggy
 
