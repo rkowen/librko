@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.5 2002/06/27 22:07:46 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.6 2002/06/30 04:07:13 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -28,6 +28,10 @@ avec_srcs = \
 	avec/avec_resize_percentage.c avec/avec_set_fns.c		\
 	avec/avec_values.c avec/avec_walk.c avec/avec_walk_r.c
 
+coexec_srcs = \
+	coexec/invoke.c coexec/postfilter.c coexec/postprocess.c	\
+	coexec/prefilter.c coexec/preprocess.c coexec/spawn.c
+
 igcd_srcs = \
 	igcd/chgcd.c igcd/hgcd.c igcd/igcd.c		\
 	igcd/lgcd.c igcd/scgcd.c igcd/ucgcd.c		\
@@ -50,6 +54,9 @@ list_srcs = \
 	list/list_first.c list/list_last.c list/list_number.c		\
 	list/list_pop.c list/list_push.c list/list_shift.c		\
 	list/list_sizeof.c list/list_unshift.c
+
+netfns = \
+	netfns/gethostbyX.c netfns/tcp_connect.c
 
 numfns = \
 	numfns/divdiff.c numfns/foptim.c numfns/fzeroin.c
@@ -75,19 +82,18 @@ librko_a_SOURCES	= \
 	ansi_seq.c \
 	$(avec_srcs) \
 	clocker.c \
-	coexec.c \
+	$(coexec_srcs) \
 	dirtree.c \
-	gethostbyX.c \
 	$(igcd_srcs) \
 	$(iprime_srcs) \
 	$(isqrt_srcs) \
 	$(list_srcs) \
 	memdbg.c \
 	memdebug.c \
+	$(netfns) \
 	$(numfns) \
 	rkoerror.c \
 	$(strfns) \
-	tcp_connect.c \
 	$(uvec_srcs) \
 	version.c
 
