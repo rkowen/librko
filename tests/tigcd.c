@@ -31,9 +31,11 @@ if((res = NM(arg1,arg2)) != result) {\
 int main() {
 	int err = 0, tot = 0, res;
 
+	TESTOUT(scgcd, signed char, 48, 42, 6);
+	TESTOUT(scgcd, signed char, 18, 35, 1);
+	TESTOUT(scgcd, signed char, -18, 35, 0);
 	TESTOUT(cgcd, char, 48, 42, 6);
 	TESTOUT(cgcd, char, 18, 35, 1);
-	TESTOUT(cgcd, char, -18, 35, 0);
 	TESTOUT(ucgcd, unsigned char, 48, 42, 6);
 	TESTOUT(ucgcd, unsigned char, 18, 35, 1);
 	MTESTOUT(hgcd,short)

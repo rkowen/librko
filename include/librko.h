@@ -2,7 +2,7 @@
 #  define _LIBRKO_H_
 /* 
  * USMID %W%
- * RCSID @(#)$Id: librko.h,v 1.9 1998/11/19 22:58:42 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.10 1998/11/19 23:05:14 rk Exp $
  */
 /*
  *********************************************************************
@@ -81,6 +81,7 @@ int istext(int c);
 /* GCD - greatest common divisor */
 #define __GCD(NM, TYPE) TYPE NM(TYPE a, TYPE b);
 __GCD(cgcd,char)
+__GCD(scgcd,signed char)
 __GCD(ucgcd,unsigned char)
 __GCD(hgcd,short)
 __GCD(uhgcd,unsigned short)
