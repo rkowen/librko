@@ -7,6 +7,7 @@
 #  include <time.h>		/* CLK_TCK */
 #endif
 #include <sys/times.h>		/* times */
+#include <unistd.h>		/* sysconf */
 
 typedef clock_t clocker_t;
 typedef enum {_SET = 0, _RESET, _READ, _PER_SEC} clocker_action;
@@ -37,7 +38,7 @@ clock_t clocker_tick(clocker_t *clock_variable, clocker_action what_to_do) {
 		tc = ts.tms_utime - tc;
 		break;
 	case _PER_SEC:
-		tc = CLK_TCK;
+		tc = sysconf(_SC_CLK_TCK);
 		break;
 	default:
 #ifdef RKOERROR
@@ -58,7 +59,7 @@ double clocker(clocker_t *clock_variable, clocker_action what_to_do) {
 	if (what_to_do == _PER_SEC) {
 		x = (double) t;
 	} else {
-		x = (double) t / (double) CLK_TCK;
+		x = (double) t / (double) sysconf(_SC_CLK_TCK);
 	}
 	return x;
 }
