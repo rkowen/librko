@@ -1,5 +1,7 @@
+#ifndef _AVEC_H__
+#  define _AVEC_H__
 /* 
- * RCSID @(#)$Id: avec_.h,v 1.2 2002/06/27 22:21:38 rk Exp $
+ * RCSID @(#)$Id: avec_.h,v 1.3 2003/09/05 05:02:00 rk Exp $
  */
 /** ** Copyright *********************************************************** **
  ** 									     **
@@ -9,15 +11,15 @@
  ** see LICENSE.LGPL, which must be provided, for details		     **
  ** 									     **
  ** ************************************************************************ **/
-#ifdef __cplusplus
+#  ifdef __cplusplus
 extern "C" {
-#endif
+#  endif
 
-#include <stdarg.h>
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-#include "avec.h"
+#  include <stdarg.h>
+#  ifdef HAVE_CONFIG_H
+#    include "config.h"
+#  endif
+#  include "avec.h"
 
 /* ---------------------------------------------------------------------- */
 /* type of key search */
@@ -54,6 +56,7 @@ extern char avec_TAG[5];
 extern const avec_element REMOVED;
 extern avec_fns default_fns;
 
-#ifdef __cplusplus
+#  ifdef __cplusplus
 	}
-#endif
+#  endif
+#endif /* _AVEC_H__ */

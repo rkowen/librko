@@ -1,0 +1,60 @@
+.\" RCSID @(#)$Id: key_value.man,v 1.1 2003/09/05 05:02:00 rk Exp $
+.\" LIBDIR
+.TH "KEY_VALUE" "3rko" "04 Sep 2003"
+.SH NAME
+key_value \- decodes a string into a key/value hash
+
+.SH SYNOPSIS
+
+ #include "strfns.h"
+ avec *key_value(const char *string,
+    const char *pair_delim, const char *ref_delim, int nowhitespace);
+
+.SH DESCRIPTION
+.I key_value
+decodes a string into an associative array (hash) of keys each pointing
+to a string representing the value.
+An example of a typical string is "aaa=>one||bbb=>two||ccc=>three"
+where the default values for
+.I pair_delim = "||"
+and
+.I ref_delim = "=>"
+are used.
+The default values are used for either if the value passed is NULL for
+the respective delimiter.
+
+If nowhitespace is non-zero then any white space as detected by
+.I isspace()
+is ignored surrounding the keys or the values.
+Embedded white space in either key or value is honored though.
+
+There are no requirements on
+.I pair_delim
+or
+.I ref_delim
+as to length or characters used.
+However, if either are NULL or a null character then the respective
+default delimiter string, as given above, will be used.
+
+If successful then
+.I key_value()
+returns an
+.I avec
+object, else a NULL.
+
+.SH SEE ALSO
+.\" crontab(1),stat(2),libmon(8)
+librko(3rko),avec(3rko),rkoerror(3rko),isspace(3)
+
+.SH NOTES
+
+.SH DIAGNOSTICS
+Returns (avec *) NULL if an error occurs, and puts a descriptive string into
+rkoerror() if RKOERROR is defined.
+
+.SH BUGS
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

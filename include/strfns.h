@@ -1,7 +1,7 @@
 #ifndef _STRFNS_H_
 #  define _STRFNS_H_
 /* 
- * RCSID @(#)$Id: strfns.h,v 1.2 2002/07/08 15:55:09 rk Exp $
+ * RCSID @(#)$Id: strfns.h,v 1.3 2003/09/05 05:02:00 rk Exp $
  */
 /** ** Copyright *********************************************************** **
  ** 									     **
@@ -17,7 +17,10 @@ extern "C" {
 
 
 #include <stdlib.h>	/* size_t */
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+#include "avec.h"
 
 int	 istext(int c);
 
@@ -56,6 +59,9 @@ extern int MacroTrf[];
 #define NAMETOD(a,b)	nametod(a,#b,&b)
 int	 nametol(const char *line, const char *name, long *value);
 int	 nametod(const char *line, const char *name, double *value);
+
+avec *key_value(const char *string,
+	const char *pair_delim, const char *ref_delim, int nowhitespace);
 
 #  ifdef __cplusplus
 	}

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: strmem.c,v 1.7 2002/08/23 15:18:11 rk Exp $";
+static const char RCSID[]="@(#)$Id: strmem.c,v 1.8 2003/09/05 05:02:00 rk Exp $";
 static const char AUTHOR[]="@(#)strmem 1.1 08/09/95 R.K.Owen,PhD";
 
 /* strmem - allocates/deallocates collected string pool memory.  Instead of
@@ -45,7 +45,9 @@ void strmemfree(char **ChArSpAcE, char ***charspace);
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #ifdef MEMDEBUG
 #  include "memdebug.h"
 #endif

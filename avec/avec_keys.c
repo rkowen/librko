@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec_keys.c,v 1.1 2002/06/24 21:55:06 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec_keys.c,v 1.2 2003/09/05 05:02:00 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -17,7 +17,9 @@ static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
  ** ************************************************************************ **/
 
 #include <stdlib.h>
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #ifdef MEMDEBUG
 #  include "memdebug.h"
 #endif

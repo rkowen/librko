@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.18 2003/08/25 18:26:27 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.19 2003/09/05 05:02:00 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -19,7 +19,7 @@ ACLOCAL_AMFLAGS=-I config
 SUBDIRS = . tests
 AM_CPPFLAGS = -I$(srcdir)/include -I$(srcdir)
 
-avec_srcs = \
+avec_srcs = 								\
 	avec/avec_.c							\
 	avec/avec_accessor.c avec/avec_alloc.c avec/avec_close.c	\
 	avec/avec_ctor.c avec/avec_dealloc.c avec/avec_decrease.c	\
@@ -29,29 +29,29 @@ avec_srcs = \
 	avec/avec_resize_percentage.c avec/avec_set_fns.c		\
 	avec/avec_values.c avec/avec_walk.c avec/avec_walk_r.c
 
-coexec_srcs = \
+coexec_srcs = 								\
 	coexec/invoke.c coexec/postfilter.c coexec/postprocess.c	\
 	coexec/prefilter.c coexec/preprocess.c coexec/spawn.c		\
 	coexec/spawn3.c coexec/prefile.c
 
-igcd_srcs = \
-	igcd/chgcd.c igcd/hgcd.c igcd/igcd.c		\
-	igcd/lgcd.c igcd/scgcd.c igcd/ucgcd.c		\
+igcd_srcs = 								\
+	igcd/chgcd.c igcd/hgcd.c igcd/igcd.c				\
+	igcd/lgcd.c igcd/scgcd.c igcd/ucgcd.c				\
 	igcd/ugcd.c igcd/uhgcd.c igcd/ulgcd.c
 
-iprime_srcs = \
-	iprime/iprime_lut.c					\
-	iprime/chprime.c iprime/hprime.c iprime/iprime.c	\
-	iprime/lprime.c iprime/scprime.c iprime/ucprime.c	\
+iprime_srcs = 								\
+	iprime/iprime_lut.c						\
+	iprime/chprime.c iprime/hprime.c iprime/iprime.c		\
+	iprime/lprime.c iprime/scprime.c iprime/ucprime.c		\
 	iprime/uhprime.c iprime/uiprime.c iprime/ulprime.c
 
-isqrt_srcs = \
-	isqrt/isqrt_lut.c				\
-	isqrt/chsqrt.c isqrt/hsqrt.c isqrt/isqrt.c	\
-	isqrt/lsqrt.c isqrt/scsqrt.c isqrt/ucsrt.c	\
+isqrt_srcs = 								\
+	isqrt/isqrt_lut.c						\
+	isqrt/chsqrt.c isqrt/hsqrt.c isqrt/isqrt.c			\
+	isqrt/lsqrt.c isqrt/scsqrt.c isqrt/ucsrt.c			\
 	isqrt/uhsqrt.c isqrt/uisqrt.c isqrt/ulsqrt.c
 
-list_srcs = \
+list_srcs = 								\
 	list/list_.c list/list_append.c list/list_insert.c		\
 	list/list_delete.c list/list_swap.c list/list_qsort.c		\
 	list/list_ctor.c list/list_dtor.c list/list_exists.c		\
@@ -59,21 +59,22 @@ list_srcs = \
 	list/list_pop.c list/list_push.c list/list_shift.c		\
 	list/list_sizeof.c list/list_unshift.c
 
-netfns = \
+netfns = 								\
 	netfns/gethostbyX.c netfns/tcp_connect.c
 
-numfns = \
+numfns = 								\
 	numfns/divdiff.c numfns/foptim.c numfns/fzeroin.c
 
-strfns = \
+strfns = 								\
 	strfns/istext.c strfns/macrosub.c strfns/nameread.c		\
 	strfns/strchop.c strfns/strdbecpy.c strfns/strmalloc.c		\
-	strfns/strmem.c strfns/timedfgets.c strfns/wcstrcmp.c
+	strfns/strmem.c strfns/timedfgets.c strfns/wcstrcmp.c		\
+	strfns/key_value.c
 
-urand_srcs = \
+urand_srcs = 								\
 	urand/urand.c
 
-uvec_srcs =  \
+uvec_srcs =  								\
 	uvec/str2uvec.c uvec/uvec2str.c uvec/uvec2uvec.c		\
 	uvec/uvec_accessor.c uvec/uvec_add.c uvec/uvec_alloc.c		\
 	uvec/uvec_close.c uvec/uvec_copy.c uvec/uvec_copy_str.c		\
@@ -136,7 +137,8 @@ man3_MANS =  \
 	docs/rkoerror.man docs/spawn.man docs/strchop.man 		\
 	docs/strdbecpy.man docs/strmalloc.man docs/strmem.man 		\
 	docs/tcp_connect.man docs/timedfgets.man docs/uvec.man 		\
-	docs/urand.man docs/wcstrcmp.man docs/prefile.man
+	docs/urand.man docs/wcstrcmp.man docs/prefile.man		\
+	docs/key_value.man
 
 special_includes=	\
 	avec/avec_.h igcd/igcd_.h iprime/iprime_.h isqrt/isqrt_.h	\
