@@ -2,7 +2,7 @@
 #  define _LIBRKO_H_
 /* 
  * USMID %W%
- * RCSID @(#)$Id: librko.h,v 1.4 1998/10/27 21:59:30 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.5 1998/10/29 16:58:49 rk Exp $
  */
 /*
  *********************************************************************
@@ -219,6 +219,7 @@ list *list_ctor(const char *tag,
 	int (addfn)(void **, va_list), int (delfn)(void **, va_list));
 int list_dtor(list **lst, char const *tag, ...);
 int list_exists(list const *lst, const char *tag);
+int list_sizeof(list const *lst, const char *tag);
 int list_number(list const *lst, const char *tag);
 list_elem *list_first(list const *lst, const char *tag);
 list_elem *list_last(list const *lst, const char *tag);

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: list.c,v 1.3 1998/10/27 21:59:30 rk Exp $";
+static const char RCSID[]="@(#)$Id: list.c,v 1.4 1998/10/29 16:58:49 rk Exp $";
 static const char AUTHOR[]="@(#)list 1.0 10/31/98 R.K.Owen,Ph.D.";
 /* list.c -
  * This could have easily been made a C++ class, but is
@@ -142,6 +142,20 @@ int list_number(list const *lst, const char *tag) {
 		rkoerrno = RKO_OK;
 #endif
 		return lst->number;
+	} else {
+#ifdef RKOERROR
+		(void) rkopsterror("list_number : ");
+#endif
+		return -1;
+	}
+}
+
+int list_sizeof(list const *lst, const char *tag) {
+	if (list_exists(lst, tag)) {
+#ifdef RKOERROR
+		rkoerrno = RKO_OK;
+#endif
+		return sizeof(*lst) + strlen(tag);
 	} else {
 #ifdef RKOERROR
 		(void) rkopsterror("list_number : ");
