@@ -210,7 +210,8 @@ int yystacksize;
 #line 387 "minish.yacc"
  /* start of programs */
 
-#undef input()		/* eliminates a useless warning */
+/* eliminates a useless warning */
+#undef input	
 #include "minish-lex.c"
 
 int minish_yyerror(const char *s) {
@@ -233,7 +234,7 @@ int main(void) {
 	return minish_yyparse();
 }
 #endif /* YACCTEST */
-#line 237 "y.tab.c"
+#line 238 "y.tab.c"
 /* allocate initial stack or double stack size, up to YYMAXDEPTH */
 static int yygrowstack()
 {
@@ -749,7 +750,7 @@ case 30:
 				rkoperror("minish : yacc : eol : fd : dtor");
 		}
 break;
-#line 753 "y.tab.c"
+#line 754 "y.tab.c"
     }
     yyssp -= yym;
     minish_yystate = *yyssp;

@@ -1,8 +1,8 @@
 /* minish.yacc - grammar for minish program
  */
 /* declarations */
-%token COMMAND LPAREN RPAREN EOC EOL
-%token AMPER_AMPER BAR_BAR BAR BAR_AMPER
+%token COMMAND EOC EOL
+%token AMPER_AMPER BAR_BAR
 %token GREATER_AMPER_CLOSE GREATER_AMPER GREATER_GREATER GREATER_THAN
 %token LESS_AMPER LESS_THAN LESS_GREATER
 %token NUMBER WORD
@@ -386,7 +386,8 @@ eol	: EOL
 
 %% /* start of programs */
 
-#undef input()		/* eliminates a useless warning */
+/* eliminates a useless warning */
+#undef input	
 #include "minish-lex.c"
 
 int minish_yyerror(const char *s) {

@@ -1,0 +1,7 @@
+*test *.out
+lex.yy.c
+minish-tab.h
+y.output
+y.tab.c
+y.tab.h
+
