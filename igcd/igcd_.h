@@ -12,6 +12,8 @@
  ** 									     **
  ** ************************************************************************ **/
 
+#include "config.h"
+
 #define _GCD(NM, TYPE) \
 TYPE NM(TYPE a, TYPE b) { TYPE t; \
 	if (a <= 0 || b <= 0) return 0; \

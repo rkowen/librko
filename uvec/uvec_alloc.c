@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: uvec_alloc.c,v 1.1 2002/06/24 05:44:14 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec_alloc.c,v 1.2 2002/06/24 20:23:56 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 /* uvec.c -
  *  uvec_alloc_    allocate  the uninitialized uvec object (no
@@ -19,6 +19,7 @@ static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
  ** ************************************************************************ **/
 
 #include <stdlib.h>
+#include "config.h"
 #include "uvec.h"
 #ifdef RKOERROR
 #  include "rkoerror.h"
