@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec.c,v 1.12 2002/02/22 21:39:20 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec.c,v 1.13 2002/03/01 23:06:29 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -196,6 +196,7 @@ avec_fns default_fns = {
 avec_fns default_fns = {
 	AVEC_STDC,
 	stdc_malloc,
+	stdc_free,
 	stdc_free
 };
 #endif
@@ -533,6 +534,7 @@ int avec_init_(avec *av, int cap, avec_fns fns) {
 	(void) strcpy(av->tag, TAG);
 	av->capacity = newcap;
 	av->number = 0;
+	av->fns.type = fns.type;
 	av->fns.data_add = fns.data_add;
 	av->fns.data_del = fns.data_del;
 	av->fns.data_rm = fns.data_rm;
