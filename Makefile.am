@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.21 2003/09/05 17:00:54 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.22 2005/03/29 06:16:42 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -58,6 +58,12 @@ list_srcs = 								\
 	list/list_first.c list/list_last.c list/list_number.c		\
 	list/list_pop.c list/list_push.c list/list_shift.c		\
 	list/list_sizeof.c list/list_unshift.c
+
+metropolis_srcs =							\
+	metropolis/metropolis.c metropolis/idxperm.c			\
+	metropolis/idxrevr.c metropolis/idxswap.c			\
+	metropolis/ranindex.c metropolis/ranperm.c			\
+	metropolis/ranswap.c
 
 netfns = 								\
 	netfns/gethostbyX.c netfns/tcp_connect.c
@@ -118,6 +124,7 @@ librko_a_SOURCES	=	\
 	$(list_srcs) 		\
 	memdbg.c 		\
 	memdebug.c 		\
+	$(metropolis_srcs) 	\
 	$(netfns) 		\
 	$(numfns) 		\
 	rkoerror.c 		\
@@ -138,9 +145,9 @@ man3_MANS =  \
 	docs/strdbecpy.man docs/strmalloc.man docs/strmem.man 		\
 	docs/tcp_connect.man docs/timedfgets.man docs/uvec.man 		\
 	docs/urand.man docs/wcstrcmp.man docs/prefile.man		\
-	docs/key_value.man
+	docs/key_value.man docs/metropolis.man
 
-special_includes=	\
+special_includes=							\
 	avec/avec_.h igcd/igcd_.h iprime/iprime_.h isqrt/isqrt_.h	\
 	list/list_.h
 
