@@ -12,8 +12,6 @@
 %{
 #ifdef YACCTEST
 #  define _MAIN_
-#else
-static int i;
 #endif
 
 #include <stdio.h>
@@ -34,7 +32,13 @@ static uvec *statement;
 static uvec *minish_argv;
 static minish_fdlist *fdlist;
 
-#ifdef YACCTEST
+typedef enum {NEXT_NONE, NEXT_ANY, NEXT_IF_GOOD, NEXT_IF_BAD} minish_next;
+static minish_next next_command = NEXT_ANY;
+static int retval = 0;
+int minish_signal = 0;
+int minish_retval = 0;
+
+#if defined(YACCTEST) || defined(DEBUG)
 void dbgstop(void) {
 	static int a=1;
 }
@@ -67,7 +71,7 @@ statements
 statement
 	: command options eoc
 		{
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("statement: %d\n", ++statnum);
 #endif
 		}
@@ -75,7 +79,7 @@ statement
 command : COMMAND
 		{
 			fdnum = -1;
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("command:%s\n", minish_yytext);
 #endif
 			if (!(fdlist = minish_fdlist_ctor()))
@@ -84,7 +88,7 @@ command : COMMAND
 				rkoperror("minish : yacc : arg : ctor");
 			if (uvec_add(minish_argv,minish_yytext))
 				rkoperror("minish : yacc : com");
-			if (! uvec_exists(statement)) {
+			if (!uvec_exists(statement)) {
 				if (!(statement = uvec_ctor(10)))
 					rkoperror("minish : yacc : stm : ctor");
 			}
@@ -97,7 +101,7 @@ options :	/* empty options */
 	| options redirection
 	| options word
 		{
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("option:%s\n", minish_yytext);
 #endif
 			if (uvec_add(minish_argv,minish_yytext))
@@ -114,7 +118,7 @@ redirection
 redir_file
 	: redirect file
 		{
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("redirect:stdin/out:%s\n", minish_yytext);
 #endif
 			if (minish_fdlist_add(fdlist, action,
@@ -130,7 +134,7 @@ redir_file
 	| number redirect file
 		{
 			fdnum = $1;
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("redirect:%d:%s\n", fdnum, minish_yytext);
 #endif
 			if (minish_fdlist_add(fdlist, action,
@@ -143,7 +147,7 @@ redirect: GREATER_THAN
 		{
 			fdnum = STDOUT_FILENO;
 			action = MINISH_FD_WRITE;
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("redirect:%s\n", minish_yytext);
 #endif
 			if (uvec_add(statement,minish_yytext))
@@ -153,7 +157,7 @@ redirect: GREATER_THAN
 		{
 			fdnum = STDOUT_FILENO;
 			action = MINISH_FD_APPEND;
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("redirect:%s\n", minish_yytext);
 #endif
 			if (uvec_add(statement,minish_yytext))
@@ -163,7 +167,7 @@ redirect: GREATER_THAN
 		{
 			fdnum = STDIN_FILENO;
 			action = MINISH_FD_READ;
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("redirect:%s\n", minish_yytext);
 #endif
 			if (uvec_add(statement,minish_yytext))
@@ -173,7 +177,7 @@ redirect: GREATER_THAN
 		{
 			fdnum = STDIN_FILENO;
 			action = MINISH_FD_READWRITE;
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("redirect:%s\n", minish_yytext);
 #endif
 			if (uvec_add(statement,minish_yytext))
@@ -185,7 +189,7 @@ redir_fd: number redir_ga number
 		{
 			fdnum = $1;
 			fdnum2 = $3;
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("redirect:%d to %d\n", fdnum, fdnum2);
 #endif
 			if (minish_fdlist_add(fdlist, MINISH_FD_REDIRECT,
@@ -204,7 +208,7 @@ redir_close
 	: LESS_AMPER
 		{
 			fdnum = STDIN_FILENO;
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("close:%d:\n", fdnum);
 #endif
 			if (uvec_add(statement,minish_yytext))
@@ -215,7 +219,7 @@ redir_close
 	| GREATER_AMPER_CLOSE
 		{
 			fdnum = STDOUT_FILENO;
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("close:%d:\n", fdnum);
 #endif
 			if (uvec_add(statement,minish_yytext))
@@ -226,7 +230,7 @@ redir_close
 	| number GREATER_AMPER_CLOSE
 		{
 			fdnum = $1;
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("close:%d:\n", fdnum);
 #endif
 			if (uvec_add(statement,minish_yytext))
@@ -238,7 +242,7 @@ redir_close
 
 file	: word
 		{
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("file:%s\n", minish_yytext);
 #endif
 			(void) strcpy(filename, minish_yytext);
@@ -247,17 +251,24 @@ file	: word
 eoc	: eol
 	| EOC
 		{
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("eoc:%s\n", minish_yytext);
 			dump_uvec("<argv>", minish_argv);
 			if (minish_fdlist_dump(fdlist, stdout))
 				rkoperror("minish : yacc : eoc : fd : dump");
-#else
-			if (minish_fdlist_process(fdlist))
-				rkoperror("minish : yacc : eoc : fd : process");
 #endif
 			if (uvec_add(statement,minish_yytext))
 				rkoperror("minish : yacc : eoc : stm");
+
+#ifndef YACCTEST
+			if (next_command==NEXT_ANY ||
+			(retval && next_command==NEXT_IF_BAD) ||
+			(!retval && next_command==NEXT_IF_GOOD)) {
+				retval = minish_exec(minish_argv, fdlist,
+					&minish_signal);
+			}
+			next_command = NEXT_ANY;
+#endif
 
 			if (uvec_dtor(&minish_argv))
 				rkoperror("minish : yacc : eoc : arg : dtor");
@@ -266,17 +277,24 @@ eoc	: eol
 		}
 	| BAR_BAR
 		{
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("eoc:%s\n", minish_yytext);
 			dump_uvec("<argv>", minish_argv);
 			if (minish_fdlist_dump(fdlist, stdout))
 				rkoperror("minish : yacc : || : fd : dump");
-#else
-			if (minish_fdlist_process(fdlist))
-				rkoperror("minish : yacc : || : fd : process");
 #endif
 			if (uvec_add(statement,minish_yytext))
 				rkoperror("minish : yacc : || : stm");
+
+#ifndef YACCTEST
+			if (next_command==NEXT_ANY ||
+			(retval && next_command==NEXT_IF_BAD) ||
+			(!retval && next_command==NEXT_IF_GOOD)) {
+				retval = minish_exec(minish_argv, fdlist,
+					&minish_signal);
+			}
+			next_command = NEXT_IF_BAD;
+#endif
 
 			if (uvec_dtor(&minish_argv))
 				rkoperror("minish : yacc : || : arg : dtor");
@@ -285,17 +303,24 @@ eoc	: eol
 		}
 	| AMPER_AMPER
 		{
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("eoc:%s\n", minish_yytext);
 			dump_uvec("<argv>", minish_argv);
 			if (minish_fdlist_dump(fdlist, stdout))
 				rkoperror("minish : yacc : && : fd : dump");
-#else
-			if (minish_fdlist_process(fdlist))
-				rkoperror("minish : yacc : && : fd : process");
 #endif
 			if (uvec_add(statement,minish_yytext))
 				rkoperror("minish : yacc : && : stm");
+
+#ifndef YACCTEST
+			if (next_command==NEXT_ANY ||
+			(retval && next_command==NEXT_IF_BAD) ||
+			(!retval && next_command==NEXT_IF_GOOD)) {
+				retval = minish_exec(minish_argv, fdlist,
+					&minish_signal);
+			}
+			next_command = NEXT_IF_GOOD;
+#endif
 
 			if (uvec_dtor(&minish_argv))
 				rkoperror("minish : yacc : && : arg : dtor");
@@ -307,7 +332,7 @@ eoc	: eol
 number	: NUMBER
 		{
 			$$ = $1;
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("number:%s\n", minish_yytext);
 #endif
 			strcpy(buffer, "(");
@@ -319,7 +344,7 @@ number	: NUMBER
 
 word	: WORD
 		{
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			printf("word:%s\n", minish_yytext);
 #endif
 			if (uvec_add(statement,minish_yytext))
@@ -328,15 +353,22 @@ word	: WORD
 
 eol	: EOL
 		{
-#ifdef YACCTEST
+#if defined(YACCTEST) || defined(DEBUG)
 			dump_uvec("<argv>", minish_argv);
 			printf("eol: linenum = %d\n", ++linenum);
 			dump_uvec("<line>", statement);
 			if (minish_fdlist_dump(fdlist, stdout))
 				rkoperror("minish : yacc : eol : fd : dump");
-#else
-			if (minish_fdlist_process(fdlist))
-				rkoperror("minish : yacc : && : fd : process");
+#endif
+#ifndef YACCTEST
+			if (next_command==NEXT_ANY ||
+			(retval && next_command==NEXT_IF_BAD) ||
+			(!retval && next_command==NEXT_IF_GOOD)) {
+				retval = minish_exec(minish_argv, fdlist,
+					&minish_signal);
+			}
+			minish_retval = retval;
+			next_command = NEXT_ANY;
 #endif
 
 			if (uvec_dtor(&statement))
@@ -354,7 +386,7 @@ eol	: EOL
 #include "minish-lex.c"
 
 int minish_yyerror(const char *s) {
-	fprintf(stderr,"minish.yacc: %s\n", s);
+	fprintf(stdout,"minish.yacc: %s at '%s'\n", s, yytext);
 }
 
 #ifdef YACCTEST
@@ -371,6 +403,5 @@ int main(void) {
 		return 1;
 	}
 	return minish_yyparse();
-	return 0;
 }
 #endif /* YACCTEST */

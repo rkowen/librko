@@ -12,6 +12,10 @@ int minish_yylval;
 #  define RETURN(a)	\
 	return(a);
 extern int minish_yylval;
+#  ifdef FLEX_STRING
+#    undef YY_INPUT
+#    define YY_INPUT(b, r, ms)	(r = minish_string_yyinput(b, ms))
+#  endif
 #endif
 
 #include "minish-tab.h"
@@ -26,7 +30,7 @@ NUMBER	[0-9]+
 WORD	[^ 	;&<>|#'"\n]+
 WS	[ \t]*
 
-%s	START_COMMAND OPT START_COMMENT
+%s	START_COMMAND OPT START_COMMENT START_COMMENT_ONLY
 %s	START_SQUOTE END_SQUOTE START_DQUOTE END_DQUOTE
 %s	REDI REDI_NUM
 
@@ -142,14 +146,23 @@ WS	[ \t]*
 			minish_yytext[minish_yyleng]='\0'; */
 			BEGIN OPT;
 		}
+<INITIAL>"#"	{
+			BEGIN START_COMMENT_ONLY;
+		}
 <OPT>"#"	{
 			BEGIN START_COMMENT;
 		}
-<START_COMMENT>.*	{
+<START_COMMENT,START_COMMENT_ONLY>.*	{
 			/* eat rest of comments */
 		}
 <OPT>{WORD}		{
 			RETURN(WORD);
+		}
+^{WS}\n		{	/* eat blank lines */
+			BEGIN 0;
+		}
+<START_COMMENT_ONLY>\n	{	/* eat comment only lines */
+			BEGIN 0;
 		}
 \n		{
 			BEGIN 0;

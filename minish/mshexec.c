@@ -49,6 +49,9 @@ int minish_exec(uvec *mshargv, minish_fdlist *fdlist, int *signal) {
 #endif
 		return -2;
 	}
+	if (uvec_number(mshargv) == 0) {	/* nothing to do */
+		return 0;			/* and that's OK */
+	}
 	if (!minish_fdlist_exists(fdlist)) {
 #ifdef RKOERROR
 		rkocpyerror("exec : fdlist doesn't exist!");
@@ -113,7 +116,7 @@ int minish_exec(uvec *mshargv, minish_fdlist *fdlist, int *signal) {
 	}
 }
 
-#ifdef TEST
+#ifdef EXECTEST
 
 int main () {
 	minish_fdlist *fdlist;
@@ -221,4 +224,4 @@ int main () {
 
 	return 0;
 }
-#endif /* TEST */
+#endif /* EXECTEST */

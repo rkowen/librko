@@ -60,7 +60,15 @@ sed \
 	-e "s/${ppre}yytop${ppost}/\1${prefix}top\2/g" \
 	-e "s/${ppre}yyunput${ppost}/\1${prefix}unput\2/g" \
 	-e "s/${ppre}yyvstop${ppost}/\1${prefix}vstop\2/g" \
-	-e "s/${ppre}yywrap${ppost}/\1${prefix}wrap\2/g"
+	-e "s/${ppre}yywrap${ppost}/\1${prefix}wrap\2/g" \
+	-e "s/${ppre}yy_create_buffer${ppost}/\1${prefix}_create_buffer\2/g" \
+	-e "s/${ppre}yy_delete_buffer${ppost}/\1${prefix}_delete_buffer\2/g" \
+	-e "s/${ppre}yy_flex_debug${ppost}/\1${prefix}_flex_debug\2/g" \
+	-e "s/${ppre}yy_init_buffer${ppost}/\1${prefix}_init_buffer\2/g" \
+	-e "s/${ppre}yy_flush_buffer${ppost}/\1${prefix}_flush_buffer\2/g" \
+	-e "s/${ppre}yy_load_buffer${ppost}/\1${prefix}_load_buffer\2/g" \
+	-e "s/${ppre}yy_switch_to_buffer${ppost}/\1${prefix}_switch_to_buffer\2/g" \
+	-e "s/${ppre}yyrestart${ppost}/\1${prefix}restart\2/g"
 }
 
 sedyacc () {

@@ -1,6 +1,9 @@
 xxx
+
 xxx # comments <zzz>
+        # comments only
 	xxx1 -e "what is this string?" ; xxx2 -2 "what's # for?"
+   
 	xxx1 -e 'what is this string?' ; xxx2 -2 'Say what?'
 xxx1 -e 1 && xxx2 -x ; xxx3
 xxx1 -e 1 || xxx2 -x && xxx3

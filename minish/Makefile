@@ -1,6 +1,7 @@
 CC	=gcc
 LD	=gcc -o
 LEX	=lex
+LEXFLAGS=
 YACC	=yacc
 YYFLAGS	=-v -d -t
 RM	=rm
@@ -8,19 +9,27 @@ SHELL	=sh
 YYSED	=../etc/yy-sed
 CP	=cp
 #
-CFLAGS=-g -DRKOERROR -I..
+CFLAGS=-g -DRKOERROR -I.. -DTEST
 
 .c.o :
 	$(CC) -c $(CFLAGS) $<
 
+shtest : minish.c minish-yacc.o mshexec.o fdlist.o
+	$(CC) $(CFLAGS) -o shtest -DSHTEST minish.c \
+		minish-yacc.o mshexec.o fdlist.o \
+		-ll -L.. -lrko
+
 exectest : mshexec.c fdlist.o
-	$(CC) $(CFLAGS) -o exectest -DTEST mshexec.c fdlist.o \
+	$(CC) $(CFLAGS) -o exectest -DEXECTEST mshexec.c fdlist.o \
 		-ll -L.. -lrko
 
 #yacctest : y.tab.c lex.yy.c fdlist.o
 yacctest : minish-yacc.c minish-lex.c fdlist.o
 	$(CC) $(CFLAGS) -o yacctest -DYACCTEST minish-yacc.c fdlist.o \
 		-ll -L.. -lrko
+
+minish-yacc.o : minish-yacc.c minish-lex.c
+	$(CC) -c $(CFLAGS) -DFLEX_STRING $<
 
 minish-yacc.c : y.tab.c
 	$(YYSED) --prefix minish_yy < $< > minish-yacc.c
@@ -39,7 +48,7 @@ lextest : minish-lex.c minish-tab.h
 	$(CC) $(CFLAGS) -o lextest -DLEXTEST minish-lex.c -ll
 
 lex.yy.c : minish.lex
-	$(LEX) minish.lex
+	$(LEX) $(LEXFLAGS) minish.lex
 
 fdtest/fdtest : fdlist.c
 	$(CC) $(CFLAGS) -o fdtest/fdtest -DTEST fdlist.c -L.. -lrko
