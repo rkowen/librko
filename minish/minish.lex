@@ -89,11 +89,11 @@ WS	[ \t]*
 <REDI>">&"	{
 			/* this means to close off this redirction - an error */
 			BEGIN OPT;
-			RETURN(GREATER_AMPER);
+			RETURN(GREATER_AMPER_CLOSE);
 		}
 <OPT>">&"	{
 			/* close off stdout */
-			RETURN(GREATER_AMPER);
+			RETURN(GREATER_AMPER_CLOSE);
 		}
 <OPT>"<&"	{
 			/* close off stdin */
@@ -115,6 +115,8 @@ WS	[ \t]*
 		}
 <END_SQUOTE>'	{
 			/* eat closing ' */
+			/* yyleng--;
+			yytext[yyleng]='\0'; */
 			BEGIN OPT;
 		}
 <OPT>\"		{
@@ -132,6 +134,8 @@ WS	[ \t]*
 		}
 <END_DQUOTE>\"	{
 			/* eat closing " */
+			/* yyleng--;
+			yytext[yyleng]='\0'; */
 			BEGIN OPT;
 		}
 <OPT>"#"	{

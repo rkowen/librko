@@ -3,7 +3,8 @@
 /* declarations */
 %token COMMAND EOC EOL
 %token AMPER_AMPER BAR_BAR
-%token GREATER_AMPER GREATER_GREATER GREATER_THAN LESS_AMPER LESS_THAN
+%token GREATER_AMPER_CLOSE GREATER_AMPER GREATER_GREATER GREATER_THAN
+%token LESS_AMPER LESS_THAN
 %token NUMBER WORD
 
 %left EOC BAR_BAR AMPER_AMPER
@@ -27,6 +28,11 @@ char buffer[20];
 
 uvec statement;
 uvec options;
+
+void dbgstop(void) {
+	static int a=1;
+}
+
 %}
 
 %start statements
@@ -56,7 +62,10 @@ command : COMMAND
 #endif
 			if (uvec_ctor(&options,10))
 				rkoperror("minish-yacc:o:ctor:");
-			(void) uvec_ctor(&statement,10);
+			if (! uvec_exists(&statement)) {
+				if (uvec_ctor(&statement,10))
+					rkoperror("minish-yacc:s:ctor:");
+			}
 			if (uvec_add(&statement,yytext))
 				rkoperror("minish-yacc:com:");
 		}
@@ -101,18 +110,18 @@ redirect: GREATER_THAN
 			fdnum = 1;	/* stdout */
 #ifdef YACCTEST
 			printf("redirect:%s\n", yytext);
-			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:red:");
 #endif
+			if (uvec_add(&statement,yytext))
+				rkoperror("minish-yacc:red:stdout");
 		}
 	| GREATER_GREATER
 		{
 			fdnum = 1;	/* stdout */
 #ifdef YACCTEST
 			printf("redirect:%s\n", yytext);
-			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:red:");
 #endif
+			if (uvec_add(&statement,yytext))
+				rkoperror("minish-yacc:app:");
 		}
 	| LESS_THAN
 		{
@@ -121,17 +130,24 @@ redirect: GREATER_THAN
 			printf("redirect:%s\n", yytext);
 #endif
 			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:redchar:");
+				rkoperror("minish-yacc:red:");
 		}
 	;
 
-redir_fd: number GREATER_AMPER number
+redir_fd: number redir_ga number
 		{
 			fdnum = $1;
 			fdnum2 = $3;
 #ifdef YACCTEST
 			printf("redirect:%d to %d\n", fdnum, fdnum2);
 #endif
+		}
+
+redir_ga
+	: GREATER_AMPER
+		{
+			if (uvec_add(&statement,yytext))
+				rkoperror("minish-yacc:fd-red:");
 		}
 
 redir_close
@@ -141,20 +157,26 @@ redir_close
 #ifdef YACCTEST
 			printf("close:%d:\n", fdnum);
 #endif
+			if (uvec_add(&statement,yytext))
+				rkoperror("minish-yacc:close:stdin");
 		}
-	| GREATER_AMPER
+	| GREATER_AMPER_CLOSE
 		{
 			fdnum = 1;
 #ifdef YACCTEST
 			printf("close:%d:\n", fdnum);
 #endif
+			if (uvec_add(&statement,yytext))
+				rkoperror("minish-yacc:close:stdout");
 		}
-	| number GREATER_AMPER
+	| number GREATER_AMPER_CLOSE
 		{
 			fdnum = $1;
 #ifdef YACCTEST
 			printf("close:%d:\n", fdnum);
 #endif
+			if (uvec_add(&statement,yytext))
+				rkoperror("minish-yacc:close:fd");
 		}
 	;
 

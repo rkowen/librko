@@ -83,7 +83,7 @@
 : EOL :
 
 : COMMAND :xxx
-: GREATER_AMPER :>&
+: GREATER_AMPER_CLOSE :>&
 : EOL :
 
 : COMMAND :xxx
@@ -101,7 +101,7 @@
 : COMMAND :xxx
 : WORD :2
 : NUMBER :2
-: GREATER_AMPER :>&
+: GREATER_AMPER_CLOSE :>&
 : WORD :1
 : EOL :
 
