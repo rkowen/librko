@@ -238,6 +238,10 @@ int main () {
 		"e:0 c:11 n:1 k:first v:=1=");
 	_CHECK(avec_insert(x,"second","=2="),*x,
 		"e:0 c:11 n:2 k:second|first v:=2=|=1=");
+	_CHECK(avec_insert(x,"foo","=bar="),*x,
+		"e:0 c:11 n:3 k:second|foo|first v:=2=|=bar=|=1=");
+	_CHECK(avec_remove(x,"foo","=bar="),*x,
+		"e:0 c:11 n:2 k:second|first v:=2=|=1=");
 	_CHECK(avec_insert(x,"second","#2#"),*x,
 		"e:1 c:11 n:2 k:second|first v:=2=|=1=");
 	_CHECK(avec_insert(x,"third","=3="),*x,
@@ -292,6 +296,10 @@ int main () {
 	_CHECK(avec_insert(y,"first","=1="),*y,
 		"e:0 c:11 n:1 k:first v:=1=");
 	_CHECK(avec_insert(y,"second","=2="),*y,
+		"e:0 c:11 n:2 k:second|first v:=2=|=1=");
+	_CHECK(avec_insert(y,"foo","=bar="),*y,
+		"e:0 c:11 n:3 k:second|foo|first v:=2=|=bar=|=1=");
+	_CHECK(avec_remove(y,"foo"),*y,
 		"e:0 c:11 n:2 k:second|first v:=2=|=1=");
 	_CHECK(avec_insert(y,"second","#2#"),*y,
 		"e:1 c:11 n:2 k:second|first v:=2=#2#|=1=");
@@ -356,6 +364,10 @@ int main () {
 	_COUNT(avec_insert(z,"first"),*z,
 		"e:1 c:11 n:1 k:first v: 2");
 	_COUNT(avec_insert(z,"second"),*z,
+		"e:0 c:11 n:2 k:second|first v: 1 2");
+	_COUNT(avec_insert(z,"foo"),*z,
+		"e:0 c:11 n:3 k:second|foo|first v: 1 1 2");
+	_COUNT(avec_remove(z,"foo"),*z,
 		"e:0 c:11 n:2 k:second|first v: 1 2");
 	_COUNT(avec_insert(z,"first"),*z,
 		"e:1 c:11 n:2 k:second|first v: 1 3");

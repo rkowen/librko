@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec.c,v 1.10 2002/02/21 18:05:34 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec.c,v 1.11 2002/02/22 17:08:34 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -106,7 +106,7 @@ int avec_count_delete (void **data, va_list ap) {
 	return retval;
 }
 
-int avec_count_close (void **data, va_list ap) {
+int avec_count_rm (void **data, va_list ap) {
 	if (!data) return -1;
 	*data = (void *) NULL;
 	return 0;
@@ -116,7 +116,7 @@ avec_fns count_fns = {
 	AVEC_COUNT,
 	avec_count_insert,
 	avec_count_delete,
-	avec_count_close
+	avec_count_rm
 };
 
 /* ---------------------------------------------------------------------- */
@@ -797,29 +797,41 @@ int avec_insert(avec *av, char const *key, ...) {
 }
 
 /* ---------------------------------------------------------------------- */
-/* avec_delete - delete an element of the key and returns 0 if successful
+/* whether delete or remove */
+enum avec_delrm {AVEC_DELETE, AVEC_REMOVE};
+
+/* ---------------------------------------------------------------------- */
+/* avec_data_delrm - delete or remove an element of the key and returns 0
+ * if successful
  * else returns < 0 if an error
+ * and only AVEC_DELETE should ever return > 0 to signify the key is not gone
  */
-int avec_delete(avec *av, char const *key, ...) {
-	va_list vargs;
+static int avec_data_delrm(enum avec_delrm type,
+	avec *av, char const *key, va_list vargs) {
+
 	int retval;
-	avec_element	**elem;		/* place to insert value */
+	avec_element	**elem;		/* place to data_delrm value */
 
 	if (!(elem = avec_hash_search(AVEC_MATCH, av,key))) {
 #ifdef RKOERROR
-		rkopsterror("avec_delete : ");
+		rkopsterror("avec_data_delrm : ");
 #endif
 		return -1;
 	}
-	va_start(vargs, key);
-	retval = (av->fns.data_del)(&((*elem)->data),vargs);
+	if (type == AVEC_DELETE) {
+		retval = (av->fns.data_del)(&((*elem)->data),vargs);
+	} else {
+		retval = (av->fns.data_rm)(&((*elem)->data),vargs);
+	}
 	if (retval) {
 #ifdef RKOERROR
-		if (! rkostrerror() ) {
-			rkocpyerror("unspecified user data_del error");
-			rkoerrno = RKOUSEERR;
+		if (retval < 0) {
+			if (! rkostrerror() ) {
+				rkocpyerror("unspecified user data_del error");
+				rkoerrno = RKOUSEERR;
+			}
+			rkopsterror("avec_data_delrm : ");
 		}
-		rkopsterror("avec_delete : ");
 #endif
 		return retval;
 	}
@@ -832,6 +844,63 @@ int avec_delete(avec *av, char const *key, ...) {
 	rkoerrno = RKO_OK;
 #endif
 	return 0;
+}
+
+/* ---------------------------------------------------------------------- */
+/* avec_delete - delete an element of the key and returns 0 if successful
+ * else returns < 0 if an error
+ * and should only return > 0 to signify the key is not gone
+ */
+int avec_delete(avec *av, char const *key, ...) {
+	va_list vargs;
+	int retval;
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+
+	va_start(vargs, key);
+
+	retval = avec_data_delrm(AVEC_DELETE, av, key, vargs);
+
+	if (retval < 0) {
+#ifdef RKOERROR
+		rkopsterror("avec_delete : ");
+#endif
+		return retval;
+	}
+
+	return retval;
+}
+
+/* ---------------------------------------------------------------------- */
+/* avec_remove - remove an element of the key and returns 0 if successful
+ * else returns < 0 if an error
+ * should never return > 0
+ */
+int avec_remove(avec *av, char const *key, ...) {
+	va_list vargs;
+	int retval;
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+
+	va_start(vargs, key);
+
+	retval = avec_data_delrm(AVEC_REMOVE, av, key, vargs);
+
+	if (retval < 0) {
+#ifdef RKOERROR
+		rkopsterror("avec_remove : ");
+#endif
+		return retval;
+	} else if (retval > 0) {
+#ifdef RKOERROR
+		rkocpyerror("avec_remove : user data rm return status > 0!");
+#endif
+		return -retval;
+	}
+
+	return retval;
 }
 
 /* ---------------------------------------------------------------------- */

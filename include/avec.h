@@ -1,7 +1,7 @@
 #ifndef _AVEC_H_
 #  define _AVEC_H_
 /* 
- * RCSID @(#)$Id: avec.h,v 1.7 2002/02/15 23:01:55 rk Exp $
+ * RCSID @(#)$Id: avec.h,v 1.8 2002/02/22 17:09:17 rk Exp $
  */
 /*
  *********************************************************************
@@ -60,6 +60,10 @@ typedef struct {
 	avec_fns	  fns;		/* which alloc fns to use */
 } avec;
 
+/* shield users from certain internal details */
+#define AVEC_KEY(elemptr)	((elemptr)->key)
+#define AVEC_DATA(elemptr)	((elemptr)->data)
+
 
 int                avec_set_fns(enum avec_def_fns type, avec_fns *fns);
 enum avec_def_fns  avec_get_fns(void);
@@ -85,6 +89,7 @@ int    avec_decrease(avec *av, int newcap);
 
 int    avec_insert(avec *av, char const *key, ...);
 int    avec_delete(avec *av, char const *key, ...);
+int    avec_remove(avec *av, char const *key, ...);
 void  *avec_lookup(avec *av, char const *key);
 
 avec_element             **avec_walk_r(avec *av, avec_element **ptrptr);
@@ -92,7 +97,6 @@ avec_element             **avec_walk(avec *av);
 char const * const        *avec_keys(avec *av);
 void                     **avec_values(avec *av);
 avec_element const *const *avec_hash(avec *av);
-
 
 #  ifdef __cplusplus
 	}

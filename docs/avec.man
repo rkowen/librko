@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: avec.man,v 1.3 2002/02/21 20:46:39 rk Exp $
+.\" RCSID @(#)$Id: avec.man,v 1.4 2002/02/22 17:08:34 rk Exp $
 .\" LIBDIR
 .TH "avec" "3rko" "31 Oct 1997"
 .SH NAME
@@ -8,7 +8,7 @@ avec \- associative vector (hash array) stores data according to a string key.
 
 .nf
 
-enum avec_def_fns {AVEC_DEFAULT, AVEC_USER, AVEC_STDC
+enum avec_def_fns {AVEC_DEFAULT, AVEC_USER, AVEC_COUNT, AVEC_STDC
 #  ifdef HAVE_STRMALLOC
 	, AVEC_STRMALLOC
 #endif
@@ -39,9 +39,13 @@ typedef struct {
 	avec_fns	  fns;		/* which alloc fns to use */
 } avec;
 
+/* shield users from certain internal details */
+#define AVEC_KEY(elemptr)	((elemptr)->key)
+#define AVEC_DATA(elemptr)	((elemptr)->data)
 
-int   avec_set_fns(enum avec_def_fns type, avec_fns *fns);
-enum  avec_def_fns avec_get_fns(void);
+
+int                avec_set_fns(enum avec_def_fns type, avec_fns *fns);
+enum avec_def_fns  avec_get_fns(void);
 
 avec  *avec_ctor_(int cap, avec_fns fns);
 avec  *avec_ctor(int cap);
@@ -64,6 +68,7 @@ int    avec_decrease(avec *av, int newcap);
 
 int    avec_insert(avec *av, char const *key, ...);
 int    avec_delete(avec *av, char const *key, ...);
+int    avec_remove(avec *av, char const *key, ...);
 void  *avec_lookup(avec *av, char const *key);
 
 avec_element             **avec_walk_r(avec *av, avec_element **ptrptr);
@@ -211,8 +216,16 @@ See the section on
 .IR avec_fns .
 
 .TP
+.I avec_remove
+``removes'' an element for the given key.  This calls the object data_rm
+function, which must handle a pre-existing slot and remove the data.
+See the section on
+.IR avec_fns .
+
+.TP
 .I avec_lookup
-Returns a pointer to the data element pointed to by the given key.
+Returns the address of the pointer to the data element pointed
+to by the given key.
 
 .TP
 .I avec_walk_r
@@ -220,7 +233,7 @@ A re-entrant version of
 .I avec_walk
 which will march through the entries of the object hash array
 with repeated calls
-returning a pointer to the avec_element that contains the
+returning a address of the pointer to the avec_element that contains the
 key and the data.
 The first call should have ptrptr = NULL, (unless you know exactly
 what you're doing).
@@ -237,7 +250,7 @@ key and the data.
 The first call must have av pointing to an avec object,
 and subsequent calls must have av=NULL.
 br
-This routine is not thread save since it uses internal static variables.
+This routine is not thread safe since it uses internal static variables.
 It should not be used at all.  Use
 .I avec_walk_r
 instead.  See the example.
@@ -272,7 +285,7 @@ for the same key.
 The form of these functions using StdC functions are as follows:
 
 .nf
-/* ---------------------------------------------------------------------- */
+/* --------------------------------------------------- */
 /* wrappers for the StdC string functions
  */
 int stdc_malloc (void **data, va_list ap) {
@@ -318,8 +331,11 @@ and is
 .I std_free
 in this case, is called only by
 .I avec_delete
-and does not need to deallocate the data.  However, if it does
-then it can return 0, else have it return 1.
+and does not need to deallocate the data, but must return
+a positive value in this case.  However, if it does
+deallocate the data then and only then it can return 0.
+This is the function used by
+.IR avec_delete .
 .P
 The third function in the
 .I ave_fns
@@ -327,48 +343,89 @@ structure is
 .I data_rm
 and for the default case is
 .I std_free
-also.  This function must deallocate the data.
+also.  This function must deallocate the data and never return a value
+greater than 0.  To do so is an error and may cause unexpected behavior.
+This is the function used by
+.I avec_remove
+and
+.IR avec_close .
+
+.P
+A second set of provided
+.I avec_fns
+can be used by declaring
+.I avec_set_fns(AVEC_COUNT, NULL);
+which will then use the internal counting functions for the
+next
+.IR avec_ctor(capacity) ,
+which does
+not allocate any memory for the data, but stores a numerical
+value in the (void *) data pointer.
+However, the numerical limit is limited by the size of a (void *)
+pointer, and it's upto the application to cast to an appropriate
+size integer type.  However, the following code fragment might be
+of use for a generalized way to retrieve values,  but ignore
+any compiler warnings because at least one of the casts should
+be to a different size.  A more efficient way would be to use a
+.I GNU configure
+script to arrive at the void * pointer size and use the appropriate
+sized integer, prior to compile time.
+.nf
+
+/* convert a void *  to a long */
+long v2l (void *vptr) {
+	unsigned int	icount;
+	unsigned short	scount;
+	unsigned long	lcount;
+
+	if (sizeof(void *) == sizeof(unsigned int)) {
+		icount = (unsigned int) vptr;
+		lcount = icount;
+	} else if (sizeof(void *) == sizeof(unsigned short)) {
+		scount = (unsigned short) vptr;
+		lcount = scount;
+	} else if (sizeof(void *) == sizeof(unsigned long)) {
+		lcount = (unsigned long) vptr;
+	} else {
+		lcount = (unsigned long) vptr;
+	}
+	return lcount;
+}
+.fi
 
 .SH EXAMPLES
 
+The following example counts some words that are inserted.
+(Some more detailed and varying examples can be viewed in the
+.I wf.c
+and
+.I memdbg.c
+sources.)
+
 .nf
-#define RKOERROR
 #include <stdio.h>
-#include "rkoerror.h"
 #include "avec.h"
 
 int main() {
-	avec *u;
-	int estat=0;
-	char buffer[128];
-	char **vec;
+	avec *wordcount;
+	avec_element **elem = (avec_element **) NULL;
 	int i;
 
-	if(!(u = avec_ctor(10))) rkoperror("main");
+	if (avec_set_fns(AVEC_COUNT, NULL)) return -2;
+	if (!(wordcount = avec_ctor(50))) return -1;
+	if (avec_resize_percentage(wordcount,40)) return -3;
 
-	for (i = 0; i < 12; ++i) {
-		(void) sprintf(buffer, ":%0.2d:", i);
-		if (avec_add(u, buffer)) rkoperror("main");
-	}
-	/* can access the elements ``directly'' */
-	*(avec_vector(u)[0]) = 'x';
-	*(avec_vector(u)[5]) = 'x';
-
-	if(avec_pop(u)) rkoperror("main");
-	if(avec_pop(u)) rkoperror("main");
-
-	vec = avec_vector(u);
-	if (avec_exists(u)) {
-		for (i = 0; *vec != (char *) NULL; ++i, ++vec) {
-			printf("\t-%s-", *vec);
-			if (!((i+1)%5)) printf("\\n");
-		}
-		printf("\\n");
-		printf("\\tend = %d, number = %d, capacity = %d\n",
-			avec_end(u), avec_number(u), avec_capacity(u));
+	avec_insert(wordcount,"first");
+	for (i=0; i < 4; i++) {
+		avec_insert(wordcount,"second");
+		avec_insert(wordcount,"third");
 	}
 
-	if(avec_dtor(&u)) rkoperror("main");
+	while ((elem = avec_walk_r(wordcount, elem))) {
+		printf("%s\t%d\n", AVEC_KEY(*elem), (int) AVEC_DATA(*elem));
+	}
+
+	if(avec_dtor(&wordcount)) return -4;
 
 	return 0;
 }
@@ -376,10 +433,9 @@ int main() {
 .P
 Should get the following results:
 .nf
-        -x00:-  -:01:-  -:02:-  -:03:-  -:04:-
-        -x05:-  -:06:-  -:07:-  -:08:-  -:09:-
-
-        end = 9, number = 10, capacity = 15
+first	1
+third	4
+second	4
 .fi
 
 .SH SEE ALSO
