@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec_set_fns.c,v 1.2 2002/09/13 01:50:44 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec_set_fns.c,v 1.3 2003/09/04 19:38:54 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -168,9 +168,10 @@ avec_fns default_fns = {
 	stdc_free
 };
 #endif
-/* set the default set of data functions to use
+/* return the data functions to use
  */
-int avec_set_fns(enum avec_def_fns type, avec_fns *fns) {
+static avec_fns *avec_set_fns_(enum avec_def_fns type, avec_fns *fns) {
+	static avec_fns t_fns;
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
@@ -182,19 +183,19 @@ int avec_set_fns(enum avec_def_fns type, avec_fns *fns) {
 #endif
 	}
 	if (type == AVEC_STDC) {
-		default_fns.data_add = stdc_fns.data_add;
-		default_fns.data_del = stdc_fns.data_del;
-		default_fns.data_rm = stdc_fns.data_rm;
+		t_fns.data_add = stdc_fns.data_add;
+		t_fns.data_del = stdc_fns.data_del;
+		t_fns.data_rm = stdc_fns.data_rm;
 #ifdef HAVE_STRMALLOC
 	} else if (type == AVEC_STRMALLOC) {
-		default_fns.data_add = stdc_fns.data_add;
-		default_fns.data_del = stdc_fns.data_del;
-		default_fns.data_rm = stdc_fns.data_rm;
+		t_fns.data_add = stdc_fns.data_add;
+		t_fns.data_del = stdc_fns.data_del;
+		t_fns.data_rm = stdc_fns.data_rm;
 #endif
 	} else if (type == AVEC_COUNT) {
-		default_fns.data_add = count_fns.data_add;
-		default_fns.data_del = count_fns.data_del;
-		default_fns.data_rm = count_fns.data_rm;
+		t_fns.data_add = count_fns.data_add;
+		t_fns.data_del = count_fns.data_del;
+		t_fns.data_rm = count_fns.data_rm;
 	} else if (type == AVEC_USER) {
 		if (fns == (avec_fns*) NULL
 		|| fns->data_add == NULL
@@ -202,21 +203,117 @@ int avec_set_fns(enum avec_def_fns type, avec_fns *fns) {
 		|| fns->data_rm == NULL) {
 #ifdef RKOERROR
 			(void) rkocpyerror(
-				"avec_set_fns : null data functions!");
+				"null data functions!");
 			rkoerrno = RKOUSEERR;
 #endif
-			return -1;
+			return (avec_fns *) NULL;
 		}
-		default_fns.data_add = fns->data_add;
-		default_fns.data_del = fns->data_del;
-		default_fns.data_rm = fns->data_rm;
+		t_fns.data_add = fns->data_add;
+		t_fns.data_del = fns->data_del;
+		t_fns.data_rm = fns->data_rm;
 	}
-	default_fns.type = type;
+	t_fns.type = type;
+	return &t_fns;
+}
+
+/* set the default set of data functions to use
+ */
+int avec_set_def_fns(enum avec_def_fns type, avec_fns *fns) {
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	avec_fns	*t_fns;
+
+	if (!(t_fns = avec_set_fns_(type,fns))) {
+#ifdef RKOERROR
+		(void) rkopsterror("avec_set_def_fns :");
+#endif
+		return -1;
+	}
+
+	default_fns.data_add = t_fns->data_add;
+	default_fns.data_del = t_fns->data_del;
+	default_fns.data_rm = t_fns->data_rm;
+	default_fns.type = t_fns->type;
 	return 0;
 }
 /* return what type of data functions are currently default
  */
-enum avec_def_fns avec_get_fns(void) {
+enum avec_def_fns avec_get_def_fns_enum(void) {
 	return default_fns.type;
 }
 
+/* return the current default data functions struct
+ */
+avec_fns *avec_get_def_fns(void) {
+	return &default_fns;
+}
+
+/* return the current data functions struct for this avec object
+ */
+int avec_set_fns(avec *av, enum avec_def_fns type, avec_fns *fns) {
+	avec_fns *t_fns;
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	if (!avec_exists(av)) {
+#ifdef RKOERROR
+	rkoerrno = RKOUSEERR;
+	(void) rkocpyerror("avec_set_fns : null avec!");
+#endif
+		return -1;
+	}
+	if (!(t_fns = avec_set_fns_(type,fns))) {
+#ifdef RKOERROR
+		(void) rkopsterror("avec_set_fns :");
+#endif
+		return -2;
+	}
+
+	(av->fns).data_add = t_fns->data_add;
+	(av->fns).data_del = t_fns->data_del;
+	(av->fns).data_rm = t_fns->data_rm;
+	(av->fns).type = t_fns->type;
+	return 0;
+}
+/* return the current data functions struct for this avec object
+ */
+avec_fns *avec_get_fns(avec *av) {
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	if (avec_exists(av)) {
+		return &(av->fns);
+	} else {
+#ifdef RKOERROR
+	rkoerrno = RKOUSEERR;
+	(void) rkocpyerror("avec_get_fns : null avec!");
+#endif
+		return (avec_fns *) NULL;
+	}
+}
+
+/* return a pointer to one of the internal standard avec fn set
+ */
+avec_fns *avec_get_std_fns(enum avec_def_fns type) {
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	if (type == AVEC_DEFAULT) {
+		return &default_fns;
+	} else if (type == AVEC_STDC) {
+		return &stdc_fns;
+#ifdef HAVE_STRMALLOC
+	} else if (type == AVEC_STRMALLOC) {
+		return &strmalloc_fns;
+#endif
+	} else if (type == AVEC_COUNT) {
+		return &count_fns;
+	} else if (type == AVEC_USER) {
+#ifdef RKOERROR
+		rkoerrno = RKOUSEERR;
+		(void) rkocpyerror("avec_get_std_fns : AVEC_USER not standard");
+#endif
+		return (avec_fns *) NULL;
+	}
+}

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec_ctor.c,v 1.1 2002/06/24 21:55:06 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec_ctor.c,v 1.2 2003/09/04 19:38:54 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -30,7 +30,7 @@ static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
  * returns NULL if an error, else the memory location  if OK.
  * avec_ctor_ will call avec_init_() to set things up.
  */
-avec *avec_ctor_(int cap, avec_fns fns) {
+avec *avec_ctor_(int cap, avec_fns *fns) {
 	avec *av = (avec *) NULL;
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
@@ -58,6 +58,6 @@ avec *avec_ctor_(int cap, avec_fns fns) {
  * avec_ctor will call avec_ctor_() to set things up.
  */
 avec *avec_ctor(int cap) {
-	return avec_ctor_(cap, default_fns);
+	return avec_ctor_(cap, &default_fns);
 }
 

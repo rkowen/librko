@@ -1,7 +1,7 @@
 #ifndef _AVEC_H_
 #  define _AVEC_H_
 /* 
- * RCSID @(#)$Id: avec.h,v 1.9 2002/06/21 21:51:33 rk Exp $
+ * RCSID @(#)$Id: avec.h,v 1.10 2003/09/04 19:38:54 rk Exp $
  */
 /** ** Copyright *********************************************************** **
  ** 									     **
@@ -55,16 +55,20 @@ typedef struct {
 #define AVEC_DATA(elemptr)	((elemptr)->data)
 
 
-int                avec_set_fns(enum avec_def_fns type, avec_fns *fns);
-enum avec_def_fns  avec_get_fns(void);
+int                avec_set_def_fns(enum avec_def_fns type, avec_fns *fns);
+enum avec_def_fns  avec_get_def_fns_enum(void);
+avec_fns          *avec_get_def_fns(void);
+int                avec_set_fns(avec *av,enum avec_def_fns type,avec_fns *fns);
+avec_fns          *avec_get_fns(avec *av);
+avec_fns          *avec_get_std_fns(enum avec_def_fns type);
 
-avec  *avec_ctor_(int cap, avec_fns fns);
+avec  *avec_ctor_(int cap, avec_fns *fns);
 avec  *avec_ctor(int cap);
 int    avec_dtor(avec **av, ...);
-avec  *avec_alloc_(avec_fns strfns);
+avec  *avec_alloc_(avec_fns *strfns);
 avec  *avec_alloc(void);
 int    avec_dealloc(avec **av);
-int    avec_init_(avec *av, int cap, avec_fns fns);
+int    avec_init_(avec *av, int cap, avec_fns *fns);
 int    avec_init(avec *av, int cap);
 int    avec_close(avec *av, ...);
 

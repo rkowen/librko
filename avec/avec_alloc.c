@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec_alloc.c,v 1.1 2002/06/24 21:55:06 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec_alloc.c,v 1.2 2003/09/04 19:38:54 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -29,7 +29,7 @@ static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
  * given data functions.
  * returns NULL if an error, else the memory location  if OK.
  */
-avec *avec_alloc_(avec_fns fns) {
+avec *avec_alloc_(avec_fns *fns) {
 	avec *av = (avec *) NULL;
 
 	if (!(av = (avec *) malloc(sizeof(avec)))) {
@@ -39,9 +39,9 @@ avec *avec_alloc_(avec_fns fns) {
 #endif
 		return av;
 	}
-	av->fns.data_add = fns.data_add;
-	av->fns.data_del = fns.data_del;
-	av->fns.data_rm = fns.data_rm;
+	av->fns.data_add = fns->data_add;
+	av->fns.data_del = fns->data_del;
+	av->fns.data_rm = fns->data_rm;
 	*(av->tag) = '\0';
 	av->number = 0;
 	av->capacity = 0;
@@ -53,6 +53,6 @@ avec *avec_alloc_(avec_fns fns) {
  * avec_alloc will call avec_alloc_() to set things up.
  */
 avec *avec_alloc(void) {
-	return avec_alloc_(default_fns);
+	return avec_alloc_(&default_fns);
 }
 

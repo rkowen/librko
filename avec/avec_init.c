@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec_init.c,v 1.1 2002/06/24 21:55:06 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec_init.c,v 1.2 2003/09/04 19:38:54 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -29,7 +29,7 @@ static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
  * given data functions.
  * returns <0 if an error, else 0 if OK as well as all the other functions
  */
-int avec_init_(avec *av, int cap, avec_fns fns) {
+int avec_init_(avec *av, int cap, avec_fns *fns) {
 	int newcap;
 	if (av == (avec *) NULL) {
 #ifdef RKOERROR
@@ -65,10 +65,10 @@ int avec_init_(avec *av, int cap, avec_fns fns) {
 	(void) strcpy(av->tag, avec_TAG);
 	av->capacity = newcap;
 	av->number = 0;
-	av->fns.type = fns.type;
-	av->fns.data_add = fns.data_add;
-	av->fns.data_del = fns.data_del;
-	av->fns.data_rm = fns.data_rm;
+	av->fns.type = fns->type;
+	av->fns.data_add = fns->data_add;
+	av->fns.data_del = fns->data_del;
+	av->fns.data_rm = fns->data_rm;
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
@@ -79,6 +79,6 @@ int avec_init_(avec *av, int cap, avec_fns fns) {
  * avec_init will call avec_init_() to set things up.
  */
 int avec_init(avec *av, int cap) {
-	return avec_init_(av, cap, default_fns);
+	return avec_init_(av, cap, &default_fns);
 }
 

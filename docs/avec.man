@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: avec.man,v 1.5 2002/07/16 21:33:36 rk Exp $
+.\" RCSID @(#)$Id: avec.man,v 1.6 2003/09/04 19:38:54 rk Exp $
 .\" LIBDIR
 .TH "avec" "3rko" "31 Oct 1997"
 .SH NAME
@@ -44,16 +44,20 @@ typedef struct {
 #define AVEC_DATA(elemptr)	((elemptr)->data)
 
 
-int                avec_set_fns(enum avec_def_fns type, avec_fns *fns);
-enum avec_def_fns  avec_get_fns(void);
+int                avec_set_def_fns(enum avec_def_fns type, avec_fns *fns);
+enum avec_def_fns  avec_get_def_fns_enum(void);
+avec_fns          *avec_get_def_fns(void);
+int                avec_set_fns(avec *av, enum avec_def_fns type, avec_fns *fns);
+avec_fns          *avec_get_fns(avec *av);
+avec_fns          *avec_get_std_fns(enum avec_def_fns type);
 
-avec  *avec_ctor_(int cap, avec_fns fns);
+avec  *avec_ctor_(int cap, avec_fns *fns);
 avec  *avec_ctor(int cap);
 int    avec_dtor(avec **av, ...);
-avec  *avec_alloc_(avec_fns strfns);
+avec  *avec_alloc_(avec_fns *strfns);
 avec  *avec_alloc(void);
 int    avec_dealloc(avec **av);
-int    avec_init_(avec *av, int cap, avec_fns fns);
+int    avec_init_(avec *av, int cap, avec_fns *fns);
 int    avec_init(avec *av, int cap);
 int    avec_close(avec *av, ...);
 
@@ -110,13 +114,36 @@ except for the accessor and constructor functions,
 return 0 if no error or return <0 otherwise.
 
 .TP 15
-.I avec_set_fns
-register the set of data functions to use by default.
+.I avec_set_def_fns
+register the set of data functions to use by default.  If using
+one of the standard ones then only type needs to be specified.
+However, if AVEC_USER is given then the fns struct must be given.
 
 .TP
-.I avec_get_fns
+.I avec_get_def_fns_enum
 query as to which set of data functions are being used,
 only the values given by enum avec_def_fns will be returned.
+
+.TP
+.I avec_get_def_fns
+query as to which set of data functions are being used as default.
+Returns the avec_fns struct.  Can be saved and put back in.
+
+.TP
+.I avec_set_fns
+Sets the set of avec_fns for the avec object.  This should not be used for
+general use.
+
+.TP
+avec_get_fns
+Get the set of avec_fns for the avec object.  Useful if constructing
+another avec object to be similar to an existing one.
+
+.TP
+avec_get_std_fns
+Get the set of standard avec avec_fns for the given type.
+Useful if constructing avec objects of differing types.
+The only one not returned is for AVEC_USER.
 
 .TP
 .I avec_ctor_

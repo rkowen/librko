@@ -297,7 +297,7 @@ int main () {
 		"e:0 c:-1 n:-1");
 	printf("========================\n");
 
-	y = avec_ctor_(10, user_fns);
+	y = avec_ctor_(10, &user_fns);
 	_CHECK(avec_number(y),*y,
 		"e:0 c:11 n:0 k: v:");
 	_CHECK(avec_capacity(y),*y,
@@ -362,7 +362,7 @@ int main () {
 	free((void *) values);
 	printf("========================\n");
 
-	avec_set_fns(AVEC_COUNT, NULL);
+	avec_set_def_fns(AVEC_COUNT, NULL);
 	z = avec_ctor(10);
 	_COUNT(avec_number(z),*z,
 		"e:0 c:11 n:0 k: v:");
