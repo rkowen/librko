@@ -11,6 +11,12 @@ double tfun(double x) {
 	return (maxmin * cos(hpi*(x - offset)));
 }
 
+static PRECISION _F_a_D_d_(PRECISION ad1, PRECISION ad2) {
+	volatile /* static */ PRECISION tmp;
+	tmp = (ad1 + ad2);	/* force the value out of the registers */
+	return tmp;
+}
+
 void main(void) {
 	PRECISION x, Ax, dx, scale, eps, tmp;
 	const PRECISION half = 0.5, one = 1.0;
@@ -19,7 +25,7 @@ void main(void) {
 
 /* compute machine eps */
 	tmp = half;
-	while (one + tmp != one) {
+	while (_F_a_D_d_(one,tmp) != one) {
 		eps = tmp;
 		tmp *= half;
 	}
