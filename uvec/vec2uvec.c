@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: vec2uvec.c,v 1.2 2002/06/24 20:23:56 rk Exp $";
+static const char RCSID[]="@(#)$Id: vec2uvec.c,v 1.3 2002/06/27 22:21:38 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 /* uvec.c -
  *  vec2uvec copies  a  vector (or part of a vector upto
@@ -16,7 +16,6 @@ static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
  ** 									     **
  ** ************************************************************************ **/
 
-#include "config.h"
 #include "uvec.h"
 #ifdef RKOERROR
 #  include "rkoerror.h"

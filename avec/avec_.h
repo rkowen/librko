@@ -1,5 +1,5 @@
 /* 
- * RCSID @(#)$Id: avec_.h,v 1.1 2002/06/24 21:55:06 rk Exp $
+ * RCSID @(#)$Id: avec_.h,v 1.2 2002/06/27 22:21:38 rk Exp $
  */
 /** ** Copyright *********************************************************** **
  ** 									     **
@@ -14,7 +14,9 @@ extern "C" {
 #endif
 
 #include <stdarg.h>
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #include "avec.h"
 
 /* ---------------------------------------------------------------------- */

@@ -12,7 +12,9 @@
  ** 									     **
  ** ************************************************************************ **/
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 
 #define _GCD(NM, TYPE) \
 TYPE NM(TYPE a, TYPE b) { TYPE t; \

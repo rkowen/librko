@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: uvec_init.c,v 1.2 2002/06/24 20:23:56 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec_init.c,v 1.3 2002/06/27 22:21:38 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 /* uvec.c -
  *  uvec_init_     initialize Unix vector to capacity  ``cap''
@@ -18,7 +18,6 @@ static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 
 #include <stdlib.h>
 #include <string.h>
-#include "config.h"
 #include "uvec.h"
 #ifdef RKOERROR
 #  include "rkoerror.h"

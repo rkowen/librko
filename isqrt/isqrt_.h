@@ -11,7 +11,9 @@
  ** 									     **
  ** ************************************************************************ **/
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 
 /* a look-up table lut[i] = 256*sqrt(i/256) */
 extern unsigned char isqrt_lut[256];

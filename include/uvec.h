@@ -1,7 +1,7 @@
 #ifndef _UVEC_H_
 #  define _UVEC_H_
 /* 
- * RCSID @(#)$Id: uvec.h,v 1.4 2002/06/24 05:44:14 rk Exp $
+ * RCSID @(#)$Id: uvec.h,v 1.5 2002/06/27 22:21:38 rk Exp $
  */
 /** ** Copyright *********************************************************** **
  ** 									     **
@@ -18,6 +18,10 @@ extern "C" {
 #  endif
 
 #include <stdlib.h>
+
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 
 /* Unix Vector enums */
 

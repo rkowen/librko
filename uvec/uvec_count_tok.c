@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: uvec_count_tok.c,v 1.2 2002/06/24 20:23:56 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec_count_tok.c,v 1.3 2002/06/27 22:21:38 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 /* uvec.c -
  *  uvec_copy_str *  create a uvec from a token delimited string.
@@ -14,7 +14,6 @@ static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
  ** ************************************************************************ **/
 
 #include <string.h>
-#include "config.h"
 #include "uvec.h"
 #ifdef HAVE_STRMALLOC
 #  include "strmalloc.h"

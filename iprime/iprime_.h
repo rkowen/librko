@@ -12,7 +12,9 @@
  ** 									     **
  ** ************************************************************************ **/
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #include "isqrt.h"
 
 /* a look-up table of the first few primes */
