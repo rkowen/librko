@@ -5,7 +5,7 @@ YACC	=yacc
 YYFLAGS	=-v -d -t
 RM	=rm
 #
-CFLAGS=-g
+CFLAGS=-g -DRKOERROR
 
 .c.o :
 	$(CC) -c $(CFLAGS) $<
@@ -22,11 +22,18 @@ lextest : lex.yy.c y.tab.h
 lex.yy.c : minish.lex
 	$(LEX) minish.lex
 
+fdtest/fdtest : fdlist.c
+	$(CC) $(CFLAGS) -I.. -o fdtest/fdtest -DTEST fdlist.c -L.. -lrko
+
+runfdtest : fdtest/fdtest
+	-(cd fdtest; ./fdtest.sh)
+
 clean :
-	$(RM) -f *.o a.out core y.output
+	-$(RM) -f *.o a.out core y.output
+	-$(RM) -f fdtest/fdtest fdtest/fdtest.*out
 
 wipe : clean
-	$(RM) lextest yacctest
+	-$(RM) lextest yacctest
 
 clobber: wipe
-	$(RM) -f lex.yy.c y.tab.c
+	-$(RM) -f lex.yy.c y.tab.c
