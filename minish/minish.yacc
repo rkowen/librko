@@ -34,9 +34,22 @@ uvec statement;
 uvec minish_argv;
 minish_fdlist fdlist;
 
+#ifdef YACCTEST
 void dbgstop(void) {
 	static int a=1;
 }
+
+void dump_uvec(char *string, uvec *m_uvec) {
+	char **ptr;
+
+	printf("%s: ", string);
+	for (ptr = uvec_vector(m_uvec);
+		*ptr != (char *) NULL; ++ptr) {
+		printf("%s ", *ptr);
+	}
+	printf("\n");
+}
+#endif /* YACCTEST */
 
 %}
 
@@ -236,12 +249,7 @@ eoc	: eol
 		{
 #ifdef YACCTEST
 			printf("eoc:%s\n", yytext);
-			printf("argv: ");
-			for (ptr = uvec_vector(&minish_argv);
-				*ptr != (char *) NULL; ++ptr) {
-				printf("%s ", *ptr);
-			}
-			printf("\n");
+			dump_uvec("<argv>", &minish_argv);
 			if (minish_fdlist_dump(&fdlist, stdout))
 				rkoperror("minish : yacc : eoc : fd : dump");
 #else
@@ -260,12 +268,7 @@ eoc	: eol
 		{
 #ifdef YACCTEST
 			printf("eoc:%s\n", yytext);
-			printf("argv: ");
-			for (ptr = uvec_vector(&minish_argv);
-				*ptr != (char *) NULL; ++ptr) {
-				printf("%s ", *ptr);
-			}
-			printf("\n");
+			dump_uvec("<argv>", &minish_argv);
 			if (minish_fdlist_dump(&fdlist, stdout))
 				rkoperror("minish : yacc : || : fd : dump");
 #else
@@ -284,12 +287,7 @@ eoc	: eol
 		{
 #ifdef YACCTEST
 			printf("eoc:%s\n", yytext);
-			printf("argv: ");
-			for (ptr = uvec_vector(&minish_argv);
-				*ptr != (char *) NULL; ++ptr) {
-				printf("%s ", *ptr);
-			}
-			printf("\n");
+			dump_uvec("<argv>", &minish_argv);
 			if (minish_fdlist_dump(&fdlist, stdout))
 				rkoperror("minish : yacc : && : fd : dump");
 #else
@@ -331,12 +329,9 @@ word	: WORD
 eol	: EOL
 		{
 #ifdef YACCTEST
+			dump_uvec("<argv>", &minish_argv);
 			printf("eol: linenum = %d\n", ++linenum);
-			for (ptr = uvec_vector(&statement);
-				*ptr != (char *) NULL; ++ptr) {
-				printf("%s ", *ptr);
-			}
-			printf("\n");
+			dump_uvec("<line>", &statement);
 			if (minish_fdlist_dump(&fdlist, stdout))
 				rkoperror("minish : yacc : eol : fd : dump");
 #else
