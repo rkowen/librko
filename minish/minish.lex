@@ -6,11 +6,16 @@
 #  define RETURN(a)	\
 	printf(": " #a " :"); \
 	puts(yytext);
+int yylval;
 
 #else
 #  define RETURN(a)	\
 	return(a);
+extern int yylval;
 #endif
+
+#include "y.tab.h"
+#include <stdlib.h>
 
 /* WORD		= anything that should be passed as a single entity
  * NUMBER	= a filedescriptor 0=stdin, 1=stdout, 2=stderr, etc.
@@ -47,17 +52,20 @@ WS	[ \t]*
 <OPT>{NUMBER}/">"	{
 			/* number is only a NUMBER if followed by > */
 			/* must be a redirection */
+			yylval = atoi(yytext);
 			BEGIN REDI;
 			RETURN(NUMBER);
 		}
 <OPT>{NUMBER}/"<"	{
 			/* number is only a NUMBER if followed by < */
 			/* must be a redirection */
+			yylval = atoi(yytext);
 			BEGIN REDI;
 			RETURN(NUMBER);
 		}
 <REDI_NUM>{NUMBER}	{
 			/* have redirection with trialing NUMBER */
+			yylval = atoi(yytext);
 			BEGIN OPT;
 			RETURN(NUMBER);
 		}

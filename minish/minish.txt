@@ -1,6 +1,7 @@
 
 Redirection rules (note spaces, or lack thereof, are important for fd numbers;
 otherwise spaces are unimportant)
+command < file		redirect stdin from a file
 command > file		redirect stdout to file
 command >> file		append stdout to file
 command n> file		redirect fd n to file

@@ -2,6 +2,7 @@ CC	=gcc
 LD	=gcc -o
 LEX	=lex
 YACC	=yacc
+YYFLAGS	=-v -d -t
 RM	=rm
 #
 CFLAGS=-g
@@ -10,19 +11,19 @@ CFLAGS=-g
 	$(CC) -c $(CFLAGS) $<
 
 yacctest : y.tab.c lex.yy.c
-	$(CC) $(CFLAGS) -o yacctest -DYACCTEST y.tab.c -ll -lrko
+	$(CC) $(CFLAGS) -I.. -o yacctest -DYACCTEST y.tab.c -ll -L.. -lrko
 
-y.tab.c : minish.yacc
-	$(YACC) -t minish.yacc
+y.tab.c y.tab.h : minish.yacc
+	$(YACC) $(YYFLAGS) minish.yacc
 
-lextest : lex.yy.c
+lextest : lex.yy.c y.tab.h
 	$(CC) $(CFLAGS) -o lextest -DLEXTEST lex.yy.c -ll
 
 lex.yy.c : minish.lex
 	$(LEX) minish.lex
 
 clean :
-	$(RM) -f *.o a.out core
+	$(RM) -f *.o a.out core y.output
 
 wipe : clean
 	$(RM) lextest yacctest
