@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: uvec_add.c,v 1.3 2002/06/27 22:21:38 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec_add.c,v 1.4 2003/09/04 19:37:15 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 /* uvec.c -
  *  uvec_add       add one element to end of vector.
@@ -35,7 +35,7 @@ int uvec_add(uvec *uv, char const *str) {
 #endif
 		return -1;
 	}
-	return uvec_nadd(uv, str, strlen(str));
+	return uvec_nadd(uv, str, strlen(str)+1);
 }
 
 /* ---------------------------------------------------------------------- */
