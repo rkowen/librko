@@ -1,5 +1,6 @@
 /* birdy - reads files given on commandline line-by-line and for each line
  *	it prepends "BOL: " and appends " :EOL" and sends it to stdout.
+ *	If a commandline argument is "--" then use stdin at that point.
  *
  *	by R.K.Owen, Ph.D.	11/17/1998
  */
@@ -14,9 +15,13 @@ int main(int argc, char *argv[]) {
 	FILE *in;
 
 	while (*argv != (char *) NULL) {
-		if ((in = fopen(*argv, "r")) == (FILE *) NULL) {
-			(void) fprintf(stderr,"%s: can't open '%s'\n",
-				prgname, *argv);
+		if (strcmp(*argv,"--")) {	/* want stdin */
+			if ((in = fopen(*argv, "r")) == (FILE *) NULL) {
+				(void) fprintf(stderr,"%s: can't open '%s'\n",
+					prgname, *argv);
+			}
+		} else {
+			in = stdin;
 		}
 		(void) setvbuf(stdout, (char *) NULL, _IOLBF, 0);
 		while (fgets(buffer, MAXBUF, in) != (char *) NULL) {

@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 	HACK(NULL)
 
 	subargv = uvec_ctor(3);
-	(void) uvec_add(subargv,"./birdy");
+	(void) uvec_addl(subargv,"./birdy", "--", NULL);
 
 	if ((in = fopen("testtext", "r")) == (FILE *) NULL) {
 		printf("%s failed to open 'testtext'\n", prgname);
