@@ -1,10 +1,10 @@
-/* :OK: cc tmemory.c
+/* :OK: cc tmemdebug.c
  * :OK: a.out
  * :OK: && echo ran OK
  * :OK:END:
  */
-/* :*: cc -c memory.c
- * :*: cc -DMEMDEBUG tmemory.c memory.o
+/* :*: cc -c memdebug.c
+ * :*: cc -DMEMDEBUG tmemdebug.c memdebug.o
  * :*: a.out
  * :*:END:
  */
@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 #define MEMDEBUG
-#include "librko.h"		/* include this AFTER stdlib.h */
+#include "memdebug.h"		/* include this AFTER stdlib.h */
 
 typedef struct Trial {
 	int a;
@@ -28,6 +28,10 @@ int main() {
 	double *da = (double *) NULL;
 	char *ca = (char *) NULL;
 	trial *ta = (trial *) NULL;
+
+	 printf("Some regular output\n");
+
+	memdebug_output(stdout);
 
 	if ((ia = (int *) malloc(num * sizeof(int))) == NULL)
 		(void) fprintf(stderr,"malloc error\n");
@@ -57,6 +61,8 @@ int main() {
 
 	if ((ca = (char *) malloc(num * sizeof(char))) == NULL)
 		(void) fprintf(stderr,"malloc error\n");
+
+	 printf("Some more regular output\n");
 
 	free(da);
 	free(ta);

@@ -69,8 +69,11 @@ mall : $(MLIB)
 		($(CD) $$d; $(MAKE) mall ) ; \
 	done
 
-memdbg : memdbg.c $(LIB)
+memdbg : memdbg.c memdbg.1 $(LIB)
 	$(CC) -o memdbg $(CFLAGS) memdbg.c -L. -lrko
+
+memdbg.1 : memdbg.man
+	$(NROFF) $(MAN) $< > memdbg.1
 
 test :
 	-@for d in $(DIRS); do \
@@ -139,10 +142,19 @@ FTP/istext.tgz : istext.c apps/istextmain.c apps/istext.man
 	$(TAR) -czvf FTP/istext.tgz	istext
 	$(RM) -rf			istext
 
-FTP/memory.tgz : memdebug.c memdebug.h memdebug.man
-	./setupmake memory memdebug.c memdebug.h memdebug.man
-	$(TAR) -czvf FTP/memory.tgz	memory
-	$(RM) -rf			memory
+FTP/memdbg.tgz : memdbg.c memdbg.man avec.c avec.h uvec.c uvec.h \
+		iprime.c iprime.h isqrt.c isqrt.h
+	-$(RM) memdbg
+	./setupmake memdbg memdbg.c memdbg.man avec.c avec.h uvec.c uvec.h \
+		iprime.c iprime.h isqrt.c isqrt.h
+	$(TAR) -czvf FTP/memdbg.tgz	memdbg
+	$(RM) -rf			memdbg
+
+FTP/memdebug.tgz : memdebug.c memdebug.h memdebug.man
+	./setupmake memdebug memdebug.c memdebug.h memdebug.man
+	$(CP) apps/Makefile.memdebug	memdebug/Makefile
+	$(TAR) -czvf FTP/memdebug.tgz	memdebug
+	$(RM) -rf			memdebug
 
 FTP/mexpn.tgz : apps/mexpn.c gethostbyX.c tcp_connect.c timedfgets.c \
 		rkoerror.c librko.h apps/mexpn.man

@@ -17,8 +17,7 @@ the given application built on top of the librko library.
 exit -1
 }
 
-if [ $# -eq 0 ]
-then
+if [ $# -eq 0 ]; then
 	usage
 fi
 
@@ -27,6 +26,11 @@ PkgNm=$1
 shift
 
 # copy all the files to the new directory
+if [ -e $PkgNm ]; then
+	echo "Something already exists at $PkgNm!"
+	usage
+	exit 1;
+fi
 mkdir $PkgNm
 cp $* $PkgNm
 
