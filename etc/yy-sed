@@ -25,8 +25,10 @@ where	-h|--help		= this help info
 sedlex () {
 # change lex external references
 #  need to make sure it's an isolated C name
-	ppre="\([^a-zA-Z_]\)"
-	ppost="\([^a-zA-Z_]\)"
+#	ppre="\([^a-zA-Z_]\)"
+#	ppost="\([^a-zA-Z_]\)"
+	ppre="\(\)\b"
+	ppost="\b\(\)"
 sed \
 	-e "s/${ppre}yyback${ppost}/\1${prefix}back\2/g" \
 	-e "s/${ppre}yybgin${ppost}/\1${prefix}bgin\2/g" \
@@ -64,8 +66,10 @@ sed \
 sedyacc () {
 # yacc external references
 #  need to make sure it's an isolated C name
-	ppre="\([^a-zA-Z_]\)"
-	ppost="\([^a-zA-Z_]\)"
+#	ppre="\([^a-zA-Z_]\)"
+#	ppost="\([^a-zA-Z_]\)"
+	ppre="\(\)\b"
+	ppost="\b\(\)"
 sed \
 	-e "s/${ppre}yyact${ppost}/\1${prefix}act\2/g" \
 	-e "s/${ppre}yychar${ppost}/\1${prefix}char\2/g" \

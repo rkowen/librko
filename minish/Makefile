@@ -5,6 +5,8 @@ YACC	=yacc
 YYFLAGS	=-v -d -t
 RM	=rm
 SHELL	=sh
+YYSED	=../etc/yy-sed
+CP	=cp
 #
 CFLAGS=-g -DRKOERROR -I..
 
@@ -15,15 +17,26 @@ exectest : mshexec.c fdlist.o
 	$(CC) $(CFLAGS) -o exectest -DTEST mshexec.c fdlist.o \
 		-ll -L.. -lrko
 
-yacctest : y.tab.c lex.yy.c fdlist.o
-	$(CC) $(CFLAGS) -o yacctest -DYACCTEST y.tab.c fdlist.o \
+#yacctest : y.tab.c lex.yy.c fdlist.o
+yacctest : minish-yacc.c minish-lex.c fdlist.o
+	$(CC) $(CFLAGS) -o yacctest -DYACCTEST minish-yacc.c fdlist.o \
 		-ll -L.. -lrko
+
+minish-yacc.c : y.tab.c
+	$(YYSED) --prefix minish_yy < $< > minish-yacc.c
+
+minish-lex.c : lex.yy.c
+	$(YYSED) --prefix minish_yy < $< > minish-lex.c
+
+minish-tab.h : y.tab.h
+	$(CP) $< minish-tab.h
 
 y.tab.c y.tab.h : minish.yacc
 	$(YACC) $(YYFLAGS) minish.yacc
 
-lextest : lex.yy.c y.tab.h
-	$(CC) $(CFLAGS) -o lextest -DLEXTEST lex.yy.c -ll
+#lextest : lex.yy.c y.tab.h
+lextest : minish-lex.c minish-tab.h
+	$(CC) $(CFLAGS) -o lextest -DLEXTEST minish-lex.c -ll
 
 lex.yy.c : minish.lex
 	$(LEX) minish.lex
@@ -69,7 +82,10 @@ clean :
 	-$(RM) -f lextest.out yacctest.out exectest.out
 
 wipe : clean
-	-$(RM) lextest yacctest
+	-$(RM) lextest yacctest exectest
 
 clobber: wipe
 	-$(RM) -f lex.yy.c y.tab.c
+
+distclean: clobber
+	-$(RM) -f minish-lex.c minish-yacc.c

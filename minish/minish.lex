@@ -5,16 +5,16 @@
 #  define _MAIN_
 #  define RETURN(a)	\
 	printf(": " #a " :"); \
-	puts(yytext);
-int yylval;
+	puts(minish_yytext);
+int minish_yylval;
 
 #else
 #  define RETURN(a)	\
 	return(a);
-extern int yylval;
+extern int minish_yylval;
 #endif
 
-#include "y.tab.h"
+#include "minish-tab.h"
 #include <stdlib.h>
 
 /* WORD		= anything that should be passed as a single entity
@@ -52,20 +52,20 @@ WS	[ \t]*
 <OPT>{NUMBER}/">"	{
 			/* number is only a NUMBER if followed by > */
 			/* must be a redirection */
-			yylval = atoi(yytext);
+			minish_yylval = atoi(minish_yytext);
 			BEGIN REDI;
 			RETURN(NUMBER);
 		}
 <OPT>{NUMBER}/"<"	{
 			/* number is only a NUMBER if followed by < */
 			/* must be a redirection */
-			yylval = atoi(yytext);
+			minish_yylval = atoi(minish_yytext);
 			BEGIN REDI;
 			RETURN(NUMBER);
 		}
 <REDI_NUM>{NUMBER}	{
 			/* have redirection with trialing NUMBER */
-			yylval = atoi(yytext);
+			minish_yylval = atoi(minish_yytext);
 			BEGIN OPT;
 			RETURN(NUMBER);
 		}
@@ -107,10 +107,10 @@ WS	[ \t]*
 			BEGIN START_SQUOTE;
 		}
 <START_SQUOTE>[^']*	{
-			if (yytext[yyleng-1] == '\\') {
-				yytext[yyleng-1]='\'';
+			if (minish_yytext[minish_yyleng-1] == '\\') {
+				minish_yytext[minish_yyleng-1]='\'';
 				/* handle escaped ' */
-				yyless(yyleng);		/* return string */
+				yyless(minish_yyleng);		/* return string */
 				yymore();		/* append next string */
 			} else {
 				BEGIN END_SQUOTE;
@@ -119,17 +119,17 @@ WS	[ \t]*
 		}
 <END_SQUOTE>'	{
 			/* eat closing ' */
-			/* yyleng--;
-			yytext[yyleng]='\0'; */
+			/* minish_yyleng--;
+			minish_yytext[minish_yyleng]='\0'; */
 			BEGIN OPT;
 		}
 <OPT>\"		{
 			BEGIN START_DQUOTE;
 		}
 <START_DQUOTE>[^\"]*	{
-			if (yytext[yyleng-2] == '\\') {
+			if (minish_yytext[minish_yyleng-2] == '\\') {
 				/* handle escaped " */
-				yyless(yyleng-1);	/* return last " */
+				yyless(minish_yyleng-1);	/* return last " */
 				yymore();		/* append next string */
 			} else {
 				BEGIN END_DQUOTE;
@@ -138,8 +138,8 @@ WS	[ \t]*
 		}
 <END_DQUOTE>\"	{
 			/* eat closing " */
-			/* yyleng--;
-			yytext[yyleng]='\0'; */
+			/* minish_yyleng--;
+			minish_yytext[minish_yyleng]='\0'; */
 			BEGIN OPT;
 		}
 <OPT>"#"	{
@@ -163,7 +163,7 @@ WS	[ \t]*
 
 #ifdef LEXTEST
 
-int yywrap(void) {
+int minish_yywrap(void) {
 	fprintf(stdout, "mini-sh.lex: end of input\n");
 	return(1);
 }
@@ -174,13 +174,13 @@ int main(void) {
 		fprintf(stderr,"Can't open lextest.dat file for testing\n");
 		return 1;
 	}
-	while(yylex());
+	while(minish_yylex());
 	return 0;
 }
 
 #else
 
-int yywrap(void) {
+int minish_yywrap(void) {
 	return(1);
 }
 
