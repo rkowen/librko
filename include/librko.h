@@ -1,7 +1,7 @@
 #ifndef _LIBRKO_H_
 #  define _LIBRKO_H_
 /* 
- * RCSID @(#)$Id: librko.h,v 1.12 1999/03/25 15:08:31 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.13 1999/09/09 05:46:49 rk Exp $
  */
 /*
  *********************************************************************
@@ -59,6 +59,8 @@ int dirtree(int sort, int dirlvl, int lnklvl, const char *dir,
 
 char *strchop(const char *string, int chop_len,
         size_t *str_len, char **next);
+char *strmalloc(const char *in);
+void strfree(char **str);
 int strmemalloc(char **ChArSpAcE, char ***charspace,
 		size_t numstr, size_t maxstrlen);
 void strmemfree(char **ChArSpAcE, char ***charspace);

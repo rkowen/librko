@@ -9,7 +9,8 @@ include Makefile.inc
 SRCS	=invoke.c timedfgets.c rkoerror.c memory.c strmem.c wcstrcmp.c \
 	 nameread.c foptim.c fzeroin.c divdiff.c strchop.c \
 	 ansi_seq.c gethostbyX.c tcp_connect.c macrosub.c uvec.c \
-	 strdbecpy.c istext.c list.c dirtree.c spawn.c gcd.c isqrt.c
+	 strdbecpy.c istext.c list.c dirtree.c spawn.c gcd.c isqrt.c \
+	 strmalloc.c
 DIRS	= minish urand
 
 # requires a GNU "make" for the following

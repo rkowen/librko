@@ -1,0 +1,52 @@
+.\" RCSID @(#)$Id: strmalloc.man,v 1.1 1999/09/09 05:46:49 rk Exp $
+.TH "STRMALLOC" "3rko" "01 Sept 1999"
+.SH NAME
+strmalloc \- adds a strdup-like routine for copying strings
+strfree \- frees the string memory storage
+.SH SYNOPSIS
+
+ #include "librko.h"
+ char *strmalloc(const char *in);
+ void strfree(char **str);
+
+.SH DESCRIPTION
+.I strmalloc
+adds a stdup-like function for routinely allocating memory
+and copying a string to some other location.
+The only difference is that
+.I strmalloc
+allocates memory on the heap via
+.I malloc()
+instead of the stack.  Hence the memory needs to be freed
+explicitly.  Use the associated
+.I strfree
+to free up the memory.   First it will wipe out the memory area
+and then call
+.IR free() .
+
+.SH SEE ALSO
+strdup(3), malloc(3), free(3), rkoerror(3rko)
+
+.SH NOTES
+The allocated memory will actually be a few bytes larger, since
+.I strmalloc
+prepends the length of the string and a identifiable tag string.
+
+.SH DIAGNOSTICS
+If
+.I strmalloc()
+returns NULL, then some sort of error occured.
+To check whether
+.I strfree()
+was successful then check
+.I rkoerrno
+and
+.IR rkostrerror() .
+However, it's not really necessary for the same reasons that
+.I free()
+doesn't return a status.
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS
