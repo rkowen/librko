@@ -25,6 +25,7 @@ help :
 	@echo "Targets:"
 	@echo "	all	- create all the test executables"
 	@echo "	runall	- run all the tests"
+	@echo "	test	- both of above"
 	@echo "	help	- this info"
 	@echo "	clean	- remove .o files"
 	@echo "	clobber	- do clean and remove all executables"
@@ -35,6 +36,8 @@ $(EXES) : ../librko.a
 
 runall : $(EXE)
 	-for f in $(EXES) ; do echo ===$$f===; ./$$f ; done 2>&1 | more
+
+test : all runall
 
 .c.o :
 	$(CC) -DRKOERROR $(CFLAGS) -c $< -I..

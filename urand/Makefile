@@ -24,6 +24,9 @@ all: ../$(LIB) urand.3
 .man.3 :
 	$(NROFF) $(MAN) $< > $@
 
+test :
+	@$(ECHO) "urand - no tests"
+
 help:
 	@$(ECHO) "make		- makes the urand object file"
 	@$(ECHO) "make all	- same as above"

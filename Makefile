@@ -47,6 +47,7 @@ test :
 		$(ECHO) "making $$d"; \
 		($(CD) $$d; $(MAKE) test ) ; \
 	done
+	cd tests; $(ECHO) "making tests"; $(MAKE) test
 
 $(LIB): $(LIBOBJS)
 	@echo lib is now up-to-date
