@@ -1,5 +1,5 @@
 .\" USMID %W%
-.\" RCSID @(#)$Id: uvec.man,v 1.2 1998/10/21 22:30:32 rk Exp $
+.\" RCSID @(#)$Id: uvec.man,v 1.3 1998/11/16 04:25:32 rk Exp $
 .\" LIBDIR
 .TH "UVEC" "3rko" "31 Oct 1997"
 .SH NAME
@@ -9,40 +9,40 @@ strings.
 .SH SYNOPSIS
 
 .nf
- #include "librko.h"
- defines the following structure:
- typedef struct {
+#include "librko.h"
+defines the following structure and enum:
+typedef struct {
 	char tag[5];			/* name tag for this type */
 	char **vector;
 	int number;			/* current number of list */
 	int capacity;			/* the possible capacity of vector */
- } uvec;
+} uvec;
 
- enum uvec_order {UVEC_ASCEND, UVEC_DESCEND
- #ifndef NO_STRCASECMP
- 		, UVEC_CASE_ASCEND, UVEC_CASE_DESCEND
- #endif
- 		};
+enum uvec_order {UVEC_ASCEND, UVEC_DESCEND
+#ifndef NO_STRCASECMP
+	, UVEC_CASE_ASCEND, UVEC_CASE_DESCEND
+#endif
+	};
 
- uvec *uvec_ctor(uvec *uv, int cap);
- int uvec_dtor(uvec **uv);
- int uvec_init(uvec *uv, int cap);
- int uvec_close(uvec *uv);
- int uvec_exists(uvec const *uv);
- int uvec_capacity(uvec const *uv);
- int uvec_number(uvec const *uv);
- int uvec_end(uvec const *uv);
- char ** uvec_vector(uvec const *uv);
- int uvec_insert(uvec *uv, char const *str, int place);
- int uvec_delete(uvec *uv, int place);
- int uvec_add(uvec *uv, char const *str);
- int uvec_pop(uvec *uv);
- int uvec_copy_vec(uvec *u, char **vec, int number);
- int uvec_copy(uvec *u, uvec const *v);
- int uvec_sort(uvec *uv, enum uvec_order type)
- int uvec_uniq(uvec *uv, enum uvec_order type)
- int uvec_reverse(uvec const *uv);
- int uvec_randomize(uvec const *uv, int seed);
+uvec *uvec_ctor(int cap);
+int uvec_dtor(uvec **uv);
+int uvec_init(uvec *uv, int cap);
+int uvec_close(uvec *uv);
+int uvec_exists(uvec const *uv);
+int uvec_capacity(uvec const *uv);
+int uvec_number(uvec const *uv);
+int uvec_end(uvec const *uv);
+char ** uvec_vector(uvec const *uv);
+int uvec_insert(uvec *uv, char const *str, int place);
+int uvec_delete(uvec *uv, int place);
+int uvec_add(uvec *uv, char const *str);
+int uvec_pop(uvec *uv);
+int uvec_copy_vec(uvec *u, char **vec, int number);
+int uvec_copy(uvec *u, uvec const *v);
+int uvec_sort(uvec *uv, enum uvec_order type);
+int uvec_uniq(uvec *uv, enum uvec_order type);
+int uvec_reverse(uvec const *uv);
+int uvec_randomize(uvec const *uv, int seed);
 .fi
 
 .SH DESCRIPTION
@@ -191,7 +191,7 @@ Should get the following results:
 .fi
 
 .SH SEE ALSO
-environ(5),exec(2),strcasecmp(3),rkoerror(3),urand(3rko)
+environ(5),exec(2),strcasecmp(3),rkoerror(3rko),urand(3rko)
 
 .SH NOTES
 

@@ -3,9 +3,11 @@
 #
 SRCS = \
 	tansi_seq.c tfoptim.c tfzeroin.c tmacrosub.c \
-	tmemory.c tnameread.c tstrchop.c tstrmem.c tstrtok.c \
+	tmemory.c tnameread.c tstrchop.c tstrmem.c \
 	ttfgets.c twcstrcmp.c tuvec.c tstrdbecpy.c tlist.c \
-	tdirtree.c
+	tdirtree.c tinvoke.c tspawn.c
+
+XEXES = birdy kitty doggy
 
 # requires a GNU "make" for the following
 OBJS = $(SRCS:.c=.o)
@@ -27,7 +29,9 @@ help :
 	@echo "	clean	- remove .o files"
 	@echo "	clobber	- do clean and remove all executables"
 	
-all : $(EXES) tdir
+all : $(EXES) $(XEXES) tdir
+
+$(EXES) : ../librko.a
 
 runall : $(EXE)
 	-for f in $(EXES) ; do echo ===$$f===; ./$$f ; done 2>&1 | more
@@ -37,6 +41,9 @@ runall : $(EXE)
 
 .o.x :
 	$(CC) $(CFLAGS) -o $@ $< -L.. -lrko -lm
+
+birdy : birdy.c
+	$(CC) -o birdy $<
 
 tdir :
 	tar -xf tdir.tar

@@ -1,3 +1,0 @@
-#!/usr/bin/awk -f
-{	print "BOL:", $0, ":EOL"
-}

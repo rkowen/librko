@@ -1,8 +1,8 @@
-static const char RCSID[]="@(#)$Id: spawn.c,v 1.1 1998/11/11 16:53:12 rk Exp $";
+static const char RCSID[]="@(#)$Id: spawn.c,v 1.2 1998/11/16 04:25:32 rk Exp $";
 static const char AUTHOR[]="@(#)spawn 1.0 11/06/98 R.K.Owen,Ph.D.";
 /* spawn.c - routine for fork/exec/dup/pipe a child process and tie its
  *	input/output back to be written/read by the caller.
- *	returns 0 if successful, else < 0 if error.
+ *	returns the child pid (>0) if successful, else < 0 if error.
  */
 /*
  *********************************************************************
@@ -37,7 +37,7 @@ int spawn(FILE **childin, FILE **childout, char **argv) {
 	int pipepath2[2];
 	int parent_rfd, parent_wfd;
 	int child_rfd,  child_wfd;
-	int child_pid;
+	int child_pid = 0;
 	FILE * returnfile = (FILE *) NULL;
 
 	/* open pipes for two one-way communication */
@@ -84,6 +84,22 @@ int spawn(FILE **childin, FILE **childout, char **argv) {
 				argv[0]);
 			goto child_failure;
 		}
+		if (child_rfd != STDIN_FILENO) {
+			if(close(child_rfd) < 0) {
+				(void) sprintf(buffer,
+				"spawn: child failed to close in pipe to '%s'",
+					argv[0]);
+				goto child_failure;
+			}
+		}
+		if (child_wfd != STDOUT_FILENO) {
+			if(close(child_wfd) < 0) {
+				(void) sprintf(buffer,
+				"spawn: child failed to close out pipe to '%s'",
+					argv[0]);
+				goto child_failure;
+			}
+		}
 		if (execvp(argv[0],argv) < 0) {
 			(void) sprintf(buffer,
 				"spawn: child failed to execvp with '%s'",
@@ -117,6 +133,18 @@ int spawn(FILE **childin, FILE **childout, char **argv) {
 				argv[0]);
 			goto parent_failure;
 		}
+		if(setvbuf(*childout, (char *) NULL, _IOLBF, 0)) {
+			(void) sprintf(buffer,
+				"spawn: parent failed readpipe line buffer with '%s'",
+				argv[0]);
+			goto parent_failure;
+		}
+		if(setvbuf(*childin, (char *) NULL, _IOLBF, 0)) {
+			(void) sprintf(buffer,
+				"spawn: parent failed writepipe line buffer with '%s'",
+				argv[0]);
+			goto parent_failure;
+		}
 		if (0) parent_failure: {
 			(void) close(child_wfd);
 			(void) close(parent_rfd);
@@ -127,6 +155,6 @@ int spawn(FILE **childin, FILE **childout, char **argv) {
 			(void) kill(child_pid,SIGKILL);
 		}
 		/* don't wait for child */
-		return 0;
+		return child_pid;
 	}
 }

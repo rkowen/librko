@@ -1,5 +1,5 @@
 .\" USMID %W%
-.\" RCSID @(#)$Id: invoke.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" RCSID @(#)$Id: invoke.man,v 1.2 1998/11/16 04:25:32 rk Exp $
 .\" LIBDIR
 .TH "INVOKE" "3rko" "2 Jun 1995"
 .SH NAME
@@ -8,10 +8,12 @@ for the process is returned.
 
 .SH SYNOPSIS
 
- #include <stdio.h>
- #include "librko.h"
+.nf
+#include <stdio.h>
+#include "librko.h"
 
- FILE *invoke(char **argv);
+FILE *invoke(char **argv);
+.fi
 
 .SH DESCRIPTION
 .I invoke
@@ -26,7 +28,7 @@ This is a better \`\`system( \.\.\. )\'\' function since the output
 is returned directly as a FILE stream.
 
 .SH SEE ALSO
-execvp(2),fork(2),pipe(2),fclose(3),wait(2),system(3)
+execvp(2),fork(2),pipe(2),fclose(3),wait(2),system(3),uvec(3rko)
 
 .SH NOTES
 
