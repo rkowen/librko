@@ -84,6 +84,17 @@ ACLOCAL_AMFLAGS = -I $(srcdir)/config
 
 AM_CPPFLAGS = -I$(srcdir)/include -I$(srcdir)
 
+avec_srcs = \
+	avec/avec_.c							\
+	avec/avec_accessor.c avec/avec_alloc.c avec/avec_close.c	\
+	avec/avec_ctor.c avec/avec_dealloc.c avec/avec_decrease.c	\
+	avec/avec_delete.c avec/avec_dtor.c avec/avec_increase.c	\
+	avec/avec_init.c avec/avec_insert.c avec/avec_keys.c		\
+	avec/avec_lookup.c avec/avec_remove.c avec/avec_resize.c	\
+	avec/avec_resize_percentage.c avec/avec_set_fns.c		\
+	avec/avec_values.c avec/avec_walk.c avec/avec_walk_r.c
+
+
 igcd_srcs = \
 	igcd/chgcd.c igcd/hgcd.c igcd/igcd.c		\
 	igcd/lgcd.c igcd/scgcd.c igcd/ucgcd.c		\
@@ -119,7 +130,7 @@ lib_LIBRARIES = librko.a
 
 librko_a_SOURCES = \
 	ansi_seq.c \
-	avec.c \
+	$(avec_srcs) \
 	clocker.c \
 	coexec.c \
 	dirtree.c \
@@ -170,21 +181,32 @@ LIBRARIES = $(lib_LIBRARIES)
 
 librko_a_AR = $(AR) cru
 librko_a_LIBADD =
-am__objects_1 = igcd/chgcd.$(OBJEXT) igcd/hgcd.$(OBJEXT) \
+am__objects_1 = avec/avec_.$(OBJEXT) avec/avec_accessor.$(OBJEXT) \
+	avec/avec_alloc.$(OBJEXT) avec/avec_close.$(OBJEXT) \
+	avec/avec_ctor.$(OBJEXT) avec/avec_dealloc.$(OBJEXT) \
+	avec/avec_decrease.$(OBJEXT) avec/avec_delete.$(OBJEXT) \
+	avec/avec_dtor.$(OBJEXT) avec/avec_increase.$(OBJEXT) \
+	avec/avec_init.$(OBJEXT) avec/avec_insert.$(OBJEXT) \
+	avec/avec_keys.$(OBJEXT) avec/avec_lookup.$(OBJEXT) \
+	avec/avec_remove.$(OBJEXT) avec/avec_resize.$(OBJEXT) \
+	avec/avec_resize_percentage.$(OBJEXT) \
+	avec/avec_set_fns.$(OBJEXT) avec/avec_values.$(OBJEXT) \
+	avec/avec_walk.$(OBJEXT) avec/avec_walk_r.$(OBJEXT)
+am__objects_2 = igcd/chgcd.$(OBJEXT) igcd/hgcd.$(OBJEXT) \
 	igcd/igcd.$(OBJEXT) igcd/lgcd.$(OBJEXT) igcd/scgcd.$(OBJEXT) \
 	igcd/ucgcd.$(OBJEXT) igcd/ugcd.$(OBJEXT) igcd/uhgcd.$(OBJEXT) \
 	igcd/ulgcd.$(OBJEXT)
-am__objects_2 = iprime/iprime_lut.$(OBJEXT) iprime/chprime.$(OBJEXT) \
+am__objects_3 = iprime/iprime_lut.$(OBJEXT) iprime/chprime.$(OBJEXT) \
 	iprime/hprime.$(OBJEXT) iprime/iprime.$(OBJEXT) \
 	iprime/lprime.$(OBJEXT) iprime/scprime.$(OBJEXT) \
 	iprime/ucprime.$(OBJEXT) iprime/uhprime.$(OBJEXT) \
 	iprime/uiprime.$(OBJEXT) iprime/ulprime.$(OBJEXT)
-am__objects_3 = isqrt/isqrt_lut.$(OBJEXT) isqrt/chsqrt.$(OBJEXT) \
+am__objects_4 = isqrt/isqrt_lut.$(OBJEXT) isqrt/chsqrt.$(OBJEXT) \
 	isqrt/hsqrt.$(OBJEXT) isqrt/isqrt.$(OBJEXT) \
 	isqrt/lsqrt.$(OBJEXT) isqrt/scsqrt.$(OBJEXT) \
 	isqrt/ucsrt.$(OBJEXT) isqrt/uhsqrt.$(OBJEXT) \
 	isqrt/uisqrt.$(OBJEXT) isqrt/ulsqrt.$(OBJEXT)
-am__objects_4 = uvec/str2uvec.$(OBJEXT) uvec/uvec2str.$(OBJEXT) \
+am__objects_5 = uvec/str2uvec.$(OBJEXT) uvec/uvec2str.$(OBJEXT) \
 	uvec/uvec2uvec.$(OBJEXT) uvec/uvec_accessor.$(OBJEXT) \
 	uvec/uvec_add.$(OBJEXT) uvec/uvec_alloc.$(OBJEXT) \
 	uvec/uvec_close.$(OBJEXT) uvec/uvec_copy.$(OBJEXT) \
@@ -196,15 +218,15 @@ am__objects_4 = uvec/str2uvec.$(OBJEXT) uvec/uvec2str.$(OBJEXT) \
 	uvec/uvec_reverse.$(OBJEXT) uvec/uvec_shift.$(OBJEXT) \
 	uvec/uvec_sort.$(OBJEXT) uvec/uvec_strfns.$(OBJEXT) \
 	uvec/vec2uvec.$(OBJEXT)
-am_librko_a_OBJECTS = ansi_seq.$(OBJEXT) avec.$(OBJEXT) \
+am_librko_a_OBJECTS = ansi_seq.$(OBJEXT) $(am__objects_1) \
 	clocker.$(OBJEXT) coexec.$(OBJEXT) dirtree.$(OBJEXT) \
 	divdiff.$(OBJEXT) foptim.$(OBJEXT) fzeroin.$(OBJEXT) \
-	gethostbyX.$(OBJEXT) $(am__objects_1) $(am__objects_2) \
-	$(am__objects_3) istext.$(OBJEXT) list.$(OBJEXT) \
+	gethostbyX.$(OBJEXT) $(am__objects_2) $(am__objects_3) \
+	$(am__objects_4) istext.$(OBJEXT) list.$(OBJEXT) \
 	macrosub.$(OBJEXT) memdbg.$(OBJEXT) memdebug.$(OBJEXT) \
 	nameread.$(OBJEXT) rkoerror.$(OBJEXT) strchop.$(OBJEXT) \
 	strdbecpy.$(OBJEXT) strmalloc.$(OBJEXT) strmem.$(OBJEXT) \
-	tcp_connect.$(OBJEXT) timedfgets.$(OBJEXT) $(am__objects_4) \
+	tcp_connect.$(OBJEXT) timedfgets.$(OBJEXT) $(am__objects_5) \
 	version.$(OBJEXT) wcstrcmp.$(OBJEXT)
 librko_a_OBJECTS = $(am_librko_a_OBJECTS)
 
@@ -215,24 +237,43 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/ansi_seq.Po ./$(DEPDIR)/avec.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/clocker.Po ./$(DEPDIR)/coexec.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/dirtree.Po ./$(DEPDIR)/divdiff.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/foptim.Po ./$(DEPDIR)/fzeroin.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/gethostbyX.Po ./$(DEPDIR)/istext.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/list.Po ./$(DEPDIR)/macrosub.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/memdbg.Po ./$(DEPDIR)/memdebug.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/nameread.Po ./$(DEPDIR)/rkoerror.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/strchop.Po ./$(DEPDIR)/strdbecpy.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/strmalloc.Po ./$(DEPDIR)/strmem.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tcp_connect.Po \
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/ansi_seq.Po ./$(DEPDIR)/clocker.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/coexec.Po ./$(DEPDIR)/dirtree.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/divdiff.Po ./$(DEPDIR)/foptim.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/fzeroin.Po ./$(DEPDIR)/gethostbyX.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/istext.Po ./$(DEPDIR)/list.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/macrosub.Po ./$(DEPDIR)/memdbg.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/memdebug.Po ./$(DEPDIR)/nameread.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/rkoerror.Po ./$(DEPDIR)/strchop.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/strdbecpy.Po ./$(DEPDIR)/strmalloc.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/strmem.Po ./$(DEPDIR)/tcp_connect.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/timedfgets.Po ./$(DEPDIR)/version.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/wcstrcmp.Po igcd/$(DEPDIR)/chgcd.Po \
-@AMDEP_TRUE@	igcd/$(DEPDIR)/hgcd.Po igcd/$(DEPDIR)/igcd.Po \
-@AMDEP_TRUE@	igcd/$(DEPDIR)/lgcd.Po igcd/$(DEPDIR)/scgcd.Po \
-@AMDEP_TRUE@	igcd/$(DEPDIR)/ucgcd.Po igcd/$(DEPDIR)/ugcd.Po \
-@AMDEP_TRUE@	igcd/$(DEPDIR)/uhgcd.Po igcd/$(DEPDIR)/ulgcd.Po \
-@AMDEP_TRUE@	iprime/$(DEPDIR)/chprime.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/wcstrcmp.Po avec/$(DEPDIR)/avec_.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_accessor.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_alloc.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_close.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_ctor.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_dealloc.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_decrease.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_delete.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_dtor.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_increase.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_init.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_insert.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_keys.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_lookup.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_remove.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_resize.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_resize_percentage.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_set_fns.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_values.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_walk.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_walk_r.Po \
+@AMDEP_TRUE@	igcd/$(DEPDIR)/chgcd.Po igcd/$(DEPDIR)/hgcd.Po \
+@AMDEP_TRUE@	igcd/$(DEPDIR)/igcd.Po igcd/$(DEPDIR)/lgcd.Po \
+@AMDEP_TRUE@	igcd/$(DEPDIR)/scgcd.Po igcd/$(DEPDIR)/ucgcd.Po \
+@AMDEP_TRUE@	igcd/$(DEPDIR)/ugcd.Po igcd/$(DEPDIR)/uhgcd.Po \
+@AMDEP_TRUE@	igcd/$(DEPDIR)/ulgcd.Po iprime/$(DEPDIR)/chprime.Po \
 @AMDEP_TRUE@	iprime/$(DEPDIR)/hprime.Po \
 @AMDEP_TRUE@	iprime/$(DEPDIR)/iprime.Po \
 @AMDEP_TRUE@	iprime/$(DEPDIR)/iprime_lut.Po \
@@ -352,6 +393,54 @@ uninstall-libLIBRARIES:
 
 clean-libLIBRARIES:
 	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
+avec/.dirstamp:
+	@$(mkinstalldirs) avec
+	@: > avec/.dirstamp
+avec/$(DEPDIR)/.dirstamp:
+	@$(mkinstalldirs) avec/$(DEPDIR)
+	@: > avec/$(DEPDIR)/.dirstamp
+avec/avec_.$(OBJEXT): avec/avec_.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_accessor.$(OBJEXT): avec/avec_accessor.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_alloc.$(OBJEXT): avec/avec_alloc.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_close.$(OBJEXT): avec/avec_close.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_ctor.$(OBJEXT): avec/avec_ctor.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_dealloc.$(OBJEXT): avec/avec_dealloc.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_decrease.$(OBJEXT): avec/avec_decrease.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_delete.$(OBJEXT): avec/avec_delete.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_dtor.$(OBJEXT): avec/avec_dtor.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_increase.$(OBJEXT): avec/avec_increase.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_init.$(OBJEXT): avec/avec_init.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_insert.$(OBJEXT): avec/avec_insert.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_keys.$(OBJEXT): avec/avec_keys.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_lookup.$(OBJEXT): avec/avec_lookup.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_remove.$(OBJEXT): avec/avec_remove.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_resize.$(OBJEXT): avec/avec_resize.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_resize_percentage.$(OBJEXT): avec/avec_resize_percentage.c \
+	avec/.dirstamp avec/$(DEPDIR)/.dirstamp
+avec/avec_set_fns.$(OBJEXT): avec/avec_set_fns.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_values.$(OBJEXT): avec/avec_values.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_walk.$(OBJEXT): avec/avec_walk.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
+avec/avec_walk_r.$(OBJEXT): avec/avec_walk_r.c avec/.dirstamp \
+	avec/$(DEPDIR)/.dirstamp
 igcd/.dirstamp:
 	@$(mkinstalldirs) igcd
 	@: > igcd/.dirstamp
@@ -483,6 +572,27 @@ librko.a: $(librko_a_OBJECTS) $(librko_a_DEPENDENCIES)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
+	-rm -f avec/avec_.$(OBJEXT)
+	-rm -f avec/avec_accessor.$(OBJEXT)
+	-rm -f avec/avec_alloc.$(OBJEXT)
+	-rm -f avec/avec_close.$(OBJEXT)
+	-rm -f avec/avec_ctor.$(OBJEXT)
+	-rm -f avec/avec_dealloc.$(OBJEXT)
+	-rm -f avec/avec_decrease.$(OBJEXT)
+	-rm -f avec/avec_delete.$(OBJEXT)
+	-rm -f avec/avec_dtor.$(OBJEXT)
+	-rm -f avec/avec_increase.$(OBJEXT)
+	-rm -f avec/avec_init.$(OBJEXT)
+	-rm -f avec/avec_insert.$(OBJEXT)
+	-rm -f avec/avec_keys.$(OBJEXT)
+	-rm -f avec/avec_lookup.$(OBJEXT)
+	-rm -f avec/avec_remove.$(OBJEXT)
+	-rm -f avec/avec_resize.$(OBJEXT)
+	-rm -f avec/avec_resize_percentage.$(OBJEXT)
+	-rm -f avec/avec_set_fns.$(OBJEXT)
+	-rm -f avec/avec_values.$(OBJEXT)
+	-rm -f avec/avec_walk.$(OBJEXT)
+	-rm -f avec/avec_walk_r.$(OBJEXT)
 	-rm -f igcd/chgcd.$(OBJEXT)
 	-rm -f igcd/hgcd.$(OBJEXT)
 	-rm -f igcd/igcd.$(OBJEXT)
@@ -538,6 +648,8 @@ mostlyclean-compile:
 
 distclean-compile:
 	-rm -f *.tab.c
+	-rm -f avec/$(DEPDIR)/.dirstamp
+	-rm -f avec/.dirstamp
 	-rm -f igcd/$(DEPDIR)/.dirstamp
 	-rm -f igcd/.dirstamp
 	-rm -f iprime/$(DEPDIR)/.dirstamp
@@ -548,7 +660,6 @@ distclean-compile:
 	-rm -f uvec/.dirstamp
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ansi_seq.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/avec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clocker.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/coexec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dirtree.Po@am__quote@
@@ -571,6 +682,27 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/timedfgets.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/version.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wcstrcmp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_accessor.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_alloc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_close.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_ctor.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_dealloc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_decrease.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_delete.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_dtor.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_increase.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_init.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_insert.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_keys.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_lookup.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_remove.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_resize.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_resize_percentage.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_set_fns.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_values.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_walk.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_walk_r.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@igcd/$(DEPDIR)/chgcd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@igcd/$(DEPDIR)/hgcd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@igcd/$(DEPDIR)/igcd.Po@am__quote@
@@ -625,7 +757,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@uvec/$(DEPDIR)/vec2uvec.Po@am__quote@
 
 distclean-depend:
-	-rm -rf ./$(DEPDIR) igcd/$(DEPDIR) iprime/$(DEPDIR) isqrt/$(DEPDIR) uvec/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) avec/$(DEPDIR) igcd/$(DEPDIR) iprime/$(DEPDIR) isqrt/$(DEPDIR) uvec/$(DEPDIR)
 
 .c.o:
 @AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
@@ -638,6 +770,258 @@ distclean-depend:
 @AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(COMPILE) -c -o $@ `cygpath -w $<`
+
+avec/avec_.o: avec/avec_.c
+@AMDEP_TRUE@	source='avec/avec_.c' object='avec/avec_.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_.Po' tmpdepfile='avec/$(DEPDIR)/avec_.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_.o `test -f avec/avec_.c || echo '$(srcdir)/'`avec/avec_.c
+
+avec/avec_.obj: avec/avec_.c
+@AMDEP_TRUE@	source='avec/avec_.c' object='avec/avec_.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_.Po' tmpdepfile='avec/$(DEPDIR)/avec_.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_.obj `cygpath -w avec/avec_.c`
+
+avec/avec_accessor.o: avec/avec_accessor.c
+@AMDEP_TRUE@	source='avec/avec_accessor.c' object='avec/avec_accessor.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_accessor.Po' tmpdepfile='avec/$(DEPDIR)/avec_accessor.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_accessor.o `test -f avec/avec_accessor.c || echo '$(srcdir)/'`avec/avec_accessor.c
+
+avec/avec_accessor.obj: avec/avec_accessor.c
+@AMDEP_TRUE@	source='avec/avec_accessor.c' object='avec/avec_accessor.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_accessor.Po' tmpdepfile='avec/$(DEPDIR)/avec_accessor.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_accessor.obj `cygpath -w avec/avec_accessor.c`
+
+avec/avec_alloc.o: avec/avec_alloc.c
+@AMDEP_TRUE@	source='avec/avec_alloc.c' object='avec/avec_alloc.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_alloc.Po' tmpdepfile='avec/$(DEPDIR)/avec_alloc.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_alloc.o `test -f avec/avec_alloc.c || echo '$(srcdir)/'`avec/avec_alloc.c
+
+avec/avec_alloc.obj: avec/avec_alloc.c
+@AMDEP_TRUE@	source='avec/avec_alloc.c' object='avec/avec_alloc.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_alloc.Po' tmpdepfile='avec/$(DEPDIR)/avec_alloc.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_alloc.obj `cygpath -w avec/avec_alloc.c`
+
+avec/avec_close.o: avec/avec_close.c
+@AMDEP_TRUE@	source='avec/avec_close.c' object='avec/avec_close.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_close.Po' tmpdepfile='avec/$(DEPDIR)/avec_close.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_close.o `test -f avec/avec_close.c || echo '$(srcdir)/'`avec/avec_close.c
+
+avec/avec_close.obj: avec/avec_close.c
+@AMDEP_TRUE@	source='avec/avec_close.c' object='avec/avec_close.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_close.Po' tmpdepfile='avec/$(DEPDIR)/avec_close.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_close.obj `cygpath -w avec/avec_close.c`
+
+avec/avec_ctor.o: avec/avec_ctor.c
+@AMDEP_TRUE@	source='avec/avec_ctor.c' object='avec/avec_ctor.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_ctor.Po' tmpdepfile='avec/$(DEPDIR)/avec_ctor.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_ctor.o `test -f avec/avec_ctor.c || echo '$(srcdir)/'`avec/avec_ctor.c
+
+avec/avec_ctor.obj: avec/avec_ctor.c
+@AMDEP_TRUE@	source='avec/avec_ctor.c' object='avec/avec_ctor.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_ctor.Po' tmpdepfile='avec/$(DEPDIR)/avec_ctor.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_ctor.obj `cygpath -w avec/avec_ctor.c`
+
+avec/avec_dealloc.o: avec/avec_dealloc.c
+@AMDEP_TRUE@	source='avec/avec_dealloc.c' object='avec/avec_dealloc.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_dealloc.Po' tmpdepfile='avec/$(DEPDIR)/avec_dealloc.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_dealloc.o `test -f avec/avec_dealloc.c || echo '$(srcdir)/'`avec/avec_dealloc.c
+
+avec/avec_dealloc.obj: avec/avec_dealloc.c
+@AMDEP_TRUE@	source='avec/avec_dealloc.c' object='avec/avec_dealloc.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_dealloc.Po' tmpdepfile='avec/$(DEPDIR)/avec_dealloc.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_dealloc.obj `cygpath -w avec/avec_dealloc.c`
+
+avec/avec_decrease.o: avec/avec_decrease.c
+@AMDEP_TRUE@	source='avec/avec_decrease.c' object='avec/avec_decrease.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_decrease.Po' tmpdepfile='avec/$(DEPDIR)/avec_decrease.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_decrease.o `test -f avec/avec_decrease.c || echo '$(srcdir)/'`avec/avec_decrease.c
+
+avec/avec_decrease.obj: avec/avec_decrease.c
+@AMDEP_TRUE@	source='avec/avec_decrease.c' object='avec/avec_decrease.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_decrease.Po' tmpdepfile='avec/$(DEPDIR)/avec_decrease.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_decrease.obj `cygpath -w avec/avec_decrease.c`
+
+avec/avec_delete.o: avec/avec_delete.c
+@AMDEP_TRUE@	source='avec/avec_delete.c' object='avec/avec_delete.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_delete.Po' tmpdepfile='avec/$(DEPDIR)/avec_delete.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_delete.o `test -f avec/avec_delete.c || echo '$(srcdir)/'`avec/avec_delete.c
+
+avec/avec_delete.obj: avec/avec_delete.c
+@AMDEP_TRUE@	source='avec/avec_delete.c' object='avec/avec_delete.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_delete.Po' tmpdepfile='avec/$(DEPDIR)/avec_delete.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_delete.obj `cygpath -w avec/avec_delete.c`
+
+avec/avec_dtor.o: avec/avec_dtor.c
+@AMDEP_TRUE@	source='avec/avec_dtor.c' object='avec/avec_dtor.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_dtor.Po' tmpdepfile='avec/$(DEPDIR)/avec_dtor.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_dtor.o `test -f avec/avec_dtor.c || echo '$(srcdir)/'`avec/avec_dtor.c
+
+avec/avec_dtor.obj: avec/avec_dtor.c
+@AMDEP_TRUE@	source='avec/avec_dtor.c' object='avec/avec_dtor.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_dtor.Po' tmpdepfile='avec/$(DEPDIR)/avec_dtor.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_dtor.obj `cygpath -w avec/avec_dtor.c`
+
+avec/avec_increase.o: avec/avec_increase.c
+@AMDEP_TRUE@	source='avec/avec_increase.c' object='avec/avec_increase.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_increase.Po' tmpdepfile='avec/$(DEPDIR)/avec_increase.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_increase.o `test -f avec/avec_increase.c || echo '$(srcdir)/'`avec/avec_increase.c
+
+avec/avec_increase.obj: avec/avec_increase.c
+@AMDEP_TRUE@	source='avec/avec_increase.c' object='avec/avec_increase.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_increase.Po' tmpdepfile='avec/$(DEPDIR)/avec_increase.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_increase.obj `cygpath -w avec/avec_increase.c`
+
+avec/avec_init.o: avec/avec_init.c
+@AMDEP_TRUE@	source='avec/avec_init.c' object='avec/avec_init.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_init.Po' tmpdepfile='avec/$(DEPDIR)/avec_init.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_init.o `test -f avec/avec_init.c || echo '$(srcdir)/'`avec/avec_init.c
+
+avec/avec_init.obj: avec/avec_init.c
+@AMDEP_TRUE@	source='avec/avec_init.c' object='avec/avec_init.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_init.Po' tmpdepfile='avec/$(DEPDIR)/avec_init.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_init.obj `cygpath -w avec/avec_init.c`
+
+avec/avec_insert.o: avec/avec_insert.c
+@AMDEP_TRUE@	source='avec/avec_insert.c' object='avec/avec_insert.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_insert.Po' tmpdepfile='avec/$(DEPDIR)/avec_insert.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_insert.o `test -f avec/avec_insert.c || echo '$(srcdir)/'`avec/avec_insert.c
+
+avec/avec_insert.obj: avec/avec_insert.c
+@AMDEP_TRUE@	source='avec/avec_insert.c' object='avec/avec_insert.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_insert.Po' tmpdepfile='avec/$(DEPDIR)/avec_insert.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_insert.obj `cygpath -w avec/avec_insert.c`
+
+avec/avec_keys.o: avec/avec_keys.c
+@AMDEP_TRUE@	source='avec/avec_keys.c' object='avec/avec_keys.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_keys.Po' tmpdepfile='avec/$(DEPDIR)/avec_keys.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_keys.o `test -f avec/avec_keys.c || echo '$(srcdir)/'`avec/avec_keys.c
+
+avec/avec_keys.obj: avec/avec_keys.c
+@AMDEP_TRUE@	source='avec/avec_keys.c' object='avec/avec_keys.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_keys.Po' tmpdepfile='avec/$(DEPDIR)/avec_keys.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_keys.obj `cygpath -w avec/avec_keys.c`
+
+avec/avec_lookup.o: avec/avec_lookup.c
+@AMDEP_TRUE@	source='avec/avec_lookup.c' object='avec/avec_lookup.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_lookup.Po' tmpdepfile='avec/$(DEPDIR)/avec_lookup.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_lookup.o `test -f avec/avec_lookup.c || echo '$(srcdir)/'`avec/avec_lookup.c
+
+avec/avec_lookup.obj: avec/avec_lookup.c
+@AMDEP_TRUE@	source='avec/avec_lookup.c' object='avec/avec_lookup.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_lookup.Po' tmpdepfile='avec/$(DEPDIR)/avec_lookup.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_lookup.obj `cygpath -w avec/avec_lookup.c`
+
+avec/avec_remove.o: avec/avec_remove.c
+@AMDEP_TRUE@	source='avec/avec_remove.c' object='avec/avec_remove.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_remove.Po' tmpdepfile='avec/$(DEPDIR)/avec_remove.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_remove.o `test -f avec/avec_remove.c || echo '$(srcdir)/'`avec/avec_remove.c
+
+avec/avec_remove.obj: avec/avec_remove.c
+@AMDEP_TRUE@	source='avec/avec_remove.c' object='avec/avec_remove.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_remove.Po' tmpdepfile='avec/$(DEPDIR)/avec_remove.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_remove.obj `cygpath -w avec/avec_remove.c`
+
+avec/avec_resize.o: avec/avec_resize.c
+@AMDEP_TRUE@	source='avec/avec_resize.c' object='avec/avec_resize.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_resize.Po' tmpdepfile='avec/$(DEPDIR)/avec_resize.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_resize.o `test -f avec/avec_resize.c || echo '$(srcdir)/'`avec/avec_resize.c
+
+avec/avec_resize.obj: avec/avec_resize.c
+@AMDEP_TRUE@	source='avec/avec_resize.c' object='avec/avec_resize.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_resize.Po' tmpdepfile='avec/$(DEPDIR)/avec_resize.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_resize.obj `cygpath -w avec/avec_resize.c`
+
+avec/avec_resize_percentage.o: avec/avec_resize_percentage.c
+@AMDEP_TRUE@	source='avec/avec_resize_percentage.c' object='avec/avec_resize_percentage.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_resize_percentage.Po' tmpdepfile='avec/$(DEPDIR)/avec_resize_percentage.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_resize_percentage.o `test -f avec/avec_resize_percentage.c || echo '$(srcdir)/'`avec/avec_resize_percentage.c
+
+avec/avec_resize_percentage.obj: avec/avec_resize_percentage.c
+@AMDEP_TRUE@	source='avec/avec_resize_percentage.c' object='avec/avec_resize_percentage.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_resize_percentage.Po' tmpdepfile='avec/$(DEPDIR)/avec_resize_percentage.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_resize_percentage.obj `cygpath -w avec/avec_resize_percentage.c`
+
+avec/avec_set_fns.o: avec/avec_set_fns.c
+@AMDEP_TRUE@	source='avec/avec_set_fns.c' object='avec/avec_set_fns.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_set_fns.Po' tmpdepfile='avec/$(DEPDIR)/avec_set_fns.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_set_fns.o `test -f avec/avec_set_fns.c || echo '$(srcdir)/'`avec/avec_set_fns.c
+
+avec/avec_set_fns.obj: avec/avec_set_fns.c
+@AMDEP_TRUE@	source='avec/avec_set_fns.c' object='avec/avec_set_fns.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_set_fns.Po' tmpdepfile='avec/$(DEPDIR)/avec_set_fns.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_set_fns.obj `cygpath -w avec/avec_set_fns.c`
+
+avec/avec_values.o: avec/avec_values.c
+@AMDEP_TRUE@	source='avec/avec_values.c' object='avec/avec_values.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_values.Po' tmpdepfile='avec/$(DEPDIR)/avec_values.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_values.o `test -f avec/avec_values.c || echo '$(srcdir)/'`avec/avec_values.c
+
+avec/avec_values.obj: avec/avec_values.c
+@AMDEP_TRUE@	source='avec/avec_values.c' object='avec/avec_values.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_values.Po' tmpdepfile='avec/$(DEPDIR)/avec_values.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_values.obj `cygpath -w avec/avec_values.c`
+
+avec/avec_walk.o: avec/avec_walk.c
+@AMDEP_TRUE@	source='avec/avec_walk.c' object='avec/avec_walk.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_walk.Po' tmpdepfile='avec/$(DEPDIR)/avec_walk.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_walk.o `test -f avec/avec_walk.c || echo '$(srcdir)/'`avec/avec_walk.c
+
+avec/avec_walk.obj: avec/avec_walk.c
+@AMDEP_TRUE@	source='avec/avec_walk.c' object='avec/avec_walk.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_walk.Po' tmpdepfile='avec/$(DEPDIR)/avec_walk.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_walk.obj `cygpath -w avec/avec_walk.c`
+
+avec/avec_walk_r.o: avec/avec_walk_r.c
+@AMDEP_TRUE@	source='avec/avec_walk_r.c' object='avec/avec_walk_r.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_walk_r.Po' tmpdepfile='avec/$(DEPDIR)/avec_walk_r.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_walk_r.o `test -f avec/avec_walk_r.c || echo '$(srcdir)/'`avec/avec_walk_r.c
+
+avec/avec_walk_r.obj: avec/avec_walk_r.c
+@AMDEP_TRUE@	source='avec/avec_walk_r.c' object='avec/avec_walk_r.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='avec/$(DEPDIR)/avec_walk_r.Po' tmpdepfile='avec/$(DEPDIR)/avec_walk_r.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o avec/avec_walk_r.obj `cygpath -w avec/avec_walk_r.c`
 
 igcd/chgcd.o: igcd/chgcd.c
 @AMDEP_TRUE@	source='igcd/chgcd.c' object='igcd/chgcd.o' libtool=no @AMDEPBACKSLASH@

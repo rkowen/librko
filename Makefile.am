@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.3 2002/06/24 19:20:09 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.4 2002/06/24 21:55:06 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -17,6 +17,16 @@ AUTOMAKE_OPTIONS=foreign subdir-objects no-installinfo
 ACLOCAL_AMFLAGS=-I $(srcdir)/config
 
 AM_CPPFLAGS = -I$(srcdir)/include -I$(srcdir)
+
+avec_srcs = \
+	avec/avec_.c							\
+	avec/avec_accessor.c avec/avec_alloc.c avec/avec_close.c	\
+	avec/avec_ctor.c avec/avec_dealloc.c avec/avec_decrease.c	\
+	avec/avec_delete.c avec/avec_dtor.c avec/avec_increase.c	\
+	avec/avec_init.c avec/avec_insert.c avec/avec_keys.c		\
+	avec/avec_lookup.c avec/avec_remove.c avec/avec_resize.c	\
+	avec/avec_resize_percentage.c avec/avec_set_fns.c		\
+	avec/avec_values.c avec/avec_walk.c avec/avec_walk_r.c
 
 igcd_srcs = \
 	igcd/chgcd.c igcd/hgcd.c igcd/igcd.c		\
@@ -49,7 +59,7 @@ lib_LIBRARIES		= librko.a
 
 librko_a_SOURCES	= \
 	ansi_seq.c \
-	avec.c \
+	$(avec_srcs) \
 	clocker.c \
 	coexec.c \
 	dirtree.c \
