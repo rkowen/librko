@@ -8,11 +8,6 @@
 #define MAXBUF	1024
 
 int main() {
-#include <stdio.h>
-
-#define MAXBUF	1024
-
-int main() {
 	char buffer[MAXBUF];
 
 	(void) setvbuf(stdout, (char *) NULL, _IOLBF, 0);

@@ -1,5 +1,4 @@
-static const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: uvec.c,v 1.5 1998/10/21 22:30:31 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec.c,v 1.6 1998/11/18 18:37:51 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.0 10/31/97 R.K.Owen,Ph.D.";
 /* uvec.c -
  * This could have easily been made a C++ class, but is
@@ -31,6 +30,7 @@ static const char AUTHOR[]="@(#)uvec 1.0 10/31/97 R.K.Owen,Ph.D.";
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
 #include <time.h>
 #include "librko.h"
@@ -463,6 +463,30 @@ int uvec_add(uvec *uv, char const *str) {
 		return rstat - 128;
 	}
 
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	return 0;
+}
+/* ---------------------------------------------------------------------- */
+/* uvec_addl - add a variable number of elements (terminated by a NULL
+ *	argument) to end of vector
+ */
+int uvec_addl(uvec *uv, ...) {
+	int rstat;
+	const char *str;
+	va_list ap;
+
+	va_start(ap, uv);
+	while (str = va_arg(ap, const char *)) {
+		if (rstat = uvec_add(uv, str)) {
+#ifdef RKOERROR
+			(void) rkopsterror("uvec_addl : ");
+#endif
+			return rstat - 128;
+		}
+	}
+	va_end(ap);
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif

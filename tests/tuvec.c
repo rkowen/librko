@@ -14,7 +14,13 @@ void printout(uvec *uv, char const *head, int err, char const *ans) {
 			strcat(testbuf, *argv);
 		}
 	}
-	if (strcmp(testbuf, ans)) {
+	if (
+#ifndef NO_STRCASECMP
+	strcmp(testbuf, ans)
+#else
+	strncmp(testbuf, ans)
+#endif
+	) {
 		printf("FAIL:%-20s=\n    <\t%s\n    >\t%s\n",head,testbuf,ans);
 	} else {
 		printf("OK  :%-20s=\n\t%s\n",head,testbuf);
@@ -52,7 +58,9 @@ int main() {
 
 	_CHECK(uvec_add(&u, ";00"), u,
 	"e:0 c:10 n:1 r:;00")
-	for (i = 1; i < 12; ++i) {
+	_CHECK(uvec_addl(&u, ":01", ":02", NULL), u,
+	"e:0 c:10 n:3 r:;00:01:02")
+	for (i = 3; i < 12; ++i) {
 		(void) sprintf(buffer, ":%0.2d", i);
 		if (estat = uvec_add(&u, buffer))
 #ifdef RKOERROR

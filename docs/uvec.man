@@ -1,5 +1,5 @@
 .\" USMID %W%
-.\" RCSID @(#)$Id: uvec.man,v 1.3 1998/11/16 04:25:32 rk Exp $
+.\" RCSID @(#)$Id: uvec.man,v 1.4 1998/11/18 18:37:51 rk Exp $
 .\" LIBDIR
 .TH "UVEC" "3rko" "31 Oct 1997"
 .SH NAME
@@ -36,6 +36,7 @@ char ** uvec_vector(uvec const *uv);
 int uvec_insert(uvec *uv, char const *str, int place);
 int uvec_delete(uvec *uv, int place);
 int uvec_add(uvec *uv, char const *str);
+int uvec_addl(uvec *uv, ...);
 int uvec_pop(uvec *uv);
 int uvec_copy_vec(uvec *u, char **vec, int number);
 int uvec_copy(uvec *u, uvec const *v);
@@ -108,6 +109,9 @@ delete an element at element ``place''.
 .TP
 .I uvec_add
 add one element to end of vector.
+.TP
+.I uvec_addl
+add a NULL terminated list of elements to end of vector.
 .TP
 .I uvec_pop
 pop off one element at end of vector.
@@ -201,7 +205,7 @@ Uses the
 mechanism, and should be self explanatory.
 
 .SH BUGS
-Only adds or deletes one element at a time, because I found no
+Only deletes one element at a time, because I found no
 real need to do otherwise.  However, the sources are general enough
 that it could easily handle this event.
 

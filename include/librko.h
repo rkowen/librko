@@ -2,7 +2,7 @@
 #  define _LIBRKO_H_
 /* 
  * USMID %W%
- * RCSID @(#)$Id: librko.h,v 1.7 1998/11/12 22:26:24 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.8 1998/11/18 18:37:51 rk Exp $
  */
 /*
  *********************************************************************
@@ -178,6 +178,7 @@ char ** uvec_vector(uvec const *uv);
 int uvec_insert(uvec *uv, char const *str, int place);
 int uvec_delete(uvec *uv, int place);
 int uvec_add(uvec *uv, char const *str);
+int uvec_addl(uvec *uv, ...);
 int uvec_pop(uvec *uv);
 int uvec_copy_vec(uvec *u, char **vec, int number);
 int uvec_copy(uvec *u, uvec const *v);
