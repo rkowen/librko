@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: uvec.c,v 1.9 1999/09/09 21:30:44 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec.c,v 1.10 1999/09/11 08:00:13 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.0 10/31/97 R.K.Owen,Ph.D.";
 /* uvec.c -
  * This could have easily been made a C++ class, but is
@@ -55,6 +55,9 @@ uvec *uvec_ctor(int cap) {
 		return uv;
 	}
 	if (uvec_init(uv,cap)) {
+#ifdef RKOERROR
+		(void) rkopsterror("uvec_ctor : ");
+#endif
 		free(uv);
 		uv = (uvec *) NULL;
 	}
