@@ -20,7 +20,7 @@
  * recipients of this software.
  *
  * last known email: rk@owen.sj.ca.us
- *                   rkowen@kudonet.com
+ *                   rkowen@ckns.net
  *                   smbd89a@prodigy.com
  *
  *********************************************************************

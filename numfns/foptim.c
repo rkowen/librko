@@ -1,5 +1,5 @@
 static const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: foptim.c,v 1.1 1998/10/07 16:19:56 rk Exp $";
+static const char RCSID[]="@(#)$Id: foptim.c,v 1.2 1998/10/14 15:16:09 rk Exp $";
 static const char AUTHOR[]="@(#)foptim 1.1 05/12/94 R.K.Owen,Ph.D.";
 /*
  * foptim() finds the minimum or maximum of f(x) within the interval [ax,bx].
@@ -40,7 +40,7 @@ static const char AUTHOR[]="@(#)foptim 1.1 05/12/94 R.K.Owen,Ph.D.";
  * recipients of this software.
  *
  * last known email: rk@owen.sj.ca.us
- *                   rkowen@kudonet.com
+ *                   rkowen@ckns.net
  *
  *********************************************************************
  */

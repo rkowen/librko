@@ -1,5 +1,5 @@
 static char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: macrosub.c,v 1.1 1998/10/07 16:19:56 rk Exp $";
+static const char RCSID[]="@(#)$Id: macrosub.c,v 1.2 1998/10/14 15:16:09 rk Exp $";
 static char AUTHOR[]="@(#)macrosub.c 1.0 08/30/94 R.K.Owen,PhD";
 
 /* macstrncpy(string1,string2,n) - Macro string copy
@@ -38,7 +38,7 @@ static char AUTHOR[]="@(#)macrosub.c 1.0 08/30/94 R.K.Owen,PhD";
  * notice remains in this software and is made available to all
  * recipients of this software.
  *
- * last known email: rkowen@kudonet.com
+ * last known email: rkowen@ckns.net
  *                   rk@owen.sj.ca.us
  *
  *********************************************************************

@@ -1,6 +1,6 @@
-static char USMID[]="$Id: strchop.c,v 1.1 1998/10/07 16:19:56 rk Exp $";
-static const char RCSID[]="@(#)$Id: strchop.c,v 1.1 1998/10/07 16:19:56 rk Exp $";
-static char AUTHOR[]="@(#)$Id: strchop.c,v 1.1 1998/10/07 16:19:56 rk Exp $";
+static char USMID[]="$Id: strchop.c,v 1.2 1998/10/14 15:16:10 rk Exp $";
+static const char RCSID[]="@(#)$Id: strchop.c,v 1.2 1998/10/14 15:16:10 rk Exp $";
+static char AUTHOR[]="@(#)$Id: strchop.c,v 1.2 1998/10/14 15:16:10 rk Exp $";
 
 /* strchop - chops a string at the spaces (as determined by isspace())
  *	and behaves in the same manner as strtok in some aspects.
@@ -27,8 +27,14 @@ char *strchop(const char *string, int chop_len,
  * author	R.K.Owen,Ph.D.	10/05/95
  *
  * $Log: strchop.c,v $
- * Revision 1.1  1998/10/07 16:19:56  rk
- * Initial revision
+ * Revision 1.2  1998/10/14 15:16:10  rk
+ *
+ * added .sed for easy "global" changes, and updated the email address
+ *
+ * Revision 1.1.1.1  1998/10/07 16:19:56  rk
+ *
+ * Initial checkin of librko to CVS.
+ *
  *
  * Revision 1.1  1997/11/07 18:36:03  rk
  * Initial revision
@@ -52,7 +58,7 @@ char *strchop(const char *string, int chop_len,
  * recipients of this software.
  *
  * last known email: rk@owen.sj.ca.us
- *                   rkowen@kudonet.com
+ *                   rkowen@ckns.net
  *
  *********************************************************************
  */

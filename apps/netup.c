@@ -27,7 +27,7 @@ static const char AUTHOR[]="@(#)netup 1.0 03/26/96 R.K.Owen,Ph.D.";
  * recipients of this software.
  *
  * last known email: rk@owen.sj.ca.us
- *                   rkowen@kudonet.com
+ *                   rkowen@ckns.net
  *
  *********************************************************************
  */

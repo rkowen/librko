@@ -2,7 +2,7 @@
 #  define _LIBRKO_H_
 /* 
  * USMID %W%
- * RCSID @(#)$Id: librko.h,v 1.1 1998/10/07 16:19:56 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.2 1998/10/14 15:16:09 rk Exp $
  */
 /*
  *********************************************************************
@@ -17,7 +17,7 @@
  * notice remains in this software and is made available to all
  * recipients of this software.
  *
- * last known email: rkowen@kudonet.com
+ * last known email: rkowen@ckns.net
  *                   rk@owen.sj.ca.us
  *
  *********************************************************************

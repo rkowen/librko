@@ -20,7 +20,7 @@
  * or intends  to,  must  contact  the  author,  R.K.Owen,  and
  * license this software.
  *
- * last known email: rkowen@kudonet.com
+ * last known email: rkowen@ckns.net
  *                   rk@owen.sj.ca.us
  */
 

@@ -1,5 +1,5 @@
 static const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: uvec.c,v 1.3 1998/10/12 14:58:12 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec.c,v 1.4 1998/10/14 15:16:10 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.0 10/31/97 R.K.Owen,Ph.D.";
 /* uvec.c -
  * This could have easily been made a C++ class, but is
@@ -23,7 +23,7 @@ static const char AUTHOR[]="@(#)uvec 1.0 10/31/97 R.K.Owen,Ph.D.";
  * notice remains in this software and is made available to all
  * recipients of this software.
  *
- * last known email: rkowen@kudonet.com
+ * last known email: rkowen@ckns.net
  *                   rk@owen.sj.ca.us
  *
  *********************************************************************

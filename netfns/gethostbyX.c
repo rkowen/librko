@@ -1,6 +1,6 @@
 
 static const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: gethostbyX.c,v 1.1 1998/10/07 16:19:56 rk Exp $";
+static const char RCSID[]="@(#)$Id: gethostbyX.c,v 1.2 1998/10/14 15:16:09 rk Exp $";
 static const char AUTHOR[]="@(#)gethostbyX 1.0 03/26/96 R.K.Owen,Ph.D.";
 
 /* gethostbyX.c - accepts either input sutiable for gethostbyname
@@ -23,7 +23,7 @@ static const char AUTHOR[]="@(#)gethostbyX 1.0 03/26/96 R.K.Owen,Ph.D.";
  * recipients of this software.
  *
  * last known email: rk@owen.sj.ca.us
- *                   rkowen@kudonet.com
+ *                   rkowen@ckns.net
  *
  *********************************************************************
  */

@@ -18,7 +18,7 @@
  * notice remains in this software and is made available to all
  * recipients of this software.
  *
- * last known email: rkowen@kudonet.com
+ * last known email: rkowen@ckns.net
  *                   rk@owen.sj.ca.us
  *
  *********************************************************************

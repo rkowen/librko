@@ -1,5 +1,5 @@
 static char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: wcstrcmp.c,v 1.1 1998/10/07 16:19:56 rk Exp $";
+static const char RCSID[]="@(#)$Id: wcstrcmp.c,v 1.2 1998/10/14 15:16:10 rk Exp $";
 static char AUTHOR[]="@(#)wcstrcmp 1.1 08/09/95 R.K.Owen,PhD";
 
 /* wcstrcmp - compares two strings, where one can contain wildcard characters.
@@ -27,7 +27,7 @@ static char AUTHOR[]="@(#)wcstrcmp 1.1 08/09/95 R.K.Owen,PhD";
  * recipients of this software.
  *
  * last known email: rk@owen.sj.ca.us
- *                   rkowen@kudonet.com
+ *                   rkowen@ckns.net
  *
  *********************************************************************
  */
