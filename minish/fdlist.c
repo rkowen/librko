@@ -1,14 +1,33 @@
 /* fdlist - tracks the file descriptors / files & actions
  * by R.K. Owen,Ph.D. 10/14/1998
  */
+/*
+ *********************************************************************
+ *
+ *     This software is copyrighted by R.K.Owen,Ph.D. 1998
+ *
+ * The author, R.K.Owen, of this software is not liable for any
+ * problems WHATSOEVER which may result from use  or  abuse  of
+ * this software. The author, R.K.Owen, grants unlimited rights
+ * to anyone who uses and modifies this  software  for  private
+ * non-commercial  use  as  long  as  this copyright and rights
+ * notice remains in this software and is made available to all
+ * recipients of this software.
+ *
+ * last known email: rkowen@ckns.net
+ *                   rk@owen.sj.ca.us
+ *
+ *********************************************************************
+ */
 
-typedef enum {	MINISH_FD_NONE, MINISH_FD_CLOSE,
-		MINISH_FD_READ, MINISH_FD_WRITE,
-		MINISH_FD_APPEND, MINISH_FD_READWRITE,
-		MINISH_FD_REDIRECT } minish_fd_action;
-
-typedef struct minish_fdlist minish_fdlist;	/* forward declaration */
-typedef struct minish_fdlist_elem minish_fdlist_elem;
+#include <string.h>
+#include <stdarg.h>
+#include <sys/types.h>	/* open */
+#include <sys/stat.h>	/* open */
+#include <fcntl.h>	/* open */
+#include <unistd.h>	/* dup2, close */
+#include "librko.h"
+#include "minish.h"
 
 struct minish_fdlist {
 	char tag[7];			/* name tag for type	*/
@@ -23,14 +42,6 @@ struct minish_fdlist_elem {
 	int fd2;			/* redirected to	*/
 	char *file;			/* file name		*/
 };
-
-#include <string.h>
-#include <stdarg.h>
-#include <sys/types.h>	/* open */
-#include <sys/stat.h>	/* open */
-#include <fcntl.h>	/* open */
-#include <unistd.h>	/* dup2, close */
-#include "librko.h"
 
 #define TAG_LEN		7
 static char TAG[TAG_LEN] = "FDLIST";
@@ -51,6 +62,73 @@ static const char *str_action(minish_fd_action action) {
 	}
 	return ptr;
 }
+
+/* process a single element */
+static int minish_fdlist_single(minish_fdlist_elem *e) {
+	int retval = 0;
+	int oflag = 0;
+	char buffer[120];
+	int fid;
+
+	switch (e->action) {
+	case MINISH_FD_NONE:	/* do nothing */
+		break;
+	case MINISH_FD_CLOSE:
+		if(close(e->fd) < 0) {
+#ifdef RKOERROR
+			(void) sprintf(buffer,"can't close fd='%d'", e->fd);
+			(void) rkocpyerror(buffer);
+			rkoerrno = RKOIOERR;
+#endif
+			retval = -1;
+		}
+		break;
+	case MINISH_FD_REDIRECT:
+		if (dup2(e->fd2, e->fd)) {
+#ifdef RKOERROR
+			(void) sprintf(buffer,"can't dup2 fd='%d'->'%d'",
+				e->fd, e->fd2);
+			(void) rkocpyerror(buffer);
+			rkoerrno = RKOIOERR;
+#endif
+			retval -2;
+		}
+		break;
+	case MINISH_FD_READ:		oflag = O_RDONLY;
+		break;
+	case MINISH_FD_WRITE:		oflag = O_WRONLY | O_TRUNC | O_CREAT;
+		break;
+	case MINISH_FD_APPEND:		oflag = O_WRONLY | O_APPEND | O_CREAT;
+		break;
+	case MINISH_FD_READWRITE:	oflag = O_RDWR | O_CREAT;
+		break;
+	}
+	if (oflag != 0) {	/* must be a file request */
+		if ((fid = open(e->file, oflag, 0666)) < 0) {
+#ifdef RKOERROR
+			(void) sprintf(buffer,"can't open '%s' for fd='%d'",
+				e->file, e->fd);
+			(void) rkocpyerror(buffer);
+			rkoerrno = RKOIOERR;
+#endif
+			retval -3;
+		}
+		if (dup2(fid, e->fd)) {
+#ifdef RKOERROR
+			(void) sprintf(buffer,"can't dup2 '%s' to fd='%d'",
+				e->file, e->fd);
+			(void) rkocpyerror(buffer);
+			rkoerrno = RKOIOERR;
+#endif
+			retval -4;
+		}
+	}
+	return retval;
+}
+
+/*======================================================================*/
+/* Public Interface                                                     */
+/*======================================================================*/
 
 /* minish_fdlist "constructor"
  */
@@ -271,69 +349,6 @@ int minish_fdlist_dump(minish_fdlist *fdl) {
 	rkoerrno = RKO_OK;
 #endif
 	return 0;
-}
-
-/* process a single element */
-static int minish_fdlist_single(minish_fdlist_elem *e) {
-	int retval = 0;
-	int oflag = 0;
-	char buffer[120];
-	int fid;
-
-	switch (e->action) {
-	case MINISH_FD_NONE:	/* do nothing */
-		break;
-	case MINISH_FD_CLOSE:
-		if(close(e->fd) < 0) {
-#ifdef RKOERROR
-			(void) sprintf(buffer,"can't close fd='%d'", e->fd);
-			(void) rkocpyerror(buffer);
-			rkoerrno = RKOIOERR;
-#endif
-			retval = -1;
-		}
-		break;
-	case MINISH_FD_REDIRECT:
-		if (dup2(e->fd2, e->fd)) {
-#ifdef RKOERROR
-			(void) sprintf(buffer,"can't dup2 fd='%d'->'%d'",
-				e->fd, e->fd2);
-			(void) rkocpyerror(buffer);
-			rkoerrno = RKOIOERR;
-#endif
-			retval -2;
-		}
-		break;
-	case MINISH_FD_READ:		oflag = O_RDONLY;
-		break;
-	case MINISH_FD_WRITE:		oflag = O_WRONLY | O_TRUNC | O_CREAT;
-		break;
-	case MINISH_FD_APPEND:		oflag = O_WRONLY | O_APPEND | O_CREAT;
-		break;
-	case MINISH_FD_READWRITE:	oflag = O_RDWR | O_CREAT;
-		break;
-	}
-	if (oflag != 0) {	/* must be a file request */
-		if ((fid = open(e->file, oflag, 0666)) < 0) {
-#ifdef RKOERROR
-			(void) sprintf(buffer,"can't open '%s' for fd='%d'",
-				e->file, e->fd);
-			(void) rkocpyerror(buffer);
-			rkoerrno = RKOIOERR;
-#endif
-			retval -3;
-		}
-		if (dup2(fid, e->fd)) {
-#ifdef RKOERROR
-			(void) sprintf(buffer,"can't dup2 '%s' to fd='%d'",
-				e->file, e->fd);
-			(void) rkocpyerror(buffer);
-			rkoerrno = RKOIOERR;
-#endif
-			retval -4;
-		}
-	}
-	return retval;
 }
 
 /* process all the elements
