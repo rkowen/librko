@@ -1,0 +1,45 @@
+.\" RCSID @(#)$Id: gcd.man,v 1.1 1998/11/19 22:58:42 rk Exp $
+.\" LIBDIR
+.TH "GCD" "3rko" "17 Nov 1998"
+.SH NAME
+gcd \- Greatest Common Divisor
+.SH SYNOPSIS
+
+.nf
+#include "librko.h"
+
+char cgcd(char n, char m);
+unsigned char ucgcd(unsigned char n, unsigned char m);
+short hgcd(short n, short m);
+unsigned short uhgcd(unsigned short n, unsigned short m);
+int igcd(int n, int m);
+unsigned int ugcd(unsigned int n, unsigned int m);
+long lgcd(long n, long m);
+unsigned long ulgcd(unsigned long n, unsigned long m);
+.fi
+
+.SH DESCRIPTION
+The
+.I gcd
+collection implements Euclid's GCD algorithm for a selection of integer
+types.  The basic algorithm is this (assuming both arguments n and m
+are positive and n > m and all quantities are non-negative integers):
+.nf
+	if	n = p*m + q
+	then	gcd(n,m) = gcd(m,q)
+	repeat until q = 0 or 1
+.fi
+
+.SH SEE ALSO
+factor(1),primes(1)
+
+.SH DIAGNOSTICS
+Returns 0, if either of the arguments is less than 0 for the signed
+versions.
+
+.SH BUGS
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

@@ -2,7 +2,7 @@
 #  define _LIBRKO_H_
 /* 
  * USMID %W%
- * RCSID @(#)$Id: librko.h,v 1.8 1998/11/18 18:37:51 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.9 1998/11/19 22:58:42 rk Exp $
  */
 /*
  *********************************************************************
@@ -76,6 +76,19 @@ PRECISION foptim(int iopt, PRECISION ax, PRECISION bx,
 PRECISION fzeroin(PRECISION ax, PRECISION bx,
 	PRECISION y0, PRECISION (*f)(PRECISION), PRECISION tol);
 int istext(int c);
+
+/* useful integer functions */
+/* GCD - greatest common divisor */
+#define __GCD(NM, TYPE) TYPE NM(TYPE a, TYPE b);
+__GCD(cgcd,char)
+__GCD(ucgcd,unsigned char)
+__GCD(hgcd,short)
+__GCD(uhgcd,unsigned short)
+__GCD(igcd,int)
+__GCD(ugcd,unsigned int)
+__GCD(lgcd,long)
+__GCD(ulgcd,unsigned long)
+#undef __GCD
 
 /* urand declarations */
 INTEGER irand(void);
