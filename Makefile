@@ -63,7 +63,7 @@ all : $(LIB) $(DOCSL)
 		($(CD) $$d; $(MAKE) all ) ; \
 	done
 
-mall : $(MLIB)
+mall : $(MLIB) memdbg
 	-@for d in $(DIRS); do \
 		$(ECHO) "making $$d"; \
 		($(CD) $$d; $(MAKE) mall ) ; \

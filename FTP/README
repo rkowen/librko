@@ -1,0 +1,10 @@
+This directory receives the gzipped tar balls of some of the
+stand-alone applications.
+
+This file is mostly here to make the directory non-empty.
+
+To create all the apps do "make alltgz" in the librko root directory.
+
+To create just a single one do "make FTP/xxx.tgz" in the librko root
+directory, and where xxx is the application.
+

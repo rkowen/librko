@@ -1,0 +1,31 @@
+#
+# Specific Makefile for the memdebug package built on top of librko
+#
+
+ROOT	=	/usr/local
+NROFF	=	nroff
+
+all : memdebug.o memdebug.1
+
+install : all
+	-install -m 755 memdebug $(ROOT)/bin
+	-install -m 644 memdebug.man $(ROOT)/man/man1
+	-install -m 644 memdebug.1 $(ROOT)/man/cat1
+
+uninstall :
+	-rm -f	$(ROOT)/bin/memdebug		\
+		$(ROOT)/man/man1/memdebug.1 	\
+		$(ROOT)/man/cat1/memdebug.1
+
+memdebug.o : memdebug.c memdebug.h
+	$(CC) $(CFLAGS) -D_memdebug_ -c memdebug.c
+
+memdebug.1 : memdebug.man
+	$(NROFF) -man memdebug.man > memdebug.1
+
+clean :
+	-rm *.o a.out core
+
+clobber : clean
+	-rm memdebug.o memdebug.1
+
