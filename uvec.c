@@ -1,5 +1,5 @@
 static const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: uvec.c,v 1.2 1998/10/09 21:00:09 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec.c,v 1.3 1998/10/12 14:58:12 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.0 10/31/97 R.K.Owen,Ph.D.";
 /* uvec.c -
  * This could have easily been made a C++ class, but is
@@ -44,27 +44,34 @@ static char TAG[5] = "UVEC";
  * returns <0 if an error, else 0 if OK as well as all the other functions
  */
 int uvec_ctor(uvec *uv, int cap) {
-/* can't guarentee that struct will be initialized to 0 hence use "tag" */
+	if (uv == (uvec *) NULL) {
+#ifdef RKOERROR
+		(void) rkocpyerror("uvec_ctor : null pointer!");
+		rkoerrno = RKOUSEERR;
+#endif
+		return -1;
+	}
+/* can't guarantee that struct will be initialized to 0 hence use "tag" */
 	if (!strncmp(uv->tag,TAG, 5)) {
 #ifdef RKOERROR
 		(void) rkocpyerror("uvec_ctor : already initialized!");
 		rkoerrno = RKOUSEERR;
 #endif
-		return -1;
+		return -2;
 	}
 	if (cap < 1) {
 #ifdef RKOERROR
 		(void) rkocpyerror("uvec_ctor : invalid capacity!");
 		rkoerrno = RKOUSEERR;
 #endif
-		return -2;
+		return -3;
 	}
 	if (!(uv->vector = (char **) calloc(cap, sizeof(char *)))) {
 #ifdef RKOERROR
 		(void) rkocpyerror("uvec_ctor : malloc error!");
 		rkoerrno = RKOMEMERR;
 #endif
-		return -3;
+		return -4;
 	}
 	(void) strcpy(uv->tag, TAG);
 	uv->capacity = cap;
@@ -79,6 +86,13 @@ int uvec_ctor(uvec *uv, int cap) {
 int uvec_dtor(uvec *uv) {
 	int i;
 
+	if (uv == (uvec *) NULL) {
+#ifdef RKOERROR
+		(void) rkocpyerror("uvec_dtor : null pointer!");
+		rkoerrno = RKOUSEERR;
+#endif
+		return -1;
+	}
 	*(uv->tag) = '\0';
 	for (i = 0; i < uv->number; ++i) {
 		free(uv->vector[i]);
@@ -255,7 +269,24 @@ static int uvec_shift(uvec *uv, int start, int end, int newstart) {
 /* ---------------------------------------------------------------------- */
 /* accessor functions */
 int uvec_exists(uvec const *uv) {
-	return ! strncmp(uv->tag,TAG, 5);
+	int retval = 0;
+	if (uv == (uvec *) NULL) {
+#ifdef RKOERROR
+		(void) rkocpyerror("uvec_exists : null pointer!");
+		rkoerrno = RKOUSEERR;
+#endif
+		retval = 0;
+	} else {
+		if (strncmp(uv->tag,TAG, 5)) {
+			(void) rkocpyerror("uvec_exists : uvec doesn't exist!");
+			rkoerrno = RKOUSEERR;
+			retval = 0;
+		} else {
+			rkoerrno = RKO_OK;
+			retval = 1;
+		}
+	}
+	return retval;
 }
 
 int uvec_capacity(uvec const *uv) {
@@ -266,6 +297,7 @@ int uvec_capacity(uvec const *uv) {
 		return uv->capacity;
 	} else {
 #ifdef RKOERROR
+		(void) rkopsterror("uvec_capacity : ");
 		rkoerrno = RKOUSEERR;
 #endif
 		return -1;
@@ -280,6 +312,7 @@ int uvec_number(uvec const *uv) {
 		return uv->number;
 	} else {
 #ifdef RKOERROR
+		(void) rkopsterror("uvec_number : ");
 		rkoerrno = RKOUSEERR;
 #endif
 		return -1;
@@ -294,6 +327,7 @@ int uvec_end(uvec const *uv) {
 		return uv->number - 1;
 	} else {
 #ifdef RKOERROR
+		(void) rkopsterror("uvec_end : ");
 		rkoerrno = RKOUSEERR;
 #endif
 		return -1;
@@ -308,6 +342,7 @@ char ** uvec_vector(uvec const *uv) {
 		return uv->vector;
 	} else {
 #ifdef RKOERROR
+		(void) rkopsterror("uvec_vector : ");
 		rkoerrno = RKOUSEERR;
 #endif
 		return (char **) NULL;
@@ -491,7 +526,7 @@ int uvec_sort(uvec *uv, enum uvec_order type) {
 	int (*cmp)(const void *, const void *);
 	if (!uvec_exists(uv)) {
 #ifdef RKOERROR
-		(void) rkocpyerror("uvec_sort : vector doesn't exist!");
+		(void) rkopsterror("uvec_sort : ");
 		rkoerrno = RKOUSEERR;
 #endif
 		return -1;
@@ -539,7 +574,7 @@ int uvec_uniq(uvec *uv, enum uvec_order type) {
 
 	if (!uvec_exists(uv)) {
 #ifdef RKOERROR
-		(void) rkocpyerror("uvec_uniq : vector doesn't exist!");
+		(void) rkopsterror("uvec_uniq : ");
 		rkoerrno = RKOUSEERR;
 #endif
 		return -1;
@@ -588,7 +623,7 @@ int uvec_reverse(uvec const *uv) {
 	char *swap;
 	if (!uvec_exists(uv)) {
 #ifdef RKOERROR
-		(void) rkocpyerror("uvec_reverse : vector doesn't exist!");
+		(void) rkopsterror("uvec_reverse : ");
 		rkoerrno = RKOUSEERR;
 		return -1;
 #endif
@@ -621,7 +656,7 @@ int uvec_randomize(uvec const *uv, int seed) {
 
 	if (!uvec_exists(uv)) {
 #  ifdef RKOERROR
-		(void) rkocpyerror("uvec_randomize : vector doesn't exist!");
+		(void) rkopsterror("uvec_randomize : ");
 		rkoerrno = RKOUSEERR;
 		return -1;
 #  endif
