@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: key_value.c,v 1.1 2003/09/05 05:02:00 rk Exp $";
+static const char RCSID[]="@(#)$Id: key_value.c,v 1.2 2003/09/05 15:48:25 rk Exp $";
 static const char AUTHOR[]="@(#)keyvalue 1.0 1995/10/05 R.K.Owen,Ph.D.";
 
 /* key_value - chops a string into key/value pairs
@@ -131,7 +131,7 @@ avec *key_value(const char *string,
 	}
 
 	/* construct avec - use STDC fns */
-	if (!(kv = avec_ctor_(3*c_pair_delim,avec_get_std_fns(AVEC_STDC)))) {
+	if (!(kv = avec_ctor_(3*c_ref_delim,avec_get_std_fns(AVEC_STDC)))) {
 #ifdef RKOERROR
 		(void) rkopsterror( "key_value : ");
 #endif
