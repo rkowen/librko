@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec.c,v 1.9 2002/02/19 02:27:33 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec.c,v 1.10 2002/02/21 18:05:34 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -54,11 +54,15 @@ char const *_s, *_t
 #define HASH(ss,v,Size) \
 	{for(_s=ss,_i=0; *_s; _s++) _i=131 * _i + *_s;v=_i % Size;}
 
-#define STRCMP(ss,tt,v) {v=0; _s=ss; _t=tt; while(*_s & *_t){\
-			if(*_s==*_t){_s++;_t++;} else {v = 1; break;}}}
+#define STRCMP(ss,tt,v) {if (*ss) v=0;else v=1; _s=ss; _t=tt; while(*_s & *_t){\
+		if(*_s==*_t){_s++;_t++;} else {v = 1; break;}}}
 
+
+/* global variables */
 
 static char TAG[5] = "AVEC";
+/* place holder for removed entries */
+static const avec_element REMOVED = {"", NULL};
 
 /* ---------------------------------------------------------------------- */
 /* Implement AVEC_COUNT
@@ -377,7 +381,13 @@ static avec_element **avec_hash_search(enum avec_search type,
 /* start search */
 	while (inc < av->capacity && av->hash[hv]) {
 	/* there is an entry here ... see if it matches */
+
+		/* this entry has been removed before ... return if OK */
+		if ((av->hash[hv] == &REMOVED) && (type == AVEC_NEXT))
+			return &(av->hash[hv]);
+
 		STRCMP(av->hash[hv]->key, key, tv);
+
 		if (!tv) {	/* found match */
 			if (type == AVEC_MATCH || type == AVEC_INSERT)
 				return &(av->hash[hv]);
@@ -386,9 +396,11 @@ static avec_element **avec_hash_search(enum avec_search type,
 		hv %= av->capacity;
 		inc++;
 	}
-	/* found empty slot */
-	if (type == AVEC_NEXT || type == AVEC_INSERT) return &(av->hash[hv]);
+	/* found nothing but this empty slot */
+	if (type == AVEC_NEXT || type == AVEC_INSERT)
+		return &(av->hash[hv]);
 
+	/* either no match or no room left */
 	return retval;
 }
 
@@ -733,6 +745,9 @@ int avec_insert(avec *av, char const *key, ...) {
 	/* get variable arg pointer */
 	va_start(vargs,key);
 
+	/* NULL out if removed */
+	if (*elem == &REMOVED) *elem = (avec_element *) NULL;
+
 	if (*elem == (avec_element *) NULL) {	/* add element */
 		/* alloc element */
 		if (avec_alloc_element(key, elem)) {
@@ -810,6 +825,7 @@ int avec_delete(avec *av, char const *key, ...) {
 	}
 	(*elem)->data = (char *) NULL;
 	(void) avec_dealloc_element(elem);
+	*elem = (avec_element *) &REMOVED;
 	av->number--;
 
 #ifdef RKOERROR
@@ -877,7 +893,8 @@ int avec_resize(avec *av, int newcap) {
 	ptrptr = hash;
 	ptrptr--;	/* backup one */
 	while ((++ptrptr - hash) < oldcap) {
-		if (*ptrptr) {		/* found an element */
+		if (*ptrptr && *ptrptr != &REMOVED) {
+			/* found an element */
 			if (!(elem = avec_hash_search(AVEC_NEXT, av,
 				(*ptrptr)->key))) {
 #ifdef RKOERROR
@@ -889,6 +906,8 @@ int avec_resize(avec *av, int newcap) {
 			}
 		}
 	}
+	/* free old hash */
+	free(hash);
 
 	return 0;
 }
@@ -995,7 +1014,8 @@ avec_element **avec_walk_r(avec *av, avec_element **ptrptr) {
 	}
 
 	while ((++ptrptr - av->hash) < av->capacity) {
-		if (ptrptr && *ptrptr) {	/* found an element */
+		if (ptrptr && *ptrptr && *ptrptr != &REMOVED) {
+			/* found an element */
 			return ptrptr;
 		}
 	}

@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: avec.man,v 1.1 2002/02/15 05:30:55 rk Exp $
+.\" RCSID @(#)$Id: avec.man,v 1.2 2002/02/21 18:05:34 rk Exp $
 .\" LIBDIR
 .TH "avec" "3rko" "31 Oct 1997"
 .SH NAME
@@ -79,7 +79,12 @@ avec_element const *const *avec_hash(avec *av);
 could have easily been made a C++ class, but is
 confined to C so that it can be maximally portable.
 This is an associative vector package (a hash array)
-that uses quadratic hashing to search the hash array.
+that uses open-addressed
+quadratic hashing to search the hash array.
+That is, open-addressed means that all the data is stored in
+the hash table itself, as opposed to using chained lists.
+Quadratic hashing uses a hashing and search algorithm that is second order,
+which may have second order clustering.
 .P
 An associative vector provides approximately constant access to the
 stored data by using a hash function that converts the string key

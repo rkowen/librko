@@ -69,7 +69,7 @@ mall : $(MLIB)
 		($(CD) $$d; $(MAKE) mall ) ; \
 	done
 
-memdbg : memdbg.c
+memdbg : memdbg.c $(LIB)
 	$(CC) -o memdbg $(CFLAGS) memdbg.c -L. -lrko
 
 test :

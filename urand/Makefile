@@ -2,6 +2,8 @@
 # Makefile for minish
 #
 include ../Makefile.inc
+
+.SUFFIXES:
 .SUFFIXES: .c .o .man .3
 
 #
@@ -13,17 +15,17 @@ MLIBOBJS	=$(OBJS:%_m.o=../$(MLIB)(%_m.o))
 .DEFAULT:
 	$(MAKE) help
 
-all: ../$(LIB) urand.3
+all: ../$(LIB)(urand.o) urand.3
 
-mall: ../$(MLIB)
+mall: ../$(MLIB)(urand.o)
 
-../$(LIB) : $(LIBOBJS)
+../$(LIB)(urand.o) : urand.o
 	$(AR) $(ARFLAGS) $@ $?
-	-$(RM) -f $?
+#	-$(RM) -f $?
 
-../$(MLIB) : $(MLIBOBJS)
+../$(MLIB)(urand.o) : urand.o
 	$(AR) $(ARFLAGS) $@ $?
-	-$(RM) -f $?
+#	-$(RM) -f $?
 
 .c.o :
 	@$(ECHO) ">>>> .c.o $* $< $@"

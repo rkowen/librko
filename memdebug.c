@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: memdebug.c,v 1.5 2002/02/08 23:10:22 rk Exp $";
+static const char RCSID[]="@(#)$Id: memdebug.c,v 1.6 2002/02/21 18:05:34 rk Exp $";
 static const char AUTHOR[]="@(#)memdebug 1.0 02/10/95 R.K.Owen,PhD";
 
 /* memory - provides a front-end for the memory allocation routines to
@@ -30,16 +30,32 @@ static const char AUTHOR[]="@(#)memdebug 1.0 02/10/95 R.K.Owen,PhD";
 #include <stdlib.h>
 #include <stdio.h>
 
+FILE *m_output;
+
+FILE *memdebug_output(FILE *output) {
+
+	if (!m_output) m_output = stderr;
+
+	if (output)
+		m_output = output;
+
+	return m_output;
+}
+
 void *m_calloc(size_t nelem, size_t size, char *file, int line) {
 	void *ptr;
 	char *null = "(null)";
 
+	if (!m_output) m_output = stderr;
+
 	ptr = calloc(nelem, size);
 	if (ptr != NULL)
-		(void) fprintf(stderr,"RKOMEM:  calloc : %s %d : %p %d %d\n",
+		(void) fprintf(m_output,"RKOMEM:         calloc : %s %d :"
+			" %p %d %d\n",
 			file, line, ptr, nelem, size);
 	else
-		(void) fprintf(stderr,"RKOMEM:  calloc : %s %d : %s %d %d\n",
+		(void) fprintf(m_output,"RKOMEM:         calloc : %s %d :"
+			" %s %d %d\n",
 			file, line, null, nelem, size);
 	return ptr;
 }
@@ -47,11 +63,13 @@ void *m_calloc(size_t nelem, size_t size, char *file, int line) {
 void m_free(void *ptr, char *file, int line) {
 	char *null = "(null)";
 
+	if (!m_output) m_output = stderr;
+
 	if (ptr != NULL)
-		(void) fprintf(stderr,"RKOMEM:    free : %s %d : %p \n",
+		(void) fprintf(m_output,"RKOMEM:         free   : %s %d : %p\n",
 			file, line, ptr);
 	else
-		(void) fprintf(stderr,"RKOMEM:    free : %s %d : %s \n",
+		(void) fprintf(m_output,"RKOMEM:         free   : %s %d : %s\n",
 			file, line, null);
 	free(ptr);
 }
@@ -60,12 +78,16 @@ void *m_malloc(size_t size, char *file, int line) {
 	void *ptr;
 	char *null = "(null)";
 
+	if (!m_output) m_output = stderr;
+
 	ptr = malloc(size);
 	if (ptr != NULL)
-		(void) fprintf(stderr,"RKOMEM:  malloc : %s %d : %p %d\n",
+		(void) fprintf(m_output,"RKOMEM:         malloc : %s %d :"
+			" %p %d\n",
 			file, line, ptr, size);
 	else
-		(void) fprintf(stderr,"RKOMEM:  malloc : %s %d : %s %d\n",
+		(void)fprintf(m_output,"RKOMEM:         malloc : %s %d :"
+		" %s %d\n",
 			file, line, null, size);
 	return ptr;
 }
@@ -74,15 +96,20 @@ void *m_realloc(void *rptr, size_t size, char *file, int line) {
 	void *ptr;
 	char *null = "(null)";
 
+	if (!m_output) m_output = stderr;
+
 	ptr = realloc(rptr, size);
-	(void) fprintf(stderr,"RKOMEM: realloc : %s %d :", file, line);
-	if (ptr != NULL)
-		(void) fprintf(stderr," %p", ptr);
-	else
-		(void) fprintf(stderr," %s", null);
 	if (rptr != NULL)
-		(void) fprintf(stderr," %p %d\n", rptr, size);
-	else
-		(void) fprintf(stderr," %s %d\n", null, size);
+		(void) fprintf(m_output,"RKOMEM: realloc_free   : %s %d : %p\n",
+		file, line, rptr);
+
+	if (size) {
+		(void) fprintf(m_output,"RKOMEM: realloc_malloc : %s %d :",
+			file, line);
+		if (ptr != NULL)
+			(void) fprintf(m_output," %p %d\n", ptr, size);
+		else
+			(void) fprintf(m_output," %s %d\n", null, size);
+	}
 	return ptr;
 }

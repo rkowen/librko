@@ -16,6 +16,7 @@ char testbuf[512];
 
 int printout(avec *av, char const *head, int err, char const *ans) {
 	char const * const * vec;
+	char *sptr;
 	uvec *uv;
 	sprintf(testbuf,"e:%d c:%d n:%d",
 		err, avec_capacity(av), avec_number(av));
@@ -24,7 +25,8 @@ int printout(avec *av, char const *head, int err, char const *ans) {
 		vec = avec_keys(av);
 		uv = uvec_alloc();
 		uvec_copy_vec(uv, vec, 0);
-		strcat(testbuf, uvec2str(uv, "|"));
+		strcat(testbuf, sptr = uvec2str(uv, "|"));
+		strfree(&sptr);
 		free((void *)vec);
 		uvec_dtor(&uv);
 
@@ -32,7 +34,8 @@ int printout(avec *av, char const *head, int err, char const *ans) {
 		vec = (char const * const *) avec_values(av);
 		uv = uvec_alloc();
 		uvec_copy_vec(uv, vec, 0);
-		strcat(testbuf, uvec2str(uv, "|"));
+		strcat(testbuf, sptr = uvec2str(uv, "|"));
+		strfree(&sptr);
 		free((void *)vec);
 		uvec_dtor(&uv);
 	}
@@ -53,6 +56,7 @@ int printout(avec *av, char const *head, int err, char const *ans) {
 int printcount(avec *av, char const *head, int err, char const *ans) {
 	char const * const * vec;
 	int const * ivec;
+	char *sptr;
 	uvec *uv;
 	int count = 0, i;
 	char ibuf[64];
@@ -65,7 +69,8 @@ int printcount(avec *av, char const *head, int err, char const *ans) {
 		uv = uvec_alloc();
 		uvec_copy_vec(uv, vec, 0);
 		count = uvec_number(uv);
-		strcat(testbuf, uvec2str(uv, "|"));
+		strcat(testbuf, sptr = uvec2str(uv, "|"));
+		strfree(&sptr);
 		free((void *)vec);
 		uvec_dtor(&uv);
 
@@ -75,6 +80,7 @@ int printcount(avec *av, char const *head, int err, char const *ans) {
 			sprintf(ibuf, " %d", ivec[i]);
 			strcat(testbuf,ibuf);
 		}
+		free((void *) ivec);
 	}
 	if (strcmp(testbuf, ans)) {
 		printf("FAIL:%-20s=\n    <\t%s\n    >\t%s\n",head,testbuf,ans);
@@ -213,6 +219,10 @@ int main () {
 	int estat;
 	void **values, **vptr;
 
+#ifdef MEMDEBUG
+	memdebug_output(stdout);
+#endif
+
 	x = avec_ctor(10);
 	_CHECK(avec_number(x),*x,
 		"e:0 c:11 n:0 k: v:");
@@ -326,6 +336,7 @@ int main () {
 		strfree((char **)vptr);
 		vptr++;
 	}
+	free((void *) values);
 	printf("========================\n");
 
 	avec_set_fns(AVEC_COUNT, NULL);
@@ -360,6 +371,8 @@ int main () {
 		"e:1 c:11 n:3 k:second|third|first v: 1 2 2");
 	_COUNT(avec_delete(z,"third"),*z,
 		"e:1 c:11 n:3 k:second|third|first v: 1 1 2");
+	_CHECK(avec_dtor(&z),*z,
+		"e:0 c:-1 n:-1");
 	printf("========================\n");
 
 	if (results) {

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: strmalloc.c,v 1.4 2002/02/08 16:26:01 rk Exp $";
+static const char RCSID[]="@(#)$Id: strmalloc.c,v 1.5 2002/02/21 18:05:34 rk Exp $";
 static const char AUTHOR[]="@(#)strmalloc 1.0 09/01/1999 R.K.Owen,Ph.D.";
 /* strmalloc - adds a strdup-like routine for copying strings
  * strfree - frees the string memory storage.
@@ -30,6 +30,9 @@ static const char AUTHOR[]="@(#)strmalloc 1.0 09/01/1999 R.K.Owen,Ph.D.";
 #ifdef RKOERROR
 #  include "rkoerror.h"
 extern int rkoerrno;
+#endif
+#ifdef MEMDEBUG
+#  include "memdebug.h"
 #endif
 
 static char id[3] = "STR";

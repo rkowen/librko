@@ -1,7 +1,7 @@
 #ifndef _MEMDEBUG_H_
 #  define _MEMDEBUG_H_
 /* 
- * RCSID @(#)$Id: memdebug.h,v 1.2 2002/02/10 08:02:28 rk Exp $
+ * RCSID @(#)$Id: memdebug.h,v 1.3 2002/02/21 18:05:34 rk Exp $
  */
 /*
  *********************************************************************
@@ -30,13 +30,15 @@ extern "C" {
  *		  calloc,   free,   malloc,   realloc
  *	call with the following names:
  *		m_calloc, m_free, m_malloc, m_realloc
- *	the output goes to stderr.
+ *	the output goes to stderr by default unless set with
+ *	memdebug_output.
  */
 
 #  ifdef MEMDEBUG
 
 #    include <stdlib.h>	/* calloc, free, malloc, realloc */
 
+FILE *memdebug_output(FILE *output);
 void *m_calloc(size_t nelem, size_t size, char *file, int line);
 void m_free(void *ptr, char *file, int line);
 void *m_malloc(size_t size, char *file, int line);

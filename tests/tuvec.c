@@ -2,9 +2,16 @@
 #include <stdio.h>
 #include <string.h>
 #include "uvec.h"
+#ifdef HAVE_STRMALLOC
+#  include "strmalloc.h"
+#else
+#  define strfree(x) 0
+#endif
 #ifdef RKOERROR
 #  include "rkoerror.h"
 #endif
+
+FILE *output;
 
 char testbuf[256];
 
@@ -27,10 +34,11 @@ int printout(uvec *uv, char const *head, int err, char const *ans) {
 	strcmp(testbuf, ans)
 #endif
 	) {
-		printf("FAIL:%-20s=\n    <\t%s\n    >\t%s\n",head,testbuf,ans);
+		fprintf(output,"FAIL:%-20s=\n    <\t%s\n    >\t%s\n",
+			head,testbuf,ans);
 		return 1;
 	} else {
-		printf("OK  :%-20s=\n\t%s\n",head,testbuf);
+		fprintf(output,"OK  :%-20s=\n\t%s\n",head,testbuf);
 		return 0;
 	}
 }
@@ -46,11 +54,11 @@ int printret(uvec *uv, char const *head, int result, int ans) {
 		}
 	}
 	if (result != ans) {
-		printf("FAIL:%-20s=\n    <\t%s\n    >\te: %d != %d\n",
+		fprintf(output,"FAIL:%-20s=\n    <\t%s\n    >\te: %d != %d\n",
 			head, testbuf, result, ans);
 		return 1;
 	} else {
-		printf("OK  :%-20s=\n\t%s\n",head,testbuf);
+		fprintf(output,"OK  :%-20s=\n\t%s\n",head,testbuf);
 		return 0;
 	}
 }
@@ -58,11 +66,11 @@ int printret(uvec *uv, char const *head, int result, int ans) {
 int printval(char const *head, int result, int ans) {
 	sprintf(testbuf,"e:%d r:", result );
 	if (result != ans) {
-		printf("FAIL:%-20s=\n    <\t%s\n    >\te: %d != %d\n",
+		fprintf(output,"FAIL:%-20s=\n    <\t%s\n    >\te: %d != %d\n",
 			head, testbuf, result, ans);
 		return 1;
 	} else {
-		printf("OK  :%-20s=\t%s\n",head,testbuf);
+		fprintf(output,"OK  :%-20s=\t%s\n",head,testbuf);
 		return 0;
 	}
 }
@@ -81,6 +89,7 @@ int printval(char const *head, int result, int ans) {
 
 int main() {
 	uvec u,v, *x, *y;
+	char *vec;
 	int estat = 0;
 	int results = 0;
 	int i;
@@ -89,6 +98,12 @@ int main() {
 	char const * const list[] = {
 	":xyz",":ABC",":aaa",":bbb",":XYZ",
 	":AAA",":bb" ,":abc",":ABC", (char *) NULL};
+
+	output = stdout;
+
+#ifdef MEMDEBUG
+	memdbg_output(output);
+#endif
 
 	_CHECK(uvec_init(&u,30), u,
 	"e:0 c:30 n:0 r:")
@@ -115,7 +130,7 @@ int main() {
 #ifdef RKOERROR
 			rkoperror("main");
 #else
-			printf("error = %d",estat);
+			fprintf(output,"error = %d",estat);
 #endif
 	}
 	*(uvec_vector(&u)[3]) = 'x';
@@ -214,6 +229,7 @@ int main() {
 #endif
 	_CHECKVAL(uvec_set_strfns(UVEC_STDC, NULL), 0)
 	_CHECKVAL(uvec_get_strfns(), 2)
+	_CHECKVAL(uvec_set_strfns(UVEC_DEFAULT, NULL), 0)
 
 	_CHECK(uvec_close(&v), v,
 	"e:0 c:-1 n:-1 r:")
@@ -269,19 +285,26 @@ int main() {
 	/* intentional memory leak in this section */
 	_CHECK((x = str2uvec(":", "a:ab:abc"),rkoerrno), *x,
 	"e:0 c:4 n:3 r:aababc")
+	_CHECK(uvec_dtor(&x), *x, "e:0 c:-1 n:-1 r:")
 	_CHECK((x = vec2uvec(list, 0),rkoerrno), *x,
 	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
 	_CHECK((y = uvec2uvec(x),rkoerrno), *y,
 	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
-	_CHECK((x = str2uvec(";", uvec2str(y,";")),rkoerrno), *x,
+	_CHECK(uvec_dtor(&x), *x, "e:0 c:-1 n:-1 r:")
+	_CHECK((x = str2uvec(";", vec=uvec2str(y,";")),rkoerrno), *x,
 	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
+	if(strfree(&vec)) fprintf(output,">>> strfree error\n");;
+	_CHECK(uvec_dtor(&x), *x, "e:0 c:-1 n:-1 r:")
 	_CHECK((x = str2uvec(":", uvec2str(y,";")),rkoerrno), *x,
 	"e:0 c:11 n:10 r:xyz;ABC;aaa;bbb;XYZ;AAA;bb;abc;ABC")
+	if(strfree(&vec)) fprintf(output,">>> strfree error\n");;
+	_CHECK(uvec_dtor(&x), *x, "e:0 c:-1 n:-1 r:")
+	_CHECK(uvec_dtor(&y), *x, "e:0 c:-1 n:-1 r:")
 
 	if (results) {
-		printf("There were %d failures in %d tests\n", results, count);
+		fprintf(output,"There were %d failures in %d tests\n", results, count);
 	} else {
-		printf("There were no failures in %d tests\n", count);
+		fprintf(output,"There were no failures in %d tests\n", count);
 	}
 	return results;
 }

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: uvec.c,v 1.14 2002/02/15 23:01:55 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec.c,v 1.15 2002/02/21 18:05:34 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 /* uvec.c -
  * This could have easily been made a C++ class, but is
@@ -33,15 +33,15 @@ static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 #include <stdarg.h>
 #include <string.h>
 #include <time.h>
-#ifdef MEMDEBUG
-#  include "memdebug.h"
-#endif
 #include "uvec.h"
 #ifdef HAVE_STRMALLOC
 #  include "strmalloc.h"
 #endif
 #ifdef RKOERROR
 #  include "rkoerror.h"
+#endif
+#ifdef MEMDEBUG
+#  include "memdebug.h"
 #endif
 
 static char TAG[5] = "UVEC";
@@ -121,8 +121,8 @@ int uvec_set_strfns(enum uvec_def_str_fns type, uvec_str *strfns) {
 		default_str_fns.str_free = stdc_str_fns.str_free;
 #ifdef HAVE_STRMALLOC
 	} else if (type == UVEC_STRMALLOC) {
-		default_str_fns.str_alloc = stdc_str_fns.str_alloc;
-		default_str_fns.str_free = stdc_str_fns.str_free;
+		default_str_fns.str_alloc = strmalloc_str_fns.str_alloc;
+		default_str_fns.str_free = strmalloc_str_fns.str_free;
 #endif
 	} else if (type == UVEC_USER) {
 		if (strfns == (uvec_str*) NULL
@@ -141,6 +141,7 @@ int uvec_set_strfns(enum uvec_def_str_fns type, uvec_str *strfns) {
 	default_str_fns.type = type;
 	return 0;
 }
+
 /* return what type of string functions are currently default
  */
 enum uvec_def_str_fns uvec_get_strfns(void) {
@@ -247,6 +248,7 @@ int uvec_init_(uvec *uv, int cap, uvec_str strfns) {
 	(void) strcpy(uv->tag, TAG);
 	uv->capacity = cap;
 	uv->number = 0;
+	uv->str_fns.type = strfns.type;
 	uv->str_fns.str_alloc = strfns.str_alloc;
 	uv->str_fns.str_free = strfns.str_free;
 #ifdef RKOERROR
