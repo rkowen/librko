@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: uvec.man,v 1.12 2002/06/24 05:44:14 rk Exp $
+.\" RCSID @(#)$Id: uvec.man,v 1.13 2002/10/03 17:46:55 rk Exp $
 .\" LIBDIR
 .TH "UVEC" "3rko" "31 Oct 1997"
 .SH NAME
@@ -44,8 +44,10 @@ typedef struct {
 
 #include "uvec.h"
 
-int    uvec_set_strfns(enum uvec_def_str_fns type, uvec_str *strfns);
-enum   uvec_def_str_fns uvec_get_strfns(void);
+int       uvec_set_def_strfns(enum uvec_def_str_fns type, uvec_str *strfns);
+uvec_str *uvec_get_def_strfns(void);
+int       uvec_set_strfns(uvec *uv, uvec_str *strfns);
+uvec_str *uvec_get_strfns(uvec *uv);
 
 uvec  *uvec_ctor_(int cap, uvec_str strfns);
 uvec  *uvec_ctor(int cap);
@@ -88,6 +90,7 @@ uvec  *str2uvec(char const *token, char const *string);
 uvec  *vec2uvec(char const * const *vec, int num);
 uvec  *uvec2uvec(uvec const *uv);
 char  *uvec2str(uvec const *uv, char const *token);
+int    uvec_strfree(uvec const *uv, char **str);
 
 .fi
 
@@ -109,14 +112,27 @@ except for the accessor and constructor functions,
 return 0 if no error or return <0 otherwise.
 
 .TP 15
-.I uvec_set_strfns
+.I uvec_set_def_strfns
 register the set of string functions to use by default.
-
+If using a prepackaged set, then set
+.I type
+to the given enum, and set
+.I strfns
+to NULL.
+.TP
+.I uvec_get_def_strfns
+return which set of string functions are being used,
+returns a uvec_str struct.
+.TP
+.I uvec_set_strfns
+reset the string functions for an allocated uvec object.
+Should only be done immediately after a uvec_alloc, and not when
+the object contains a vector.  This will screw things up if a different
+set of string functions are used.
 .TP
 .I uvec_get_strfns
-query as to which set of string functions are being used,
-only the values given by enum uvec_def_str_fns will be returned.
-
+return which set of string functions are being used by the uvec object,
+returns a uvec_str struct.
 .TP
 .I uvec_ctor_
 construct Unix vector to capacity ``cap''
@@ -134,12 +150,16 @@ destroy the Unix vector and it's contents.
 .TP
 .I uvec_alloc_
 allocate the uninitialized uvec object (no vector is allocated)
-using the given set of string functions.
+using the given set of string functions.  Will need to do an
+.I uvec_init*
+afterwards.
 
 .TP
 .I uvec_alloc
 allocate the uninitialized uvec object (no vector is allocated)
-using the default set of string functions.
+using the default set of string functions.  Will need to do an
+.I uvec_init*
+afterwards.
 
 .TP
 .I uvec_dealloc
@@ -157,7 +177,7 @@ using the default set of string functions.
 
 .TP
 .I uvec_close
-destroy the Unix vector contents.
+destroy the Unix vector contents only.
 .TP
 .I uvec_exists
 returns 0 if the vector is not constructed, else non-0.
@@ -265,21 +285,28 @@ If seed <=0 then will "randomly" choose one.
 .TP
 .I str2uvec
 copies a string to a uvec, breaking the string at the given delimiter,
-uses the default string functions for creating the uvec.
+uses the default string functions for creating the new uvec.
 .TP
 .I vec2uvec
 copies a vector (or part of a vector upto num elements) to a uvec,
-uses the default string functions for creating the uvec.
+uses the default string functions for creating the new uvec.
 Set num to a value less than or equal to 0 to grab the entire vector.
 .TP
 .I uvec2uvec
 copies a uvec to a uvec
-uses the default string functions for creating the uvec.
+uses the default string functions for creating the new uvec.
 .TP
 .I uvec2str
 copies a uvec to a string with the elements separated by the
 given delimeter,
-uses the default string functions for creating the uvec.
+uses the uvec object string functions for creating the string.
+.TP
+.I uvec_strfree
+free up the string allocated by
+.I uvec2str
+using the string functions from the given uvec object (which should be
+the same one used in
+.IR uvec2str ).
 
 .SH EXAMPLES
 
