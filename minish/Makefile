@@ -51,7 +51,7 @@ lex.yy.c : minish.lex
 	$(LEX) $(LEXFLAGS) minish.lex
 
 fdtest/fdtest : fdlist.c
-	$(CC) $(CFLAGS) -o fdtest/fdtest -DTEST fdlist.c -L.. -lrko
+	$(CC) $(CFLAGS) -o fdtest/fdtest -DFDTEST fdlist.c -L.. -lrko
 
 mtest : mtest/right mtest/wrong mtest/rsignal
 
@@ -93,7 +93,7 @@ clean :
 	-$(RM) -f *.o a.out core y.output
 	-$(RM) -f fdtest/fdtest fdtest/fdtest.*out
 	-$(RM) -f mtest/right mtest/wrong mtest/rsignal mtest/core
-	-$(RM) -f lextest.out yacctest.out exectest.out
+	-$(RM) -f lextest.out yacctest.out exectest.out shtest.out
 
 wipe : clean
 	-$(RM) lextest yacctest exectest

@@ -400,7 +400,7 @@ int minish_fdlist_process(minish_fdlist *fdl) {
 	return 0;
 }
 
-#ifdef TEST
+#ifdef FDTEST
 
 int main () {
 	minish_fdlist *listA;
@@ -469,4 +469,4 @@ int main () {
 
 	return 0;
 }
-#endif /* TEST */
+#endif /* FDTEST */
