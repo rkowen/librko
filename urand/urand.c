@@ -1,5 +1,5 @@
 static const char AUTHOR[]="@(#)urand 06/02/94 1.3 R.K.Owen,PhD";
-static const char RCSID[]="$Id: urand.c,v 1.4 1999/09/09 21:31:24 rk Exp $";
+static const char RCSID[]="$Id: urand.c,v 1.5 1999/09/14 19:53:46 rk Exp $";
 /*      URAND IS A UNIFORM RANDOM NUMBER GENERATOR BASED  ON  THEORY  AND
  *  SUGGESTIONS  GIVEN  IN  D.E. KNUTH (1969),  VOL  2.   THE INTEGER  IY
  *  SHOULD BE INITIALIZED TO AN ARBITRARY INTEGER PRIOR TO THE FIRST CALL
@@ -29,6 +29,11 @@ static const char RCSID[]="$Id: urand.c,v 1.4 1999/09/09 21:31:24 rk Exp $";
  * 06/02/94 RKO, optimized some math operations (iy = iy-m2-m2)
  * 06/03/94 RKO, added many NO.. cpp optional code sections
  * $Log: urand.c,v $
+ * Revision 1.5  1999/09/14 19:53:46  rk
+ *
+ * Modified all the timing programs to use clocker(3rko) and to
+ * compute the mean average for comparisons.
+ *
  * Revision 1.4  1999/09/09 21:31:24  rk
  *
  * Updated the email address to librko@kooz.sj.ca.us
@@ -256,19 +261,11 @@ PRECISION geturand(void) {
 #  include <stdio.h>
 #  include <stdlib.h>
 
+#  include "urand_.c"	/* includes common definitions & code too */
+
 #  ifndef MAXSMP
-#    define MAXSMP 100000
+#    define MAXSMP 1000000
 #  endif
-
-#  ifndef MAXTRY
-#    define MAXTRY 11
-#  endif
-
-int tcmp(const void *t1, const void *t2) {
-	if (*(time_t *)t1 > *(time_t *)t2) return 1;
-	else if (*(time_t *)t1 < *(time_t *)t2) return -1;
-	else return 0;
-}
 
 int main() {
 	extern INTEGER m, m2;
@@ -283,7 +280,8 @@ int main() {
 	double iten;
 	INTEGER itst;
 	PRECISION utst;
-	clock_t t0, t1[MAXTRY],t2[MAXTRY], t1m, t2m;
+	clocker_t t0;
+	double t1[MAXTRY],t2[MAXTRY], t1m, t2m, t1a, t2a;
 
 /* initialize arrays */
 	for (i=0; i<arrdim; ++i) {
@@ -310,26 +308,12 @@ int main() {
 		imax = (imax > getirand() ? imax : getirand());
 	}
 /* display results */
-	if (sizeof(INTEGER) == sizeof(int)) {
-		printf("seed      = %d %d\n",myseed, getseed());
-		printf("m         = %d\t\t%x\n",m,m);
-		printf("m2        = %d\t\t%x\n",m2,m2);
-		printf("IRAND_MAX = %d\n",IRAND_MAX);
-		printf("imax      = %d\n", imax);
-	} else if (sizeof(INTEGER) == sizeof(long int)) {
-		printf("seed      = %ld %ld\n",myseed, getseed());
-		printf("m2        = %ld\n",m2);
-		printf("m         = %ld\t\t%lx\n",m,m);
-		printf("m2        = %ld\t\t%lx\n",m2,m2);
-		printf("IRAND_MAX = %ld\n",IRAND_MAX);
-		printf("imax      = %ld\n", imax);
-	} else if (sizeof(INTEGER) == sizeof(short int)) {
-		printf("seed      = %hd %sd\n",myseed, getseed());
-		printf("m         = %hd\t\t%hx\n",m,m);
-		printf("m2        = %hd\t\t%hx\n",m2,m2);
-		printf("IRAND_MAX = %hd\n",IRAND_MAX);
-		printf("imax      = %hd\n", imax);
-	}
+	printf("seed      = %ld %ld\n",(long) myseed, (long) getseed());
+	printf("m2        = %ld\n",(long) m2);
+	printf("m         = %ld\t\t%lx\n",(long) m,(long) m);
+	printf("m2        = %ld\t\t%lx\n",(long) m2,(long) m2);
+	printf("IRAND_MAX = %ld\n",(long) IRAND_MAX);
+	printf("imax      = %ld\n", (long) imax);
 	printf("sampling from irand()\n");
 	for (i=0; i<arrdim; ++i) {
 		printf(" %5d",iarr1[i]);
@@ -357,49 +341,36 @@ int main() {
 
 /* timing results */
 
-	for (j = 1; j < MAXTRY; ++j) {
+	for (j = 0; j < MAXTRY; ++j) {
 /* clock irand */
-		t0 = clock();
+		(void) clocker(&t0, _SET);
 		for (i=0; i<MAXSMP; ++i) {
 			itst = irand();
 		}
 /* clock urand */
-		t1[j] = clock();
+		t1[j] = clocker(&t0, _RESET);
 		for (i=0; i<MAXSMP; ++i) {
 			utst = urand();
 		}
-		t2[j] = clock();
-		t2[j] -= t1[j];
-		t1[j] -= t0;
+		t2[j] = clocker(&t0, _RESET);
 /* display time */
-		if (sizeof(clock_t) == sizeof(int)) {
-			printf("irand clocks: %d\t\t", t1[j]);
-			printf("urand clocks: %d\n", t2[j]);
-		} else if (sizeof(clock_t) == sizeof(long)) {
-			printf("irand clocks: %ld\t\t", t1[j]);
-			printf("urand clocks: %ld\n", t2[j]);
-		} else if (sizeof(clock_t) == sizeof(short)) {
-			printf("irand clocks: %hd\t\t", t1[j]);
-			printf("urand clocks: %hd\n", t2[j]);
-		}
+		printf("irand clocks: %7.3f\t\t", t1[j]);
+		printf("urand clocks: %7.3f\n", t2[j]);
 	}
 /* find median value */
-	qsort(t1, MAXTRY, sizeof(clock_t), tcmp);
-	qsort(t2, MAXTRY, sizeof(clock_t), tcmp);
+	qsort(t1, MAXTRY, sizeof(double), tcmp);
+	qsort(t2, MAXTRY, sizeof(double), tcmp);
 	t1m = t1[MAXTRY/2];
 	t2m = t2[MAXTRY/2];
+	t1a = tave(t1, MAXTRY);
+	t2a = tave(t2, MAXTRY);
 
         printf("Median value --\n");
-	if (sizeof(clock_t) == sizeof(int)) {
-		printf("irand clocks: %d\t\t", t1m);
-		printf("urand clocks: %d\n", t2m);
-	} else if (sizeof(clock_t) == sizeof(long)) {
-		printf("irand clocks: %ld\t\t", t1m);
-		printf("urand clocks: %ld\n", t2m);
-	} else if (sizeof(clock_t) == sizeof(short)) {
-		printf("irand clocks: %hd\t\t", t1m);
-		printf("urand clocks: %hd\n", t2m);
-	}
+	printf("irand clocks: %7.3f\t\t", t1m);
+	printf("urand clocks: %7.3f\n", t2m);
+        printf("Average value --\n");
+	printf("irand clocks: %7.3f\t\t", t1a);
+	printf("urand clocks: %7.3f\n", t2a);
 	return 0;
 }
 

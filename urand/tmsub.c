@@ -1,7 +1,9 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "urand.h"
+#include "librko.h"
+
+#include "urand_.c"	/* includes common definitions & code too */
 
 /*
  * #define OPEQ to compare	-=	and	^=
@@ -13,26 +15,18 @@
  *			else	-DNOOPSUB
  */
 
-#ifndef MAXTRY
-#  define MAXTRY 11
-#endif
-
-#ifndef MAXDIM
-#  define MAXDIM 100000
-#endif
-
-int tcmp(const void *t1, const void *t2) {
-	if (*(time_t *)t1 > *(time_t *)t2) return 1;
-	else if (*(time_t *)t1 < *(time_t *)t2) return -1;
-	else return 0;
-}
-
 int main() {
 	int i, j, iflag = 0;
 	int iarr1[MAXDIM], iarr2[MAXDIM];
 	INTEGER myseed = sizeof(INTEGER);
-	clock_t t0,t1[MAXTRY],t2[MAXTRY], t1m, t2m;
+	clocker_t t0;
+	double t1[MAXTRY],t2[MAXTRY], t1m, t2m, t1a, t2a;
 	INTEGER mm2 = 0, mm = 1, notmm;
+#ifdef OPEQ
+	char opeq[] = "=";
+#else
+	char opeq[] = "";
+#endif
 
 /*  COMPUTE MACHINE INTEGER WORD LENGTH */
 	do {
@@ -48,13 +42,13 @@ int main() {
 
 /* initialize seed */
 	setseed(myseed);
-	for (j = 1; j < MAXTRY; ++j) {
+	for (j = 0; j < MAXTRY; ++j) {
 /* initialize arrays */
 		for (i=0; i<MAXDIM; ++i) {
 			iarr1[i] = iarr2[i] = irand();
 		}
 /* - */
-		t0 = clock();
+		(void) clocker(&t0, _SET);
 		for (i=0; i<MAXDIM; ++i) {
 #ifdef OPEQ
 			iarr1[i] -= mm2;
@@ -64,7 +58,7 @@ int main() {
 #endif
 		}
 /* ^ */
-		t1[j] = clock();
+		t1[j] = clocker(&t0, _RESET);
 		for (i=0; i<MAXDIM; ++i) {
 #ifdef OPEQ
 			iarr2[i] ^= mm;
@@ -72,58 +66,49 @@ int main() {
 			iarr2[i] = (iarr2[i] ^ mm);
 #endif
 		}
-		t2[j] = clock();
-		t2[j] -= t1[j];
-		t1[j] -= t0;
+		t2[j] = clocker(&t0, _RESET);
 /* display results */
 		for (i=0; i<MAXDIM; ++i) {
 			if (iarr1[i] != iarr2[i]) {
 				iflag++;
 #ifndef DOPT
-				printf("%d,%d: %x %x : %d %d\n",j,i,
+				printf("%d,%d: %x %x : %d %d\n",j+1,i,
 					iarr1[i],iarr2[i], iarr1[i],iarr2[i]);
 #endif
 			}
 		}
 #ifndef DOPT
-		if (sizeof(clock_t) == sizeof(int)) {
-			printf("-m2 clocks: %d\t\t", t1[j]);
-			printf("^m  clocks: %d\n", t2[j]);
-		} else if (sizeof(clock_t) == sizeof(long)) {
-			printf("-m2 clocks: %ld\t\t", t1[j]);
-			printf("^m  clocks: %ld\n", t2[j]);
-		} else if (sizeof(clock_t) == sizeof(short)) {
-			printf("-m2 clocks: %hd\t\t", t1[j]);
-			printf("^m  clocks: %hd\n", t2[j]);
-		}
+		printf("-%sm2 clocks: %8.4f\t\t", opeq, t1[j]);
+		printf("^%sm  clocks: %8.4f\n",   opeq, t2[j]);
 #endif
 	}
-/* find median value */
-	qsort(t1, MAXTRY, sizeof(clock_t), tcmp);
-	qsort(t2, MAXTRY, sizeof(clock_t), tcmp);
+/* find median/average values */
+	qsort(t1, MAXTRY, sizeof(double), tcmp);
+	qsort(t2, MAXTRY, sizeof(double), tcmp);
 	t1m = t1[MAXTRY/2];
 	t2m = t2[MAXTRY/2];
+	t1a = tave(t1, MAXTRY);
+	t2a = tave(t2, MAXTRY);
 
 #ifndef DOPT
         printf("Median value --\n");
-	if (sizeof(clock_t) == sizeof(int)) {
-		printf("-m2 clocks: %d\t\t", t1m);
-		printf("^m  clocks: %d\n", t2m);
-	} else if (sizeof(clock_t) == sizeof(long)) {
-		printf("-m2 clocks: %ld\t\t", t1m);
-		printf("^m  clocks: %ld\n", t2m);
-	} else if (sizeof(clock_t) == sizeof(short)) {
-		printf("-m2 clocks: %hd\t\t", t1m);
-		printf("^m  clocks: %hd\n", t2m);
-	}
-#else
-#  ifdef OPEQ
-	if (iflag || t2m >= t1m) printf(" -DOPSUB");
+	printf("-%sm2 clocks: %8.4f\t\t", opeq, t1m);
+	printf("^%sm  clocks: %8.4f\n", opeq, t2m);
+        printf("Average value --\n");
+	printf("-%sm2 clocks: %8.4f\t\t", opeq, t1a);
+	printf("^%sm  clocks: %8.4f\n", opeq, t2a);
+	printf("\nshould give the option:");
+#endif
+#ifdef OPEQ
+	if (iflag || t2a >= t1a) printf(" -DOPSUB");
 	else printf(" -DNOOPSUB");
-#  else
-	if (iflag || t2m >= t1m) printf(" -DSUB");
+#else
+	if (iflag || t2a >= t1a) printf(" -DSUB");
 	else printf(" -DNOSUB");
-#  endif
+#endif
+
+#ifndef DOPT
+	printf("\n\n");
 #endif
 
 	return 0;
