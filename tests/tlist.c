@@ -141,6 +141,8 @@ int main() {
 		list_del(listobj, tagint))
 	_NTEST(listobj, tagint, int_type, "=0=",
 		list_pop(listobj, tagint))
+	_NTEST(listobj, tagint, int_type, "=0=",
+		((list_sizeof(listobj, tagint) - sizeof(listobj)) == 4))
 
 	_ZTEST(listobj, tagint, int_type, "=1=1:",
 		list_push(listobj, tagint, 1))
@@ -188,6 +190,8 @@ int main() {
 		list_del(listobj, tagflt))
 	_NTEST(listobj, tagflt, flt_type, "=0=",
 		list_pop(listobj, tagflt))
+	_NTEST(listobj, tagflt, flt_type, "=0=",
+		((list_sizeof(listobj, tagflt) - sizeof(listobj)) == 6))
 
 	_ZTEST(listobj, tagflt, flt_type, "=1=1.1:",
 		list_push(listobj, tagflt, 1.1))
@@ -235,6 +239,8 @@ int main() {
 		list_del(listobj, tagmix))
 	_NTEST(listobj, tagmix, mix_type, "=0=",
 		list_pop(listobj, tagmix))
+	_NTEST(listobj, tagmix, mix_type, "=0=",
+		((list_sizeof(listobj, tagmix) - sizeof(listobj)) == 5))
 
 	_ZTEST(listobj, tagmix, mix_type, "=1=1|1.1:",
 		list_push(listobj, tagmix, 1, 1.1))

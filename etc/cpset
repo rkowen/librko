@@ -10,8 +10,7 @@
 #
 # defaults
 OLD=0
-if [ 1 -eq 1 ]
-then
+if [ 1 -eq 1 ]; then
 	MV=mv
 	CP=cp
 	CHMOD=chmod
@@ -26,25 +25,21 @@ else
 fi
 #
 # check if real version is available
-if [ -f /usr/bin/cpset ]
-then
+if [ -f /usr/bin/cpset ]; then
 	/usr/bin/cpset $*
 else
 # parse command line
-	if [ "$1" = "-o" ]
-	then
+	if [ "$1" = "-o" ]; then
 		OLD=1
 		shift
 	fi
-	if [ $# -le 1 ]
-	then
+	if [ $# -le 1 ]; then
 		echo "cpset [-o] object destination [mode [owner [group]]]"
 		exit 1
 	fi
 	obj=$1
 	objbase=`basename $obj`
-	if ( echo $2 | grep "\." > /dev/null)
-	then
+	if ( echo $2 | grep "\." > /dev/null); then
 		dest=`dirname $2`
 		outfile=`basename $2`
 	else
@@ -52,16 +47,29 @@ else
 		outfile=$objbase
 	fi
 	mode=${3:-0755}
-	own=${4:-bin}
-	grp=${5:-bin}
+#	own=${4:-bin}
+#	grp=${5:-bin}
+ 	if [ $# -ge 4 ]; then
+		own=${4}
+	else
+		own=
+	fi
+ 	if [ $# -ge 5 ]; then
+		grp=${5}
+	else
+		grp=
+	fi
 # move the old stuff
-	if [ $OLD -eq 1 ]
-	then
+	if [ $OLD -eq 1 ]; then
 		$MV $dest/$outfile $dest/OLD$outfile
 	fi
 	$CP $obj $dest/$outfile
 	$CHMOD $mode $dest/$outfile
-	$CHOWN $own $dest/$outfile
-	$CHGRP $grp $dest/$outfile
+	if [ x"$own" != x"" ]; then
+		$CHOWN $own $dest/$outfile
+	fi
+	if [ x"$grp" != x"" ]; then
+		$CHGRP $grp $dest/$outfile
+	fi
 fi
 exit
