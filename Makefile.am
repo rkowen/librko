@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.2 2002/06/24 17:04:51 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.3 2002/06/24 19:20:09 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -12,11 +12,22 @@
 ##	aclocal.m4  /
 ##
 
-AUTOMAKE_OPTIONS=foreign no-installinfo
+AUTOMAKE_OPTIONS=foreign subdir-objects no-installinfo
 
 ACLOCAL_AMFLAGS=-I $(srcdir)/config
 
-INCLUDES = -I$(srcdir)/include -I$(srcdir)
+AM_CPPFLAGS = -I$(srcdir)/include -I$(srcdir)
+
+igcd_srcs = \
+	igcd/chgcd.c igcd/hgcd.c igcd/igcd.c		\
+	igcd/lgcd.c igcd/scgcd.c igcd/ucgcd.c		\
+	igcd/ugcd.c igcd/uhgcd.c igcd/ulgcd.c
+
+iprime_srcs = \
+	iprime/iprime_lut.c					\
+	iprime/chprime.c iprime/hprime.c iprime/iprime.c	\
+	iprime/lprime.c iprime/scprime.c iprime/ucprime.c	\
+	iprime/uhprime.c iprime/uiprime.c iprime/ulprime.c
 
 isqrt_srcs = \
 	isqrt/isqrt_lut.c				\
@@ -45,9 +56,9 @@ librko_a_SOURCES	= \
 	divdiff.c \
 	foptim.c \
 	fzeroin.c \
-	gcd.c \
 	gethostbyX.c \
-	iprime.c \
+	$(igcd_srcs) \
+	$(iprime_srcs) \
 	$(isqrt_srcs) \
 	istext.c \
 	list.c \

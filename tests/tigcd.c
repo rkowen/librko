@@ -4,7 +4,7 @@
  */
 
 #include <stdio.h>
-#include "gcd.h"
+#include "igcd.h"
 
 #define TESTOUT(NM,TYPE,arg1,arg2,result) \
 if((res = NM(arg1,arg2)) != result) {\

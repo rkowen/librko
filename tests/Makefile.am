@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./tests/Makefile.am
-## Versions:    $Id: Makefile.am,v 1.2 2002/06/24 17:04:51 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.3 2002/06/24 19:20:09 rk Exp $
 ## Created:     2002/06/24
 ##
 ###########################################################################
@@ -14,13 +14,13 @@
 
 AUTOMAKE_OPTIONS=foreign no-installinfo no-installman
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(srcdir)
+AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir) -I$(srcdir)
 
 helper_progs = doggy kitty birdy
 
 test_progs = \
 	tansi_seq.x tavec.x tclocker.x tdirtree.x tfilter.x	\
-	tfoptim.x tfzeroin.x tgcd.x tinvoke.x tiprime.x		\
+	tfoptim.x tfzeroin.x tigcd.x tinvoke.x tiprime.x	\
 	tisqrt.x tlist.x tmacrosub.x tmemdbg.x tnameread.x	\
 	tspawn.x tstrchop.x tstrdbecpy.x tstrmalloc.x tstrmem.x	\
 	ttfgets.x tuvec.x twcstrcmp.x
@@ -43,7 +43,7 @@ tdirtree_x_SOURCES		= tdirtree.c
 tfilter_x_SOURCES		= tfilter.c
 tfoptim_x_SOURCES		= tfoptim.c
 tfzeroin_x_SOURCES		= tfzeroin.c
-tgcd_x_SOURCES			= tgcd.c
+tigcd_x_SOURCES			= tigcd.c
 tinvoke_x_SOURCES		= tinvoke.c
 tiprime_x_SOURCES		= tiprime.c
 tisqrt_x_SOURCES		= tisqrt.c

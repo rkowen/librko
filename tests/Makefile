@@ -80,13 +80,13 @@ install_sh = /u/owen/rk/src/librko/config/install-sh
 
 AUTOMAKE_OPTIONS = foreign no-installinfo no-installman
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(srcdir)
+AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir) -I$(srcdir)
 
 helper_progs = doggy kitty birdy
 
 test_progs = \
 	tansi_seq.x tavec.x tclocker.x tdirtree.x tfilter.x	\
-	tfoptim.x tfzeroin.x tgcd.x tinvoke.x tiprime.x		\
+	tfoptim.x tfzeroin.x tigcd.x tinvoke.x tiprime.x	\
 	tisqrt.x tlist.x tmacrosub.x tmemdbg.x tnameread.x	\
 	tspawn.x tstrchop.x tstrdbecpy.x tstrmalloc.x tstrmem.x	\
 	ttfgets.x tuvec.x twcstrcmp.x
@@ -111,7 +111,7 @@ tdirtree_x_SOURCES = tdirtree.c
 tfilter_x_SOURCES = tfilter.c
 tfoptim_x_SOURCES = tfoptim.c
 tfzeroin_x_SOURCES = tfzeroin.c
-tgcd_x_SOURCES = tgcd.c
+tigcd_x_SOURCES = tigcd.c
 tinvoke_x_SOURCES = tinvoke.c
 tiprime_x_SOURCES = tiprime.c
 tisqrt_x_SOURCES = tisqrt.c
@@ -136,7 +136,7 @@ CONFIG_CLEAN_FILES =
 noinst_PROGRAMS = doggy$(EXEEXT) kitty$(EXEEXT) birdy$(EXEEXT) \
 	tansi_seq.x$(EXEEXT) tavec.x$(EXEEXT) tclocker.x$(EXEEXT) \
 	tdirtree.x$(EXEEXT) tfilter.x$(EXEEXT) tfoptim.x$(EXEEXT) \
-	tfzeroin.x$(EXEEXT) tgcd.x$(EXEEXT) tinvoke.x$(EXEEXT) \
+	tfzeroin.x$(EXEEXT) tigcd.x$(EXEEXT) tinvoke.x$(EXEEXT) \
 	tiprime.x$(EXEEXT) tisqrt.x$(EXEEXT) tlist.x$(EXEEXT) \
 	tmacrosub.x$(EXEEXT) tmemdbg.x$(EXEEXT) tnameread.x$(EXEEXT) \
 	tspawn.x$(EXEEXT) tstrchop.x$(EXEEXT) tstrdbecpy.x$(EXEEXT) \
@@ -194,11 +194,11 @@ tfzeroin_x_OBJECTS = $(am_tfzeroin_x_OBJECTS)
 tfzeroin_x_LDADD = $(LDADD)
 tfzeroin_x_DEPENDENCIES = ../librko.a
 tfzeroin_x_LDFLAGS =
-am_tgcd_x_OBJECTS = tgcd.$(OBJEXT)
-tgcd_x_OBJECTS = $(am_tgcd_x_OBJECTS)
-tgcd_x_LDADD = $(LDADD)
-tgcd_x_DEPENDENCIES = ../librko.a
-tgcd_x_LDFLAGS =
+am_tigcd_x_OBJECTS = tigcd.$(OBJEXT)
+tigcd_x_OBJECTS = $(am_tigcd_x_OBJECTS)
+tigcd_x_LDADD = $(LDADD)
+tigcd_x_DEPENDENCIES = ../librko.a
+tigcd_x_LDFLAGS =
 am_tinvoke_x_OBJECTS = tinvoke.$(OBJEXT)
 tinvoke_x_OBJECTS = $(am_tinvoke_x_OBJECTS)
 tinvoke_x_LDADD = $(LDADD)
@@ -287,7 +287,7 @@ DEP_FILES = ./$(DEPDIR)/birdy.Po ./$(DEPDIR)/doggy.Po \
 	./$(DEPDIR)/tavec.Po ./$(DEPDIR)/tclocker.Po \
 	./$(DEPDIR)/tdirtree.Po ./$(DEPDIR)/tfilter.Po \
 	./$(DEPDIR)/tfoptim.Po ./$(DEPDIR)/tfzeroin.Po \
-	./$(DEPDIR)/tgcd.Po ./$(DEPDIR)/tinvoke.Po \
+	./$(DEPDIR)/tigcd.Po ./$(DEPDIR)/tinvoke.Po \
 	./$(DEPDIR)/tiprime.Po ./$(DEPDIR)/tisqrt.Po \
 	./$(DEPDIR)/tlist.Po ./$(DEPDIR)/tmacrosub.Po \
 	./$(DEPDIR)/tmemdbg.Po ./$(DEPDIR)/tnameread.Po \
@@ -303,7 +303,7 @@ CFLAGS = -g -O2
 DIST_SOURCES = $(birdy_SOURCES) $(doggy_SOURCES) $(kitty_SOURCES) \
 	$(tansi_seq_x_SOURCES) $(tavec_x_SOURCES) $(tclocker_x_SOURCES) \
 	$(tdirtree_x_SOURCES) $(tfilter_x_SOURCES) $(tfoptim_x_SOURCES) \
-	$(tfzeroin_x_SOURCES) $(tgcd_x_SOURCES) $(tinvoke_x_SOURCES) \
+	$(tfzeroin_x_SOURCES) $(tigcd_x_SOURCES) $(tinvoke_x_SOURCES) \
 	$(tiprime_x_SOURCES) $(tisqrt_x_SOURCES) $(tlist_x_SOURCES) \
 	$(tmacrosub_x_SOURCES) $(tmemdbg_x_SOURCES) \
 	$(tnameread_x_SOURCES) $(tspawn_x_SOURCES) \
@@ -311,7 +311,7 @@ DIST_SOURCES = $(birdy_SOURCES) $(doggy_SOURCES) $(kitty_SOURCES) \
 	$(tstrmalloc_x_SOURCES) $(tstrmem_x_SOURCES) \
 	$(ttfgets_x_SOURCES) $(tuvec_x_SOURCES) $(twcstrcmp_x_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(birdy_SOURCES) $(doggy_SOURCES) $(kitty_SOURCES) $(tansi_seq_x_SOURCES) $(tavec_x_SOURCES) $(tclocker_x_SOURCES) $(tdirtree_x_SOURCES) $(tfilter_x_SOURCES) $(tfoptim_x_SOURCES) $(tfzeroin_x_SOURCES) $(tgcd_x_SOURCES) $(tinvoke_x_SOURCES) $(tiprime_x_SOURCES) $(tisqrt_x_SOURCES) $(tlist_x_SOURCES) $(tmacrosub_x_SOURCES) $(tmemdbg_x_SOURCES) $(tnameread_x_SOURCES) $(tspawn_x_SOURCES) $(tstrchop_x_SOURCES) $(tstrdbecpy_x_SOURCES) $(tstrmalloc_x_SOURCES) $(tstrmem_x_SOURCES) $(ttfgets_x_SOURCES) $(tuvec_x_SOURCES) $(twcstrcmp_x_SOURCES)
+SOURCES = $(birdy_SOURCES) $(doggy_SOURCES) $(kitty_SOURCES) $(tansi_seq_x_SOURCES) $(tavec_x_SOURCES) $(tclocker_x_SOURCES) $(tdirtree_x_SOURCES) $(tfilter_x_SOURCES) $(tfoptim_x_SOURCES) $(tfzeroin_x_SOURCES) $(tigcd_x_SOURCES) $(tinvoke_x_SOURCES) $(tiprime_x_SOURCES) $(tisqrt_x_SOURCES) $(tlist_x_SOURCES) $(tmacrosub_x_SOURCES) $(tmemdbg_x_SOURCES) $(tnameread_x_SOURCES) $(tspawn_x_SOURCES) $(tstrchop_x_SOURCES) $(tstrdbecpy_x_SOURCES) $(tstrmalloc_x_SOURCES) $(tstrmem_x_SOURCES) $(ttfgets_x_SOURCES) $(tuvec_x_SOURCES) $(twcstrcmp_x_SOURCES)
 
 all: all-am
 
@@ -355,9 +355,9 @@ tfoptim.x$(EXEEXT): $(tfoptim_x_OBJECTS) $(tfoptim_x_DEPENDENCIES)
 tfzeroin.x$(EXEEXT): $(tfzeroin_x_OBJECTS) $(tfzeroin_x_DEPENDENCIES) 
 	@rm -f tfzeroin.x$(EXEEXT)
 	$(LINK) $(tfzeroin_x_LDFLAGS) $(tfzeroin_x_OBJECTS) $(tfzeroin_x_LDADD) $(LIBS)
-tgcd.x$(EXEEXT): $(tgcd_x_OBJECTS) $(tgcd_x_DEPENDENCIES) 
-	@rm -f tgcd.x$(EXEEXT)
-	$(LINK) $(tgcd_x_LDFLAGS) $(tgcd_x_OBJECTS) $(tgcd_x_LDADD) $(LIBS)
+tigcd.x$(EXEEXT): $(tigcd_x_OBJECTS) $(tigcd_x_DEPENDENCIES) 
+	@rm -f tigcd.x$(EXEEXT)
+	$(LINK) $(tigcd_x_LDFLAGS) $(tigcd_x_OBJECTS) $(tigcd_x_LDADD) $(LIBS)
 tinvoke.x$(EXEEXT): $(tinvoke_x_OBJECTS) $(tinvoke_x_DEPENDENCIES) 
 	@rm -f tinvoke.x$(EXEEXT)
 	$(LINK) $(tinvoke_x_LDFLAGS) $(tinvoke_x_OBJECTS) $(tinvoke_x_LDADD) $(LIBS)
@@ -420,7 +420,7 @@ include ./$(DEPDIR)/tdirtree.Po
 include ./$(DEPDIR)/tfilter.Po
 include ./$(DEPDIR)/tfoptim.Po
 include ./$(DEPDIR)/tfzeroin.Po
-include ./$(DEPDIR)/tgcd.Po
+include ./$(DEPDIR)/tigcd.Po
 include ./$(DEPDIR)/tinvoke.Po
 include ./$(DEPDIR)/tiprime.Po
 include ./$(DEPDIR)/tisqrt.Po

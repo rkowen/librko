@@ -1,7 +1,7 @@
 #ifndef _LIBRKO_H_
 #  define _LIBRKO_H_
 /* 
- * RCSID @(#)$Id: librko.h,v 1.23 2002/03/01 05:23:28 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.24 2002/06/24 19:20:09 rk Exp $
  */
 /*
  *********************************************************************
@@ -49,7 +49,7 @@ extern "C" {
 #  include "memdebug.h"
 #  include "rkoerror.h"
 #  include "clocker.h"
-#  include "gcd.h"
+#  include "igcd.h"
 #  include "iprime.h"
 #  include "isqrt.h"
 #  include "istext.h"
