@@ -1,13 +1,15 @@
-.\" RCSID @(#)$Id: strdbecpy.man,v 1.2 1998/11/04 20:57:06 rk Exp $
+.\" RCSID @(#)$Id: strdbecpy.man,v 1.3 1998/11/04 22:55:24 rk Exp $
 .TH "STRDBECPY" "3rko" "12 May 1995"
 .SH NAME
 strdbecpy \-
 breaks apart a UNIX filename into its path, basename, and extension.
 .SH SYNOPSIS
 
+.nf
  #include "librko.h"
  char *strDBEcpy(char *path, char *base, char *ext,
          char dirchar, char extchar, const char *filename);
+.fi
 
 .SH DESCRIPTION
 .I strDBEcpy

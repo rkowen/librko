@@ -78,13 +78,82 @@ int listfile(const char *filename) {
 	return 0;
 }
 
+int trimlistdir(const char *dirname) {
+	int i;
+	char basename[FILENAME_MAX];
+	char extension[FILENAME_MAX];
+
+	for (i = 0; i < level; ++i) {
+		printf("\t");
+	}
+	(void) strDBEcpy(NULL, basename, extension, 0, 0, dirname);
+	printf(">>> %s%s\n", basename, extension);
+	return 0;
+}
+
+int trimlistfile(const char *filename) {
+	struct stat sbuf;
+	int i;
+	char basename[FILENAME_MAX];
+	char extension[FILENAME_MAX];
+
+	(void) lstat(filename, &sbuf);
+	if (!S_ISDIR(sbuf.st_mode)) {
+		for (i = 0; i < level; ++i) {
+			printf("\t");
+		}
+		(void) strDBEcpy(NULL, basename, extension, 0, 0, filename);
+		printf("%s%s%s\n", basename, extension,
+			strfilemode(sbuf.st_mode));
+	}
+	return 0;
+}
+
+int trimlist(const char *filename) {
+	struct stat sbuf;
+	int i;
+	char basename[FILENAME_MAX];
+	char extension[FILENAME_MAX];
+
+	(void) lstat(filename, &sbuf);
+	for (i = 0; i < level; ++i) {
+		printf("\t");
+	}
+	(void) strDBEcpy(NULL, basename, extension, 0, 0, filename);
+	printf("%s%s%s\n", basename, extension,
+		strfilemode(sbuf.st_mode));
+	return 0;
+}
+
 int main(int argc, char *argv[]) {
 	char	*PrgName;	/* program name			*/
 	int err = 0;
 
 	PrgName = *argv++;
+	printf("\nSorted list with full path names\n");
 	listdir(".");
 	if (err = dirtree(1,".", listdir, listfile, enterdir, leavedir)) {
+#ifdef RKOERROR
+		rkoperror(PrgName);
+#endif
+		return err;
+	}
+	printf("\nUnsorted list with full path names\n");
+	if (err = dirtree(0,".", listdir, listfile, enterdir, leavedir)) {
+#ifdef RKOERROR
+		rkoperror(PrgName);
+#endif
+		return err;
+	}
+	printf("\nSorted list with `basenames' only\n");
+	if (err = dirtree(1,".", trimlistdir, trimlistfile, enterdir, leavedir)) {
+#ifdef RKOERROR
+		rkoperror(PrgName);
+#endif
+		return err;
+	}
+	printf("\nSecond sorted list with `basenames' only and a missing fn\n");
+	if (err = dirtree(1,".", NULL, trimlist, enterdir, leavedir)) {
 #ifdef RKOERROR
 		rkoperror(PrgName);
 #endif

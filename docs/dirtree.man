@@ -1,0 +1,63 @@
+.\" RCSID @(#)$Id: dirtree.man,v 1.1 1998/11/04 22:55:24 rk Exp $
+.\" LIBDIR
+.TH "DIRTREE" "3rko" "31 October 1998"
+.SH NAME
+dirtree \- recurses through a directory tree and executes four user functions
+.SH SYNOPSIS
+
+.nf
+ #include "librko.h"
+ int dirtree(int sort, const char *dir,
+	int (dirfn)(const char *), int (filefn)(const char *),
+	int (direnter)(const char *), int (dirleave)(const char *));
+.fi
+
+.SH DESCRIPTION
+.I dirtree - recurses through a directory tree and executes
+four user functions, where each function is passed the full
+path name for the given file or directory and returns 0 on
+success, else non-zero otherwise:
+.TP 15
+.I direnter
+entry into dirtree() & before entry into the directory
+
+.TP
+.I dirfn
+function regarding sub-directories in the ``current'' directory
+
+.TP
+.I filefn
+function regarding files in the ``current'' directory
+
+.TP
+.I dirleave
+executed when leaving dirtree() & after the directory is closed
+
+.P
+.I dirtree
+will recursively call itself for each subdirectory and does a
+depth-first walk through the directory structure, and will perform
+the user action on all files in the directory before recursing through
+subdirectories.
+
+.I dirtree
+does not change the current working directory, that
+can be performed by the user functions.  If a given
+user function is NULL, then that action will be skipped.
+.I dirtree
+sorts all lists and perform all recursions and file
+actions on these ASCII alphabetically sorted lists if the
+sort argument is non-zero, else
+.I dirtree
+will process the
+lists as given in the directory file.
+
+.SH EXAMPLES
+
+.SH SEE ALSO
+stat(2), strDBEcpy(3rko)
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS
