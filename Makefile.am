@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.9 2002/07/18 05:10:36 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.10 2002/07/18 20:44:32 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -51,7 +51,7 @@ isqrt_srcs = \
 
 list_srcs = \
 	list/list_.c list/list_append.c list/list_insert.c		\
-	list/list_delete.c						\
+	list/list_delete.c list/list_swap.c list/list_qsort.c		\
 	list/list_ctor.c list/list_dtor.c list/list_exists.c		\
 	list/list_first.c list/list_last.c list/list_number.c		\
 	list/list_pop.c list/list_push.c list/list_shift.c		\

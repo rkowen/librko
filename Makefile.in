@@ -123,7 +123,7 @@ isqrt_srcs = \
 
 list_srcs = \
 	list/list_.c list/list_append.c list/list_insert.c		\
-	list/list_delete.c						\
+	list/list_delete.c list/list_swap.c list/list_qsort.c		\
 	list/list_ctor.c list/list_dtor.c list/list_exists.c		\
 	list/list_first.c list/list_last.c list/list_number.c		\
 	list/list_pop.c list/list_push.c list/list_shift.c		\
@@ -234,6 +234,7 @@ am__objects_5 = isqrt/isqrt_lut.$(OBJEXT) isqrt/chsqrt.$(OBJEXT) \
 	isqrt/uisqrt.$(OBJEXT) isqrt/ulsqrt.$(OBJEXT)
 am__objects_6 = list/list_.$(OBJEXT) list/list_append.$(OBJEXT) \
 	list/list_insert.$(OBJEXT) list/list_delete.$(OBJEXT) \
+	list/list_swap.$(OBJEXT) list/list_qsort.$(OBJEXT) \
 	list/list_ctor.$(OBJEXT) list/list_dtor.$(OBJEXT) \
 	list/list_exists.$(OBJEXT) list/list_first.$(OBJEXT) \
 	list/list_last.$(OBJEXT) list/list_number.$(OBJEXT) \
@@ -339,8 +340,10 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	list/$(DEPDIR)/list_number.Po \
 @AMDEP_TRUE@	list/$(DEPDIR)/list_pop.Po \
 @AMDEP_TRUE@	list/$(DEPDIR)/list_push.Po \
+@AMDEP_TRUE@	list/$(DEPDIR)/list_qsort.Po \
 @AMDEP_TRUE@	list/$(DEPDIR)/list_shift.Po \
 @AMDEP_TRUE@	list/$(DEPDIR)/list_sizeof.Po \
+@AMDEP_TRUE@	list/$(DEPDIR)/list_swap.Po \
 @AMDEP_TRUE@	list/$(DEPDIR)/list_unshift.Po \
 @AMDEP_TRUE@	netfns/$(DEPDIR)/gethostbyX.Po \
 @AMDEP_TRUE@	netfns/$(DEPDIR)/tcp_connect.Po \
@@ -614,6 +617,10 @@ list/list_insert.$(OBJEXT): list/list_insert.c list/.dirstamp \
 	list/$(DEPDIR)/.dirstamp
 list/list_delete.$(OBJEXT): list/list_delete.c list/.dirstamp \
 	list/$(DEPDIR)/.dirstamp
+list/list_swap.$(OBJEXT): list/list_swap.c list/.dirstamp \
+	list/$(DEPDIR)/.dirstamp
+list/list_qsort.$(OBJEXT): list/list_qsort.c list/.dirstamp \
+	list/$(DEPDIR)/.dirstamp
 list/list_ctor.$(OBJEXT): list/list_ctor.c list/.dirstamp \
 	list/$(DEPDIR)/.dirstamp
 list/list_dtor.$(OBJEXT): list/list_dtor.c list/.dirstamp \
@@ -817,8 +824,10 @@ mostlyclean-compile:
 	-rm -f list/list_number.$(OBJEXT)
 	-rm -f list/list_pop.$(OBJEXT)
 	-rm -f list/list_push.$(OBJEXT)
+	-rm -f list/list_qsort.$(OBJEXT)
 	-rm -f list/list_shift.$(OBJEXT)
 	-rm -f list/list_sizeof.$(OBJEXT)
+	-rm -f list/list_swap.$(OBJEXT)
 	-rm -f list/list_unshift.$(OBJEXT)
 	-rm -f netfns/gethostbyX.$(OBJEXT)
 	-rm -f netfns/tcp_connect.$(OBJEXT)
@@ -959,8 +968,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_number.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_pop.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_push.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_qsort.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_shift.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_sizeof.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_swap.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_unshift.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@netfns/$(DEPDIR)/gethostbyX.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@netfns/$(DEPDIR)/tcp_connect.Po@am__quote@
@@ -1735,6 +1746,30 @@ list/list_delete.obj: list/list_delete.c
 @AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_delete.Po' tmpdepfile='list/$(DEPDIR)/list_delete.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_delete.obj `cygpath -w list/list_delete.c`
+
+list/list_swap.o: list/list_swap.c
+@AMDEP_TRUE@	source='list/list_swap.c' object='list/list_swap.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_swap.Po' tmpdepfile='list/$(DEPDIR)/list_swap.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_swap.o `test -f 'list/list_swap.c' || echo '$(srcdir)/'`list/list_swap.c
+
+list/list_swap.obj: list/list_swap.c
+@AMDEP_TRUE@	source='list/list_swap.c' object='list/list_swap.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_swap.Po' tmpdepfile='list/$(DEPDIR)/list_swap.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_swap.obj `cygpath -w list/list_swap.c`
+
+list/list_qsort.o: list/list_qsort.c
+@AMDEP_TRUE@	source='list/list_qsort.c' object='list/list_qsort.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_qsort.Po' tmpdepfile='list/$(DEPDIR)/list_qsort.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_qsort.o `test -f 'list/list_qsort.c' || echo '$(srcdir)/'`list/list_qsort.c
+
+list/list_qsort.obj: list/list_qsort.c
+@AMDEP_TRUE@	source='list/list_qsort.c' object='list/list_qsort.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_qsort.Po' tmpdepfile='list/$(DEPDIR)/list_qsort.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_qsort.obj `cygpath -w list/list_qsort.c`
 
 list/list_ctor.o: list/list_ctor.c
 @AMDEP_TRUE@	source='list/list_ctor.c' object='list/list_ctor.o' libtool=no @AMDEPBACKSLASH@

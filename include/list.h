@@ -1,7 +1,7 @@
 #ifndef _LIST_H_
 #  define _LIST_H_
 /* 
- * RCSID @(#)$Id: list.h,v 1.7 2002/07/18 05:10:36 rk Exp $
+ * RCSID @(#)$Id: list.h,v 1.8 2002/07/18 20:44:32 rk Exp $
  */
 /** ** Copyright *********************************************************** **
  ** 									     **
@@ -38,7 +38,7 @@ struct list {
 	char tag[1];			/* name tag for list */
 /* followed by expanded memory allocation to contain rest of tag with
  * terminating NULL.  A list object must only be defined as "list *"
- * and set = to list_ctor(TAG,INIT,ADDFN,DELFN);
+ * and set = to list_ctor(TAG,ADDFN,DELFN);
  */
 };
 
@@ -71,6 +71,10 @@ int list_unshift(list *lst, char const *tag, ...);
 int list_shift(list *lst, char const *tag, ...);
 int list_push(list *lst, char const *tag, ...);
 int list_pop(list *lst, char const *tag, ...);
+
+int list_swap(list *lst, char const *tag, list_elem *here, list_elem *there);
+int list_qsort(list *lst, char const *tag,
+		int (*cmp)(const void *, const void *));
 
 #  ifdef __cplusplus
 	}

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: list_append.c,v 1.2 2002/07/18 05:10:36 rk Exp $";
+static const char RCSID[]="@(#)$Id: list_append.c,v 1.3 2002/07/18 20:44:32 rk Exp $";
 static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 /* list.c -
  * This could have easily been made a C++ class, but is
@@ -28,7 +28,6 @@ static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 int list_append_(list *lst, char const *tag, list_elem *here, va_list vargs) {
 
 	int retval = 0;
-	void *ptr = (void *) NULL;
 	list_elem *eptr = (list_elem *) NULL;
 
 	if (!(eptr = list_add_elem_(lst,tag,vargs))) {
