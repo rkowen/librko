@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: coexec.man,v 1.2 2003/08/25 18:12:50 rk Exp $
+.\" RCSID @(#)$Id: coexec.man,v 1.3 2003/08/25 18:26:27 rk Exp $
 .\" LIBDIR
 .TH "COEXEC" "3rko" "28 Feb 2002"
 .SH NAME
@@ -59,6 +59,14 @@ except tied to STDIN
 same as
 .I postpocess
 except tied to STDOUT
+.TP
+.I prefile
+finds the given file, checking for common compressed file variants
+(.gz, .Z, .z).  If compressed then uncompresses and returns the
+temporary file name.
+.TP
+.I unlink_prefile
+removes the temporary file, if one was generated.
 
 .SH SEE ALSO
 coexec(3rko),invoke(3rko),spawn(3rko),spawn3(3rko),filter(3rko),

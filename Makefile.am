@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.17 2003/08/25 18:12:50 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.18 2003/08/25 18:26:27 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -136,7 +136,7 @@ man3_MANS =  \
 	docs/rkoerror.man docs/spawn.man docs/strchop.man 		\
 	docs/strdbecpy.man docs/strmalloc.man docs/strmem.man 		\
 	docs/tcp_connect.man docs/timedfgets.man docs/uvec.man 		\
-	docs/urand.man docs/wcstrcmp.man
+	docs/urand.man docs/wcstrcmp.man docs/prefile.man
 
 special_includes=	\
 	avec/avec_.h igcd/igcd_.h iprime/iprime_.h isqrt/isqrt_.h	\
