@@ -1,0 +1,18 @@
+#ifndef YYERRCODE
+#define YYERRCODE 256
+#endif
+
+#define COMMAND 257
+#define EOC 258
+#define EOL 259
+#define AMPER_AMPER 260
+#define BAR_BAR 261
+#define GREATER_AMPER_CLOSE 262
+#define GREATER_AMPER 263
+#define GREATER_GREATER 264
+#define GREATER_THAN 265
+#define LESS_AMPER 266
+#define LESS_THAN 267
+#define LESS_GREATER 268
+#define NUMBER 269
+#define WORD 270
