@@ -1,5 +1,4 @@
-static const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: timedfgets.c,v 1.3 1998/10/23 20:20:55 rk Exp $";
+static const char RCSID[]="@(#)$Id: timedfgets.c,v 1.4 1998/11/18 19:03:22 rk Exp $";
 static const char AUTHOR[]="@(#)timedfgets 1.0 03/26/96 R.K.Owen,Ph.D.";
 /* timedfgets  -  performs an fgets and times out if input is
  * not received by the specified amount of time.
