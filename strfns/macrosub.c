@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: macrosub.c,v 1.5 1999/09/09 21:30:44 rk Exp $";
+static const char RCSID[]="@(#)$Id: macrosub.c,v 1.6 1999/11/02 18:23:55 rk Exp $";
 static char AUTHOR[]="@(#)macrosub.c 1.0 08/30/94 R.K.Owen,PhD";
 
 /* macstrncpy(string1,string2,n) - Macro string copy
@@ -52,7 +52,7 @@ static char AUTHOR[]="@(#)macrosub.c 1.0 08/30/94 R.K.Owen,PhD";
 #define MACRONUM	54
 #define MACROCHAR	'$'
 
-#ifndef __STDC__
+#if !(defined(__STDC__) || defined(_AIX))
 #  define void
 #  define const
 #endif
@@ -83,7 +83,7 @@ int MacroTrf[128] = {		/* translate ASCII character to index */
    /*p*/41,	42,	43,	44,	45,	46,	47,	48,
    /*x*/49,	50,	51,	-1,	-1,	-1,	-1,	-1};
 
-#ifdef __STDC__
+#if defined(__STDC__) || defined(_AIX)
 char *macstrncpy(char *string, const char *mstring, size_t n)
 #else
 char *macstrncpy(string, mstring, n)

@@ -2,6 +2,10 @@
  *	the ANSI/Std C clock() doesn't always work.
  */
 
+#if defined(_AIX)
+#  define _POSIX_SOURCE
+#  include <time.h>		/* CLK_TCK */
+#endif
 #include <sys/times.h>		/* times */
 
 typedef clock_t clocker_t;

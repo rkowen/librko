@@ -34,13 +34,17 @@ static const char AUTHOR[]="@(#)tcp_connect 1.0 03/26/96 R.K.Owen,Ph.D.";
 #  define TEST
 #endif
 
+#ifdef _AIX
+#  define	_POSIX_SOURCE
+#  define	_XOPEN_SOURCE_EXTENDED	1
+#endif
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include "librko.h"
 
-#ifndef _CRAY
+#if	!(defined(_CRAY) || defined(_AIX))
 #  define HERRNO_LEN 128
 /* quick routine that should have been provided with herror */
 static const char *hstrerror(int hh_errno) {
@@ -62,7 +66,9 @@ int tcp_connect(char *hostname, int port_num) {
 	struct hostent *hostinfo;
 	struct sockaddr_in sock_addr;
 	int sd, status;
+#if !defined(_AIX)
 	extern int h_errno;
+#endif
 
 	hostinfo = gethostbyX(hostname);
 
