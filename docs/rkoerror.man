@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: rkoerror.man,v 1.2 1999/03/25 15:08:31 rk Exp $
+.\" RCSID @(#)$Id: rkoerror.man,v 1.3 2002/02/08 16:26:01 rk Exp $
 .\" LIBDIR
 .TH "RKOERROR" "3rko" "12 May 1995"
 .SH NAME

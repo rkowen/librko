@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: uvec.man,v 1.7 1999/09/11 08:00:13 rk Exp $
+.\" RCSID @(#)$Id: uvec.man,v 1.8 2002/02/08 16:26:01 rk Exp $
 .\" LIBDIR
 .TH "UVEC" "3rko" "31 Oct 1997"
 .SH NAME
@@ -8,42 +8,84 @@ strings.
 .SH SYNOPSIS
 
 .nf
-#include "librko.h"
+#include "uvec.h"
 defines the following structure and enum:
+
 typedef struct {
-	char tag[5];			/* name tag for this type */
-	char **vector;
-	int number;			/* current number of list */
-	int capacity;			/* the possible capacity of vector */
+        /* store the string function type - user can ignore this */
+        enum uvec_def_str_fns type;
+        /* allocate a string of n+1 chars and put str in it */
+        char    *(*str_alloc)(char const *str, size_t n);
+        /* free up the string storage */
+        int      (*str_free)(char **str);
+} uvec_str;
+
+typedef struct {
+        char      tag[5];               /* name tag for this type */
+        char    **vector;               /* vector of strings */
+        int       number;               /* current number of list */
+        int       capacity;             /* the possible capacity of vector */
+        uvec_str  str_fns;              /* which string functions to use */
 } uvec;
 
+/* sorting type */
 enum uvec_order {UVEC_ASCEND, UVEC_DESCEND
 #ifndef NO_STRCASECMP
 	, UVEC_CASE_ASCEND, UVEC_CASE_DESCEND
 #endif
 	};
 
+/* string function types */
+enum uvec_def_str_fns {UVEC_DEFAULT, UVEC_USER, UVEC_STDC
+#ifdef HAVE_STRMALLOC
+        , UVEC_STRMALLOC
+#endif
+        };
+
+int uvec_set_strfns(enum uvec_def_str_fns type, uvec_str *strfns);
+enum uvec_def_str_fns uvec_get_strfns(void);
+
+uvec *uvec_ctor_(int cap, uvec_str strfns);
 uvec *uvec_ctor(int cap);
 int uvec_dtor(uvec **uv);
+uvec *uvec_alloc_(uvec_str strfns);
+uvec *uvec_alloc(void);
+int uvec_dealloc(uvec **uv);
+int uvec_init_(uvec *uv, int cap, uvec_str strfns);
 int uvec_init(uvec *uv, int cap);
 int uvec_close(uvec *uv);
+
 int uvec_exists(uvec const *uv);
 int uvec_capacity(uvec const *uv);
 int uvec_number(uvec const *uv);
 int uvec_end(uvec const *uv);
 char ** uvec_vector(uvec const *uv);
+
+int uvec_ninsert(uvec *uv, char const *str, size_t n, int place);
 int uvec_insert(uvec *uv, char const *str, int place);
 int uvec_delete(uvec *uv, int place);
+int uvec_nadd(uvec *uv, char const *str, size_t n);
 int uvec_add(uvec *uv, char const *str);
 int uvec_addl(uvec *uv, ...);
+int uvec_push(uvec *uv, char const *str);
 int uvec_pop(uvec *uv);
-int uvec_copy_vec(uvec *u, char **vec, int number);
+int uvec_unshift(uvec *uv, char const *str);
+int uvec_shift(uvec *uv);
+
+int uvec_count_tok(char const *token, char const *string);
+int uvec_copy_str(uvec *u, char const *token, char const *string);
+int uvec_copy_vec(uvec *u, char const * const *vec, int number);
 int uvec_copy(uvec *u, uvec const *v);
 int uvec_sort(uvec *uv, enum uvec_order type);
 int uvec_find(uvec *uv, char const *str, enum uvec_order type);
 int uvec_uniq(uvec *uv, enum uvec_order type);
 int uvec_reverse(uvec const *uv);
 int uvec_randomize(uvec const *uv, int seed);
+uvec *str2uvec(char const *token, char const *string);
+uvec *vec2uvec(char const * const *vec, int num);
+uvec *uvec2uvec(uvec const *uv);
+char *uvec2str(uvec const *uv, char const *token);
+
 .fi
 
 .SH DESCRIPTION
@@ -64,16 +106,47 @@ except for the accessor and constructor functions,
 return 0 if no error or return <0 otherwise.
 
 .TP 15
+.I uvec_set_strfns
+register the set of string functions to use by default.
+
+.TP
+.I uvec_get_strfns
+query as to which set of string functions are being used,
+only the values given by enum uvec_def_str_fns will be returned.
+
+.TP
+.I uvec_ctor_
+construct Unix vector to capacity ``cap''
+using the given set of string functions.
+
+.TP
 .I uvec_ctor
-construct Unix vector to capacity ``cap''.
+construct Unix vector to capacity ``cap''
+using the default set of string functions.
 
 .TP
 .I uvec_dtor
 destroy the Unix vector.
 
 .TP
+.I uvec_alloc_
+allocate the uninitialized uvec object (no vector is allocated)
+using the given set of string functions.
+
+.TP
+.I uvec_alloc
+allocate the uninitialized uvec object (no vector is allocated)
+using the default set of string functions.
+
+.TP
+.I uvec_init_
+initialize Unix vector to capacity ``cap''
+using the given set of string functions.
+
+.TP
 .I uvec_init
-initialize Unix vector to capacity ``cap''.
+initialize Unix vector to capacity ``cap''
+using the default set of string functions.
 
 .TP
 .I uvec_close
@@ -104,20 +177,37 @@ if the vector is not defined.
 .I uvec_insert
 insert an element before element ``place''.
 .TP
+.I uvec_ninsert
+insert an element of size n before element ``place''.
+.TP
 .I uvec_delete
 delete an element at element ``place''.
 .TP
 .I uvec_add
 add one element to end of vector.
 .TP
+.I uvec_nadd
+add one element of size n to end of vector.
+.TP
 .I uvec_addl
 add a NULL terminated list of elements to end of vector.
+.TP
+.I uvec_push
+same as
+.I uvec_add
 .TP
 .I uvec_pop
 pop off one element at end of vector.
 .TP
+.I uvec_unshift
+add one element to start of vector.
+.TP
+.I uvec_shift
+shift one element from start of vector.
+.TP
 .I uvec_copy_vec
 copy an existing char vector to an unitialized uvec.
+Set num to a value less than or equal to 0 to grab the entire vector.
 .TP
 .I uvec_copy
 copy one uvec to another unitialized one.
@@ -130,18 +220,19 @@ where the last two are only available if the
 function is available for ``caseless'' string comparisons.
 .TP
 .I uvec_find
-find the first element that matches the string
+find the first or last element that matches the string
 .I str
+depending on the sort type
 and returns the element number.
 If the string is not found then returns -1.  A value less than -1
 indicates an error, which probably can be ignored.
-type = uvec sorting type ... the important information is whether
-to use a caseless comparison or not.
+type = uvec sorting type.
 .TP
 .I uvec_uniq
 remove all adjacent duplicate elements, where
 type = uvec sorting type ... the important information is whether
-to use a caseless comparison or not.
+to use a caseless comparison or not, but there may be subtle
+side effects depending on whether the sort type is ascending or descending.
 .TP
 .I uvec_reverse
 reverses the element order of the vector.
@@ -150,13 +241,31 @@ reverses the element order of the vector.
 randomizes the vector, will be repeatable if
 given the same random number seed.
 If seed <=0 then will "randomly" choose one.
+.TP
+.I str2uvec
+copies a string to a uvec, breaking the string at the given delimiter,
+uses the default string functions for creating the uvec.
+.TP
+.I vec2uvec
+copies a vector (or part of a vector upto num elements) to a uvec,
+uses the default string functions for creating the uvec.
+Set num to a value less than or equal to 0 to grab the entire vector.
+.TP
+.I uvec2uvec
+copies a uvec to a uvec
+uses the default string functions for creating the uvec.
+.TP
+.I uvec2str
+copies a uvec to a string with the elements separated by the
+given delimeter,
+uses the default string functions for creating the uvec.
 
 .SH EXAMPLES
 
 .nf
 #define RKOERROR
 #include <stdio.h>
-#include "librko.h"
+#include "uvec.h"
 
 int main() {
 	uvec *u;
@@ -204,7 +313,7 @@ Should get the following results:
 .fi
 
 .SH SEE ALSO
-environ(5),exec(2),strcasecmp(3),rkoerror(3rko),urand(3rko)
+environ(5),exec(2),strcasecmp(3),strmalloc(3rko),rkoerror(3rko),urand(3rko)
 
 .SH NOTES
 
@@ -216,9 +325,9 @@ mechanism, and should be self explanatory.
 .SH BUGS
 Only deletes one element at a time, because I found no
 real need to do otherwise.  However, the sources are general enough
-that it could easily handle this event.
+that it could easily handle more than one element if so desired.
 
 .SH AUTHOR
-R.K.Owen,Ph.D. 10/31/1997
+R.K.Owen,Ph.D. 10/31/1997, updated 10/31/2001
 
 .KEY WORDS

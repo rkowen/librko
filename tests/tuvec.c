@@ -1,12 +1,18 @@
 
 #include <stdio.h>
-#include "librko.h"
+#include <string.h>
+#include "uvec.h"
+#ifdef RKOERROR
+#  include "rkoerror.h"
+#endif
 
 char testbuf[256];
 
 int printout(uvec *uv, char const *head, int err, char const *ans) {
 	int i;
-	char **argv = uv->vector;
+	char **argv;
+
+	if (uv) argv = uv->vector;
 	sprintf(testbuf,"e:%d c:%d n:%d r:",
 		err, uvec_capacity(uv), uvec_number(uv));
 	if (uvec_exists(uv)) {
@@ -15,7 +21,7 @@ int printout(uvec *uv, char const *head, int err, char const *ans) {
 		}
 	}
 	if (
-#ifndef NO_STRCASECMP
+#ifdef HAVE_STRCASECMP
 	strcasecmp(testbuf, ans)
 #else
 	strcmp(testbuf, ans)
@@ -29,7 +35,7 @@ int printout(uvec *uv, char const *head, int err, char const *ans) {
 	}
 }
 
-int printval(uvec *uv, char const *head, int result, int ans) {
+int printret(uvec *uv, char const *head, int result, int ans) {
 	int i;
 	char **argv = uv->vector;
 	sprintf(testbuf,"e:%d c:%d n:%d r:",
@@ -49,22 +55,38 @@ int printval(uvec *uv, char const *head, int result, int ans) {
 	}
 }
 
-#define _CHECK(c,v,a) \
-	estat = c; \
-	results += printout(&##v, #c , estat, a);
+int printval(char const *head, int result, int ans) {
+	sprintf(testbuf,"e:%d r:", result );
+	if (result != ans) {
+		printf("FAIL:%-20s=\n    <\t%s\n    >\te: %d != %d\n",
+			head, testbuf, result, ans);
+		return 1;
+	} else {
+		printf("OK  :%-20s=\t%s\n",head,testbuf);
+		return 0;
+	}
+}
 
-#define _CHECKVAL(c,v,a) \
-	estat = c; \
-	results += printval(&##v, #c , estat, a);
+#define _CHECK(c,v,a) \
+	count++; estat = c; \
+	results += printout(&(v), #c , estat, a);
+
+#define _CHECKRET(c,v,a) \
+	count++; estat = c; \
+	results += printret(&(v), #c , estat, a);
+
+#define _CHECKVAL(c,a) \
+	count++; estat = c; \
+	results += printval(#c , estat, a);
 
 int main() {
-	uvec u,v,w, *x;
+	uvec u,v, *x, *y;
 	int estat = 0;
 	int results = 0;
 	int i;
+	int count = 0;
 	char buffer[128];
-	char **vec;
-	char *list[] = {
+	char const * const list[] = {
 	":xyz",":ABC",":aaa",":bbb",":XYZ",
 	":AAA",":bb" ,":abc",":ABC", (char *) NULL};
 
@@ -88,8 +110,8 @@ int main() {
 	_CHECK(uvec_addl(&u, ":01", ":02", NULL), u,
 	"e:0 c:10 n:3 r:;00:01:02")
 	for (i = 3; i < 12; ++i) {
-		(void) sprintf(buffer, ":%0.2d", i);
-		if (estat = uvec_add(&u, buffer))
+		(void) sprintf(buffer, ":%.2d", i);
+		if ((estat = uvec_add(&u, buffer)))
 #ifdef RKOERROR
 			rkoperror("main");
 #else
@@ -148,13 +170,13 @@ int main() {
 	"e:0 c:-1 n:-1 r:")
 	_CHECK(uvec_copy(&v,&u), v,
 	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
-	_CHECKVAL(uvec_find(&v,":abc", UVEC_ASCEND), v, 7)
-	_CHECKVAL(uvec_find(&v,":abc", UVEC_DESCEND), v, 7)
-	_CHECKVAL(uvec_find(&v,":abcdef", UVEC_ASCEND), v, -1)
-#ifndef NO_STRCASECMP
-	_CHECKVAL(uvec_find(&v,":abc", UVEC_CASE_ASCEND), v, 1)
-	_CHECKVAL(uvec_find(&v,":abc", UVEC_CASE_DESCEND), v, 1)
-	_CHECKVAL(uvec_find(&v,":abcdef", UVEC_CASE_ASCEND), v, -1)
+	_CHECKRET(uvec_find(&v,":abc", UVEC_ASCEND), v, 7)
+	_CHECKRET(uvec_find(&v,":abc", UVEC_DESCEND), v, 7)
+	_CHECKRET(uvec_find(&v,":abcdef", UVEC_ASCEND), v, -1)
+#ifdef HAVE_STRCASECMP
+	_CHECKRET(uvec_find(&v,":abc", UVEC_CASE_ASCEND), v, 1)
+	_CHECKRET(uvec_find(&v,":abc", UVEC_CASE_DESCEND), v, 1)
+	_CHECKRET(uvec_find(&v,":abcdef", UVEC_CASE_ASCEND), v, -1)
 #endif
 	_CHECK(uvec_sort(&v,UVEC_DESCEND), v,
 	"e:0 c:10 n:9 r::xyz:bbb:bb:abc:aaa:XYZ:ABC:ABC:AAA")
@@ -164,7 +186,7 @@ int main() {
 	_CHECK(uvec_dup(&w,UVEC_DESCEND), w,
 	"e:0 c:5 n:1 r::ABC")
 #endif
-#ifndef NO_STRCASECMP
+#ifdef HAVE_STRCASECMP
 	_CHECK(uvec_close(&v), v,
 	"e:0 c:-1 n:-1 r:")
 	_CHECK(uvec_copy(&v,&u), v,
@@ -190,6 +212,8 @@ int main() {
 	"e:0 c:10 n:7 r::xyz:XYZ:ABC:abc:ABC:aaa:AAA")
 #endif
 #endif
+	_CHECKVAL(uvec_set_strfns(UVEC_STDC, NULL), 0)
+	_CHECKVAL(uvec_get_strfns(), 2)
 
 	_CHECK(uvec_close(&v), v,
 	"e:0 c:-1 n:-1 r:")
@@ -197,7 +221,6 @@ int main() {
 	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
 	_CHECK(uvec_reverse(&v), v,
 	"e:0 c:10 n:9 r::ABC:abc:bb:AAA:XYZ:bbb:aaa:ABC:xyz")
-#ifndef NO_URAND
 	_CHECK(uvec_close(&v), v,
 	"e:0 c:-1 n:-1 r:")
 	_CHECK(uvec_copy(&v,&u), v,
@@ -210,12 +233,55 @@ int main() {
 	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
 	_CHECK(uvec_randomize(&v, 51258), v,
 	"e:0 c:10 n:9 r::abc:ABC:ABC:bb:aaa:XYZ:bbb:AAA:xyz")
-#endif /* NO_URAND */
+	_CHECKVAL(uvec_count_tok(":","a:b:c:d"), 4)
+	_CHECKVAL(uvec_count_tok(":","a:b:c:d:"), 4)
+	_CHECKVAL(uvec_count_tok("()","a()b()c()d"), 4)
+	_CHECKVAL(uvec_count_tok(":","a\\:b:c:d"), 3)
+	_CHECKVAL(uvec_count_tok("()","a()b\\()c()d"), 3)
+	_CHECKVAL(uvec_count_tok(":","a()b()c()d"), 1)
+	_CHECKVAL(uvec_count_tok(":","a"), 1)
+	_CHECKVAL(uvec_count_tok(":",":a"), 2)
+	_CHECKVAL(uvec_count_tok(":","a:"), 1)
+	_CHECKVAL(uvec_count_tok(NULL,"a"), -1)
+	_CHECKVAL(uvec_count_tok(":",NULL), 0)
+	_CHECKVAL(uvec_count_tok("","a"), -1)
+	_CHECKVAL(uvec_count_tok(":",""), 0)
+
+	_CHECK(uvec_close(&v), v,
+	"e:0 c:-1 n:-1 r:")
+	_CHECK(uvec_copy_str(&v, ":", "a:ab:abc"), v,
+	"e:0 c:4 n:3 r:aababc")
+	_CHECK(uvec_close(&v), v,
+	"e:0 c:-1 n:-1 r:")
+	_CHECK(uvec_copy_str(&v, ":", ":a:ab:abc"), v,
+	"e:0 c:5 n:4 r:aababc")
+	_CHECK(uvec_close(&v), v,
+	"e:0 c:-1 n:-1 r:")
+	_CHECK(uvec_copy_str(&v, ":", "a:ab:abc:"), v,
+	"e:0 c:4 n:3 r:aababc")
+	_CHECK(uvec_close(&v), v,
+	"e:0 c:-1 n:-1 r:")
+	_CHECK(uvec_copy_str(&v, ":", "a\\:ab:abc"), v,
+	"e:0 c:3 n:2 r:a\\:ababc")
+	_CHECK(uvec_close(&v), v,
+	"e:0 c:-1 n:-1 r:")
+
+	/* intentional memory leak in this section */
+	_CHECK((x = str2uvec(":", "a:ab:abc"),rkoerrno), *x,
+	"e:0 c:4 n:3 r:aababc")
+	_CHECK((x = vec2uvec(list, 0),rkoerrno), *x,
+	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
+	_CHECK((y = uvec2uvec(x),rkoerrno), *y,
+	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
+	_CHECK((x = str2uvec(";", uvec2str(y,";")),rkoerrno), *x,
+	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
+	_CHECK((x = str2uvec(":", uvec2str(y,";")),rkoerrno), *x,
+	"e:0 c:11 n:10 r:xyz;ABC;aaa;bbb;XYZ;AAA;bb;abc;ABC")
 
 	if (results) {
-		printf("There were %d test failures\n", results);
+		printf("There were %d failures in %d tests\n", results, count);
 	} else {
-		printf("There were no test failures\n", results);
+		printf("There were no failures in %d tests\n", count);
 	}
 	return results;
 }

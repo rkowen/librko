@@ -1,6 +1,8 @@
 
 #include <stdio.h>
-#include "librko.h"
+#define RKOERROR
+#include "rkoerror.h"
+#include "strmalloc.h"
 
 size_t lengthstr(const char *str) {
 	size_t sizeit;
@@ -51,17 +53,18 @@ int tryfree(int errvalue, char *errmsg) {
 }
 
 int main() {
-	char *test[4];
-	char *teststr[5] = {
+	char *test[6];
+	char *teststr[7] = {
 		"",
 		"This is a Test String",
 		"This is a Test_String",
 		"This is another Test String",
-		"This is another Test_String"
+		"This is another Test_String",
+		"This",
+		"is"
 	};
 
 	int results = 0;
-	int i;
 
 	test[0] = (char *) NULL;
 	test[1] = strmalloc(teststr[1]);
@@ -74,20 +77,37 @@ int main() {
 	results += trystr(test[1], teststr[2]);
 	test[2][20] = '\0';
 	results += trystr(test[2], teststr[4]);
+	test[4] = strnmalloc(test[3],4);
+	results += trystr(test[4], teststr[5]);
+	test[5] = strnmalloc(teststr[3]+2,2);
+	results += trystr(test[5], teststr[6]);
 
 	strfree(&test[0]);
+#if 0
 	results += tryfree(RKOUSEERR, "strfree : null input!");
+#else
+	results += tryfree(RKO_OK, "");
+#endif
 	strfree(&test[1]);
 	results += tryfree(RKO_OK, "");
 	strfree(&test[2]);
 	results += tryfree(RKO_OK, "");
 	strfree(&test[3]);
 	results += tryfree(RKOUSEERR, "strfree : invalid string object!");
+	strfree(&test[4]);
+	results += tryfree(RKO_OK, "");
+	strfree(&test[5]);
+	results += tryfree(RKO_OK, "");
+	/* bunch of error stuff */
+	test[1] = strmalloc((char *) NULL);
+	results += tryfree(RKOUSEERR, "strmalloc : NULL string!");
+	test[1] = strnmalloc((char *) NULL, 3);
+	results += tryfree(RKOUSEERR, "strnmalloc : NULL string!");
 
 	if (results) {
 		printf("There were %d test failures\n", results);
 	} else {
-		printf("There were no test failures\n", results);
+		printf("There were no test failures\n");
 	}
 	return results;
 }

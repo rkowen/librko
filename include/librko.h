@@ -1,7 +1,7 @@
 #ifndef _LIBRKO_H_
 #  define _LIBRKO_H_
 /* 
- * RCSID @(#)$Id: librko.h,v 1.17 1999/09/14 21:31:09 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.18 2002/02/08 16:26:01 rk Exp $
  */
 /*
  *********************************************************************
@@ -46,6 +46,10 @@ extern "C" {
      typedef int INTEGER;
 #  endif
 
+#  include "rkoerror.h"
+#  include "strmalloc.h"
+#  include "uvec.h"
+
 FILE * invoke(char ** argv);
 FILE * prefilter(FILE *instream, char ** argv);
 FILE * postfilter(FILE *outstream, char ** argv);
@@ -60,8 +64,6 @@ int dirtree(int sort, int dirlvl, int lnklvl, const char *dir,
 
 char *strchop(const char *string, int chop_len,
         size_t *str_len, char **next);
-char *strmalloc(const char *in);
-void strfree(char **str);
 int strmemalloc(char **ChArSpAcE, char ***charspace,
 		size_t numstr, size_t maxstrlen);
 void strmemfree(char **ChArSpAcE, char ***charspace);
@@ -199,43 +201,6 @@ const char *ansi_fgcolor(ansi_colors f);
 const char *ansi_bgcolor(ansi_colors b);
 const char *ansi_attribute(ansi_attributes a);
 
-/* Unix Vector package */
-
-typedef struct {
-	char tag[5];			/* name tag for this type */
-	char **vector;
-	int number;			/* current number of list */
-	int capacity;			/* the possible capacity of vector */
-} uvec;
-
-enum uvec_order {UVEC_ASCEND, UVEC_DESCEND
-#ifndef NO_STRCASECMP
-	, UVEC_CASE_ASCEND, UVEC_CASE_DESCEND
-#endif
-	};
-
-uvec *uvec_ctor(int cap);
-int uvec_dtor(uvec **uv);
-int uvec_init(uvec *uv, int cap);
-int uvec_close(uvec *uv);
-int uvec_exists(uvec const *uv);
-int uvec_capacity(uvec const *uv);
-int uvec_number(uvec const *uv);
-int uvec_end(uvec const *uv);
-char ** uvec_vector(uvec const *uv);
-int uvec_insert(uvec *uv, char const *str, int place);
-int uvec_delete(uvec *uv, int place);
-int uvec_add(uvec *uv, char const *str);
-int uvec_addl(uvec *uv, ...);
-int uvec_pop(uvec *uv);
-int uvec_copy_vec(uvec *u, char **vec, int number);
-int uvec_copy(uvec *u, uvec const *v);
-int uvec_sort(uvec *uv, enum uvec_order type);
-int uvec_find(uvec *uv, char const *str, enum uvec_order type);
-int uvec_uniq(uvec *uv, enum uvec_order type);
-int uvec_reverse(uvec const *uv);
-int uvec_randomize(uvec const *uv, int seed);
-
 /* Associative Vector (hash array) package */
 
 typedef struct {
@@ -294,24 +259,6 @@ int list_add(list *lst, char const *tag, ...);
 int list_del(list *lst, char const *tag, ...);
 int list_push(list *lst, char const *tag, ...);
 int list_pop(list *lst, char const *tag, ...);
-
-/* librko - error message package */
-
-extern int rkoerrno;
-
-#define	RKO_OK		0
-#define	RKOGENERR	1
-#define	RKOSIGERR	2
-#define	RKOSIGNAL	3
-#define	RKOMEMERR	4
-#define	RKOIOERR	5
-#define	RKOUSEERR	6
-
-void rkoperror(const char *s);
-char *rkostrerror(void);
-char *rkocpyerror(const char *s);
-char *rkocaterror(const char *s);
-char *rkopsterror(const char *s);
 
 /* memory - provides a front-end for the memory allocation routines to
  *	help find memory leaks.  Supports only the ANSI-C routines:

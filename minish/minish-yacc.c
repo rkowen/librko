@@ -54,23 +54,19 @@ void dump_uvec(char *string, uvec *m_uvec) {
 
 #line 56 "y.tab.c"
 #define COMMAND 257
-#define LPAREN 258
-#define RPAREN 259
-#define EOC 260
-#define EOL 261
-#define AMPER_AMPER 262
-#define BAR_BAR 263
-#define BAR 264
-#define BAR_AMPER 265
-#define GREATER_AMPER_CLOSE 266
-#define GREATER_AMPER 267
-#define GREATER_GREATER 268
-#define GREATER_THAN 269
-#define LESS_AMPER 270
-#define LESS_THAN 271
-#define LESS_GREATER 272
-#define NUMBER 273
-#define WORD 274
+#define EOC 258
+#define EOL 259
+#define AMPER_AMPER 260
+#define BAR_BAR 261
+#define GREATER_AMPER_CLOSE 262
+#define GREATER_AMPER 263
+#define GREATER_GREATER 264
+#define GREATER_THAN 265
+#define LESS_AMPER 266
+#define LESS_THAN 267
+#define LESS_GREATER 268
+#define NUMBER 269
+#define WORD 270
 #define YYERRCODE 256
 short yylhs[] = {                                        -1,
     0,    0,    0,    1,    2,    3,    3,    3,    5,    5,
@@ -92,11 +88,11 @@ short yydgoto[] = {                                       3,
     4,    5,    7,   20,   21,   29,   23,   24,   25,   26,
    30,   27,   34,   28,
 };
-short yysindex[] = {                                   -238,
-    0,    0, -253,    0,    0,    0, -260,    0,    0,    0,
+short yysindex[] = {                                   -237,
+    0,    0, -252,    0,    0,    0, -258,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0, -269, -251,    0,    0,    0,
-    0,    0, -269, -266,    0,    0,
+    0,    0,    0,    0,    0, -253, -249,    0,    0,    0,
+    0,    0, -253, -248,    0,    0,
 };
 short yyrindex[] = {                                      0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
@@ -105,25 +101,25 @@ short yyrindex[] = {                                      0,
     0,    0,    0,    0,    0,    0,
 };
 short yygindex[] = {                                      0,
-   19,    0,    0,    0,    0,   17,    0,    0,    0,   -2,
+   20,    0,    0,    0,    0,   17,    0,    0,    0,   -2,
    -7,   -6,    0,    0,
 };
 #define YYTABLESIZE 28
 short yytable[] = {                                       8,
-    9,   10,   11,    1,   19,   12,   18,   13,   14,   15,
-   16,   17,   18,   19,   31,   32,   13,   14,    1,   16,
-   17,    6,    2,   22,   33,   35,    0,   36,
+    9,   10,   11,   12,    1,   13,   14,   15,   16,   17,
+   18,   19,   31,   32,   13,   14,   19,   16,   17,    1,
+   18,    2,    6,   22,   33,   35,    0,   36,
 };
-short yycheck[] = {                                     260,
-  261,  262,  263,  257,  274,  266,  273,  268,  269,  270,
-  271,  272,  273,  274,  266,  267,  268,  269,  257,  271,
-  272,    3,  261,    7,   27,   33,   -1,   34,
+short yycheck[] = {                                     258,
+  259,  260,  261,  262,  257,  264,  265,  266,  267,  268,
+  269,  270,  262,  263,  264,  265,  270,  267,  268,  257,
+  269,  259,    3,    7,   27,   33,   -1,   34,
 };
 #define YYFINAL 3
 #ifndef YYDEBUG
 #define YYDEBUG 1
 #endif
-#define YYMAXTOKEN 274
+#define YYMAXTOKEN 270
 #if YYDEBUG
 char *yyname[] = {
 "end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -132,10 +128,9 @@ char *yyname[] = {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"COMMAND","LPAREN","RPAREN","EOC",
-"EOL","AMPER_AMPER","BAR_BAR","BAR","BAR_AMPER","GREATER_AMPER_CLOSE",
-"GREATER_AMPER","GREATER_GREATER","GREATER_THAN","LESS_AMPER","LESS_THAN",
-"LESS_GREATER","NUMBER","WORD",
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"COMMAND","EOC","EOL",
+"AMPER_AMPER","BAR_BAR","GREATER_AMPER_CLOSE","GREATER_AMPER","GREATER_GREATER",
+"GREATER_THAN","LESS_AMPER","LESS_THAN","LESS_GREATER","NUMBER","WORD",
 };
 char *yyrule[] = {
 "$accept : statements",
@@ -199,7 +194,7 @@ YYSTYPE minish_yylval;
 short yyss[YYSTACKSIZE];
 YYSTYPE yyvs[YYSTACKSIZE];
 #define yystacksize YYSTACKSIZE
-#line 387 "minish.yacc"
+#line 388 "minish.yacc"
  /* start of programs */
 
 #undef input()		/* eliminates a useless warning */
@@ -225,7 +220,7 @@ int main(void) {
 	return minish_yyparse();
 }
 #endif /* YACCTEST */
-#line 229 "y.tab.c"
+#line 224 "y.tab.c"
 #define YYABORT goto yyabort
 #define YYACCEPT goto yyaccept
 #define YYERROR goto yyerrlab
@@ -370,11 +365,12 @@ case 4:
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("statement: %d\n", ++statnum);
+	dbgstop();
 #endif
 		}
 break;
 case 5:
-#line 84 "minish.yacc"
+#line 85 "minish.yacc"
 {
 			fdnum = -1;
 #if defined(YACCTEST) || defined(DEBUG)
@@ -395,7 +391,7 @@ case 5:
 		}
 break;
 case 8:
-#line 107 "minish.yacc"
+#line 108 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("option:%s\n", minish_yytext);
@@ -405,7 +401,7 @@ case 8:
 		}
 break;
 case 12:
-#line 124 "minish.yacc"
+#line 125 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("redirect:stdin/out:%s\n", minish_yytext);
@@ -422,7 +418,7 @@ case 12:
 		}
 break;
 case 13:
-#line 139 "minish.yacc"
+#line 140 "minish.yacc"
 {
 			fdnum = yyvsp[-2];
 #if defined(YACCTEST) || defined(DEBUG)
@@ -434,7 +430,7 @@ case 13:
 		}
 break;
 case 14:
-#line 151 "minish.yacc"
+#line 152 "minish.yacc"
 {
 			fdnum = STDOUT_FILENO;
 			action = MINISH_FD_WRITE;
@@ -446,7 +442,7 @@ case 14:
 		}
 break;
 case 15:
-#line 161 "minish.yacc"
+#line 162 "minish.yacc"
 {
 			fdnum = STDOUT_FILENO;
 			action = MINISH_FD_APPEND;
@@ -458,7 +454,7 @@ case 15:
 		}
 break;
 case 16:
-#line 171 "minish.yacc"
+#line 172 "minish.yacc"
 {
 			fdnum = STDIN_FILENO;
 			action = MINISH_FD_READ;
@@ -470,7 +466,7 @@ case 16:
 		}
 break;
 case 17:
-#line 181 "minish.yacc"
+#line 182 "minish.yacc"
 {
 			fdnum = STDIN_FILENO;
 			action = MINISH_FD_READWRITE;
@@ -482,7 +478,7 @@ case 17:
 		}
 break;
 case 18:
-#line 193 "minish.yacc"
+#line 194 "minish.yacc"
 {
 			fdnum = yyvsp[-2];
 			fdnum2 = yyvsp[0];
@@ -495,14 +491,14 @@ case 18:
 		}
 break;
 case 19:
-#line 206 "minish.yacc"
+#line 207 "minish.yacc"
 {
 			if (uvec_add(statement,minish_yytext))
 				rkoperror("minish : yacc : fd-red");
 		}
 break;
 case 20:
-#line 213 "minish.yacc"
+#line 214 "minish.yacc"
 {
 			fdnum = STDIN_FILENO;
 #if defined(YACCTEST) || defined(DEBUG)
@@ -515,7 +511,7 @@ case 20:
 		}
 break;
 case 21:
-#line 224 "minish.yacc"
+#line 225 "minish.yacc"
 {
 			fdnum = STDOUT_FILENO;
 #if defined(YACCTEST) || defined(DEBUG)
@@ -528,7 +524,7 @@ case 21:
 		}
 break;
 case 22:
-#line 235 "minish.yacc"
+#line 236 "minish.yacc"
 {
 			fdnum = yyvsp[-1];
 #if defined(YACCTEST) || defined(DEBUG)
@@ -541,7 +537,7 @@ case 22:
 		}
 break;
 case 23:
-#line 248 "minish.yacc"
+#line 249 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("file:%s\n", minish_yytext);
@@ -550,7 +546,7 @@ case 23:
 		}
 break;
 case 25:
-#line 257 "minish.yacc"
+#line 258 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("eoc:%s\n", minish_yytext);
@@ -578,7 +574,7 @@ case 25:
 		}
 break;
 case 26:
-#line 283 "minish.yacc"
+#line 284 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("eoc:%s\n", minish_yytext);
@@ -606,7 +602,7 @@ case 26:
 		}
 break;
 case 27:
-#line 309 "minish.yacc"
+#line 310 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("eoc:%s\n", minish_yytext);
@@ -634,7 +630,7 @@ case 27:
 		}
 break;
 case 28:
-#line 337 "minish.yacc"
+#line 338 "minish.yacc"
 {
 			minish_yyval = yyvsp[0];
 #if defined(YACCTEST) || defined(DEBUG)
@@ -648,7 +644,7 @@ case 28:
 		}
 break;
 case 29:
-#line 350 "minish.yacc"
+#line 351 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("word:%s\n", minish_yytext);
@@ -658,7 +654,7 @@ case 29:
 		}
 break;
 case 30:
-#line 359 "minish.yacc"
+#line 360 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			dump_uvec("<argv>", minish_argv);
@@ -686,7 +682,7 @@ case 30:
 				rkoperror("minish : yacc : eol : fd : dtor");
 		}
 break;
-#line 690 "y.tab.c"
+#line 686 "y.tab.c"
     }
     yyssp -= yym;
     minish_yystate = *yyssp;

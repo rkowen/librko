@@ -1,17 +1,18 @@
-.\" RCSID @(#)$Id: strmalloc.man,v 1.1 1999/09/09 05:46:49 rk Exp $
+.\" RCSID @(#)$Id: strmalloc.man,v 1.2 2002/02/08 16:26:01 rk Exp $
 .TH "STRMALLOC" "3rko" "01 Sept 1999"
 .SH NAME
 strmalloc \- adds a strdup-like routine for copying strings
 strfree \- frees the string memory storage
 .SH SYNOPSIS
 
- #include "librko.h"
- char *strmalloc(const char *in);
- void strfree(char **str);
+ #include "strmallloc.h"
+ char *strnmalloc(char const *in, size_t n);
+ char *strmalloc(char const *in);
+ int strfree(char **str);
 
 .SH DESCRIPTION
 .I strmalloc
-adds a stdup-like function for routinely allocating memory
+adds a strdup-like function for routinely allocating memory
 and copying a string to some other location.
 The only difference is that
 .I strmalloc
@@ -35,10 +36,13 @@ prepends the length of the string and a identifiable tag string.
 .SH DIAGNOSTICS
 If
 .I strmalloc()
+or
+.I strnmalloc()
 returns NULL, then some sort of error occured.
-To check whether
 .I strfree()
-was successful then check
+only returns an error if the user sent an invalid string object
+(i.e. user error).
+Details can be queried from
 .I rkoerrno
 and
 .IR rkostrerror() .
