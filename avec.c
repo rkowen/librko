@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec.c,v 1.2 2002/02/08 23:10:22 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec.c,v 1.3 2002/02/12 06:03:02 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -45,8 +45,8 @@ static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
  *  ... don't use _i,_s,_t otherwise.
  */
 #define SETUP	\
-unsigned int _i;
-char const *_s, *_t;
+unsigned int _i; \
+char const *_s, *_t
 
 #define HASH(ss,v,Size) \
 	{for(_s=ss,_i=0; *_s; _s++) _i=131 * _i + *_s;v=_i % Size;}
@@ -166,6 +166,8 @@ enum avec_def_fns avec_get_fns(void) {
 }
 
 /* ---------------------------------------------------------------------- */
+/* - internal routines only                                             - */
+/* ---------------------------------------------------------------------- */
 /* avec_hash_cap - returns the next largest prime to the given value
  */
 static int avec_hash_cap(int cap) {
@@ -173,6 +175,124 @@ static int avec_hash_cap(int cap) {
 	while (iprime(cap) != 1) ++cap;
 	return cap;
 }
+
+/* avec_dealloc_element - deallocates the memory for an element and returns 0
+ * if successful, else < 0;
+ */
+static int avec_dealloc_element(avec_element **element) {
+	if ((! element) || (! *element)) {
+#ifdef RKOERROR
+		rkoerrno = RKOUSEERR;
+		rkocpyerror("avec_dealloc_element : already NULL");
+#endif
+		return -1;
+	}
+	if ((*element)->key) {
+		*((*element)->key) = '\0';
+		free((*element)->key);
+	}
+	free(element);
+	*element = (avec_element *) NULL;
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	return 0;
+}
+
+/* avec_alloc_element - allocates memory for an element and returns 0
+ * if successful, else < 0;
+ */
+static int avec_alloc_element(char const *key, avec_element **element) {
+	int retval = 0;
+/* check if key is OK */
+	if ((!key) || (!*key)) {
+#ifdef RKOERROR
+		rkoerrno = RKOUSEERR;
+		rkocpyerror("avec_alloc_element : NULL key");
+#endif
+		retval = -1;
+		goto unwind1;
+	}
+/* allocate an element array */
+	if (!(*element = (avec_element *) calloc(sizeof(avec_element), 1))) {
+#ifdef RKOERROR
+		rkoerrno = RKOMEMERR;
+		rkocpyerror("avec_alloc_element : element memory error");
+#endif
+		retval = -2;
+		goto unwind1;
+	}
+/* allocate the key string space */
+	if (!((*element)->key = malloc(strlen(key)+1))) {
+#ifdef RKOERROR
+		rkoerrno = RKOMEMERR;
+		rkocpyerror("avec_alloc_element : key memory error");
+#endif
+		retval = -3;
+		goto unwind2;
+	}
+/* copy key over */
+	strcpy((*element)->key, key);
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	return retval;
+unwind2:
+	free(element);
+unwind1:
+	return retval;
+}
+
+/* type of key search */
+enum avec_search {AVEC_MATCH, AVEC_NEXT};
+
+/* avec_hash_search - finds and returns the address in the av->hash
+ * if successful, else returns NULL
+ * type=AVEC_MATCH - return the matching hash element else NULL
+ * type=AVEC_NEXT  - return the next empty hash element else NULL
+ */
+static avec_element *avec_hash_search(avec_enum avec_search type,
+		avec *av, char const *key) {
+	avec_element *retval = (avec_element *) NULL;
+	SETUP;
+	unsigned int	hv,		/* hash value */
+			inc = 0,	/* increment for quadratic hashing */
+			tv;		/* boolean test result */
+/* check if key is OK */
+	if ((!key) || (!*key)) {
+#ifdef RKOERROR
+		rkoerrno = RKOUSEERR;
+		rkocpyerror("avec_hash_search : NULL key");
+#endif
+		return retval;
+	}
+
+/* get the HASH of the key */
+	HASH(key,hv, av->capacity);
+/* start search */
+	while (inc < av->capacity && av->hash[hv]) {
+	/* there is an entry here ... see if it matches */
+		STRCMP(av->hash[hv]->key, key, tv);
+		if (tv) {	/* no match - keep going */
+			hv += ++inc;
+			hv %= av->capacity;
+			inc++;
+		} else {	/* found match */
+			if (type == AVEC_MATCH) return av->hash[hv];
+			else if(type == AVEC_NEXT) return retval;
+		}
+	}
+	if (av->hash[hv]) {
+	}
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	return retval;
+}
+
+/* ---------------------------------------------------------------------- */
+/* - public interface routines                                          - */
+/* ---------------------------------------------------------------------- */
 
 /* ---------------------------------------------------------------------- */
 /* avec_ctor_ - construct Unix vector to capacity cap and use the
@@ -325,8 +445,8 @@ int avec_close(avec *av, ...) {
 	}
 	*(av->tag) = '\0';
 	for (i = 0; i < av->number; ++i) {
-		(av->fns.data_del)(&(av->hash[i]), args);
-		av->hash[i] = (char *) NULL;
+		(av->fns.data_del)(&(av->hash[i]->data), args);
+		av->hash[i]->data = (char *) NULL;
 	}
 	free(av->hash);
 	av->hash = (avec_element **) NULL;
@@ -440,60 +560,150 @@ int avec_number(avec const *av) {
 }
 
 /* ---------------------------------------------------------------------- */
-/* avec_insert - insert an element before element "place"
+/* avec_insert - insert an element into the hash table,
+ * returns 0 if no existing element is there and insert was successful.
+ * Else it returns 1 if the key already exists,
+ * and < 0 if an error occured.
  */
-int avec_insert(avec *av, char const *str, ...) {
-	va_list args;
+int avec_insert(avec *av, char const *key, ...) {
+	va_list vargs;
 
-	if (! str ) {
+	unsigned int	hv,		/* hash value */
+			inc = 0,	/* increment for quadratic hashing */
+			tv;		/* boolean test result */
+	int		retval;		/* user data_add return value */
+
+	if (!avec_exists(av)) {
 #ifdef RKOERROR
-		(void) rkocpyerror("avec_insert : NULL string!");
-		rkoerrno = RKOUSEERR;
+		(void) rkopsterror("avec_insert : ");
 #endif
 		return -1;
 	}
-	return avec_ninsert(av, str, strlen(str), place);
+	if (! key  || ! *key) {
+#ifdef RKOERROR
+		(void) rkocpyerror("avec_insert : NULL key string!");
+		rkoerrno = RKOUSEERR;
+#endif
+		return -2;
+	}
+/* get the HASH of the key */
+	HASH(key,hv, av->capacity);
+/* start search */
+	while (inc < av->capacity && av->hash[hv]) {
+	/* there is an entry here ... see if it matches */
+		STRCMP(av->hash[hv]->key, key, tv);
+		if (tv) {	/* no match - keep going */
+			hv += ++inc;
+			hv %= av->capacity;
+			inc++;
+		} else {	/* found match */
+			return 1;
+		}
+	}
+	if (av->hash[hv] == (void *) NULL) {	/* add element */
+		/* alloc element */
+		if (avec_alloc_element(key, &(av->hash[hv]))) {
+#ifdef RKOERROR
+			rkopsterror("avec_insert : ");
+#endif
+			return -3;
+		}
+		/* get variable arg pointer */
+		va_start(vargs,key);
+		retval = (av->fns.data_add)(&(av->hash[hv]->data), vargs);
+		if (retval) {
+#ifdef RKOERROR
+			if (! rkostrerror() ) {
+				rkocpyerror("unspecified user data_add error");
+				rkoerrno = RKOUSEERR;
+			}
+			rkopsterror("avec_insert : ");
+#endif
+			return retval - 128;
+		}
+	}
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	av->number++;
+	return 0;
 }
 
 /* ---------------------------------------------------------------------- */
-/* avec_delete - delete an element at element "place"
+/* avec_delete - delete an element of the key
  */
-int avec_delete(avec *av, ...) {
-	int rstat;
-	va_list args;
+int avec_delete(avec *av, char const *key, ...) {
+	int retval;
+	va_list vargs;
 
+	if (!avec_exists(av)) {
+#ifdef RKOERROR
+		(void) rkopsterror("avec_insert : ");
+#endif
+		return -1;
+	}
+	if (! key  || ! *key) {
+#ifdef RKOERROR
+		(void) rkocpyerror("avec_insert : NULL key string!");
+		rkoerrno = RKOUSEERR;
+#endif
+		return -2;
+	}
+/* get the HASH of the key */
+	HASH(key,hv, av->capacity);
 	if (av->number <= 0) {
 #ifdef RKOERROR
 		(void) rkocpyerror("avec_delete : empty vector!");
 		rkoerrno = RKOUSEERR;
 #endif
+		return -3;
+	}
+	va_start(vargs, key);
+	retval = (av->fns.data_del)(&(av->hash[av->number]->data),vargs);
+	if (retval) {
+#ifdef RKOERROR
+		if (! rkostrerror() ) {
+			rkocpyerror("unspecified user data_del error");
+			rkoerrno = RKOUSEERR;
+		}
+		rkopsterror("avec_delete : ");
+#endif
+		return retval - 128;
+	}
+	av->hash[av->number]->data = (char *) NULL;
+	(void) avec_dealloc_element(av->hash[hv]);
+	av->number--;
+
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	return 0;
+}
+
+/* ---------------------------------------------------------------------- */
+/* avec_keys - returns all the keys in a NULL terminated vector
+ */
+int avec_keys(avec *av) {
+	avec_element *elem = 
+
+	if (! key  || ! *key) {
+#ifdef RKOERROR
+		(void) rkocpyerror("avec_insert : NULL key string!");
+		rkoerrno = RKOUSEERR;
+#endif
 		return -1;
 	}
-	if (place < 0 || place > av->number - 1) {
+	if (av->number <= 0) {
 #ifdef RKOERROR
-		(void) rkocpyerror("avec_delete : invalid place!");
+		(void) rkocpyerror("avec_delete : empty vector!");
 		rkoerrno = RKOUSEERR;
 #endif
 		return -2;
 	}
-	if ((rstat = avec_shift_vec(av, place + 1, 0, place))) {
-#ifdef RKOERROR
-		(void) rkopsterror("avec_delete : ");
-#endif
-		return rstat - 128;
-	}
-	--(av->number);
-	(av->fns.data_del)(&(av->hash[av->number]),args);
-	av->hash[av->number] = (char *) NULL;
+	(av->fns.data_del)(&(av->hash[av->number]->data),args);
+	av->hash[av->number]->data = (char *) NULL;
+	av->number--;
 
-	if (av->number < av->capacity/2) {
-		if ((rstat = avec_decrease(av, 0))) {
-#ifdef RKOERROR
-			(void) rkopsterror("avec_delete : ");
-#endif
-			return rstat - 128;
-		}
-	}
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
@@ -504,12 +714,25 @@ int avec_delete(avec *av, ...) {
 
 #include <stdio.h>
 
+#define _STEST(e, comm) \
+	if ((comm) != e) {results++; printf("FAIL");} \
+	else printf("OK  ");\
+	count++; printf(" %s\n",#comm);
+
 int main () {
 	avec u,v, *x, *y;
+	int count=0, results=0;
+	int e;
 
 	x = avec_ctor(100);
-	printf ("=%d\n", avec_number(x));
 	printf ("num=%d\n", avec_number(x));
 	printf ("cap=%d\n", avec_capacity(x));
+	_STEST(0, avec_insert(x,"first","This is the first value"));
+	printf ("num=%d\n", avec_number(x));
+	_STEST(1, avec_insert(x,"first","This is not the first value"));
+	printf ("num=%d\n", avec_number(x));
+	_STEST(0, avec_insert(x,"second","This is the second value"));
+	printf ("num=%d\n", avec_number(x));
 	return 0;
-};
+}
+

@@ -8,7 +8,7 @@ include Makefile.inc
 
 SRCS	=invoke.c timedfgets.c rkoerror.c memdebug.c strmem.c wcstrcmp.c \
 	 nameread.c foptim.c fzeroin.c divdiff.c strchop.c \
-	 ansi_seq.c gethostbyX.c tcp_connect.c macrosub.c uvec.c \
+	 ansi_seq.c gethostbyX.c tcp_connect.c macrosub.c uvec.c avec.c \
 	 strdbecpy.c istext.c list.c dirtree.c spawn.c gcd.c isqrt.c iprime.c \
 	 strmalloc.c clocker.c
 DIRS	= minish urand
@@ -36,6 +36,9 @@ DOCSL	=librko.3 $(DOCS)
 
 .man.3 :
 	$(NROFF) $(MAN) $< > $@
+
+avec.x : avec.c
+	$(CC) $(CFLAGS) -g -o avec.x $< -I. -L. -lrko
 
 all : $(LIB) $(DOCSL)
 	-@for d in $(DIRS); do \
