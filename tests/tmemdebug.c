@@ -24,14 +24,15 @@ typedef struct Trial {
 int main() {
 
 	size_t num = 20;
-	int *ia;
-	double *da;
-	char *ca;
-	trial *ta;
+	int *ia = (int *) NULL;
+	double *da = (double *) NULL;
+	char *ca = (char *) NULL;
+	trial *ta = (trial *) NULL;
 
 	if ((ia = (int *) malloc(num * sizeof(int))) == NULL)
 		(void) fprintf(stderr,"malloc error\n");
 	free(ia);
+	ia = (int *) NULL;
 
 	if ((ia = (int *) malloc(2 * num * sizeof(int))) == NULL)
 		(void) fprintf(stderr,"malloc error\n");
@@ -44,12 +45,15 @@ int main() {
 	if ((ta = (trial *) calloc(num, sizeof(trial))) == NULL)
 		(void) fprintf(stderr,"malloc error\n");
 	free(ta);
+	ta = (trial *) NULL;
+
 	if ((ta = (trial *) calloc(2 * num, sizeof(trial))) == NULL)
 		(void) fprintf(stderr,"malloc error\n");
 
 	if ((da = (double *) realloc(da, 2 * num * sizeof(double))) == NULL)
 		(void) fprintf(stderr,"realloc error\n");
 	free(ia);
+	ia = (int *) NULL;
 
 	if ((ca = (char *) malloc(num * sizeof(char))) == NULL)
 		(void) fprintf(stderr,"malloc error\n");

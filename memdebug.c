@@ -1,5 +1,4 @@
-static char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: memdebug.c,v 1.2 1998/10/14 15:16:10 rk Exp $";
+static const char RCSID[]="@(#)$Id: memdebug.c,v 1.3 1998/11/11 21:18:12 rk Exp $";
 static char AUTHOR[]="@(#)memory 1.0 02/10/95 R.K.Owen,PhD";
 
 /* memory - provides a front-end for the memory allocation routines to
@@ -31,102 +30,59 @@ static char AUTHOR[]="@(#)memory 1.0 02/10/95 R.K.Owen,PhD";
 #include <stdlib.h>
 #include <stdio.h>
 
-#if 0
-#  define TEST		/* stand-alone test program */
-#endif
-
 void *m_calloc(size_t nelem, size_t size, char *file, int line) {
 	void *ptr;
+	char *null = "(null)";
 
 	ptr = calloc(nelem, size);
-	(void) fprintf(stderr,"  calloc : %s %d : %p %d %d\n",
-		file, line, ptr, nelem, size);
+	if (ptr != NULL)
+		(void) fprintf(stderr,"RKOMEM:  calloc : %s %d : %p %d %d\n",
+			file, line, ptr, nelem, size);
+	else
+		(void) fprintf(stderr,"RKOMEM:  calloc : %s %d : %s %d %d\n",
+			file, line, null, nelem, size);
 	return ptr;
 }
 
 void m_free(void *ptr, char *file, int line) {
-	(void) fprintf(stderr,"    free : %s %d : %p \n",
-		file, line, ptr);
+	char *null = "(null)";
+
+	if (ptr != NULL)
+		(void) fprintf(stderr,"RKOMEM:    free : %s %d : %p \n",
+			file, line, ptr);
+	else
+		(void) fprintf(stderr,"RKOMEM:    free : %s %d : %s \n",
+			file, line, null);
 	free(ptr);
 }
 
 void *m_malloc(size_t size, char *file, int line) {
 	void *ptr;
+	char *null = "(null)";
 
 	ptr = malloc(size);
-	(void) fprintf(stderr,"  malloc : %s %d : %p %d\n",
-		file, line, ptr, size);
+	if (ptr != NULL)
+		(void) fprintf(stderr,"RKOMEM:  malloc : %s %d : %p %d\n",
+			file, line, ptr, size);
+	else
+		(void) fprintf(stderr,"RKOMEM:  malloc : %s %d : %s %d\n",
+			file, line, null, size);
 	return ptr;
 }
 
 void *m_realloc(void *rptr, size_t size, char *file, int line) {
 	void *ptr;
+	char *null = "(null)";
 
 	ptr = realloc(rptr, size);
-	(void) fprintf(stderr," realloc : %s %d : %p %p %d\n",
-		file, line, ptr, rptr, size);
+	(void) fprintf(stderr,"RKOMEM: realloc : %s %d :", file, line);
+	if (ptr != NULL)
+		(void) fprintf(stderr," %p", ptr);
+	else
+		(void) fprintf(stderr," %s", null);
+	if (rptr != NULL)
+		(void) fprintf(stderr," %p %d\n", rptr, size);
+	else
+		(void) fprintf(stderr," %s %d\n", null, size);
 	return ptr;
 }
-
-#ifdef TEST
-
-#  ifndef QUIET
-#    define  _calloc(a,b)	m_calloc(a,b,	__FILE__, __LINE__)
-#    define    _free(a)		m_free(a,	__FILE__, __LINE__)
-#    define  _malloc(a)		m_malloc(a,	__FILE__, __LINE__)
-#    define _realloc(a,b)	m_realloc(a,b,	__FILE__, __LINE__)
-#  else
-#    define  _calloc(a,b)	calloc(a,b)
-#    define    _free(a)		free(a)
-#    define  _malloc(a)		malloc(a)
-#    define _realloc(a,b)	realloc(a,b)
-#  endif
-
-typedef struct Trial {
-	int a;
-	double b;
-	char c[5];
-	struct Trial *next;
-} trial;
-
-int main() {
-
-	size_t num = 20;
-	int *ia;
-	double *da;
-	char *ca;
-	trial *ta;
-
-	if ((ia = (int *) _malloc(num * sizeof(int))) == NULL)
-		(void) fprintf(stderr,"malloc error\n");
-	_free(ia);
-
-	if ((ia = (int *) _malloc(2 * num * sizeof(int))) == NULL)
-		(void) fprintf(stderr,"malloc error\n");
-	if ((ia = (int *) _realloc(ia, 4 * num * sizeof(int))) == NULL)
-		(void) fprintf(stderr,"realloc error\n");
-
-	if ((da = (double *) _malloc(num * sizeof(double))) == NULL)
-		(void) fprintf(stderr,"malloc error\n");
-
-	if ((ta = (trial *) _calloc(num, sizeof(trial))) == NULL)
-		(void) fprintf(stderr,"malloc error\n");
-	_free(ta);
-	if ((ta = (trial *) _calloc(2 * num, sizeof(trial))) == NULL)
-		(void) fprintf(stderr,"malloc error\n");
-
-	if ((da = (double *) _realloc(da, 2 * num * sizeof(double))) == NULL)
-		(void) fprintf(stderr,"realloc error\n");
-	_free(ia);
-
-	if ((ca = (char *) _malloc(num * sizeof(char))) == NULL)
-		(void) fprintf(stderr,"malloc error\n");
-
-	_free(da);
-	_free(ta);
-	_free(ca);
-	_free(ia);
-
-	return 0;
-}
-#endif /* TEST */

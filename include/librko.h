@@ -2,7 +2,7 @@
 #  define _LIBRKO_H_
 /* 
  * USMID %W%
- * RCSID @(#)$Id: librko.h,v 1.5 1998/10/29 16:58:49 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.6 1998/11/11 21:18:12 rk Exp $
  */
 /*
  *********************************************************************
@@ -264,10 +264,10 @@ void m_free(void *ptr, char *file, int line);
 void *m_malloc(size_t size, char *file, int line);
 void *m_realloc(void *rptr, size_t size, char *file, int line);
 
-#      define   calloc(a,b)	m_calloc(a,b,	__FILE__, __LINE__)
-#      define     free(a)	m_free(a,	__FILE__, __LINE__)
-#      define   malloc(a)	m_malloc(a,	__FILE__, __LINE__)
-#      define  realloc(a,b)	m_realloc(a,b,	__FILE__, __LINE__)
+#      define   calloc(a,b)	m_calloc((a),(b),	__FILE__, __LINE__)
+#      define     free(a)	m_free((a),		__FILE__, __LINE__)
+#      define   malloc(a)	m_malloc((a),		__FILE__, __LINE__)
+#      define  realloc(a,b)	m_realloc((a),(b),	__FILE__, __LINE__)
 
 #    endif /* _MEMORY_H_ */
 #  endif /* MEMDEBUG */
