@@ -15,11 +15,10 @@ void printout(uvec *uv, char const *head, int err, char const *ans) {
 		}
 	}
 	if (strcmp(testbuf, ans)) {
-		printf("FAIL:");
+		printf("FAIL:%-20s=\n    <\t%s\n    >\t%s\n",head,testbuf,ans);
 	} else {
-		printf("OK  :");
+		printf("OK  :%-20s=\n\t%s\n",head,testbuf);
 	}
-	printf("%-20s=\n\t%s\n",head,testbuf);
 }
 
 #define _CHECK(c,v,a) \
