@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: uvec.c,v 1.10 1999/09/11 08:00:13 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec.c,v 1.11 2001/08/29 21:49:31 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.0 10/31/97 R.K.Owen,Ph.D.";
 /* uvec.c -
  * This could have easily been made a C++ class, but is
@@ -169,7 +169,6 @@ static int uvec_increase(uvec *uv, int newcap) {
  * if newcap <= 0 then decrease by default size else compute  new capacity
  */
 static int uvec_decrease(uvec *uv, int newcap) {
-	int i;
 
 	newcap = (newcap <= 0 ? UVECPREVLENGTH(uv->capacity) : newcap);
 	if (!(uv->vector = (char **) realloc(uv->vector,
@@ -265,9 +264,9 @@ static int uvec_shift(uvec *uv, int start, int end, int newstart) {
 		n = newstart + end - start;
 		if (n >= uv->capacity) {
 			/* increase capacity */
-			if (rstat = uvec_increase(uv,
+			if ((rstat = uvec_increase(uv,
 				(n>UVECNEXTLENGTH(uv->capacity)
-				? n :  UVECNEXTLENGTH(uv->capacity)))) {
+				? n :  UVECNEXTLENGTH(uv->capacity))))) {
 #ifdef RKOERROR
 				(void) rkopsterror("uvec_shift : ");
 #endif
@@ -384,13 +383,13 @@ int uvec_insert(uvec *uv, char const *str, int place) {
 #endif
 		return -1;
 	}
-	if (rstat = uvec_shift(uv, place, 0, place + 1)) {
+	if ((rstat = uvec_shift(uv, place, 0, place + 1))) {
 #ifdef RKOERROR
 		(void) rkopsterror("uvec_insert : ");
 #endif
 		return rstat - 128;
 	}
-	if (rstat = uvec_malloc(uv, str, place)) {
+	if ((rstat = uvec_malloc(uv, str, place))) {
 #ifdef RKOERROR
 		(void) rkopsterror("uvec_insert : ");
 #endif
@@ -422,7 +421,7 @@ int uvec_delete(uvec *uv, int place) {
 #endif
 		return -2;
 	}
-	if (rstat = uvec_shift(uv, place + 1, 0, place)) {
+	if ((rstat = uvec_shift(uv, place + 1, 0, place))) {
 #ifdef RKOERROR
 		(void) rkopsterror("uvec_delete : ");
 #endif
@@ -433,7 +432,7 @@ int uvec_delete(uvec *uv, int place) {
 	uv->vector[uv->number] = (char *) NULL;
 
 	if (uv->number < uv->capacity/2) {
-		if (rstat = uvec_decrease(uv, 0)) {
+		if ((rstat = uvec_decrease(uv, 0))) {
 #ifdef RKOERROR
 			(void) rkopsterror("uvec_delete : ");
 #endif
@@ -449,7 +448,7 @@ int uvec_delete(uvec *uv, int place) {
 /* uvec_add - add 1 element to end of vector */
 int uvec_add(uvec *uv, char const *str) {
 	int rstat;
-	if (rstat = uvec_insert(uv, str, uv->number)) {
+	if ((rstat = uvec_insert(uv, str, uv->number))) {
 #ifdef RKOERROR
 		(void) rkopsterror("uvec_add : ");
 #endif
@@ -471,8 +470,8 @@ int uvec_addl(uvec *uv, ...) {
 	va_list ap;
 
 	va_start(ap, uv);
-	while (str = va_arg(ap, const char *)) {
-		if (rstat = uvec_add(uv, str)) {
+	while ((str = va_arg(ap, const char *))) {
+		if ((rstat = uvec_add(uv, str))) {
 #ifdef RKOERROR
 			(void) rkopsterror("uvec_addl : ");
 #endif
@@ -489,7 +488,7 @@ int uvec_addl(uvec *uv, ...) {
 /* uvec_pop - pop off 1 element at end of vector */
 int uvec_pop(uvec *uv) {
 	int rstat;
-	if (rstat = uvec_delete(uv, uv->number - 1)) {
+	if ((rstat = uvec_delete(uv, uv->number - 1))) {
 #ifdef RKOERROR
 		(void) rkopsterror("uvec_pop : ");
 #endif
@@ -518,14 +517,14 @@ int uvec_copy_vec(uvec *u, char **vec, int number) {
 		number = ++num;
 	}
 
-	if (rstat = uvec_init(u, number)) {
+	if ((rstat = uvec_init(u, number))) {
 #ifdef RKOERROR
 		(void) rkopsterror("uvec_copy_vec : ");
 		return rstat - 128;
 #endif
 	}
 	for (ptr = vec; *ptr != (char *)NULL; ++ptr) {
-		if (rstat = uvec_add(u, *ptr)) {
+		if ((rstat = uvec_add(u, *ptr))) {
 #ifdef RKOERROR
 			(void) rkopsterror("uvec_copy_vec : ");
 			return rstat - 128;
@@ -539,11 +538,11 @@ int uvec_copy_vec(uvec *u, char **vec, int number) {
 int uvec_copy(uvec *u, uvec const *v) {
 	int rstat;
 
-	if (rstat = uvec_copy_vec(u, uvec_vector(v), uvec_capacity(v))) {
+	if ((rstat = uvec_copy_vec(u, uvec_vector(v), uvec_capacity(v)))) {
 #ifdef RKOERROR
 		(void) rkopsterror("uvec_copy : ");
-		return rstat - 128;
 #endif
+		return rstat - 128;
 	}
 	return 0;
 }
