@@ -30,8 +30,7 @@ int main(int argc, char *argv[]) {
 	HACK("BOL: EOF :EOL")
 
 	subargv = uvec_ctor(3);
-	(void) uvec_add(subargv,"./birdy");
-	(void) uvec_add(subargv,"testtext");
+	(void) uvec_addl(subargv,"./birdy", "testtext", NULL);
 
 	if ((in = invoke(uvec_vector(subargv))) == (FILE *) NULL) {
 		printf("%s failed to invoke '%s'\n", prgname,
