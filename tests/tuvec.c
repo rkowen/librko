@@ -16,9 +16,9 @@ void printout(uvec *uv, char const *head, int err, char const *ans) {
 	}
 	if (
 #ifndef NO_STRCASECMP
-	strcmp(testbuf, ans)
+	strcasecmp(testbuf, ans)
 #else
-	strncmp(testbuf, ans)
+	strcmp(testbuf, ans)
 #endif
 	) {
 		printf("FAIL:%-20s=\n    <\t%s\n    >\t%s\n",head,testbuf,ans);
