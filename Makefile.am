@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.19 2003/09/05 05:02:00 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.20 2003/09/05 16:44:18 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -159,6 +159,9 @@ dist-hook:
 	rm -rf `find $(distdir) -name CVS -print`
 	rm -rf `find $(distdir) -name Makefile -print`
 	rm -rf `find $(distdir) -name .deps -print`
+	rm -rf `find $(distdir) -name "*.x" -print`
+	rm -rf `find $(distdir) -name "*.o" -print`
+	rm -rf `find $(distdir) -name kitty -o -name doggy -o -name birdy`
 
 urand/urand.o : urand/urand.c urand/urand_.c clocker.o
 	cd urand; ./all.csh $(CC)

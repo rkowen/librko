@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: uvec_insert.c,v 1.3 2002/06/27 22:21:38 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec_insert.c,v 1.4 2003/09/05 16:44:18 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 /* uvec.c -
  *  uvec_insert    insert an element before element ``place''.
@@ -219,7 +219,7 @@ int uvec_insert(uvec *uv, char const *str, int place) {
 #endif
 		return -1;
 	}
-	return uvec_ninsert(uv, str, strlen(str), place);
+	return uvec_ninsert(uv, str, strlen(str)+1, place);
 }
 
 /* ---------------------------------------------------------------------- */

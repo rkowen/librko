@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: uvec_shift.c,v 1.3 2002/06/27 22:21:38 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec_shift.c,v 1.4 2003/09/05 16:44:18 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 /* uvec.c -
  *  uvec_unshift   add one element to start of vector.
@@ -32,7 +32,7 @@ int uvec_unshift(uvec *uv, char const *str) {
 #endif
 		return -1;
 	}
-	if ((rstat = uvec_ninsert(uv, str, strlen(str), 0))) {
+	if ((rstat = uvec_ninsert(uv, str, strlen(str)+1, 0))) {
 #ifdef RKOERROR
 		(void) rkopsterror("uvec_unshift : ");
 #endif
