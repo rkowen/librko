@@ -1,7 +1,7 @@
 #ifndef _MINISH_H_
 #  define _MINISH_H_
 /* 
- * RCSID @(#)$Id: minish.h,v 1.1 1998/10/15 03:25:56 rk Exp $
+ * RCSID @(#)$Id: minish.h,v 1.2 1998/10/15 06:28:29 rk Exp $
  */
 /*
  *********************************************************************
@@ -37,11 +37,25 @@ typedef enum {	MINISH_FD_NONE, MINISH_FD_CLOSE,
 typedef struct minish_fdlist minish_fdlist;	/* forward declaration */
 typedef struct minish_fdlist_elem minish_fdlist_elem;
 
+struct minish_fdlist {
+	char tag[7];			/* name tag for type	*/
+	minish_fdlist_elem *first;	/* head of list		*/
+	minish_fdlist_elem *last;	/* last in list		*/
+};
+
+struct minish_fdlist_elem {
+	int fd;				/* file descriptor	*/
+	minish_fd_action action;	/* file access action	*/
+	minish_fdlist_elem *next;	/* next in chain	*/
+	int fd2;			/* redirected to	*/
+	char *file;			/* file name		*/
+};
+
 int minish_fdlist_ctor(minish_fdlist *fdl);
 int minish_fdlist_dtor(minish_fdlist *fdl);
 int minish_fdlist_exists(minish_fdlist *fdl);
 int minish_fdlist_add(minish_fdlist *fdl, minish_fd_action action, int fd, ...);
-int minish_fdlist_dump(minish_fdlist *fdl);
+int minish_fdlist_dump(minish_fdlist *fdl, FILE *file);
 int minish_fdlist_process(minish_fdlist *fdl);
 
 #  ifdef __cplusplus

@@ -4,14 +4,16 @@ LEX	=lex
 YACC	=yacc
 YYFLAGS	=-v -d -t
 RM	=rm
+SHELL	=sh
 #
-CFLAGS=-g -DRKOERROR
+CFLAGS=-g -DRKOERROR -I..
 
 .c.o :
 	$(CC) -c $(CFLAGS) $<
 
-yacctest : y.tab.c lex.yy.c
-	$(CC) $(CFLAGS) -I.. -o yacctest -DYACCTEST y.tab.c -ll -L.. -lrko
+yacctest : y.tab.c lex.yy.c fdlist.o
+	$(CC) $(CFLAGS) -o yacctest -DYACCTEST y.tab.c fdlist.o \
+		-ll -L.. -lrko
 
 y.tab.c y.tab.h : minish.yacc
 	$(YACC) $(YYFLAGS) minish.yacc
@@ -23,10 +25,22 @@ lex.yy.c : minish.lex
 	$(LEX) minish.lex
 
 fdtest/fdtest : fdlist.c
-	$(CC) $(CFLAGS) -I.. -o fdtest/fdtest -DTEST fdlist.c -L.. -lrko
+	$(CC) $(CFLAGS) -o fdtest/fdtest -DTEST fdlist.c -L.. -lrko
+
+runtest : runfdtest runlextest runyacctest
+
+runyacctest : yacctest
+	-@./yacctest > yacctest.out
+	-@if diff yacctest.out yacctest.cmp ; then \
+		echo yacctest OK ; else echo yacctest FAILED ; fi
+
+runlextest : lextest
+	-@./lextest > lextest.out
+	-@if diff lextest.out lextest.cmp ; then \
+		echo lextest OK ; else echo lextest FAILED ; fi
 
 runfdtest : fdtest/fdtest
-	-(cd fdtest; ./fdtest.sh)
+	-@(cd fdtest; ./fdtest.sh)
 
 clean :
 	-$(RM) -f *.o a.out core y.output

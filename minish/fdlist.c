@@ -29,20 +29,6 @@
 #include "librko.h"
 #include "minish.h"
 
-struct minish_fdlist {
-	char tag[7];			/* name tag for type	*/
-	minish_fdlist_elem *first;	/* head of list		*/
-	minish_fdlist_elem *last;	/* last in list		*/
-};
-
-struct minish_fdlist_elem {
-	int fd;				/* file descriptor	*/
-	minish_fd_action action;	/* file access action	*/
-	minish_fdlist_elem *next;	/* next in chain	*/
-	int fd2;			/* redirected to	*/
-	char *file;			/* file name		*/
-};
-
 #define TAG_LEN		7
 static char TAG[TAG_LEN] = "FDLIST";
 
@@ -319,7 +305,7 @@ int minish_fdlist_add(minish_fdlist *fdl, minish_fd_action action,
 }
 
 /* dump all elements to stderr - for debug purposes */
-int minish_fdlist_dump(minish_fdlist *fdl) {
+int minish_fdlist_dump(minish_fdlist *fdl, FILE *file) {
 	minish_fdlist_elem *ptr;
 
 	if (! minish_fdlist_exists(fdl)) {
@@ -329,9 +315,9 @@ int minish_fdlist_dump(minish_fdlist *fdl) {
 		return -1;
 	}
 	ptr = fdl->first;
-	(void) fprintf(stderr, "<minish_fdlist_dump>\n");
+	(void) fprintf(file, "<minish_fdlist_dump>\n");
 	while (ptr != (minish_fdlist_elem *) NULL) {
-		(void) fprintf(stderr,
+		(void) fprintf(file,
 #if 0
 		"  prt=%p fd=%2d fd2=%2d file=%15.15s action=%9s next=%p\n",
 			ptr, ptr->fd, ptr->fd2, ptr->file,
@@ -387,9 +373,9 @@ int main () {
 	minish_fdlist listA, listB;
 	char buffer[200];
 
-	if (minish_fdlist_dump(&listA)) rkoperror("main");
+	if (minish_fdlist_dump(&listA, stderr)) rkoperror("main");
 	if (minish_fdlist_ctor(&listA)) rkoperror("main");
-	if (minish_fdlist_dump(&listA)) rkoperror("main");
+	if (minish_fdlist_dump(&listA, stderr)) rkoperror("main");
 	if (minish_fdlist_add(&listA, MINISH_FD_REDIRECT, -1, 99))
 		rkoperror("main");
 	if (minish_fdlist_add(&listA, MINISH_FD_REDIRECT, 0, 99))
@@ -408,25 +394,27 @@ int main () {
 		5, "file_5_append")) rkoperror("main");
 	if (minish_fdlist_add(&listA, MINISH_FD_CLOSE,
 		6)) rkoperror("main");
-	if (minish_fdlist_dump(&listA)) rkoperror("main");
+	if (minish_fdlist_dump(&listA, stderr)) rkoperror("main");
+
+	if (minish_fdlist_dtor(&listA)) rkoperror("main");
 
 /* this is the actual list to I/O */
-	if (minish_fdlist_ctor(&listB)) rkoperror("main");
+	if (minish_fdlist_ctor(&listA)) rkoperror("main");
 /* send stdout to "fdtest.out" */
-	if (minish_fdlist_add(&listB, MINISH_FD_WRITE, 
+	if (minish_fdlist_add(&listA, MINISH_FD_WRITE, 
 		STDOUT_FILENO, "fdtest.out")) rkoperror("main");
 /* redirect stderr to stdout */
-	if (minish_fdlist_add(&listB, MINISH_FD_REDIRECT, 
+	if (minish_fdlist_add(&listA, MINISH_FD_REDIRECT, 
 		STDERR_FILENO, STDOUT_FILENO)) rkoperror("main");
-	if (minish_fdlist_add(&listB, MINISH_FD_READWRITE, 
+	if (minish_fdlist_add(&listA, MINISH_FD_READWRITE, 
 		3, "fdtest.3inout")) rkoperror("main");
-	if (minish_fdlist_add(&listB, MINISH_FD_APPEND, 
+	if (minish_fdlist_add(&listA, MINISH_FD_APPEND, 
 		4, "fdtest.4out")) rkoperror("main");
 
-	if (minish_fdlist_dump(&listB)) rkoperror("main");
+	if (minish_fdlist_dump(&listA, stderr)) rkoperror("main");
 
 /* process file requests */
-	if (minish_fdlist_process(&listB)) rkoperror("main");
+	if (minish_fdlist_process(&listA)) rkoperror("main");
 
 /* write something to the files */
 	strcpy(buffer,"fdtest -> stdout\n");
@@ -445,7 +433,6 @@ int main () {
 	write(4, buffer, strlen(buffer));
 
 	if (minish_fdlist_dtor(&listA)) rkoperror("main");
-	if (minish_fdlist_dtor(&listB)) rkoperror("main");
 
 	return 0;
 }

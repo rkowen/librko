@@ -18,16 +18,20 @@ int i;
 
 #include <stdio.h>
 #include "librko.h"
+#include "minish.h"
 
 int linenum = 0;
 int statnum = 0;
 int fdnum = 0;
 int fdnum2 = 0;
+minish_fd_action action;
 char **ptr;
 char buffer[20];
+char filename[FILENAME_MAX];
 
 uvec statement;
 uvec minish_argv;
+minish_fdlist fdlist;
 
 void dbgstop(void) {
 	static int a=1;
@@ -60,16 +64,19 @@ command : COMMAND
 #ifdef YACCTEST
 			printf("command:%s\n", yytext);
 #endif
+	dbgstop();
+			if (minish_fdlist_ctor(&fdlist))
+				rkoperror("minish : yacc : fd : ctor");
 			if (uvec_ctor(&minish_argv,10))
-				rkoperror("minish-yacc:o:ctor:");
+				rkoperror("minish : yacc : arg : ctor");
 			if (uvec_add(&minish_argv,yytext))
-				rkoperror("minish-yacc:com:");
+				rkoperror("minish : yacc : com");
 			if (! uvec_exists(&statement)) {
 				if (uvec_ctor(&statement,10))
-					rkoperror("minish-yacc:s:ctor:");
+					rkoperror("minish : yacc : stm : ctor");
 			}
 			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:com:");
+				rkoperror("minish : yacc : com");
 		}
 	;
 
@@ -81,7 +88,7 @@ options :	/* empty options */
 			printf("option:%s\n", yytext);
 #endif
 			if (uvec_add(&minish_argv,yytext))
-				rkoperror("minish-yacc:option:");
+				rkoperror("minish : yacc : option ");
 		}
 	;
 
@@ -97,6 +104,10 @@ redir_file
 #ifdef YACCTEST
 			printf("redirect:stdin/out:%s\n", yytext);
 #endif
+	dbgstop();
+			if (minish_fdlist_add(&fdlist, action,
+			fdnum, filename))
+				rkoperror("minish : yacc : redir : stdio");
 		}
 	| number redirect file
 		{
@@ -104,44 +115,52 @@ redir_file
 #ifdef YACCTEST
 			printf("redirect:%d:%s\n", fdnum, yytext);
 #endif
+	dbgstop();
+			if (minish_fdlist_add(&fdlist, action,
+			fdnum, filename))
+				rkoperror("minish : yacc : redir : fd");
 		}
 	;
 
 redirect: GREATER_THAN
 		{
 			fdnum = 1;	/* stdout */
+			action = MINISH_FD_WRITE;
 #ifdef YACCTEST
 			printf("redirect:%s\n", yytext);
 #endif
 			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:red:stdout");
+				rkoperror("minish : yacc : red : stdout");
 		}
 	| GREATER_GREATER
 		{
 			fdnum = 1;	/* stdout */
+			action = MINISH_FD_APPEND;
 #ifdef YACCTEST
 			printf("redirect:%s\n", yytext);
 #endif
 			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:app:");
+				rkoperror("minish : yacc : app");
 		}
 	| LESS_THAN
 		{
 			fdnum = 0;	/* stdin */
+			action = MINISH_FD_READ;
 #ifdef YACCTEST
 			printf("redirect:%s\n", yytext);
 #endif
 			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:red:");
+				rkoperror("minish : yacc : red");
 		}
 	| LESS_GREATER
 		{
 			fdnum = 0;	/* stdin */
+			action = MINISH_FD_READWRITE;
 #ifdef YACCTEST
 			printf("redirect:%s\n", yytext);
 #endif
 			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:rw:");
+				rkoperror("minish : yacc : rw");
 		}
 	;
 
@@ -152,13 +171,16 @@ redir_fd: number redir_ga number
 #ifdef YACCTEST
 			printf("redirect:%d to %d\n", fdnum, fdnum2);
 #endif
+			if (minish_fdlist_add(&fdlist, MINISH_FD_REDIRECT,
+			fdnum, fdnum2))
+				rkoperror("minish : yacc : redir : fd");
 		}
 
 redir_ga
 	: GREATER_AMPER
 		{
 			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:fd-red:");
+				rkoperror("minish : yacc : fd-red");
 		}
 
 redir_close
@@ -169,7 +191,9 @@ redir_close
 			printf("close:%d:\n", fdnum);
 #endif
 			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:close:stdin");
+				rkoperror("minish : yacc : close : stdin : stm");
+			if (minish_fdlist_add(&fdlist, MINISH_FD_CLOSE, fdnum))
+				rkoperror("minish : yacc : close : stdin : fd");
 		}
 	| GREATER_AMPER_CLOSE
 		{
@@ -178,7 +202,9 @@ redir_close
 			printf("close:%d:\n", fdnum);
 #endif
 			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:close:stdout");
+				rkoperror("minish : yacc : close : stdout : stm");
+			if (minish_fdlist_add(&fdlist, MINISH_FD_CLOSE, fdnum))
+				rkoperror("minish : yacc : close : stdout : fd");
 		}
 	| number GREATER_AMPER_CLOSE
 		{
@@ -187,7 +213,9 @@ redir_close
 			printf("close:%d:\n", fdnum);
 #endif
 			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:close:fd");
+				rkoperror("minish : yacc : close : n : stm");
+			if (minish_fdlist_add(&fdlist, MINISH_FD_CLOSE, fdnum))
+				rkoperror("minish : yacc : close : n : fd");
 		}
 	;
 
@@ -196,8 +224,8 @@ file	: word
 #ifdef YACCTEST
 			printf("file:%s\n", yytext);
 #endif
+			(void) strcpy(filename, yytext);
 		}
-
 
 eoc	: eol
 	| EOC
@@ -210,12 +238,20 @@ eoc	: eol
 				printf("%s ", *ptr);
 			}
 			printf("\n");
+			dbgstop();
+			if (minish_fdlist_dump(&fdlist, stdout))
+				rkoperror("minish : yacc : eoc : fd : dump");
+#else
+			if (minish_fdlist_process(&fdlist))
+				rkoperror("minish : yacc : eoc : fd : process");
 #endif
 			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:eoc:");
+				rkoperror("minish : yacc : eoc : stm");
 
 			if (uvec_dtor(&minish_argv))
-				rkoperror("minish-yacc:o:dtor:");
+				rkoperror("minish : yacc : eoc : arg : dtor");
+			if (minish_fdlist_dtor(&fdlist))
+				rkoperror("minish : yacc : eoc : fd : dtor");
 		}
 	| BAR_BAR
 		{
@@ -227,12 +263,19 @@ eoc	: eol
 				printf("%s ", *ptr);
 			}
 			printf("\n");
+			if (minish_fdlist_dump(&fdlist, stdout))
+				rkoperror("minish : yacc : || : fd : dump");
+#else
+			if (minish_fdlist_process(&fdlist))
+				rkoperror("minish : yacc : || : fd : process");
 #endif
 			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:eoc:");
+				rkoperror("minish : yacc : || : stm");
 
 			if (uvec_dtor(&minish_argv))
-				rkoperror("minish-yacc:o:dtor:");
+				rkoperror("minish : yacc : || : arg : dtor");
+			if (minish_fdlist_dtor(&fdlist))
+				rkoperror("minish : yacc : || : fd : dtor");
 		}
 	| AMPER_AMPER
 		{
@@ -244,12 +287,19 @@ eoc	: eol
 				printf("%s ", *ptr);
 			}
 			printf("\n");
+			if (minish_fdlist_dump(&fdlist, stdout))
+				rkoperror("minish : yacc : && : fd : dump");
+#else
+			if (minish_fdlist_process(&fdlist))
+				rkoperror("minish : yacc : && : fd : process");
 #endif
 			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:eoc:");
+				rkoperror("minish : yacc : && : stm");
 
 			if (uvec_dtor(&minish_argv))
-				rkoperror("minish-yacc:o:dtor:");
+				rkoperror("minish : yacc : && : arg : dtor");
+			if (minish_fdlist_dtor(&fdlist))
+				rkoperror("minish : yacc : && : fd : dtor");
 		}
 	;
 
@@ -263,7 +313,7 @@ number	: NUMBER
 			strcat(buffer, yytext);
 			strcat(buffer, ")");
 			if (uvec_add(&statement,buffer))
-				rkoperror("minish-yacc:number:");
+				rkoperror("minish : yacc : number");
 		}
 
 word	: WORD
@@ -272,7 +322,7 @@ word	: WORD
 			printf("word:%s\n", yytext);
 #endif
 			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:word:");
+				rkoperror("minish : yacc : word");
 		}
 
 eol	: EOL
@@ -284,14 +334,19 @@ eol	: EOL
 				printf("%s ", *ptr);
 			}
 			printf("\n");
+			if (minish_fdlist_dump(&fdlist, stdout))
+				rkoperror("minish : yacc : eol : fd : dump");
+#else
+			if (minish_fdlist_process(&fdlist))
+				rkoperror("minish : yacc : && : fd : process");
 #endif
-			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:eol:");
 
 			if (uvec_dtor(&statement))
-				rkoperror("minish-yacc:s:dtor:");
+				rkoperror("minish : yacc : eol : stm : dtor");
 			if (uvec_dtor(&minish_argv))
-				rkoperror("minish-yacc:o:dtor:");
+				rkoperror("minish : yacc : eol : arg : dtor");
+			if (minish_fdlist_dtor(&fdlist))
+				rkoperror("minish : yacc : eol : fd : dtor");
 		}
 	;
 
