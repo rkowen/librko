@@ -185,4 +185,5 @@ wipe : clean
 
 clobber : wipe
 	-$(RM) $(LIB)
+	-$(RM) urand/urand.o
 	-cd metropolis; make clobber
