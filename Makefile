@@ -3,18 +3,14 @@
 #
 # by R.K. Owen, Ph.D.
 #
-# do:	make
-#	make install
-#	make uninstall
-#	make help - for further info
 
 include Makefile.inc
 
-LIB	=librko.a
 SRCS	=invoke.c timedfgets.c rkoerror.c memory.c strmem.c wcstrcmp.c \
-	 nameread.c foptim.c fzeroin.c divdiff.c urand.c strchop.c \
+	 nameread.c foptim.c fzeroin.c divdiff.c strchop.c \
 	 ansi_seq.c gethostbyX.c tcp_connect.c macrosub.c uvec.c \
 	 strdbecpy.c istext.c list.c dirtree.c spawn.c gcd.c isqrt.c
+DIRS	= minish urand
 
 # requires a GNU "make" for the following
 LIBOBJS	=$(SRCS:%.c=$(LIB)(%.o))
@@ -41,6 +37,16 @@ DOCSL	=librko.3 $(DOCS)
 	$(NROFF) $(MAN) $< > $@
 
 all : $(LIB) $(DOCSL)
+	-@for d in $(DIRS); do \
+		$(ECHO) "making $$d"; \
+		($(CD) $$d; $(MAKE) all ) ; \
+	done
+
+test :
+	-@for d in $(DIRS); do \
+		$(ECHO) "making $$d"; \
+		($(CD) $$d; $(MAKE) test ) ; \
+	done
 
 $(LIB): $(LIBOBJS)
 	@echo lib is now up-to-date
@@ -51,15 +57,6 @@ $(LIB): $(LIBOBJS)
 
 librko.man : Librko.man whatis.librko
 	$(SHELL) Librko.man
-
-urand.o : urand/urand.o
-	$(CP) urand/urand.o urand.o
-
-urand/urand.o : urand/urand.c
-	cd urand; ./script.csh "$(CC) $(CFLAGS)" ; $(CP) urand.o ..
-
-urand.man : urand/urand.man
-	cp urand/urand.man urand.man
 
 install : installlib installdoc
 
@@ -85,10 +82,10 @@ uninstalldoc :
 	-for f in $(DOCSL); do $(RM) $(MANDIR)/cat3/$$f ; done
 
 tgz : clobber
-	cd ..; tar -czvf librko.tgz librko
+	$(CD) ..; $(TAR) -czvf librko.tgz librko
 
 shar : clobber
-	cd .. ; librko/etc/mkshar -s 250000 -f - librko > librko.shar
+	$(CD) .. ; librko/etc/mkshar -s 250000 -f - librko > librko.shar
 
 #
 # the following are individual packages for distribution
@@ -99,32 +96,32 @@ alltgz : FTP/color.tgz FTP/mexpn.tgz FTP/netup.tgz FTP/memory.tgz \
 FTP/color.tgz : apps/color.c ansi_seq.c librko.h apps/color.man
 	./setupmake color apps/color.c ansi_seq.c \
 		librko.h apps/color.man
-	tar -czvf FTP/color.tgz		color
-	rm -rf				color
+	$(TAR) -czvf FTP/color.tgz	color
+	$(RM) -rf			color
 
 FTP/mexpn.tgz : apps/mexpn.c gethostbyX.c tcp_connect.c timedfgets.c \
 		rkoerror.c librko.h apps/mexpn.man
 	./setupmake mexpn apps/mexpn.c gethostbyX.c tcp_connect.c timedfgets.c \
 		rkoerror.c librko.h apps/mexpn.man
-	tar -czvf FTP/mexpn.tgz		mexpn
-	rm -rf				mexpn
+	$(TAR) -czvf FTP/mexpn.tgz	mexpn
+	$(RM) -rf			mexpn
 
 FTP/netup.tgz : apps/netup.c gethostbyX.c tcp_connect.c \
 		rkoerror.c librko.h apps/netup.man
 	./setupmake netup apps/netup.c gethostbyX.c tcp_connect.c \
 		rkoerror.c librko.h apps/netup.man
-	tar -czvf FTP/netup.tgz		netup
-	rm -rf				netup
+	$(TAR) -czvf FTP/netup.tgz	netup
+	$(RM) -rf			netup
 
 FTP/memory.tgz : memory.c librko.h memory.man
 	./setupmake memory amemory.c librko.h memory.man
-	tar -czvf FTP/memory.tgz	memory
-	rm -rf				memory
+	$(TAR) -czvf FTP/memory.tgz	memory
+	$(RM) -rf			memory
 
 FTP/istext.tgz : istext.c apps/istextmain.c apps/istext.man
 	./setupmake istext istext.c apps/istextmain.c apps/istext.man
-	tar -czvf FTP/istext.tgz	istext
-	rm -rf				istext
+	$(TAR) -czvf FTP/istext.tgz	istext
+	$(RM) -rf			istext
 
 #
 # Helpful info
@@ -132,6 +129,7 @@ FTP/istext.tgz : istext.c apps/istextmain.c apps/istext.man
 help :
 	@$(ECHO) ""
 	@$(ECHO) "make		- makes library & man pages"
+	@$(ECHO) "make test	- runs test"
 	@$(ECHO) "make install	- installs library & man pages"
 	@$(ECHO) "make uninstall	- uninstalls library & man pages"
 	@$(ECHO) "make clean	- removes .o & executables"
@@ -141,22 +139,23 @@ help :
 	@$(ECHO) "make alltgz	- makes all the FTP/*.tgz individual distributions"
 	@$(ECHO) "make help	- this information"
 	@$(ECHO) ""
-
 #
 # various clean-up targets
 #
-
 clean :
 	-$(RM) -f a.out core *.o
-	-cd test; $(RM) -f a.out core *.o
+	-$(CD) test; $(RM) -f a.out core *.o
+	-$(CD) minish; make clean
 
 wipe : clean
 	-$(RM) *.3 librko.man
-	-cd urand; ./clean
-	-cd metropolis; make clean
-	-rm FTP/*.tgz
+	-$(CD) urand; make clean
+	-$(CD) metropolis; make clean
+	-$(CD) minish; make wipe
+	-$(RM) FTP/*.tgz
 
 clobber : wipe
 	-$(RM) $(LIB)
 	-$(RM) urand/urand.o
-	-cd metropolis; make clobber
+	-$(CD) metropolis; make clobber
+	-$(CD) minish; make clobber

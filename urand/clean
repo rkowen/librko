@@ -1,3 +1,0 @@
-# clean up urand files except for urand.o
-rm tmsub tmadd tmdiv testi testhf testf
-exit

@@ -1,37 +1,63 @@
-CC	=cc
-LD	=cc -o
-LEX	=flex
-LEXFLAGS=
-YACC	=yacc
-YYFLAGS	=-v -d -t
-RM	=rm
-SHELL	=sh
-YYSED	=../etc/yy-sed
-CP	=cp
 #
-CFLAGS=-g -DRKOERROR -I.. -DTEST
+# Makefile for minish
+#
+include ../Makefile.inc
+.SUFFIXES: .c .o
+
+YYSED	=../etc/yy-sed
+#
+#MSHFLAGS=-I.. -DTEST
+MSHFLAGS=-I..
+OBJS	=minish.o minish-yacc.o mshexec.o fdlist.o
+#requires GNU "make"
+LIBOBJS	=$(OBJS:%.o=../$(LIB)(%.o))
+
+.DEFAULT:
+	$(MAKE) help
+
+all: ../$(LIB)
+
+../$(LIB) : $(LIBOBJS)
+	$(AR) $(ARFLAGS) $@ $?
+	-$(RM) -f $?
+
+tall: $(OBJS)
+
+TESTS	= shtest exectest yacctest lextest
+
+help:
+	@$(ECHO) "make		- makes all the minish object files"
+	@$(ECHO) "make all	- same as above"
+	@$(ECHO) "make test	- make & run minish test"
+	@$(ECHO) "make runtest	- make & run all tests"
+	@$(ECHO) "make clean	- clean out .o files"
+	@$(ECHO) "make wipe	- do clean and remove tests"
+	@$(ECHO) "make clobber	- do wipe and lex/yacc intermediate files"
+	@$(ECHO) "make distclean	- don't do this"
+
+test : runshtest
 
 .c.o :
-	$(CC) -c $(CFLAGS) $<
+	$(CC) -c $(MSHFLAGS) $(CFLAGS) $<
 
-shtest : minish.c minish-yacc.o mshexec.o fdlist.o minish-tab.h
-	$(CC) $(CFLAGS) -o shtest -DSHTEST minish.c \
-		minish-yacc.o mshexec.o fdlist.o \
+shtest : minish.o minish-yacc.o mshexec.o fdlist.o minish-tab.h
+	$(CC) $(MSHFLAGS) $(CFLAGS) -o shtest tminish.c \
+		minish.o minish-yacc.o mshexec.o fdlist.o \
 		-ll -L.. -lrko
 
 exectest : mshexec.c fdlist.o
-	$(CC) $(CFLAGS) -o exectest -DEXECTEST mshexec.c fdlist.o \
+	$(CC) $(MSHFLAGS) $(CFLAGS) -o exectest -DEXECTEST mshexec.c fdlist.o \
 		-ll -L.. -lrko
 	-$(RM) mshexec.o
 
 #yacctest : y.tab.c lex.yy.c fdlist.o
 yacctest : minish-yacc.c minish-lex.c fdlist.o
-	$(CC) $(CFLAGS) -o yacctest -DYACCTEST minish-yacc.c fdlist.o \
+	$(CC) $(MSHFLAGS) $(CFLAGS) -o yacctest -DYACCTEST minish-yacc.c fdlist.o \
 		-ll -L.. -lrko
 	-$(RM) minish-yacc.o
 
 minish-yacc.o : minish-yacc.c minish-lex.c minish-tab.h
-	$(CC) -c $(CFLAGS) -DFLEX_STRING $<
+	$(CC) -c $(MSHFLAGS) $(CFLAGS) -DFLEX_STRING $<
 
 minish-yacc.c : y.tab.c
 	$(YYSED) --prefix minish_yy < $< > minish-yacc.c
@@ -47,25 +73,25 @@ y.tab.c y.tab.h : minish.yacc
 
 #lextest : lex.yy.c y.tab.h
 lextest : minish-lex.c minish-tab.h
-	$(CC) $(CFLAGS) -o lextest -DLEXTEST minish-lex.c
+	$(CC) $(MSHFLAGS) $(CFLAGS) -o lextest -DLEXTEST minish-lex.c
 	-$(RM) minish-lex.o
 
 lex.yy.c : minish.lex
 	$(LEX) $(LEXFLAGS) minish.lex
 
 fdtest/fdtest : fdlist.c
-	$(CC) $(CFLAGS) -o fdtest/fdtest -DFDTEST fdlist.c -L.. -lrko
+	$(CC) $(MSHFLAGS) $(CFLAGS) -o fdtest/fdtest -DFDTEST fdlist.c -L.. -lrko
 
 mtest : mtest/right mtest/wrong mtest/rsignal
 
 mtest/right : mtest/right.c
-	$(CC) $(CFLAGS) -o mtest/right $<
+	$(CC) $(MSHFLAGS) $(CFLAGS) -o mtest/right $<
 
 mtest/wrong : mtest/wrong.c
-	$(CC) $(CFLAGS) -o mtest/wrong $<
+	$(CC) $(MSHFLAGS) $(CFLAGS) -o mtest/wrong $<
 
 mtest/rsignal : mtest/rsignal.c
-	$(CC) $(CFLAGS) -o mtest/rsignal $<
+	$(CC) $(MSHFLAGS) $(CFLAGS) -o mtest/rsignal $<
 
 runtest : runfdtest runlextest runyacctest runexectest runshtest
 
@@ -99,10 +125,10 @@ clean :
 	-$(RM) -f lextest.out yacctest.out exectest.out shtest.out
 
 wipe : clean
-	-$(RM) lextest yacctest exectest
+	-$(RM) $(TESTS)
 
 clobber: wipe
-	-$(RM) -f lex.yy.c y.tab.c
 
 distclean: clobber
+	-$(RM) -f lex.yy.c y.tab.c
 	-$(RM) -f minish-lex.c minish-yacc.c minish-tab.h y.tab.h
