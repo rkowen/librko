@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: spawn.man,v 1.2 2002/03/01 05:23:28 rk Exp $
+.\" RCSID @(#)$Id: spawn.man,v 1.3 2002/10/21 17:17:04 rk Exp $
 .\" LIBDIR
 .TH "SPAWN" "3rko" "2 Jun 1995"
 .SH NAME
@@ -23,7 +23,7 @@ argv[1],... are the commandline options.
 Must have the last one argv[N] = NULL to terminate the vector.
 
 .I spawn
-returns 0 if successful, else < 0 an error.
+returns the child pid if successful, else < 0 an error.
 Pass in the address to the FILE streams
 .I childin
 and
@@ -41,13 +41,13 @@ close the file stream and wait for the child process.
 
  FILE *childin, *childout;
  ...
- if (spawn(&childin, &childout, argv) < 0) {
+ if (childpid = spawn(&childin, &childout, argv) < 0) {
 	fprintf(stderr,"failed to spawn '%s'\n", *argv);
  }
  ...
  fclose(childin);
  fclose(childout);
- wait(NULL);
+ waitpid(childpid,NULL,0);
 
 .SH DIAGNOSTICS
 

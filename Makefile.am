@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.12 2002/10/02 16:14:40 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.13 2002/10/21 17:17:04 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -30,7 +30,8 @@ avec_srcs = \
 
 coexec_srcs = \
 	coexec/invoke.c coexec/postfilter.c coexec/postprocess.c	\
-	coexec/prefilter.c coexec/preprocess.c coexec/spawn.c
+	coexec/prefilter.c coexec/preprocess.c coexec/spawn.c		\
+	coexec/spawn3.c
 
 igcd_srcs = \
 	igcd/chgcd.c igcd/hgcd.c igcd/igcd.c		\

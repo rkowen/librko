@@ -1,6 +1,9 @@
 .deps
+Makefile
+Makefile.in
 tdir
 *.3 *.x *.m
 birdy
 doggy
 kitty
+tweety

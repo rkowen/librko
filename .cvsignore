@@ -1,12 +1,16 @@
 *.3 *.x *.m
-Makefile
-librko.man
-memdbg
-memdbg.1
-.deps
+aclocal.m4
 autom4te.cache
 autoscan.log
 config.h
+config.h.in
 config.log
 config.status
+configure
+.deps
+librko.man
+Makefile
+Makefile.in
+memdbg
+memdbg.1
 stamp-h1

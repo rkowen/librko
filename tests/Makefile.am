@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./tests/Makefile.am
-## Versions:    $Id: Makefile.am,v 1.3 2002/06/24 19:20:09 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.4 2002/10/21 17:17:04 rk Exp $
 ## Created:     2002/06/24
 ##
 ###########################################################################
@@ -16,14 +16,14 @@ AUTOMAKE_OPTIONS=foreign no-installinfo no-installman
 
 AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir) -I$(srcdir)
 
-helper_progs = doggy kitty birdy
+helper_progs = doggy kitty birdy tweety
 
 test_progs = \
 	tansi_seq.x tavec.x tclocker.x tdirtree.x tfilter.x	\
 	tfoptim.x tfzeroin.x tigcd.x tinvoke.x tiprime.x	\
 	tisqrt.x tlist.x tmacrosub.x tmemdbg.x tnameread.x	\
-	tspawn.x tstrchop.x tstrdbecpy.x tstrmalloc.x tstrmem.x	\
-	ttfgets.x tuvec.x twcstrcmp.x
+	tspawn.x tspawn3.x tstrchop.x tstrdbecpy.x tstrmalloc.x	\
+	tstrmem.x ttfgets.x tuvec.x twcstrcmp.x
 
 noinst_PROGRAMS =	$(helper_progs)			\
 			$(test_progs)
@@ -34,6 +34,7 @@ LDADD		= ../librko.a
 doggy_SOURCES			= doggy.c
 kitty_SOURCES			= kitty.c
 birdy_SOURCES			= birdy.c
+tweety_SOURCES			= tweety.c
 
 # test programs
 tansi_seq_x_SOURCES		= tansi_seq.c
@@ -52,6 +53,7 @@ tmacrosub_x_SOURCES		= tmacrosub.c
 tmemdbg_x_SOURCES		= tmemdbg.c
 tnameread_x_SOURCES		= tnameread.c
 tspawn_x_SOURCES		= tspawn.c
+tspawn3_x_SOURCES		= tspawn3.c
 tstrchop_x_SOURCES		= tstrchop.c
 tstrdbecpy_x_SOURCES		= tstrdbecpy.c
 tstrmalloc_x_SOURCES		= tstrmalloc.c
