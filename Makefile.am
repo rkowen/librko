@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.4 2002/06/24 21:55:06 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.5 2002/06/27 22:07:46 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -45,6 +45,20 @@ isqrt_srcs = \
 	isqrt/lsqrt.c isqrt/scsqrt.c isqrt/ucsrt.c	\
 	isqrt/uhsqrt.c isqrt/uisqrt.c isqrt/ulsqrt.c
 
+list_srcs = \
+	list/list_ctor.c list/list_dtor.c list/list_exists.c		\
+	list/list_first.c list/list_last.c list/list_number.c		\
+	list/list_pop.c list/list_push.c list/list_shift.c		\
+	list/list_sizeof.c list/list_unshift.c
+
+numfns = \
+	numfns/divdiff.c numfns/foptim.c numfns/fzeroin.c
+
+strfns = \
+	strfns/istext.c strfns/macrosub.c strfns/nameread.c		\
+	strfns/strchop.c strfns/strdbecpy.c strfns/strmalloc.c		\
+	strfns/strmem.c strfns/timedfgets.c strfns/wcstrcmp.c
+
 uvec_srcs =  \
 	uvec/str2uvec.c uvec/uvec2str.c uvec/uvec2uvec.c		\
 	uvec/uvec_accessor.c uvec/uvec_add.c uvec/uvec_alloc.c		\
@@ -63,29 +77,19 @@ librko_a_SOURCES	= \
 	clocker.c \
 	coexec.c \
 	dirtree.c \
-	divdiff.c \
-	foptim.c \
-	fzeroin.c \
 	gethostbyX.c \
 	$(igcd_srcs) \
 	$(iprime_srcs) \
 	$(isqrt_srcs) \
-	istext.c \
-	list.c \
-	macrosub.c \
+	$(list_srcs) \
 	memdbg.c \
 	memdebug.c \
-	nameread.c \
+	$(numfns) \
 	rkoerror.c \
-	strchop.c \
-	strdbecpy.c \
-	strmalloc.c \
-	strmem.c \
+	$(strfns) \
 	tcp_connect.c \
-	timedfgets.c \
 	$(uvec_srcs) \
-	version.c \
-	wcstrcmp.c
+	version.c
 
 man3_MANS =  \
 	docs/ansi_seq.man docs/avec.man docs/clocker.man \

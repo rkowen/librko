@@ -115,6 +115,23 @@ isqrt_srcs = \
 	isqrt/uhsqrt.c isqrt/uisqrt.c isqrt/ulsqrt.c
 
 
+list_srcs = \
+	list/list_ctor.c list/list_dtor.c list/list_exists.c		\
+	list/list_first.c list/list_last.c list/list_number.c		\
+	list/list_pop.c list/list_push.c list/list_shift.c		\
+	list/list_sizeof.c list/list_unshift.c
+
+
+numfns = \
+	numfns/divdiff.c numfns/foptim.c numfns/fzeroin.c
+
+
+strfns = \
+	strfns/istext.c strfns/macrosub.c strfns/nameread.c		\
+	strfns/strchop.c strfns/strdbecpy.c strfns/strmalloc.c		\
+	strfns/strmem.c strfns/timedfgets.c strfns/wcstrcmp.c
+
+
 uvec_srcs = \
 	uvec/str2uvec.c uvec/uvec2str.c uvec/uvec2uvec.c		\
 	uvec/uvec_accessor.c uvec/uvec_add.c uvec/uvec_alloc.c		\
@@ -134,29 +151,19 @@ librko_a_SOURCES = \
 	clocker.c \
 	coexec.c \
 	dirtree.c \
-	divdiff.c \
-	foptim.c \
-	fzeroin.c \
 	gethostbyX.c \
 	$(igcd_srcs) \
 	$(iprime_srcs) \
 	$(isqrt_srcs) \
-	istext.c \
-	list.c \
-	macrosub.c \
+	$(list_srcs) \
 	memdbg.c \
 	memdebug.c \
-	nameread.c \
+	$(numfns) \
 	rkoerror.c \
-	strchop.c \
-	strdbecpy.c \
-	strmalloc.c \
-	strmem.c \
+	$(strfns) \
 	tcp_connect.c \
-	timedfgets.c \
 	$(uvec_srcs) \
-	version.c \
-	wcstrcmp.c
+	version.c
 
 
 man3_MANS = \
@@ -206,7 +213,20 @@ am__objects_4 = isqrt/isqrt_lut.$(OBJEXT) isqrt/chsqrt.$(OBJEXT) \
 	isqrt/lsqrt.$(OBJEXT) isqrt/scsqrt.$(OBJEXT) \
 	isqrt/ucsrt.$(OBJEXT) isqrt/uhsqrt.$(OBJEXT) \
 	isqrt/uisqrt.$(OBJEXT) isqrt/ulsqrt.$(OBJEXT)
-am__objects_5 = uvec/str2uvec.$(OBJEXT) uvec/uvec2str.$(OBJEXT) \
+am__objects_5 = list/list_ctor.$(OBJEXT) list/list_dtor.$(OBJEXT) \
+	list/list_exists.$(OBJEXT) list/list_first.$(OBJEXT) \
+	list/list_last.$(OBJEXT) list/list_number.$(OBJEXT) \
+	list/list_pop.$(OBJEXT) list/list_push.$(OBJEXT) \
+	list/list_shift.$(OBJEXT) list/list_sizeof.$(OBJEXT) \
+	list/list_unshift.$(OBJEXT)
+am__objects_6 = numfns/divdiff.$(OBJEXT) numfns/foptim.$(OBJEXT) \
+	numfns/fzeroin.$(OBJEXT)
+am__objects_7 = strfns/istext.$(OBJEXT) strfns/macrosub.$(OBJEXT) \
+	strfns/nameread.$(OBJEXT) strfns/strchop.$(OBJEXT) \
+	strfns/strdbecpy.$(OBJEXT) strfns/strmalloc.$(OBJEXT) \
+	strfns/strmem.$(OBJEXT) strfns/timedfgets.$(OBJEXT) \
+	strfns/wcstrcmp.$(OBJEXT)
+am__objects_8 = uvec/str2uvec.$(OBJEXT) uvec/uvec2str.$(OBJEXT) \
 	uvec/uvec2uvec.$(OBJEXT) uvec/uvec_accessor.$(OBJEXT) \
 	uvec/uvec_add.$(OBJEXT) uvec/uvec_alloc.$(OBJEXT) \
 	uvec/uvec_close.$(OBJEXT) uvec/uvec_copy.$(OBJEXT) \
@@ -220,14 +240,11 @@ am__objects_5 = uvec/str2uvec.$(OBJEXT) uvec/uvec2str.$(OBJEXT) \
 	uvec/vec2uvec.$(OBJEXT)
 am_librko_a_OBJECTS = ansi_seq.$(OBJEXT) $(am__objects_1) \
 	clocker.$(OBJEXT) coexec.$(OBJEXT) dirtree.$(OBJEXT) \
-	divdiff.$(OBJEXT) foptim.$(OBJEXT) fzeroin.$(OBJEXT) \
 	gethostbyX.$(OBJEXT) $(am__objects_2) $(am__objects_3) \
-	$(am__objects_4) istext.$(OBJEXT) list.$(OBJEXT) \
-	macrosub.$(OBJEXT) memdbg.$(OBJEXT) memdebug.$(OBJEXT) \
-	nameread.$(OBJEXT) rkoerror.$(OBJEXT) strchop.$(OBJEXT) \
-	strdbecpy.$(OBJEXT) strmalloc.$(OBJEXT) strmem.$(OBJEXT) \
-	tcp_connect.$(OBJEXT) timedfgets.$(OBJEXT) $(am__objects_5) \
-	version.$(OBJEXT) wcstrcmp.$(OBJEXT)
+	$(am__objects_4) $(am__objects_5) memdbg.$(OBJEXT) \
+	memdebug.$(OBJEXT) $(am__objects_6) rkoerror.$(OBJEXT) \
+	$(am__objects_7) tcp_connect.$(OBJEXT) $(am__objects_8) \
+	version.$(OBJEXT)
 librko_a_OBJECTS = $(am_librko_a_OBJECTS)
 
 DEFS = @DEFS@
@@ -239,16 +256,10 @@ depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/ansi_seq.Po ./$(DEPDIR)/clocker.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/coexec.Po ./$(DEPDIR)/dirtree.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/divdiff.Po ./$(DEPDIR)/foptim.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/fzeroin.Po ./$(DEPDIR)/gethostbyX.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/istext.Po ./$(DEPDIR)/list.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/macrosub.Po ./$(DEPDIR)/memdbg.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/memdebug.Po ./$(DEPDIR)/nameread.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/rkoerror.Po ./$(DEPDIR)/strchop.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/strdbecpy.Po ./$(DEPDIR)/strmalloc.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/strmem.Po ./$(DEPDIR)/tcp_connect.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/timedfgets.Po ./$(DEPDIR)/version.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/wcstrcmp.Po avec/$(DEPDIR)/avec_.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/gethostbyX.Po ./$(DEPDIR)/memdbg.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/memdebug.Po ./$(DEPDIR)/rkoerror.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tcp_connect.Po ./$(DEPDIR)/version.Po \
+@AMDEP_TRUE@	avec/$(DEPDIR)/avec_.Po \
 @AMDEP_TRUE@	avec/$(DEPDIR)/avec_accessor.Po \
 @AMDEP_TRUE@	avec/$(DEPDIR)/avec_alloc.Po \
 @AMDEP_TRUE@	avec/$(DEPDIR)/avec_close.Po \
@@ -289,6 +300,29 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	isqrt/$(DEPDIR)/lsqrt.Po isqrt/$(DEPDIR)/scsqrt.Po \
 @AMDEP_TRUE@	isqrt/$(DEPDIR)/ucsrt.Po isqrt/$(DEPDIR)/uhsqrt.Po \
 @AMDEP_TRUE@	isqrt/$(DEPDIR)/uisqrt.Po isqrt/$(DEPDIR)/ulsqrt.Po \
+@AMDEP_TRUE@	list/$(DEPDIR)/list_ctor.Po \
+@AMDEP_TRUE@	list/$(DEPDIR)/list_dtor.Po \
+@AMDEP_TRUE@	list/$(DEPDIR)/list_exists.Po \
+@AMDEP_TRUE@	list/$(DEPDIR)/list_first.Po \
+@AMDEP_TRUE@	list/$(DEPDIR)/list_last.Po \
+@AMDEP_TRUE@	list/$(DEPDIR)/list_number.Po \
+@AMDEP_TRUE@	list/$(DEPDIR)/list_pop.Po \
+@AMDEP_TRUE@	list/$(DEPDIR)/list_push.Po \
+@AMDEP_TRUE@	list/$(DEPDIR)/list_shift.Po \
+@AMDEP_TRUE@	list/$(DEPDIR)/list_sizeof.Po \
+@AMDEP_TRUE@	list/$(DEPDIR)/list_unshift.Po \
+@AMDEP_TRUE@	numfns/$(DEPDIR)/divdiff.Po \
+@AMDEP_TRUE@	numfns/$(DEPDIR)/foptim.Po \
+@AMDEP_TRUE@	numfns/$(DEPDIR)/fzeroin.Po \
+@AMDEP_TRUE@	strfns/$(DEPDIR)/istext.Po \
+@AMDEP_TRUE@	strfns/$(DEPDIR)/macrosub.Po \
+@AMDEP_TRUE@	strfns/$(DEPDIR)/nameread.Po \
+@AMDEP_TRUE@	strfns/$(DEPDIR)/strchop.Po \
+@AMDEP_TRUE@	strfns/$(DEPDIR)/strdbecpy.Po \
+@AMDEP_TRUE@	strfns/$(DEPDIR)/strmalloc.Po \
+@AMDEP_TRUE@	strfns/$(DEPDIR)/strmem.Po \
+@AMDEP_TRUE@	strfns/$(DEPDIR)/timedfgets.Po \
+@AMDEP_TRUE@	strfns/$(DEPDIR)/wcstrcmp.Po \
 @AMDEP_TRUE@	uvec/$(DEPDIR)/str2uvec.Po \
 @AMDEP_TRUE@	uvec/$(DEPDIR)/uvec2str.Po \
 @AMDEP_TRUE@	uvec/$(DEPDIR)/uvec2uvec.Po \
@@ -513,6 +547,70 @@ isqrt/uisqrt.$(OBJEXT): isqrt/uisqrt.c isqrt/.dirstamp \
 	isqrt/$(DEPDIR)/.dirstamp
 isqrt/ulsqrt.$(OBJEXT): isqrt/ulsqrt.c isqrt/.dirstamp \
 	isqrt/$(DEPDIR)/.dirstamp
+list/.dirstamp:
+	@$(mkinstalldirs) list
+	@: > list/.dirstamp
+list/$(DEPDIR)/.dirstamp:
+	@$(mkinstalldirs) list/$(DEPDIR)
+	@: > list/$(DEPDIR)/.dirstamp
+list/list_ctor.$(OBJEXT): list/list_ctor.c list/.dirstamp \
+	list/$(DEPDIR)/.dirstamp
+list/list_dtor.$(OBJEXT): list/list_dtor.c list/.dirstamp \
+	list/$(DEPDIR)/.dirstamp
+list/list_exists.$(OBJEXT): list/list_exists.c list/.dirstamp \
+	list/$(DEPDIR)/.dirstamp
+list/list_first.$(OBJEXT): list/list_first.c list/.dirstamp \
+	list/$(DEPDIR)/.dirstamp
+list/list_last.$(OBJEXT): list/list_last.c list/.dirstamp \
+	list/$(DEPDIR)/.dirstamp
+list/list_number.$(OBJEXT): list/list_number.c list/.dirstamp \
+	list/$(DEPDIR)/.dirstamp
+list/list_pop.$(OBJEXT): list/list_pop.c list/.dirstamp \
+	list/$(DEPDIR)/.dirstamp
+list/list_push.$(OBJEXT): list/list_push.c list/.dirstamp \
+	list/$(DEPDIR)/.dirstamp
+list/list_shift.$(OBJEXT): list/list_shift.c list/.dirstamp \
+	list/$(DEPDIR)/.dirstamp
+list/list_sizeof.$(OBJEXT): list/list_sizeof.c list/.dirstamp \
+	list/$(DEPDIR)/.dirstamp
+list/list_unshift.$(OBJEXT): list/list_unshift.c list/.dirstamp \
+	list/$(DEPDIR)/.dirstamp
+numfns/.dirstamp:
+	@$(mkinstalldirs) numfns
+	@: > numfns/.dirstamp
+numfns/$(DEPDIR)/.dirstamp:
+	@$(mkinstalldirs) numfns/$(DEPDIR)
+	@: > numfns/$(DEPDIR)/.dirstamp
+numfns/divdiff.$(OBJEXT): numfns/divdiff.c numfns/.dirstamp \
+	numfns/$(DEPDIR)/.dirstamp
+numfns/foptim.$(OBJEXT): numfns/foptim.c numfns/.dirstamp \
+	numfns/$(DEPDIR)/.dirstamp
+numfns/fzeroin.$(OBJEXT): numfns/fzeroin.c numfns/.dirstamp \
+	numfns/$(DEPDIR)/.dirstamp
+strfns/.dirstamp:
+	@$(mkinstalldirs) strfns
+	@: > strfns/.dirstamp
+strfns/$(DEPDIR)/.dirstamp:
+	@$(mkinstalldirs) strfns/$(DEPDIR)
+	@: > strfns/$(DEPDIR)/.dirstamp
+strfns/istext.$(OBJEXT): strfns/istext.c strfns/.dirstamp \
+	strfns/$(DEPDIR)/.dirstamp
+strfns/macrosub.$(OBJEXT): strfns/macrosub.c strfns/.dirstamp \
+	strfns/$(DEPDIR)/.dirstamp
+strfns/nameread.$(OBJEXT): strfns/nameread.c strfns/.dirstamp \
+	strfns/$(DEPDIR)/.dirstamp
+strfns/strchop.$(OBJEXT): strfns/strchop.c strfns/.dirstamp \
+	strfns/$(DEPDIR)/.dirstamp
+strfns/strdbecpy.$(OBJEXT): strfns/strdbecpy.c strfns/.dirstamp \
+	strfns/$(DEPDIR)/.dirstamp
+strfns/strmalloc.$(OBJEXT): strfns/strmalloc.c strfns/.dirstamp \
+	strfns/$(DEPDIR)/.dirstamp
+strfns/strmem.$(OBJEXT): strfns/strmem.c strfns/.dirstamp \
+	strfns/$(DEPDIR)/.dirstamp
+strfns/timedfgets.$(OBJEXT): strfns/timedfgets.c strfns/.dirstamp \
+	strfns/$(DEPDIR)/.dirstamp
+strfns/wcstrcmp.$(OBJEXT): strfns/wcstrcmp.c strfns/.dirstamp \
+	strfns/$(DEPDIR)/.dirstamp
 uvec/.dirstamp:
 	@$(mkinstalldirs) uvec
 	@: > uvec/.dirstamp
@@ -622,6 +720,29 @@ mostlyclean-compile:
 	-rm -f isqrt/uhsqrt.$(OBJEXT)
 	-rm -f isqrt/uisqrt.$(OBJEXT)
 	-rm -f isqrt/ulsqrt.$(OBJEXT)
+	-rm -f list/list_ctor.$(OBJEXT)
+	-rm -f list/list_dtor.$(OBJEXT)
+	-rm -f list/list_exists.$(OBJEXT)
+	-rm -f list/list_first.$(OBJEXT)
+	-rm -f list/list_last.$(OBJEXT)
+	-rm -f list/list_number.$(OBJEXT)
+	-rm -f list/list_pop.$(OBJEXT)
+	-rm -f list/list_push.$(OBJEXT)
+	-rm -f list/list_shift.$(OBJEXT)
+	-rm -f list/list_sizeof.$(OBJEXT)
+	-rm -f list/list_unshift.$(OBJEXT)
+	-rm -f numfns/divdiff.$(OBJEXT)
+	-rm -f numfns/foptim.$(OBJEXT)
+	-rm -f numfns/fzeroin.$(OBJEXT)
+	-rm -f strfns/istext.$(OBJEXT)
+	-rm -f strfns/macrosub.$(OBJEXT)
+	-rm -f strfns/nameread.$(OBJEXT)
+	-rm -f strfns/strchop.$(OBJEXT)
+	-rm -f strfns/strdbecpy.$(OBJEXT)
+	-rm -f strfns/strmalloc.$(OBJEXT)
+	-rm -f strfns/strmem.$(OBJEXT)
+	-rm -f strfns/timedfgets.$(OBJEXT)
+	-rm -f strfns/wcstrcmp.$(OBJEXT)
 	-rm -f uvec/str2uvec.$(OBJEXT)
 	-rm -f uvec/uvec2str.$(OBJEXT)
 	-rm -f uvec/uvec2uvec.$(OBJEXT)
@@ -656,6 +777,12 @@ distclean-compile:
 	-rm -f iprime/.dirstamp
 	-rm -f isqrt/$(DEPDIR)/.dirstamp
 	-rm -f isqrt/.dirstamp
+	-rm -f list/$(DEPDIR)/.dirstamp
+	-rm -f list/.dirstamp
+	-rm -f numfns/$(DEPDIR)/.dirstamp
+	-rm -f numfns/.dirstamp
+	-rm -f strfns/$(DEPDIR)/.dirstamp
+	-rm -f strfns/.dirstamp
 	-rm -f uvec/$(DEPDIR)/.dirstamp
 	-rm -f uvec/.dirstamp
 
@@ -663,25 +790,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clocker.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/coexec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dirtree.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/divdiff.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/foptim.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fzeroin.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gethostbyX.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/istext.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/macrosub.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memdbg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memdebug.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nameread.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rkoerror.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strchop.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strdbecpy.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strmalloc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strmem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tcp_connect.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/timedfgets.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/version.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wcstrcmp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_accessor.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@avec/$(DEPDIR)/avec_alloc.Po@am__quote@
@@ -732,6 +846,29 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@isqrt/$(DEPDIR)/uhsqrt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@isqrt/$(DEPDIR)/uisqrt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@isqrt/$(DEPDIR)/ulsqrt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_ctor.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_dtor.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_exists.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_first.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_last.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_number.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_pop.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_push.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_shift.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_sizeof.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_unshift.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@numfns/$(DEPDIR)/divdiff.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@numfns/$(DEPDIR)/foptim.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@numfns/$(DEPDIR)/fzeroin.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@strfns/$(DEPDIR)/istext.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@strfns/$(DEPDIR)/macrosub.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@strfns/$(DEPDIR)/nameread.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@strfns/$(DEPDIR)/strchop.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@strfns/$(DEPDIR)/strdbecpy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@strfns/$(DEPDIR)/strmalloc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@strfns/$(DEPDIR)/strmem.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@strfns/$(DEPDIR)/timedfgets.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@strfns/$(DEPDIR)/wcstrcmp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@uvec/$(DEPDIR)/str2uvec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@uvec/$(DEPDIR)/uvec2str.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@uvec/$(DEPDIR)/uvec2uvec.Po@am__quote@
@@ -757,7 +894,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@uvec/$(DEPDIR)/vec2uvec.Po@am__quote@
 
 distclean-depend:
-	-rm -rf ./$(DEPDIR) avec/$(DEPDIR) igcd/$(DEPDIR) iprime/$(DEPDIR) isqrt/$(DEPDIR) uvec/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) avec/$(DEPDIR) igcd/$(DEPDIR) iprime/$(DEPDIR) isqrt/$(DEPDIR) list/$(DEPDIR) numfns/$(DEPDIR) strfns/$(DEPDIR) uvec/$(DEPDIR)
 
 .c.o:
 @AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
@@ -1370,6 +1507,282 @@ isqrt/ulsqrt.obj: isqrt/ulsqrt.c
 @AMDEP_TRUE@	depfile='isqrt/$(DEPDIR)/ulsqrt.Po' tmpdepfile='isqrt/$(DEPDIR)/ulsqrt.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o isqrt/ulsqrt.obj `cygpath -w isqrt/ulsqrt.c`
+
+list/list_ctor.o: list/list_ctor.c
+@AMDEP_TRUE@	source='list/list_ctor.c' object='list/list_ctor.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_ctor.Po' tmpdepfile='list/$(DEPDIR)/list_ctor.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_ctor.o `test -f list/list_ctor.c || echo '$(srcdir)/'`list/list_ctor.c
+
+list/list_ctor.obj: list/list_ctor.c
+@AMDEP_TRUE@	source='list/list_ctor.c' object='list/list_ctor.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_ctor.Po' tmpdepfile='list/$(DEPDIR)/list_ctor.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_ctor.obj `cygpath -w list/list_ctor.c`
+
+list/list_dtor.o: list/list_dtor.c
+@AMDEP_TRUE@	source='list/list_dtor.c' object='list/list_dtor.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_dtor.Po' tmpdepfile='list/$(DEPDIR)/list_dtor.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_dtor.o `test -f list/list_dtor.c || echo '$(srcdir)/'`list/list_dtor.c
+
+list/list_dtor.obj: list/list_dtor.c
+@AMDEP_TRUE@	source='list/list_dtor.c' object='list/list_dtor.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_dtor.Po' tmpdepfile='list/$(DEPDIR)/list_dtor.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_dtor.obj `cygpath -w list/list_dtor.c`
+
+list/list_exists.o: list/list_exists.c
+@AMDEP_TRUE@	source='list/list_exists.c' object='list/list_exists.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_exists.Po' tmpdepfile='list/$(DEPDIR)/list_exists.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_exists.o `test -f list/list_exists.c || echo '$(srcdir)/'`list/list_exists.c
+
+list/list_exists.obj: list/list_exists.c
+@AMDEP_TRUE@	source='list/list_exists.c' object='list/list_exists.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_exists.Po' tmpdepfile='list/$(DEPDIR)/list_exists.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_exists.obj `cygpath -w list/list_exists.c`
+
+list/list_first.o: list/list_first.c
+@AMDEP_TRUE@	source='list/list_first.c' object='list/list_first.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_first.Po' tmpdepfile='list/$(DEPDIR)/list_first.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_first.o `test -f list/list_first.c || echo '$(srcdir)/'`list/list_first.c
+
+list/list_first.obj: list/list_first.c
+@AMDEP_TRUE@	source='list/list_first.c' object='list/list_first.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_first.Po' tmpdepfile='list/$(DEPDIR)/list_first.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_first.obj `cygpath -w list/list_first.c`
+
+list/list_last.o: list/list_last.c
+@AMDEP_TRUE@	source='list/list_last.c' object='list/list_last.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_last.Po' tmpdepfile='list/$(DEPDIR)/list_last.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_last.o `test -f list/list_last.c || echo '$(srcdir)/'`list/list_last.c
+
+list/list_last.obj: list/list_last.c
+@AMDEP_TRUE@	source='list/list_last.c' object='list/list_last.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_last.Po' tmpdepfile='list/$(DEPDIR)/list_last.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_last.obj `cygpath -w list/list_last.c`
+
+list/list_number.o: list/list_number.c
+@AMDEP_TRUE@	source='list/list_number.c' object='list/list_number.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_number.Po' tmpdepfile='list/$(DEPDIR)/list_number.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_number.o `test -f list/list_number.c || echo '$(srcdir)/'`list/list_number.c
+
+list/list_number.obj: list/list_number.c
+@AMDEP_TRUE@	source='list/list_number.c' object='list/list_number.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_number.Po' tmpdepfile='list/$(DEPDIR)/list_number.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_number.obj `cygpath -w list/list_number.c`
+
+list/list_pop.o: list/list_pop.c
+@AMDEP_TRUE@	source='list/list_pop.c' object='list/list_pop.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_pop.Po' tmpdepfile='list/$(DEPDIR)/list_pop.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_pop.o `test -f list/list_pop.c || echo '$(srcdir)/'`list/list_pop.c
+
+list/list_pop.obj: list/list_pop.c
+@AMDEP_TRUE@	source='list/list_pop.c' object='list/list_pop.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_pop.Po' tmpdepfile='list/$(DEPDIR)/list_pop.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_pop.obj `cygpath -w list/list_pop.c`
+
+list/list_push.o: list/list_push.c
+@AMDEP_TRUE@	source='list/list_push.c' object='list/list_push.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_push.Po' tmpdepfile='list/$(DEPDIR)/list_push.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_push.o `test -f list/list_push.c || echo '$(srcdir)/'`list/list_push.c
+
+list/list_push.obj: list/list_push.c
+@AMDEP_TRUE@	source='list/list_push.c' object='list/list_push.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_push.Po' tmpdepfile='list/$(DEPDIR)/list_push.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_push.obj `cygpath -w list/list_push.c`
+
+list/list_shift.o: list/list_shift.c
+@AMDEP_TRUE@	source='list/list_shift.c' object='list/list_shift.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_shift.Po' tmpdepfile='list/$(DEPDIR)/list_shift.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_shift.o `test -f list/list_shift.c || echo '$(srcdir)/'`list/list_shift.c
+
+list/list_shift.obj: list/list_shift.c
+@AMDEP_TRUE@	source='list/list_shift.c' object='list/list_shift.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_shift.Po' tmpdepfile='list/$(DEPDIR)/list_shift.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_shift.obj `cygpath -w list/list_shift.c`
+
+list/list_sizeof.o: list/list_sizeof.c
+@AMDEP_TRUE@	source='list/list_sizeof.c' object='list/list_sizeof.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_sizeof.Po' tmpdepfile='list/$(DEPDIR)/list_sizeof.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_sizeof.o `test -f list/list_sizeof.c || echo '$(srcdir)/'`list/list_sizeof.c
+
+list/list_sizeof.obj: list/list_sizeof.c
+@AMDEP_TRUE@	source='list/list_sizeof.c' object='list/list_sizeof.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_sizeof.Po' tmpdepfile='list/$(DEPDIR)/list_sizeof.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_sizeof.obj `cygpath -w list/list_sizeof.c`
+
+list/list_unshift.o: list/list_unshift.c
+@AMDEP_TRUE@	source='list/list_unshift.c' object='list/list_unshift.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_unshift.Po' tmpdepfile='list/$(DEPDIR)/list_unshift.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_unshift.o `test -f list/list_unshift.c || echo '$(srcdir)/'`list/list_unshift.c
+
+list/list_unshift.obj: list/list_unshift.c
+@AMDEP_TRUE@	source='list/list_unshift.c' object='list/list_unshift.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_unshift.Po' tmpdepfile='list/$(DEPDIR)/list_unshift.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_unshift.obj `cygpath -w list/list_unshift.c`
+
+numfns/divdiff.o: numfns/divdiff.c
+@AMDEP_TRUE@	source='numfns/divdiff.c' object='numfns/divdiff.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='numfns/$(DEPDIR)/divdiff.Po' tmpdepfile='numfns/$(DEPDIR)/divdiff.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o numfns/divdiff.o `test -f numfns/divdiff.c || echo '$(srcdir)/'`numfns/divdiff.c
+
+numfns/divdiff.obj: numfns/divdiff.c
+@AMDEP_TRUE@	source='numfns/divdiff.c' object='numfns/divdiff.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='numfns/$(DEPDIR)/divdiff.Po' tmpdepfile='numfns/$(DEPDIR)/divdiff.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o numfns/divdiff.obj `cygpath -w numfns/divdiff.c`
+
+numfns/foptim.o: numfns/foptim.c
+@AMDEP_TRUE@	source='numfns/foptim.c' object='numfns/foptim.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='numfns/$(DEPDIR)/foptim.Po' tmpdepfile='numfns/$(DEPDIR)/foptim.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o numfns/foptim.o `test -f numfns/foptim.c || echo '$(srcdir)/'`numfns/foptim.c
+
+numfns/foptim.obj: numfns/foptim.c
+@AMDEP_TRUE@	source='numfns/foptim.c' object='numfns/foptim.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='numfns/$(DEPDIR)/foptim.Po' tmpdepfile='numfns/$(DEPDIR)/foptim.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o numfns/foptim.obj `cygpath -w numfns/foptim.c`
+
+numfns/fzeroin.o: numfns/fzeroin.c
+@AMDEP_TRUE@	source='numfns/fzeroin.c' object='numfns/fzeroin.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='numfns/$(DEPDIR)/fzeroin.Po' tmpdepfile='numfns/$(DEPDIR)/fzeroin.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o numfns/fzeroin.o `test -f numfns/fzeroin.c || echo '$(srcdir)/'`numfns/fzeroin.c
+
+numfns/fzeroin.obj: numfns/fzeroin.c
+@AMDEP_TRUE@	source='numfns/fzeroin.c' object='numfns/fzeroin.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='numfns/$(DEPDIR)/fzeroin.Po' tmpdepfile='numfns/$(DEPDIR)/fzeroin.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o numfns/fzeroin.obj `cygpath -w numfns/fzeroin.c`
+
+strfns/istext.o: strfns/istext.c
+@AMDEP_TRUE@	source='strfns/istext.c' object='strfns/istext.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/istext.Po' tmpdepfile='strfns/$(DEPDIR)/istext.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/istext.o `test -f strfns/istext.c || echo '$(srcdir)/'`strfns/istext.c
+
+strfns/istext.obj: strfns/istext.c
+@AMDEP_TRUE@	source='strfns/istext.c' object='strfns/istext.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/istext.Po' tmpdepfile='strfns/$(DEPDIR)/istext.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/istext.obj `cygpath -w strfns/istext.c`
+
+strfns/macrosub.o: strfns/macrosub.c
+@AMDEP_TRUE@	source='strfns/macrosub.c' object='strfns/macrosub.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/macrosub.Po' tmpdepfile='strfns/$(DEPDIR)/macrosub.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/macrosub.o `test -f strfns/macrosub.c || echo '$(srcdir)/'`strfns/macrosub.c
+
+strfns/macrosub.obj: strfns/macrosub.c
+@AMDEP_TRUE@	source='strfns/macrosub.c' object='strfns/macrosub.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/macrosub.Po' tmpdepfile='strfns/$(DEPDIR)/macrosub.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/macrosub.obj `cygpath -w strfns/macrosub.c`
+
+strfns/nameread.o: strfns/nameread.c
+@AMDEP_TRUE@	source='strfns/nameread.c' object='strfns/nameread.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/nameread.Po' tmpdepfile='strfns/$(DEPDIR)/nameread.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/nameread.o `test -f strfns/nameread.c || echo '$(srcdir)/'`strfns/nameread.c
+
+strfns/nameread.obj: strfns/nameread.c
+@AMDEP_TRUE@	source='strfns/nameread.c' object='strfns/nameread.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/nameread.Po' tmpdepfile='strfns/$(DEPDIR)/nameread.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/nameread.obj `cygpath -w strfns/nameread.c`
+
+strfns/strchop.o: strfns/strchop.c
+@AMDEP_TRUE@	source='strfns/strchop.c' object='strfns/strchop.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/strchop.Po' tmpdepfile='strfns/$(DEPDIR)/strchop.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/strchop.o `test -f strfns/strchop.c || echo '$(srcdir)/'`strfns/strchop.c
+
+strfns/strchop.obj: strfns/strchop.c
+@AMDEP_TRUE@	source='strfns/strchop.c' object='strfns/strchop.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/strchop.Po' tmpdepfile='strfns/$(DEPDIR)/strchop.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/strchop.obj `cygpath -w strfns/strchop.c`
+
+strfns/strdbecpy.o: strfns/strdbecpy.c
+@AMDEP_TRUE@	source='strfns/strdbecpy.c' object='strfns/strdbecpy.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/strdbecpy.Po' tmpdepfile='strfns/$(DEPDIR)/strdbecpy.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/strdbecpy.o `test -f strfns/strdbecpy.c || echo '$(srcdir)/'`strfns/strdbecpy.c
+
+strfns/strdbecpy.obj: strfns/strdbecpy.c
+@AMDEP_TRUE@	source='strfns/strdbecpy.c' object='strfns/strdbecpy.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/strdbecpy.Po' tmpdepfile='strfns/$(DEPDIR)/strdbecpy.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/strdbecpy.obj `cygpath -w strfns/strdbecpy.c`
+
+strfns/strmalloc.o: strfns/strmalloc.c
+@AMDEP_TRUE@	source='strfns/strmalloc.c' object='strfns/strmalloc.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/strmalloc.Po' tmpdepfile='strfns/$(DEPDIR)/strmalloc.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/strmalloc.o `test -f strfns/strmalloc.c || echo '$(srcdir)/'`strfns/strmalloc.c
+
+strfns/strmalloc.obj: strfns/strmalloc.c
+@AMDEP_TRUE@	source='strfns/strmalloc.c' object='strfns/strmalloc.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/strmalloc.Po' tmpdepfile='strfns/$(DEPDIR)/strmalloc.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/strmalloc.obj `cygpath -w strfns/strmalloc.c`
+
+strfns/strmem.o: strfns/strmem.c
+@AMDEP_TRUE@	source='strfns/strmem.c' object='strfns/strmem.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/strmem.Po' tmpdepfile='strfns/$(DEPDIR)/strmem.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/strmem.o `test -f strfns/strmem.c || echo '$(srcdir)/'`strfns/strmem.c
+
+strfns/strmem.obj: strfns/strmem.c
+@AMDEP_TRUE@	source='strfns/strmem.c' object='strfns/strmem.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/strmem.Po' tmpdepfile='strfns/$(DEPDIR)/strmem.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/strmem.obj `cygpath -w strfns/strmem.c`
+
+strfns/timedfgets.o: strfns/timedfgets.c
+@AMDEP_TRUE@	source='strfns/timedfgets.c' object='strfns/timedfgets.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/timedfgets.Po' tmpdepfile='strfns/$(DEPDIR)/timedfgets.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/timedfgets.o `test -f strfns/timedfgets.c || echo '$(srcdir)/'`strfns/timedfgets.c
+
+strfns/timedfgets.obj: strfns/timedfgets.c
+@AMDEP_TRUE@	source='strfns/timedfgets.c' object='strfns/timedfgets.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/timedfgets.Po' tmpdepfile='strfns/$(DEPDIR)/timedfgets.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/timedfgets.obj `cygpath -w strfns/timedfgets.c`
+
+strfns/wcstrcmp.o: strfns/wcstrcmp.c
+@AMDEP_TRUE@	source='strfns/wcstrcmp.c' object='strfns/wcstrcmp.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/wcstrcmp.Po' tmpdepfile='strfns/$(DEPDIR)/wcstrcmp.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/wcstrcmp.o `test -f strfns/wcstrcmp.c || echo '$(srcdir)/'`strfns/wcstrcmp.c
+
+strfns/wcstrcmp.obj: strfns/wcstrcmp.c
+@AMDEP_TRUE@	source='strfns/wcstrcmp.c' object='strfns/wcstrcmp.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='strfns/$(DEPDIR)/wcstrcmp.Po' tmpdepfile='strfns/$(DEPDIR)/wcstrcmp.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/wcstrcmp.obj `cygpath -w strfns/wcstrcmp.c`
 
 uvec/str2uvec.o: uvec/str2uvec.c
 @AMDEP_TRUE@	source='uvec/str2uvec.c' object='uvec/str2uvec.o' libtool=no @AMDEPBACKSLASH@

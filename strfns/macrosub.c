@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: macrosub.c,v 1.7 2002/02/15 23:01:55 rk Exp $";
+static const char RCSID[]="@(#)$Id: macrosub.c,v 1.8 2002/06/27 22:07:46 rk Exp $";
 static const char AUTHOR[]="@(#)macrosub.c 1.0 08/30/94 R.K.Owen,PhD";
 
 /* macstrncpy(string1,string2,n) - Macro string copy
@@ -24,24 +24,14 @@ static const char AUTHOR[]="@(#)macrosub.c 1.0 08/30/94 R.K.Owen,PhD";
  *
  * author	R.K.Owen,Ph.D.	08/31/94
  */
-/*
- *********************************************************************
- *
- *     This software is copyrighted by R.K.Owen,Ph.D. 1997
- *
- * The author, R.K.Owen, of this software is not liable for any
- * problems WHATSOEVER which may result from use  or  abuse  of
- * this software. The author, R.K.Owen, grants unlimited rights
- * to anyone who uses and modifies this  software  for  private
- * non-commercial  use  as  long  as  this copyright and rights
- * notice remains in this software and is made available to all
- * recipients of this software.
- *
- * last known email: librko@kooz.sj.ca.us
- *                   rk@owen.sj.ca.us
- *
- *********************************************************************
- */
+/** ** Copyright *********************************************************** **
+ ** 									     **
+ ** Copyright 1997 by R.K.Owen,Ph.D.		                      	     **
+ ** last known email: librko@kooz.sj.ca.us				     **
+ **                   rk@owen.sj.ca.us					     **
+ ** see LICENSE.LGPL, which must be provided, for details		     **
+ ** 									     **
+ ** ************************************************************************ **/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,16 +39,11 @@ static const char AUTHOR[]="@(#)macrosub.c 1.0 08/30/94 R.K.Owen,PhD";
 #ifdef MEMDEBUG
 #  include "memdebug.h"
 #endif
-#include "librko.h"
+#include "config.h"
 
 #define MACRODEPTH	10
 #define MACRONUM	54
 #define MACROCHAR	'$'
-
-#if !(defined(__STDC__) || defined(_AIX))
-#  define void
-#  define const
-#endif
 
 char *MacroStr[MACRONUM] = {			/* macro substitutions */
 	0,	0,	0,	0,	0,	0,	0,	0,
@@ -86,14 +71,7 @@ int MacroTrf[128] = {		/* translate ASCII character to index */
    /*p*/41,	42,	43,	44,	45,	46,	47,	48,
    /*x*/49,	50,	51,	-1,	-1,	-1,	-1,	-1};
 
-#if defined(__STDC__) || defined(_AIX)
 char *macstrncpy(char *string, const char *mstring, size_t n)
-#else
-char *macstrncpy(string, mstring, n)
-char *string;
-char *mstring;
-int n;
-#endif
 {
 	char *ptr = string;
 	const char *macroptr[MACRODEPTH];	/* ptr to level */

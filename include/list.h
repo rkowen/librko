@@ -1,7 +1,7 @@
 #ifndef _LIST_H_
 #  define _LIST_H_
 /* 
- * RCSID @(#)$Id: list.h,v 1.4 2002/06/27 20:32:02 rk Exp $
+ * RCSID @(#)$Id: list.h,v 1.5 2002/06/27 22:07:46 rk Exp $
  */
 /** ** Copyright *********************************************************** **
  ** 									     **
@@ -11,6 +11,12 @@
  ** see LICENSE.LGPL, which must be provided, for details		     **
  ** 									     **
  ** ************************************************************************ **/
+#include <stdarg.h>
+
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
 #  ifdef __cplusplus
 extern "C" {
 #  endif

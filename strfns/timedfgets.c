@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: timedfgets.c,v 1.7 2002/02/15 23:01:55 rk Exp $";
+static const char RCSID[]="@(#)$Id: timedfgets.c,v 1.8 2002/06/27 22:07:46 rk Exp $";
 static const char AUTHOR[]="@(#)timedfgets 1.0 03/26/96 R.K.Owen,Ph.D.";
 /* timedfgets  -  performs an fgets and times out if input is
  * not received by the specified amount of time.
@@ -29,8 +29,9 @@ static const char AUTHOR[]="@(#)timedfgets 1.0 03/26/96 R.K.Owen,Ph.D.";
 #include <signal.h>
 #include <setjmp.h>
 #include <unistd.h>	/* alarm */
+#include "config.h"
 #ifdef RKOERROR
-#  include "librko.h"
+#  include "rkoerror.h"
 #endif
 
 /* need to use the POSIX sigjmp_buf to save the current signal mask

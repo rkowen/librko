@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: strmem.c,v 1.5 2002/02/15 23:01:55 rk Exp $";
+static const char RCSID[]="@(#)$Id: strmem.c,v 1.6 2002/06/27 22:07:46 rk Exp $";
 static const char AUTHOR[]="@(#)strmem 1.1 08/09/95 R.K.Owen,PhD";
 
 /* strmem - allocates/deallocates collected string pool memory.  Instead of
@@ -28,7 +28,7 @@ void strmemfree(char **ChArSpAcE, char ***charspace);
  *	maxstrlen	maximum string length
  *	/aborts on failure/
  *
- * author	R.K.Owen,Ph.D.	08/09/95
+ * author	R.K.Owen,Ph.D.	1995/08/09
  */
 /*
  *********************************************************************
@@ -55,11 +55,12 @@ void strmemfree(char **ChArSpAcE, char ***charspace);
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "config.h"
 #ifdef MEMDEBUG
 #  include "memdebug.h"
 #endif
 #ifdef RKOERROR
-#  include "librko.h"
+#  include "rkoerror.h"
 #endif
 
 /* do 2 allocates, the 1st one is a collective pool of space ... the

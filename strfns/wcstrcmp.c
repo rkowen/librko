@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: wcstrcmp.c,v 1.5 2002/02/15 23:01:55 rk Exp $";
+static const char RCSID[]="@(#)$Id: wcstrcmp.c,v 1.6 2002/06/27 22:07:46 rk Exp $";
 static const char AUTHOR[]="@(#)wcstrcmp 1.1 08/09/95 R.K.Owen,PhD";
 
 /* wcstrcmp - compares two strings, where one can contain wildcard characters.
@@ -40,7 +40,7 @@ static const char AUTHOR[]="@(#)wcstrcmp 1.1 08/09/95 R.K.Owen,PhD";
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef RKOERROR
-#  include "librko.h"
+#  include "rkoerror.h"
 #endif
 
 /* set ptr to a valid character in the wild card stream */
