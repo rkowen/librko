@@ -8,7 +8,7 @@
 #include <limits.h>
 
 #define TESTOUT(NM, TYPE, arg) \
-tot++; if((res1 = (long) NM((TYPE) arg)) != (res2 = tsqrt((double) arg))) {\
+tot++; if((res1 = (long) NM((TYPE) arg)) != (res2 = tsqrt((unsigned long) arg))) {\
 	printf("FAIL:" #NM "(%lu)\t= %ld != %ld\n", \
 		(unsigned long) arg, res1, res2);\
 	err++; } else \
@@ -22,7 +22,7 @@ tot++; if((res1 = (long) NM((TYPE) arg)) != (long) 0) { \
 
 #define TESTRANGE(NM, TYPE, lo, hi) \
 for (errsum = 0, i = (unsigned long) lo; i < (unsigned long) hi; ++i, ++tot) { \
-	if(((long) NM((TYPE) i)) != (tsqrt((double) i))) errsum++; }\
+	if(((long) NM((TYPE) i)) != (tsqrt((unsigned long) i))) errsum++; }\
 	if (errsum) {\
 	printf("FAIL:" #NM "(%lu:%lu)\t=> %d errs\n", \
 		(unsigned long) lo, (unsigned long) hi, errsum);\
@@ -30,25 +30,15 @@ for (errsum = 0, i = (unsigned long) lo; i < (unsigned long) hi; ++i, ++tot) { \
 	printf("OK  :" #NM "(%lu:%lu)\t=> no errs\n", \
 		(unsigned long) lo, (unsigned long) hi);
 
-#define MTESTOUT(NM, TYPE) \
-	TESTOUT(NM, TYPE, 0)\
-	TESTOUT(NM, TYPE, 1)\
-	TESTOUT(NM, TYPE, 2)\
-	TESTOUT(NM, TYPE, 99)\
-	TESTOUT(NM, TYPE, 100)\
-	TESTOUT(NM, TYPE, 101)
-
-long tsqrt(double a) {
-	double t;
+long tsqrt(unsigned long a) {
 	unsigned long lt;
-	if (a < 0.0) return 0;
-	lt = t = sqrt(a);
-	if (lt*lt <= (unsigned long) a) return lt;
+	if (a == 0) return 0;
+	lt = sqrt((double) a);
+	if (lt*lt <= a && lt*lt > 0) return lt;
 	/* watch for round-up errors */
-	t = (double) lt;
-	while (t*t >= a) t = --lt;
-	return lt;
-} 
+	while ((--lt, (lt*lt) > a));
+	return (long) lt;
+}
 
 int main() {
 	int err=0, tot = 0, errsum=0;
@@ -60,13 +50,13 @@ int main() {
 
 	TESTRANGE(chsqrt, char, 0, 127)
 	TESTOUT(chsqrt, char, CHAR_MAX)
-	TESTOUT(scsqrt, signed char, -64)
+	STESTOUT(scsqrt, signed char, -64)
 	TESTRANGE(scsqrt, signed char, 0, 127)
 	TESTOUT(scsqrt, signed char, SCHAR_MAX)
 	TESTRANGE(ucsqrt, unsigned char, 0, 255)
 	TESTOUT(ucsqrt, unsigned char, UCHAR_MAX)
 
-	TESTOUT(hsqrt, short, -64)
+	STESTOUT(hsqrt, short, -64)
 	TESTRANGE(hsqrt, short, 0, 32767)
 	TESTRANGE(hsqrt, short, SHRT_MAX-4096, SHRT_MAX)
 	TESTOUT(hsqrt, short, SHRT_MAX)
@@ -74,7 +64,7 @@ int main() {
 	TESTRANGE(uhsqrt, unsigned short, USHRT_MAX-4096, USHRT_MAX)
 	TESTOUT(uhsqrt, unsigned short, USHRT_MAX)
 
-	TESTOUT(isqrt, int, -64)
+	STESTOUT(isqrt, int, -64)
 	TESTRANGE(isqrt, int, 0, 32767)
 	TESTRANGE(isqrt, int, INT_MAX-32767, INT_MAX)
 	TESTOUT(isqrt, int, INT_MAX)
@@ -82,7 +72,7 @@ int main() {
 	TESTRANGE(uisqrt, unsigned int, UINT_MAX-32767, UINT_MAX)
 	TESTOUT(uisqrt, unsigned int, UINT_MAX)
 
-	TESTOUT(lsqrt, long, -64)
+	STESTOUT(lsqrt, long, -64)
 	TESTRANGE(lsqrt, long, 0, 32767)
 	TESTRANGE(lsqrt, long, LONG_MAX - 32767, LONG_MAX)
 	TESTOUT(lsqrt, long, LONG_MAX)
