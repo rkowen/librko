@@ -1,4 +1,4 @@
-main : minish_fdlist_dump : minish_fdlist_exists : fdlist doesn't exist!
+main : minish_fdlist_dump : minish_fdlist_exists : null pointer!
 <minish_fdlist_dump>
 main : minish_fdlist_add : invalid fd
 <minish_fdlist_dump>
