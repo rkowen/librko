@@ -54,23 +54,19 @@ void dump_uvec(char *string, uvec *m_uvec) {
 
 #line 56 "y.tab.c"
 #define COMMAND 257
-#define LPAREN 258
-#define RPAREN 259
-#define EOC 260
-#define EOL 261
-#define AMPER_AMPER 262
-#define BAR_BAR 263
-#define BAR 264
-#define BAR_AMPER 265
-#define GREATER_AMPER_CLOSE 266
-#define GREATER_AMPER 267
-#define GREATER_GREATER 268
-#define GREATER_THAN 269
-#define LESS_AMPER 270
-#define LESS_THAN 271
-#define LESS_GREATER 272
-#define NUMBER 273
-#define WORD 274
+#define EOC 258
+#define EOL 259
+#define AMPER_AMPER 260
+#define BAR_BAR 261
+#define GREATER_AMPER_CLOSE 262
+#define GREATER_AMPER 263
+#define GREATER_GREATER 264
+#define GREATER_THAN 265
+#define LESS_AMPER 266
+#define LESS_THAN 267
+#define LESS_GREATER 268
+#define NUMBER 269
+#define WORD 270
 #define YYERRCODE 256
 short yylhs[] = {                                        -1,
     0,    0,    0,    1,    2,    3,    3,    3,    5,    5,
@@ -92,11 +88,11 @@ short yydgoto[] = {                                       3,
     4,    5,    7,   20,   21,   29,   23,   24,   25,   26,
    30,   27,   34,   28,
 };
-short yysindex[] = {                                   -238,
-    0,    0, -253,    0,    0,    0, -260,    0,    0,    0,
+short yysindex[] = {                                   -237,
+    0,    0, -252,    0,    0,    0, -258,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0, -269, -251,    0,    0,    0,
-    0,    0, -269, -266,    0,    0,
+    0,    0,    0,    0,    0, -253, -249,    0,    0,    0,
+    0,    0, -253, -248,    0,    0,
 };
 short yyrindex[] = {                                      0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
@@ -105,25 +101,25 @@ short yyrindex[] = {                                      0,
     0,    0,    0,    0,    0,    0,
 };
 short yygindex[] = {                                      0,
-   19,    0,    0,    0,    0,   17,    0,    0,    0,   -2,
+   20,    0,    0,    0,    0,   17,    0,    0,    0,   -2,
    -7,   -6,    0,    0,
 };
 #define YYTABLESIZE 28
 short yytable[] = {                                       8,
-    9,   10,   11,    1,   19,   12,   18,   13,   14,   15,
-   16,   17,   18,   19,   31,   32,   13,   14,    1,   16,
-   17,    6,    2,   22,   33,   35,    0,   36,
+    9,   10,   11,   12,    1,   13,   14,   15,   16,   17,
+   18,   19,   31,   32,   13,   14,   19,   16,   17,    1,
+   18,    2,    6,   22,   33,   35,    0,   36,
 };
-short yycheck[] = {                                     260,
-  261,  262,  263,  257,  274,  266,  273,  268,  269,  270,
-  271,  272,  273,  274,  266,  267,  268,  269,  257,  271,
-  272,    3,  261,    7,   27,   33,   -1,   34,
+short yycheck[] = {                                     258,
+  259,  260,  261,  262,  257,  264,  265,  266,  267,  268,
+  269,  270,  262,  263,  264,  265,  270,  267,  268,  257,
+  269,  259,    3,    7,   27,   33,   -1,   34,
 };
 #define YYFINAL 3
 #ifndef YYDEBUG
 #define YYDEBUG 1
 #endif
-#define YYMAXTOKEN 274
+#define YYMAXTOKEN 270
 #if YYDEBUG
 char *yyname[] = {
 "end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -132,10 +128,9 @@ char *yyname[] = {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"COMMAND","LPAREN","RPAREN","EOC",
-"EOL","AMPER_AMPER","BAR_BAR","BAR","BAR_AMPER","GREATER_AMPER_CLOSE",
-"GREATER_AMPER","GREATER_GREATER","GREATER_THAN","LESS_AMPER","LESS_THAN",
-"LESS_GREATER","NUMBER","WORD",
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"COMMAND","EOC","EOL",
+"AMPER_AMPER","BAR_BAR","GREATER_AMPER_CLOSE","GREATER_AMPER","GREATER_GREATER",
+"GREATER_THAN","LESS_AMPER","LESS_THAN","LESS_GREATER","NUMBER","WORD",
 };
 char *yyrule[] = {
 "$accept : statements",
@@ -225,7 +220,7 @@ int main(void) {
 	return minish_yyparse();
 }
 #endif /* YACCTEST */
-#line 229 "y.tab.c"
+#line 224 "y.tab.c"
 #define YYABORT goto yyabort
 #define YYACCEPT goto yyaccept
 #define YYERROR goto yyerrlab
@@ -686,7 +681,7 @@ case 30:
 				rkoperror("minish : yacc : eol : fd : dtor");
 		}
 break;
-#line 690 "y.tab.c"
+#line 685 "y.tab.c"
     }
     yyssp -= yym;
     minish_yystate = *yyssp;
