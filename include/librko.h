@@ -1,7 +1,7 @@
 #ifndef _LIBRKO_H_
 #  define _LIBRKO_H_
 /* 
- * RCSID @(#)$Id: librko.h,v 1.13 1999/09/09 05:46:49 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.14 1999/09/09 20:25:31 rk Exp $
  */
 /*
  *********************************************************************
@@ -211,6 +211,7 @@ int uvec_pop(uvec *uv);
 int uvec_copy_vec(uvec *u, char **vec, int number);
 int uvec_copy(uvec *u, uvec const *v);
 int uvec_sort(uvec *uv, enum uvec_order type);
+int uvec_find(uvec *uv, char const *str, enum uvec_order type);
 int uvec_uniq(uvec *uv, enum uvec_order type);
 int uvec_reverse(uvec const *uv);
 int uvec_randomize(uvec const *uv, int seed);

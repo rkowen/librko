@@ -29,9 +29,33 @@ int printout(uvec *uv, char const *head, int err, char const *ans) {
 	}
 }
 
+int printval(uvec *uv, char const *head, int result, int ans) {
+	int i;
+	char **argv = uv->vector;
+	sprintf(testbuf,"e:%d c:%d n:%d r:",
+		result, uvec_capacity(uv), uvec_number(uv));
+	if (uvec_exists(uv)) {
+		for (i = 0; *argv != (char *) NULL; ++i, ++argv) {
+			strcat(testbuf, *argv);
+		}
+	}
+	if (result != ans) {
+		printf("FAIL:%-20s=\n    <\t%s\n    >\te: %d != %d\n",
+			head, testbuf, result, ans);
+		return 1;
+	} else {
+		printf("OK  :%-20s=\n\t%s\n",head,testbuf);
+		return 0;
+	}
+}
+
 #define _CHECK(c,v,a) \
 	estat = c; \
 	results += printout(&##v, #c , estat, a);
+
+#define _CHECKVAL(c,v,a) \
+	estat = c; \
+	results += printval(&##v, #c , estat, a);
 
 int main() {
 	uvec u,v,w, *x;
@@ -124,6 +148,14 @@ int main() {
 	"e:0 c:-1 n:-1 r:")
 	_CHECK(uvec_copy(&v,&u), v,
 	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
+	_CHECKVAL(uvec_find(&v,":abc", UVEC_ASCEND), v, 7)
+	_CHECKVAL(uvec_find(&v,":abc", UVEC_DESCEND), v, 7)
+	_CHECKVAL(uvec_find(&v,":abcdef", UVEC_ASCEND), v, -1)
+#ifndef NO_STRCASECMP
+	_CHECKVAL(uvec_find(&v,":abc", UVEC_CASE_ASCEND), v, 1)
+	_CHECKVAL(uvec_find(&v,":abc", UVEC_CASE_DESCEND), v, 1)
+	_CHECKVAL(uvec_find(&v,":abcdef", UVEC_CASE_ASCEND), v, -1)
+#endif
 	_CHECK(uvec_sort(&v,UVEC_DESCEND), v,
 	"e:0 c:10 n:9 r::xyz:bbb:bb:abc:aaa:XYZ:ABC:ABC:AAA")
 	_CHECK(uvec_uniq(&v,UVEC_DESCEND), v,

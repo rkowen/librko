@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: uvec.c,v 1.7 1999/09/09 16:23:12 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec.c,v 1.8 1999/09/09 20:25:31 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.0 10/31/97 R.K.Owen,Ph.D.";
 /* uvec.c -
  * This could have easily been made a C++ class, but is
@@ -605,6 +605,52 @@ int uvec_sort(uvec *uv, enum uvec_order type) {
 #endif
 	return 0;
 }
+
+/* ---------------------------------------------------------------------- */
+/* uvec_find - finds the first entry in a vector that matches the string
+ *	type = uvec sorting type ... the important info is whether to
+ *	use a caseless comparison or not.
+ */
+
+int uvec_find(uvec *uv, char const *str, enum uvec_order type) {
+	int i = 0;
+	char **vec;
+	int (*cmp)(const void *, const void *);
+
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+
+	if (!uvec_exists(uv)) {
+#ifdef RKOERROR
+		(void) rkopsterror("uvec_find : ");
+		rkoerrno = RKOUSEERR;
+#endif
+		return -2;
+	}
+	if (uvec_number(uv) > 0) {
+		switch (type) {
+		case UVEC_ASCEND:
+		case UVEC_DESCEND:
+			cmp = uvec_sort_cmp_ascend;
+			break;
+#ifndef NO_STRCASECMP
+		case UVEC_CASE_ASCEND:
+		case UVEC_CASE_DESCEND:
+			cmp = uvec_sort_cmp_case_ascend;
+			break;
+#endif /* NO_STRCASECMP */
+		default:	/* assume case sensitive */
+			cmp = uvec_sort_cmp_ascend;
+		}
+	}
+	while (*(vec = (uvec_vector(uv) + i))) {
+		if (!(*cmp)(vec,  &str)) return i;
+		i++;
+	}
+	return -1;	/* string not found */
+}
+
 /* ---------------------------------------------------------------------- */
 /* uvec_uniq - remove all adjacent duplicate elements
  *	type = uvec sorting type ... the import information is whether
