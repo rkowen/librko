@@ -1,0 +1,17 @@
+main : minish_fdlist_dump : minish_fdlist_exists : fdlist doesn't exist!
+<minish_fdlist_dump>
+main : minish_fdlist_add : invalid fd
+<minish_fdlist_dump>
+  fd= 0 fd2=99 file=                   (null) action= REDIRECT
+  fd= 1 fd2=-1 file=              stdout_file action=    WRITE
+  fd= 2 fd2=-1 file=              stderr_file action=   APPEND
+  fd= 3 fd2=-1 file=              file_3_read action=     READ
+  fd= 3 fd2=-1 file=             file_3_write action=    WRITE
+  fd= 4 fd2=-1 file=         file_4_readwrite action=READWRITE
+  fd= 5 fd2=-1 file=            file_5_append action=   APPEND
+  fd= 6 fd2=-1 file=                   (null) action=    CLOSE
+<minish_fdlist_dump>
+  fd= 1 fd2=-1 file=               fdtest.out action=    WRITE
+  fd= 2 fd2= 1 file=                   (null) action= REDIRECT
+  fd= 3 fd2=-1 file=            fdtest.3inout action=READWRITE
+  fd= 4 fd2=-1 file=              fdtest.4out action=   APPEND
