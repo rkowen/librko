@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.15 2002/10/21 19:46:44 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.16 2002/10/22 21:47:40 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -143,6 +143,8 @@ special_includes=	\
 	list/list_.h
 
 EXTRA_DIST=				\
+		ChangeLog		\
+		NEWS			\
 		$(man3_MANS)		\
 		include			\
 		$(special_includes)	\
