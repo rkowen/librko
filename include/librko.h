@@ -1,7 +1,7 @@
 #ifndef _LIBRKO_H_
 #  define _LIBRKO_H_
 /* 
- * RCSID @(#)$Id: librko.h,v 1.15 1999/09/09 21:30:43 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.16 1999/09/11 08:02:07 rk Exp $
  */
 /*
  *********************************************************************
@@ -104,6 +104,19 @@ __ISQRT(usqrt,unsigned int)
 __ISQRT(lsqrt,long)
 __ISQRT(ulsqrt,unsigned long)
 #undef __ISQRT
+
+/* integer prime */
+#define __IPRIME(NM, TYPE) TYPE NM(TYPE a);
+__IPRIME(chprime,char)
+__IPRIME(scprime,signed char)
+__IPRIME(ucprime,unsigned char)
+__IPRIME(hprime,short)
+__IPRIME(uhprime,unsigned short)
+__IPRIME(iprime,int)
+__IPRIME(uprime,unsigned int)
+__IPRIME(lprime,long)
+__IPRIME(ulprime,unsigned long)
+#undef __IPRIME
 
 /* urand declarations */
 INTEGER irand(void);
@@ -215,6 +228,20 @@ int uvec_find(uvec *uv, char const *str, enum uvec_order type);
 int uvec_uniq(uvec *uv, enum uvec_order type);
 int uvec_reverse(uvec const *uv);
 int uvec_randomize(uvec const *uv, int seed);
+
+/* Associative Vector (hash array) package */
+
+typedef struct {
+	char * key;			/* key for associative array */
+	uvec * set;			/* container for strings */
+} avec_element;
+
+typedef struct {
+	char tag[5];			/* name tag for this type */
+	avec_element **hash;		/* container for keys & strings */
+	int number;			/* current number of list */
+	int capacity;			/* the possible capacity of vector */
+} avec;
 
 /* generic list ``object'' */
 
