@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: uvec.man,v 1.11 2002/02/14 21:11:58 rk Exp $
+.\" RCSID @(#)$Id: uvec.man,v 1.12 2002/06/24 05:44:14 rk Exp $
 .\" LIBDIR
 .TH "UVEC" "3rko" "31 Oct 1997"
 .SH NAME
@@ -79,6 +79,7 @@ int    uvec_copy_str(uvec *u, char const *token, char const *string);
 int    uvec_copy_vec(uvec *u, char const * const *vec, int number);
 int    uvec_copy(uvec *u, uvec const *v);
 int    uvec_sort(uvec *uv, enum uvec_order type);
+int    uvec_qsort(uvec *uv, int (cmp)(void const *a, void const *b));
 int    uvec_find(uvec *uv, char const *str, enum uvec_order type);
 int    uvec_uniq(uvec *uv, enum uvec_order type);
 int    uvec_reverse(uvec const *uv);
@@ -211,6 +212,15 @@ add one element to start of vector.
 .I uvec_shift
 shift one element from start of vector.
 .TP
+.I uvec_count_tok
+a utility function that returns the number of token delimited elements
+in a string (trailing following token is optional).  Tokens escaped
+with a '\' are not counted.
+.TP
+.I uvec_copy_str
+create a uvec from a token delimited string.
+Tokens escaped with a '\' are not counted.
+.TP
 .I uvec_copy_vec
 copy an existing char vector to an unitialized uvec.
 Set num to a value less than or equal to 0 to grab the entire vector.
@@ -222,8 +232,13 @@ copy one uvec to another unitialized one.
 sort the vector, given the following types:
 UVEC_ASCEND, UVEC_DESCEND, UVEC_CASE_ASCEND, UVEC_CASE_DESCEND,
 where the last two are only available if the
-.I strcasecmp
-function is available for ``caseless'' string comparisons.
+.TP
+.I uvec_qsort
+sort the vector, according to the passed comparison function,
+which is of the same type as needed by
+.I qsort()
+namely
+.I int cmp(void const *a, void const *b)
 .TP
 .I uvec_find
 find the first or last element that matches the string

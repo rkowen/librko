@@ -1,7 +1,7 @@
 #ifndef _UVEC_H_
 #  define _UVEC_H_
 /* 
- * RCSID @(#)$Id: uvec.h,v 1.3 2002/06/21 21:51:33 rk Exp $
+ * RCSID @(#)$Id: uvec.h,v 1.4 2002/06/24 05:44:14 rk Exp $
  */
 /** ** Copyright *********************************************************** **
  ** 									     **
@@ -16,6 +16,8 @@
 #  ifdef __cplusplus
 extern "C" {
 #  endif
+
+#include <stdlib.h>
 
 /* Unix Vector enums */
 
@@ -87,6 +89,7 @@ int    uvec_copy_str(uvec *u, char const *token, char const *string);
 int    uvec_copy_vec(uvec *u, char const * const *vec, int number);
 int    uvec_copy(uvec *u, uvec const *v);
 int    uvec_sort(uvec *uv, enum uvec_order type);
+int    uvec_qsort(uvec *uv, int (*cmp)(void const *a, void const *b));
 int    uvec_find(uvec *uv, char const *str, enum uvec_order type);
 int    uvec_uniq(uvec *uv, enum uvec_order type);
 int    uvec_reverse(uvec const *uv);
