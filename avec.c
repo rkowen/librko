@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec.c,v 1.11 2002/02/22 17:08:34 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec.c,v 1.12 2002/02/22 21:39:20 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -71,34 +71,50 @@ static const avec_element REMOVED = {"", NULL};
  */
 int avec_count_insert (void **data, va_list ap) {
 	int retval = 1;
+	unsigned short us;
+	unsigned int ui;
+	unsigned long ul;
 	if (!data) return -1;
 
 	if (*data == (void *) NULL) retval = 0;
 
 	if (sizeof(void *) == sizeof(unsigned int)) {
-		((unsigned int) *data)++;
+		ui = (unsigned int) *data;
+		*data = (void *) ++ui;
 	} else if (sizeof(void *) == sizeof(unsigned short)) {
-		((unsigned short) *data)++;
+		us = (unsigned short) *data;
+		*data = (void *) ++us;
 	} else if (sizeof(void *) == sizeof(unsigned long)) {
-		((unsigned long) *data)++;
+		ul = (unsigned long) *data;
+		*data = (void *) ++ul;
 	} else {	/* hope for the best */
-		((unsigned int) *data)++;
+		ui = (unsigned int) *data;
+		*data = (void *) ++ui;
 	}
 	return retval;
 }
 
 int avec_count_delete (void **data, va_list ap) {
 	int retval = 1;
+	unsigned short us;
+	unsigned int ui;
+	unsigned long ul;
 	if (!data) return -1;
 
+	if (*data == (void *) NULL) retval = 0;
+
 	if (sizeof(void *) == sizeof(unsigned int)) {
-		((unsigned int) *data)--;
+		ui = (unsigned int) *data;
+		*data = (void *) --ui;
 	} else if (sizeof(void *) == sizeof(unsigned short)) {
-		((unsigned short) *data)--;
+		us = (unsigned short) *data;
+		*data = (void *) --us;
 	} else if (sizeof(void *) == sizeof(unsigned long)) {
-		((unsigned long) *data)--;
+		ul = (unsigned long) *data;
+		*data = (void *) --ul;
 	} else {	/* hope for the best */
-		((unsigned int) *data)--;
+		ui = (unsigned int) *data;
+		*data = (void *) --ui;
 	}
 
 	if (*data == (void *) NULL) retval = 0;
@@ -288,7 +304,7 @@ static int avec_dealloc_element(avec_element **element) {
 	}
 	if ((*element)->key) {
 		free((void *)(*element)->key);
-		(char *)((*element)->key) = '\0';
+		(*element)->key = '\0';
 	}
 	free((void *) *element);
 	*element = (avec_element *) NULL;
