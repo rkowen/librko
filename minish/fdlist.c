@@ -232,9 +232,13 @@ int minish_fdlist_add(minish_fdlist *fdl, minish_fd_action action,
 	va_list vptr;
 /* initialize an element */
 	minish_fdlist_elem elem =
-		{fd, action, (minish_fdlist_elem *) NULL, -1, (char *) NULL};
+		{-1, MINISH_FD_NONE, (minish_fdlist_elem *) NULL,
+			-1, (char *) NULL};
 		
 	minish_fdlist_elem *this;
+
+	elem.fd = fd;
+	elem.action = action;
 
 	if (!minish_fdlist_exists(fdl)) {
 #ifdef RKOERROR
@@ -403,7 +407,7 @@ int minish_fdlist_process(minish_fdlist *fdl) {
 #ifdef FDTEST
 
 int main () {
-	minish_fdlist *listA;
+	minish_fdlist *listA = (minish_fdlist *) NULL;
 	char buffer[200];
 
 	if (minish_fdlist_dump(listA, stderr)) rkoperror("main");
