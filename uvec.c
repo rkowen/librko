@@ -1,5 +1,5 @@
 static const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: uvec.c,v 1.1 1998/10/07 16:19:56 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec.c,v 1.2 1998/10/09 21:00:09 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.0 10/31/97 R.K.Owen,Ph.D.";
 /* uvec.c -
  * This could have easily been made a C++ class, but is
@@ -152,7 +152,8 @@ static int uvec_malloc(uvec *uv, char const *str, int place) {
 #endif
 		return -1;
 	}
-	if (!(uv->vector[place] = (char *) malloc(strlen(str)*sizeof(char)))) {
+	if (!(uv->vector[place] = (char *)
+	malloc((strlen(str) + 1)*sizeof(char)))) {
 #ifdef RKOERROR
 		(void) rkocpyerror("uvec_malloc : malloc error!");
 		rkoerrno = RKOMEMERR;
