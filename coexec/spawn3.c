@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: spawn3.c,v 1.1 2002/10/21 17:17:04 rk Exp $";
+static const char RCSID[]="@(#)$Id: spawn3.c,v 1.2 2002/10/22 21:39:45 rk Exp $";
 static const char AUTHOR[]="@(#)coexec 1.0 2002/02/28 R.K.Owen,Ph.D.";
 /* coexec.c - contains all the co-executable routines
  */
@@ -192,7 +192,8 @@ int spawn3(FILE **childin, FILE **childout, FILE **childerr, char **argv) {
 			strcat(buffer,"'");
 			goto parent_failure;
 		}
-		if(setvbuf(*childerr, (char *) NULL, _IOLBF, 0)) {
+		/* must not buffer stderr from the child else will lose some */
+		if(setvbuf(*childerr, (char *) NULL, _IONBF, 0)) {
 			strcpy(buffer,
 			"spawn3: parent failed to errpipe line buffer with '");
 			strncat(buffer,argv[0],100);

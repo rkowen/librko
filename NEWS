@@ -1,0 +1,5 @@
+
+librko-1.0.0	2002/10/21
+* first release with a working configure, using automake/autoconf etc.
+* added spawn3
+

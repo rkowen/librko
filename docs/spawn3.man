@@ -1,8 +1,9 @@
-.\" RCSID @(#)$Id: spawn3.man,v 1.1 2002/10/21 19:42:16 rk Exp $
+.\" RCSID @(#)$Id: spawn3.man,v 1.2 2002/10/22 21:39:45 rk Exp $
 .\" LIBDIR
 .TH "SPAWN" "3rko" "2 Jun 1995"
 .SH NAME
-spawn \- spawn a child process with stdin and stdout stream communication.
+spawn3 \- spawn3 a child process with stdin, stdout, and stderr
+stream communication.
 
 .SH SYNOPSIS
 
@@ -10,7 +11,7 @@ spawn \- spawn a child process with stdin and stdout stream communication.
 #include <stdio.h>
 #include "coexec.h"
 
-int spawn(FILE **childin, FILE **childout, FILE **childerr, char **argv);
+int spawn3(FILE **childin, FILE **childout, FILE **childerr, char **argv);
 .fi
 
 .SH DESCRIPTION
@@ -22,7 +23,7 @@ is a command vector, where argv[0] is the executable to run, and
 argv[1],... are the commandline options.
 Must have the last one argv[N] = NULL to terminate the vector.
 
-.I spawn
+.I spawn3
 returns the child pid if successful, else < 0 an error.
 Pass in the address to the FILE streams
 .IR childin , childout ,
@@ -32,23 +33,117 @@ for communication to the spawned process.
 
 .SH SEE ALSO
 coexec(3rko),invoke(3rko),spawn(3rko),uvec(3rko),
-execvp(2),fork(2),pipe(2),fclose(3),wait(2),waitpid(2),system(3)
+execvp(2),fork(2),pipe(2),select(2),fclose(3),wait(2),waitpid(2),system(3)
 
 .SH NOTES
 
+If both stdout and stderr outputs need to be read, then the calling program
+should
+.I select
+between the two file streams since the child process may be writing
+to either at any time.
+
+.nf
+ /* stdall - collects and outputs the stdout,stderr, and exit status
+  * takes all the options and just passes them on to a sub-process
+  */
+ 
+ #include <stdio.h>
+ #include <sys/types.h>	/* waitpid,select */
+ #include <sys/wait.h>	/* waitpid */
+ #include <unistd.h>	/* select */
+ #include <sys/time.h>	/* select */
+ #include "coexec.h"	/* spawn3 */
+ #include "uvec.h"
+ 
+ #define MAXBUFF	512
+ 
+ int main(int argc, char *argv[]) {
+ 	FILE	*childin,
+ 		*childout,
+ 		*childerr;
+ 	pid_t	 childpid;
+ 	int	status,
+ 		 retexit = 0;
+ 	char	 bufout[MAXBUFF],
+ 		 buferr[MAXBUFF];
+ 	fd_set	 cfds;
+ 	int	 maxfd,selval;
+ 	struct timeval tv;
+ 	uvec	*cerr;
+ 
+ 	if (argc < 2) return 1;
+ 
+ 	/* spawn the child process */
+ 	if ((childpid = spawn3(&childin,&childout, &childerr, argv+1)) < 0) {
+ 		fprintf(stderr,"%s failed to spawn3 '%s' ret = %d\n",
+ 			*argv, argv[1], childpid);
+ 		return 2;
+ 	}
+ 	/* close stdin to the child - don't need it here */
+ 	fclose(childin);
+ 
+ 	/* watch child stdin/stderr */
+ 	FD_ZERO(&cfds);
+ 	FD_SET(fileno(childout),&cfds);
+ 	FD_SET(fileno(childerr),&cfds);
+ 	tv.tv_sec = 0;
+ 	tv.tv_usec = 100;
+ 
+ 	/* capture stderr to an expandable array */
+ 	cerr = uvec_ctor(20);
+ 	maxfd = (fileno(childout) > fileno(childerr)
+ 		? fileno(childout) : fileno(childerr)) + 1;
+ 	printf(
+ "== stdout ============================================================\n");
+ 
+ 	while ((selval = select(maxfd,&cfds,NULL,NULL,&tv))
+       	> 0) {
+ 		if (FD_ISSET(fileno(childout),&cfds)) {
+ 			*bufout = '\0';
+ 			fgets(bufout, MAXBUFF, childout);
+ 			/* output stdout now */
+ 			if (*bufout) printf("%s", bufout);
+ 		} else if (FD_ISSET(fileno(childerr),&cfds)) {
+ 			*buferr = '\0';
+ 			fgets(buferr, MAXBUFF, childerr);
+ 			/* store stderr for later output */
+ 			uvec_push(cerr,buferr);
+ 		}
+ 		/* reset the select input */
+ 		FD_ZERO(&cfds);
+ 		if (!feof(childout)) FD_SET(fileno(childout),&cfds);
+ 		if (!feof(childerr)) FD_SET(fileno(childerr),&cfds);
+ 		tv.tv_sec = 0;
+ 		tv.tv_usec = 100;
+ 	}
+ 
+ 	fclose(childout);
+ 	fclose(childerr);
+ 
+ 	/* may still lose some stderr if there is lots of it */
+ 	argv = uvec_vector(cerr);
+ 	printf(
+ "== stderr ============================================================\n");
+ 	while (*argv) {
+ 		printf("%s",*argv++);
+ 	}
+ 	uvec_dtor(&cerr);
+ 
+ 	printf(
+ "== exit   ============================================================\n");
+ 	waitpid(childpid, &status, 0);
+ 	if (WIFEXITED(status)) retexit = WEXITSTATUS(status);
+ 	printf("exit = '%d'\n", retexit);
+ 	printf(
+ "== end    ============================================================\n");
+ 	return retexit;
+ }
+
+.fi
+
 After the output is read and an EOF is received, the calling program should
 close the file stream and wait for the child process.
-
- FILE *childin, *childout, *childerr;
- ...
- if (childpid = spawn(&childin, &childout, argv) < 0) {
-	fprintf(stderr,"failed to spawn '%s'\n", *argv);
- }
- ...
- fclose(childin);
- fclose(childout);
- fclose(childerr);
- waitpid(childpid,NULL,0);
 
 .SH DIAGNOSTICS
 

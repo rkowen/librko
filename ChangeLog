@@ -1,0 +1,5 @@
+2002-10-22  R.K. Owen Ph.D.  <rk@owen.sj.ca.us>
+
+	* coexec/spawn3.c: (spawn3): fixed stderr buffering problem
+	* docs/spawn3.man: added working example
+
