@@ -21,15 +21,8 @@ foptim(3rko)     - finds the minimum or maximum of f(x) in the interval [ax,bx]
 fzeroin(3rko)    - finds the zero of (f(x) - y0) in the interval [ax,bx]
 divdiff(3rko)    - osculatory (kissing) interpolates a function via divided difference
 gcd(3rko)        - Greatest Common Divisor
-cgcd             - see gdc(3rko)
-scgcd            - see gdc(3rko)
-ucgcd            - see gdc(3rko)
-hgcd             - see gdc(3rko)
-uhgcd            - see gdc(3rko)
-igcd             - see gdc(3rko)
-ugcd             - see gdc(3rko)
-lgcd             - see gdc(3rko)
-ulgcd            - see gdc(3rko)
+isqrt(3rko)      - integer sqrt
+iprime(3rko)     - finds the lowest prime factor
 memory(3rko)     - a set of macros for detecting memory leaks
 ansi_seq(3rko)   - returns ANSI sequences for screen character attributes and colors
 ansi_color(3rko) - see ansi_seq(3rko)

@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: gcd.man,v 1.3 1998/11/24 05:57:03 rk Exp $
+.\" RCSID @(#)$Id: gcd.man,v 1.4 1999/09/13 17:30:13 rk Exp $
 .\" LIBDIR
 .TH "GCD" "3rko" "17 Nov 1998"
 .SH NAME
@@ -8,15 +8,15 @@ gcd \- Greatest Common Divisor
 .nf
 #include "librko.h"
 
-char chgcd(char n, char m);
-signed char scgcd(signed char n, signed char m);
-unsigned char ucgcd(unsigned char n, unsigned char m);
-short hgcd(short n, short m);
+         char  chgcd(char n, char m);
+  signed char  scgcd(signed char n, signed char m);
+unsigned char  ucgcd(unsigned char n, unsigned char m);
+         short  hgcd(short n, short m);
 unsigned short uhgcd(unsigned short n, unsigned short m);
-int igcd(int n, int m);
-unsigned int ugcd(unsigned int n, unsigned int m);
-long lgcd(long n, long m);
-unsigned long ulgcd(unsigned long n, unsigned long m);
+         int    igcd(int n, int m);
+unsigned int    ugcd(unsigned int n, unsigned int m);
+         long   lgcd(long n, long m);
+unsigned long  ulgcd(unsigned long n, unsigned long m);
 .fi
 
 .SH DESCRIPTION
@@ -32,7 +32,7 @@ are positive and n > m and all quantities are non-negative integers):
 .fi
 
 .SH SEE ALSO
-factor(1),primes(1)
+factor(1),primes(1),isqrt(3rko),iprime(3rko)
 
 .SH DIAGNOSTICS
 Returns 0, if either of the arguments is less than 0 for the signed

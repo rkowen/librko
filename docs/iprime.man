@@ -1,8 +1,8 @@
-.\" RCSID @(#)$Id: iprime.man,v 1.1 1999/09/11 08:02:07 rk Exp $
+.\" RCSID @(#)$Id: iprime.man,v 1.2 1999/09/13 17:30:13 rk Exp $
 .\" LIBDIR
 .TH "IPRIME" "3rko" "09 Sep 1999"
 .SH NAME
-iprime \- Finds lowest prime factor
+iprime \- finds the lowest prime factor
 .SH SYNOPSIS
 
 .nf
