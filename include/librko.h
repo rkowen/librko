@@ -2,7 +2,7 @@
 #  define _LIBRKO_H_
 /* 
  * USMID %W%
- * RCSID @(#)$Id: librko.h,v 1.3 1998/10/21 22:30:31 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.4 1998/10/27 21:59:30 rk Exp $
  */
 /*
  *********************************************************************
@@ -29,6 +29,7 @@
 #  endif
 
 #  include <stdio.h>
+#  include <stdarg.h>
 #  include <netdb.h>		/* gethostbyname, gethostbyaddr */
 
 #  ifdef __cplusplus
@@ -181,6 +182,50 @@ int uvec_sort(uvec *uv, enum uvec_order type);
 int uvec_uniq(uvec *uv, enum uvec_order type);
 int uvec_reverse(uvec const *uv);
 int uvec_randomize(uvec const *uv, int seed);
+
+/* generic list ``object'' */
+
+/* warning sizeof(list) does not necessarily give the correct memory size
+ * since we make it "expandable" to handle a variable size tag
+ */
+typedef struct list list;		/* forward declaration */
+typedef struct list_elem list_elem;
+
+struct list {
+	list_elem *first;		/* head of list */
+	list_elem *last;		/* last in list */
+	int number;			/* number in list */
+	int (*addfn)(void **, va_list);	/* user fn to add user data */
+	int (*delfn)(void **, va_list);	/* user fn to del user data */
+	char tag[1];			/* name tag for list */
+/* followed by expanded memory allocation to contain rest of tag with
+ * terminating NULL.  A list object must only be defined as "list *"
+ * and set = to list_ctor(TAG,INIT,ADDFN,DELFN);
+ */
+};
+
+struct list_elem {
+	list_elem *prev;		/* previous one in list */
+	list_elem *next;		/* next one in list */
+	void *object;			/* pointer to object of interest */
+};
+
+/* shield users from  certain internal details */
+#define LIST_OBJECT(le)	((le)->object)
+#define LIST_NEXT(le)	((le)->next)
+#define LIST_PREV(le)	((le)->prev)
+
+list *list_ctor(const char *tag,
+	int (addfn)(void **, va_list), int (delfn)(void **, va_list));
+int list_dtor(list **lst, char const *tag, ...);
+int list_exists(list const *lst, const char *tag);
+int list_number(list const *lst, const char *tag);
+list_elem *list_first(list const *lst, const char *tag);
+list_elem *list_last(list const *lst, const char *tag);
+int list_add(list *lst, char const *tag, ...);
+int list_del(list *lst, char const *tag, ...);
+int list_push(list *lst, char const *tag, ...);
+int list_pop(list *lst, char const *tag, ...);
 
 /* librko - error message package */
 

@@ -7,36 +7,14 @@
 #	make install
 #	make uninstall
 #	make help - for further info
-#
-# customize the following for your own environment
-#
-PERM	= 644
-OWN	= rk
-GRP	= owen
-ROOT	= $(HOME)
-LIBDIR	= $(ROOT)/lib
-INCDIR	= $(ROOT)/include
-MANDIR	= $(ROOT)/man
-ECHO	= echo
-RANLIB	= $(ECHO)
-SHELL	= /bin/sh
-AR	= ar
-ARFLAGS	= r
-CC	= cc
-CFLAGS	= -g -DRKOERROR
-NROFF	= nroff
-MAN	= -man
-RM	= rm
-CP	= cp
-BSNM	= basename
-INSTALL	= etc/cpset
-SHAR	= etc/mkshar
+
+include Makefile.inc
 
 LIB	=librko.a
 SRCS	=invoke.c timedfgets.c rkoerror.c memory.c strmem.c wcstrcmp.c \
 	 nameread.c foptim.c fzeroin.c divdiff.c urand.c strchop.c \
 	 ansi_seq.c gethostbyX.c tcp_connect.c macrosub.c uvec.c \
-	 strdbecpy.c istext.c
+	 strdbecpy.c istext.c list.c
 
 # requires a GNU "make" for the following
 LIBOBJS	=$(SRCS:%.c=$(LIB)(%.o))

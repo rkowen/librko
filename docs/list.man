@@ -1,0 +1,268 @@
+.\" RCSID @(#)$Id: list.man,v 1.1 1998/10/27 21:59:30 rk Exp $
+.\" LIBDIR
+.TH "LIST" "3rko" "31 October 1998"
+.SH NAME
+list \- generic list ``object'' for Std-C that can contain any sort
+of data type or struct.
+
+.SH SYNOPSIS
+
+.nf
+#include "librko.h"
+
+defines the following structures and typedef's:
+
+typedef struct list list;
+typedef struct list_elem list_elem;
+
+/* warning sizeof(list) does not necessarily give the correct memory size
+ * since we make it "expandable" to handle a variable size tag
+ */
+struct list {
+	list_elem *first;		/* head of list */
+	list_elem *last;		/* last in list */
+	int number;			/* number in list */
+	int (*addfn)(void **, va_list);	/* user fn to add user data */
+	int (*delfn)(void **, va_list);	/* user fn to del user data */
+	char tag[1];			/* name tag for list */
+/* followed by expanded memory allocation to contain rest of tag with
+ * terminating NULL.  A list object must only be defined as "list *"
+ * and set with list_ctor(TAG,INIT,ADDFN,DELFN);
+ */
+};
+
+struct list_elem {
+	list_elem *prev;		/* previous one in list */
+	list_elem *next;		/* next one in list */
+	void *object;			/* pointer to object of interest */
+};
+
+/* shield users from  certain internal details */
+#define LIST_OBJECT(le)	((le)->object)
+#define LIST_NEXT(le)	((le)->next)
+#define LIST_PREV(le)	((le)->prev)
+
+list *list_ctor(const char *tag,
+	int (addfn)(void **, va_list), int (delfn)(void **, va_list));
+int list_dtor(list **lst, char const *tag, ...);
+int list_exists(list const *lst, const char *tag);
+int list_number(list const *lst, const char *tag);
+list_elem *list_first(list const *lst, const char *tag);
+list_elem *list_last(list const *lst, const char *tag);
+int list_add(list *lst, char const *tag, ...);
+int list_del(list *lst, char const *tag, ...);
+int list_push(list *lst, char const *tag, ...);
+int list_pop(list *lst, char const *tag, ...);
+.fi
+
+.SH DESCRIPTION
+.I list
+could have easily been made a C++ class, but is confined to C for
+maximum portability.
+.I list
+is designed for easy constant time adding or deleting elements
+at the beginning or end of the list.
+It uses user-defined functions to handle the actual insertion
+or deletion
+of user data in a list element, which just contains a (void *)
+pointer to the user data.
+To see how this is done, it's best to look at the example below.
+.P
+All the functions refer to a ``tag'', a simple ASCII string that
+the library will compare with.  This ensures that the list object
+is not refered to incorrectly.
+.P
+All the functions, except for the ``constructor'' or
+accessor functions, return 0 if no error occured, else
+return <0 if an error occured.
+The
+.I list_pop
+and
+.I list_del
+functions will return 1, if they're executed on an empty list.
+(This is not considered an error, but something the user may
+wish to know.)
+
+.TP 15
+.I list_ctor
+construct the list object, registering a tag and user functions for
+handling the user data.
+
+.TP
+.I list_dtor
+destroy the list object.
+.TP
+.I list_exists
+returns 0 if the list is not constructed.
+.TP
+.I list_number
+returns the number of elements in the list, otherwise returns -1
+if the list is not defined.
+.TP
+.I list_first
+returns a pointer to the first list_elem in the list object.
+It's intended for creating sequential access through the list.
+.TP
+.I list_last
+returns a pointer to the last list_elem in the list object.
+It's intended for creating sequential access through the list.
+.TP
+.I list_add
+add an element to the end of the list.  It has a variable length
+argument, which is passed to the user-defined add-function,
+to allow data to be entered in the argument list.
+.TP
+.I list_del
+delete an element at the end of the list.  It has a variable
+length argument, which is passed to the user-define delete-function,
+to allow user data handling.
+.TP
+.I list_push
+add an element to the beginning of the list.  It has a variable length
+argument, which is passed to the user-defined add-function,
+to allow data to be entered in the argument list.
+.TP
+.I list_pop
+delete an element at the end of the list.  It has a variable
+length argument, which is passed to the user-define delete-function,
+to allow user data handling.
+.TP
+.I 
+
+.SH EXAMPLES
+This example just stores, prints, and remove a list of ``double''
+values.
+.nf
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+
+#define RKOERROR
+#include "librko.h"
+
+/*----- handle a single element of "double" data -----*/
+int addflt(void **ptr, va_list ap) {
+	double *iptr;
+	if ((iptr = malloc(sizeof(double))) == (double *) NULL)
+		return -1;
+	*iptr = va_arg(ap, double);
+	*ptr = iptr;
+	return 0;
+}
+
+int delflt(void **ptr, va_list ap) {
+	free(*ptr);
+	*ptr = (void *) NULL;
+	return 0;
+}
+
+void comptest(list *lst, const char *tag, enum test_types ttypes,
+	char *expected, char *command) {
+
+	char buffer[512];
+	char ebuffer[64];
+	list_elem *eptr;
+
+	*buffer = '\0';
+	sprintf(buffer,"=%d=", list_number(lst, tag));
+	for (eptr = list_first(lst,tag);
+	eptr != (list_elem *) NULL; eptr = eptr->next) {
+		switch (ttypes) {
+		case (int_type):
+			sprintf(ebuffer,"%d:", *(int *)LIST_OBJECT(eptr));
+			break;
+		case (flt_type):
+			sprintf(ebuffer,"%3.1f:", *(double *)LIST_OBJECT(eptr));
+			break;
+		case (mix_type):
+			sprintf(ebuffer,"%d|%3.1f:",
+				(((mix *)LIST_OBJECT(eptr))->ival),
+				(((mix *)LIST_OBJECT(eptr))->fval));
+			break;
+		}
+		strcat(buffer,ebuffer);
+	}
+	if (strcmp(buffer,expected)) {
+		printf("    >%s\nFAIL:%s\n     %s <- expected\n",
+			command, buffer, expected);
+	} else {
+		printf("    >%s\nOK  :%s\n", command, buffer);
+	}
+}
+
+#  define _ZTEST(l, tg, tt, e, comm) \
+	if (comm) rkoperror("test"); \
+	comptest(l, tg, tt, e, #comm);
+
+#  define _NTEST(l, tg, tt, e, comm) \
+	if (!comm) rkoperror("test"); \
+	comptest(l, tg, tt, e, #comm);
+
+int main() {
+	list *listobj = (list *) NULL;
+	const char tagflt[] = "FLOATS";
+
+/* add elements to flt list */
+	_ZTEST(listobj, tagflt, flt_type, "=-1=",
+		list_exists(listobj, tagflt))
+	_NTEST(listobj, tagflt, flt_type, "=0=",
+		(listobj = list_ctor(tagflt, addflt, delflt)))
+	_NTEST(listobj, tagflt, flt_type, "=0=",
+		list_exists(listobj, tagflt))
+	_ZTEST(listobj, tagflt, flt_type, "=1=3.3:",
+		list_add(listobj, tagflt, 3.3))
+	_ZTEST(listobj, tagflt, flt_type, "=2=3.3:2.2:",
+		list_add(listobj, tagflt, 2.2))
+	_ZTEST(listobj, tagflt, flt_type, "=3=3.3:2.2:1.1:",
+		list_add(listobj, tagflt, 1.1))
+	_ZTEST(listobj, tagflt, flt_type, "=4=2.2:3.3:2.2:1.1:",
+		list_push(listobj, tagflt, 2.2))
+	_ZTEST(listobj, tagflt, flt_type, "=5=1.1:2.2:3.3:2.2:1.1:",
+		list_push(listobj, tagflt, 1.1))
+	
+	_ZTEST(listobj, tagflt, flt_type, "=4=1.1:2.2:3.3:2.2:",
+		list_del(listobj, tagflt))
+	_ZTEST(listobj, tagflt, flt_type, "=3=2.2:3.3:2.2:",
+		list_pop(listobj, tagflt))
+	_ZTEST(listobj, tagflt, flt_type, "=2=2.2:3.3:",
+		list_del(listobj, tagflt))
+	_ZTEST(listobj, tagflt, flt_type, "=1=3.3:",
+		list_pop(listobj, tagflt))
+	_ZTEST(listobj, tagflt, flt_type, "=0=",
+		list_del(listobj, tagflt))
+	_NTEST(listobj, tagflt, flt_type, "=0=",
+		list_pop(listobj, tagflt))
+
+	_ZTEST(listobj, tagflt, flt_type, "=1=1.1:",
+		list_push(listobj, tagflt, 1.1))
+	_ZTEST(listobj, tagflt, flt_type, "=0=",
+		list_pop(listobj, tagflt))
+	_NTEST(listobj, tagflt, flt_type, "=0=",
+		list_del(listobj, tagflt))
+	
+	_ZTEST(listobj, tagflt, flt_type, "=1=3.3:",
+		list_add(listobj, tagflt, 3.3))
+	_ZTEST(listobj, tagflt, flt_type, "=2=3.3:2.2:",
+		list_add(listobj, tagflt, 2.2))
+	_ZTEST(listobj, tagflt, flt_type, "=3=4.4:3.3:2.2:",
+		list_push(listobj, tagflt, 4.4))
+	_ZTEST(listobj, tagflt, flt_type, "=-1=",
+		list_dtor(&listobj, tagflt))
+
+	return 0;
+}
+.fi
+
+.SH SEE ALSO
+.\" crontab(1),stat(2),libmon(8)
+
+.SH NOTES
+
+.SH DIAGNOSTICS
+
+.SH BUGS
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS
