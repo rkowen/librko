@@ -1,4 +1,4 @@
-.\" USMID %W%
+.\" RCSID @(#)$Id: Tmpl.man,v 1.2 1999/02/17 17:10:38 rk Exp $
 .\" LIBDIR
 .TH "XXX" "1rko" "12 May 1996"
 .SH NAME
