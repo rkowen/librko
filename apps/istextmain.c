@@ -65,7 +65,7 @@ int main (int argc, char *argv[]) {
 			argv++;
 			goto endopts;
 		default:
-			/* do nothing on non-valid options */
+			/* do nothing on non-valid options */;
 		}
 		argv++;
 	}
