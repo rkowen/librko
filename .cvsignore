@@ -2,3 +2,10 @@
 librko.man
 memdbg
 memdbg.1
+.deps
+autom4te.cache
+autoscan.log
+config.h
+config.log
+config.status
+stamp-h1

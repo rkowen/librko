@@ -9,6 +9,8 @@
 #endif
 #ifdef RKOERROR
 #  include "rkoerror.h"
+#else
+int rkoerrno = 0;
 #endif
 #ifdef MEMDEBUG
 #  include "memdebug.h"
@@ -244,12 +246,16 @@ int main() {
 	"e:0 c:-1 n:-1 r:")
 	_CHECK(uvec_copy(&v,&u), v,
 	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
+	fprintf(output,
+	"\nthe following may fail if different random number generator\n");
 	_CHECK(uvec_randomize(&v, 51258), v,
 	"e:0 c:10 n:9 r::abc:ABC:ABC:bb:aaa:XYZ:bbb:AAA:xyz")
 	_CHECK(uvec_close(&v), v,
 	"e:0 c:-1 n:-1 r:")
 	_CHECK(uvec_copy(&v,&u), v,
 	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
+	fprintf(output,
+	"\nthe following may fail if different random number generator\n");
 	_CHECK(uvec_randomize(&v, 51258), v,
 	"e:0 c:10 n:9 r::abc:ABC:ABC:bb:aaa:XYZ:bbb:AAA:xyz")
 	_CHECKVAL(uvec_count_tok(":","a:b:c:d"), 4)
@@ -310,5 +316,7 @@ int main() {
 	} else {
 		fprintf(output,"There were no failures in %d tests\n", count);
 	}
+	fprintf(output,
+	"Expect 2 failures due to different random number generators\n");
 	return results;
 }

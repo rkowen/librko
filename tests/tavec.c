@@ -7,8 +7,16 @@
 #ifdef MEMDEBUG
 #  include "memdebug.h"
 #endif
-#include "rkoerror.h"
-#include "strmalloc.h"
+#ifdef RKOERROR
+#  include "rkoerror.h"
+#endif
+#ifdef HAVE_STRMALLOC
+#  include "strmalloc.h"
+#else
+#  define strmalloc(a)  strdup(a)
+#  define strnmalloc(a,b)  strcpy((char *) malloc((b)),(a))
+#  define strfree(a)  free(*a)
+#endif
 #include "uvec.h"
 #include "avec.h"
 
@@ -173,9 +181,11 @@ int verify(avec *av, char const *head) {
 		index++;
 	}
 	printf("------------------------\n");
+#ifdef RKOERROR
 	if (retval) {
 		rkoperror("test");
 	}
+#endif
 	return retval;
 }
 

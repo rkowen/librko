@@ -1,3 +1,5 @@
+.deps
+tdir
 *.3 *.x *.m
 birdy
 doggy
