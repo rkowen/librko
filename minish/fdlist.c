@@ -307,6 +307,8 @@ int minish_fdlist_add(minish_fdlist *fdl, minish_fd_action action,
 /* dump all elements to stderr - for debug purposes */
 int minish_fdlist_dump(minish_fdlist *fdl, FILE *file) {
 	minish_fdlist_elem *ptr;
+	char *str;
+	char none[] = "(none)";
 
 	if (! minish_fdlist_exists(fdl)) {
 #ifdef RKOERROR
@@ -317,14 +319,19 @@ int minish_fdlist_dump(minish_fdlist *fdl, FILE *file) {
 	ptr = fdl->first;
 	(void) fprintf(file, "<minish_fdlist_dump>\n");
 	while (ptr != (minish_fdlist_elem *) NULL) {
+		if (ptr->file == (char *) NULL) {
+			str = none;
+		} else {
+			str = ptr->file;
+		}
 		(void) fprintf(file,
 #if 0
-		"  prt=%p fd=%2d fd2=%2d file=%15.15s action=%9s next=%p\n",
-			ptr, ptr->fd, ptr->fd2, ptr->file,
+		"  prt=%p fd=%2d fd2=%2d file=%-15.15s action=%9s next=%p\n",
+			ptr, ptr->fd, ptr->fd2, str,
 			str_action(ptr->action), ptr->next
 #else
-		"  fd=%2d fd2=%2d file=%25.25s action=%9s\n",
-			ptr->fd, ptr->fd2, ptr->file,
+		"  fd=%2d fd2=%2d file=%-25.25s action=%9s\n",
+			ptr->fd, ptr->fd2, str,
 			str_action(ptr->action)
 #endif
 		);

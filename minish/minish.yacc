@@ -4,7 +4,7 @@
 %token COMMAND EOC EOL
 %token AMPER_AMPER BAR_BAR
 %token GREATER_AMPER_CLOSE GREATER_AMPER GREATER_GREATER GREATER_THAN
-%token LESS_AMPER LESS_THAN
+%token LESS_AMPER LESS_THAN LESS_GREATER
 %token NUMBER WORD
 
 %left EOC BAR_BAR AMPER_AMPER
@@ -17,6 +17,7 @@ int i;
 #endif
 
 #include <stdio.h>
+#include <unistd.h>
 #include "librko.h"
 #include "minish.h"
 
@@ -64,7 +65,6 @@ command : COMMAND
 #ifdef YACCTEST
 			printf("command:%s\n", yytext);
 #endif
-	dbgstop();
 			if (minish_fdlist_ctor(&fdlist))
 				rkoperror("minish : yacc : fd : ctor");
 			if (uvec_ctor(&minish_argv,10))
@@ -104,10 +104,15 @@ redir_file
 #ifdef YACCTEST
 			printf("redirect:stdin/out:%s\n", yytext);
 #endif
-	dbgstop();
 			if (minish_fdlist_add(&fdlist, action,
 			fdnum, filename))
 				rkoperror("minish : yacc : redir : stdio");
+			/* special case of <> */
+			if (action == MINISH_FD_READWRITE)
+				if (minish_fdlist_add(&fdlist,
+				MINISH_FD_REDIRECT, STDOUT_FILENO,
+				STDOUT_FILENO)) rkoperror(
+					"minish : yacc : redir : rw");
 		}
 	| number redirect file
 		{
@@ -115,7 +120,6 @@ redir_file
 #ifdef YACCTEST
 			printf("redirect:%d:%s\n", fdnum, yytext);
 #endif
-	dbgstop();
 			if (minish_fdlist_add(&fdlist, action,
 			fdnum, filename))
 				rkoperror("minish : yacc : redir : fd");
@@ -124,7 +128,7 @@ redir_file
 
 redirect: GREATER_THAN
 		{
-			fdnum = 1;	/* stdout */
+			fdnum = STDOUT_FILENO;
 			action = MINISH_FD_WRITE;
 #ifdef YACCTEST
 			printf("redirect:%s\n", yytext);
@@ -134,7 +138,7 @@ redirect: GREATER_THAN
 		}
 	| GREATER_GREATER
 		{
-			fdnum = 1;	/* stdout */
+			fdnum = STDOUT_FILENO;
 			action = MINISH_FD_APPEND;
 #ifdef YACCTEST
 			printf("redirect:%s\n", yytext);
@@ -144,7 +148,7 @@ redirect: GREATER_THAN
 		}
 	| LESS_THAN
 		{
-			fdnum = 0;	/* stdin */
+			fdnum = STDIN_FILENO;
 			action = MINISH_FD_READ;
 #ifdef YACCTEST
 			printf("redirect:%s\n", yytext);
@@ -154,7 +158,7 @@ redirect: GREATER_THAN
 		}
 	| LESS_GREATER
 		{
-			fdnum = 0;	/* stdin */
+			fdnum = STDIN_FILENO;
 			action = MINISH_FD_READWRITE;
 #ifdef YACCTEST
 			printf("redirect:%s\n", yytext);
@@ -186,7 +190,7 @@ redir_ga
 redir_close
 	: LESS_AMPER
 		{
-			fdnum = 0;
+			fdnum = STDIN_FILENO;
 #ifdef YACCTEST
 			printf("close:%d:\n", fdnum);
 #endif
@@ -197,7 +201,7 @@ redir_close
 		}
 	| GREATER_AMPER_CLOSE
 		{
-			fdnum = 1;
+			fdnum = STDOUT_FILENO;
 #ifdef YACCTEST
 			printf("close:%d:\n", fdnum);
 #endif
@@ -238,7 +242,6 @@ eoc	: eol
 				printf("%s ", *ptr);
 			}
 			printf("\n");
-			dbgstop();
 			if (minish_fdlist_dump(&fdlist, stdout))
 				rkoperror("minish : yacc : eoc : fd : dump");
 #else

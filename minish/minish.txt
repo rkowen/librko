@@ -3,10 +3,12 @@ Redirection rules (note spaces, or lack thereof, are important for fd numbers;
 otherwise spaces are unimportant)
 command < file		redirect stdin from a file
 command > file		redirect stdout to file
+command <> file		read/write stdin/stdout from/to file
 command >> file		append stdout to file
 command n> file		redirect fd n to file
 command n< file		redirect file to fd n
 command n>> file	append fd n to file
+command n<> file	read/write fd n to/from file
 command n>&m		redirect fd n to fd m
 command <&		close stdin
 command >&		close stdout
