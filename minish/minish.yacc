@@ -75,12 +75,16 @@ options :	/* empty options */
 	;
 
 redirection
-	: number redirect number
+	: redir_file
+	| redir_fd
+	| redir_close
+	;
+
+redir_file
+	: redirect file
 		{
-			fdnum = $1;
-			fdnum2 = $3;
 #ifdef YACCTEST
-			printf("redirect:%d to %d\n", fdnum, fdnum2);
+			printf("redirect:stdin/out:%s\n", yytext);
 #endif
 		}
 	| number redirect file
@@ -90,53 +94,9 @@ redirection
 			printf("redirect:%d:%s\n", fdnum, yytext);
 #endif
 		}
-	| redirect file
-		{
-#ifdef YACCTEST
-			printf("redirect:stdin/out:%s\n", yytext);
-#endif
-		}
-	| number redirect
-		{
-			fdnum = $1;
-#ifdef YACCTEST
-			printf("close:%d:\n", fdnum);
-#endif
-		}
-	| redirect
-		{
-#ifdef YACCTEST
-			printf("close:%d:\n", fdnum);
-#endif
-		}
 	;
 
-file	: word
-		{
-#ifdef YACCTEST
-			printf("file:%s\n", yytext);
-#endif
-		}
-
-redirect : GREATER_AMPER
-		{
-			fdnum = 1;	/* stdout */
-#ifdef YACCTEST
-			printf("redirect:%s\n", yytext);
-			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:red:");
-#endif
-		}
-	| LESS_AMPER
-		{
-			fdnum = 0;	/* stdin */
-#ifdef YACCTEST
-			printf("redirect:%s\n", yytext);
-			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:red:");
-#endif
-		}
-	| GREATER_THAN
+redirect: GREATER_THAN
 		{
 			fdnum = 1;	/* stdout */
 #ifdef YACCTEST
@@ -164,6 +124,47 @@ redirect : GREATER_AMPER
 				rkoperror("minish-yacc:redchar:");
 		}
 	;
+
+redir_fd: number GREATER_AMPER number
+		{
+			fdnum = $1;
+			fdnum2 = $3;
+#ifdef YACCTEST
+			printf("redirect:%d to %d\n", fdnum, fdnum2);
+#endif
+		}
+
+redir_close
+	: LESS_AMPER
+		{
+			fdnum = 0;
+#ifdef YACCTEST
+			printf("close:%d:\n", fdnum);
+#endif
+		}
+	| GREATER_AMPER
+		{
+			fdnum = 1;
+#ifdef YACCTEST
+			printf("close:%d:\n", fdnum);
+#endif
+		}
+	| number GREATER_AMPER
+		{
+			fdnum = $1;
+#ifdef YACCTEST
+			printf("close:%d:\n", fdnum);
+#endif
+		}
+	;
+
+file	: word
+		{
+#ifdef YACCTEST
+			printf("file:%s\n", yytext);
+#endif
+		}
+
 
 eoc	: eol
 	| EOC
