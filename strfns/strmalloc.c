@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: strmalloc.c,v 1.5 2002/02/21 18:05:34 rk Exp $";
+static const char RCSID[]="@(#)$Id: strmalloc.c,v 1.6 2002/02/23 01:04:42 rk Exp $";
 static const char AUTHOR[]="@(#)strmalloc 1.0 09/01/1999 R.K.Owen,Ph.D.";
 /* strmalloc - adds a strdup-like routine for copying strings
  * strfree - frees the string memory storage.
@@ -108,7 +108,7 @@ int strfree(char **str) {
 			return -1;
 		} else {
 			(void) memset((void *) ptr, 0, sizeof(id));
-			(void) memcpy(&sizeit, (void *) ptr + sizeof(id),
+			(void) memcpy(&sizeit, (void *) (ptr + sizeof(id)),
 				sizeof(size_t));
 			(void) memset((void *) *str, 0, strlen(*str));
 			free((void *) ptr);
