@@ -27,7 +27,7 @@ extern int minish_yylval;
  */
 %}
 NUMBER	[0-9]+
-WORD	[^ 	;&<>|#'"\n]+
+WORD	[^ 	;&<>|#'"()\n]+
 WS	[ \t]*
 
 %s	START_COMMAND OPT START_COMMENT START_COMMENT_ONLY
@@ -37,9 +37,17 @@ WS	[ \t]*
 %%
 	/* mini-sh rules */
 
-<INITIAL,OPT>;	{
+<INITIAL,OPT>";" {
 			BEGIN START_COMMAND;
 			RETURN(EOC);
+		}
+<INITIAL,START_COMMAND>"(" {
+			BEGIN START_COMMAND;
+			RETURN(LPAREN);
+		}
+<OPT>")"	{
+			BEGIN OPT;
+			RETURN(RPAREN);
 		}
 <OPT>"||"	{
 			BEGIN START_COMMAND;
@@ -48,6 +56,14 @@ WS	[ \t]*
 <OPT>"&&"	{
 			BEGIN START_COMMAND;
 			RETURN(AMPER_AMPER);
+		}
+<OPT>"|"	{
+			BEGIN START_COMMAND;
+			RETURN(BAR);
+		}
+<OPT>"|&"	{
+			BEGIN START_COMMAND;
+			RETURN(BAR_AMPER);
 		}
 <INITIAL,START_COMMAND>{WORD}	{
 			BEGIN OPT;
