@@ -26,7 +26,7 @@ int printout(avec *av, char const *head, int err, char const *ans) {
 		uvec_copy_vec(uv, vec, 0);
 		strcat(testbuf, uvec2str(uv, "|"));
 		free((void *)vec);
-		uvec_dealloc(&uv);
+		uvec_dtor(&uv);
 
 		strcat(testbuf," v:");
 		vec = (char const * const *) avec_values(av);
@@ -34,7 +34,7 @@ int printout(avec *av, char const *head, int err, char const *ans) {
 		uvec_copy_vec(uv, vec, 0);
 		strcat(testbuf, uvec2str(uv, "|"));
 		free((void *)vec);
-		uvec_dealloc(&uv);
+		uvec_dtor(&uv);
 	}
 	if (strcmp(testbuf, ans)) {
 		printf("FAIL:%-20s=\n    <\t%s\n    >\t%s\n",head,testbuf,ans);
@@ -67,7 +67,7 @@ int printcount(avec *av, char const *head, int err, char const *ans) {
 		count = uvec_number(uv);
 		strcat(testbuf, uvec2str(uv, "|"));
 		free((void *)vec);
-		uvec_dealloc(&uv);
+		uvec_dtor(&uv);
 
 		strcat(testbuf," v:");
 		ivec = (int const *) avec_values(av);
