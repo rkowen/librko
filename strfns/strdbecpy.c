@@ -1,5 +1,4 @@
-static char USMID[]="%W%";
-static char RCSID[]="@(#)$Id: strdbecpy.c,v 1.2 1998/10/14 15:16:10 rk Exp $";
+static char RCSID[]="@(#)$Id: strdbecpy.c,v 1.3 1998/11/04 20:57:06 rk Exp $";
 static char AUTHOR[]="@(#)strdbecpy 1.1 11/14/97 R.K.Owen,PhD";
 
 /* strDBEcpy - breaks apart a UNIX filename into its path, basename, and
@@ -8,6 +7,7 @@ static char AUTHOR[]="@(#)strdbecpy 1.1 11/14/97 R.K.Owen,PhD";
  *	where the path is tagged by dirchar and the extension with extchar,
  *	if they are NULL, then they will be set to the default of '/' & '.'
  *	respectively.
+ *	If an output variables is NULL then that value will not be copied.
  *
  * prototype:
  * char *strDBEcpy(char *path, char *base, char *ext,
@@ -24,6 +24,7 @@ static char AUTHOR[]="@(#)strdbecpy 1.1 11/14/97 R.K.Owen,PhD";
  *
  * author	R.K.Owen,Ph.D.	09/23/94
  * modified	11/14/97
+ * modified	11/04/98
  */
 /*
  *********************************************************************
@@ -64,29 +65,41 @@ char *strDBEcpy(char *path, char *base, char *ext,
 
 /* find the path name */
 	ptr = strrchr(name, (int) dirchar);
-	if (ptr == (char *) NULL) {
-		*path = '\0';			/* no path found */
+	if (ptr == (char *) NULL) {		/* no path found */
+		if (path != (char *) NULL) {
+			*path = '\0';	
+		}
 	} else {
 		len = ptr - name + 1;
-		(void) strncpy(path, name, len);
-		path[len] = '\0';
+		if (path != (char *) NULL) {
+			(void) strncpy(path, name, len);
+			path[len] = '\0';
+		}
 		name = ptr + 1;
 	}
 /* find the base name */
 	ptr = strrchr(name, (int) extchar);
-	if (ptr == (char *) NULL) {
-		(void) strcpy(base, name);	/* no extension found */
+	if (ptr == (char *) NULL) {		/* no extension found */
+		if (base != (char *) NULL) {
+			(void) strcpy(base, name);
+		}
 	} else {
 		len = ptr - name;
-		(void) strncpy(base, name, len);
-		base[len] = '\0';
+		if (base != (char *) NULL) {
+			(void) strncpy(base, name, len);
+			base[len] = '\0';
+		}
 		name = ptr;
 	}
 /* find the extension */
-	if (ptr == (char *) NULL) {
-		*ext = '\0';			/* no extension */
+	if (ptr == (char *) NULL) {		/* no extension */
+		if (ext != (char *) NULL) {
+			*ext = '\0';
+		}
 	} else {
-		(void) strcpy(ext, name);
+		if (ext != (char *) NULL) {
+			(void) strcpy(ext, name);
+		}
 	}
 	return (char *)filename;
 }

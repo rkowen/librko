@@ -1,6 +1,4 @@
-.\" USMID %W%
-.\" RCSID @(#)$Id: strdbecpy.man,v 1.1 1998/10/07 16:19:56 rk Exp $
-.\" LIBDIR
+.\" RCSID @(#)$Id: strdbecpy.man,v 1.2 1998/11/04 20:57:06 rk Exp $
 .TH "STRDBECPY" "3rko" "12 May 1995"
 .SH NAME
 strdbecpy \-
@@ -31,6 +29,9 @@ respectively.
 	Input   filename	the filename to decompose
 .fi
 The function returns a pointer to filename.
+In addition, if any of the output array pointers,
+.IR path , base , ext
+are NULL, then the respective value will not be loaded into it.
 
 .SH SEE ALSO
 strcpy(3), basename(1), dirname(1)
