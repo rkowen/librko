@@ -2,7 +2,7 @@
 #  define _LIBRKO_H_
 /* 
  * USMID %W%
- * RCSID @(#)$Id: librko.h,v 1.2 1998/10/14 15:16:09 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.3 1998/10/21 22:30:31 rk Exp $
  */
 /*
  *********************************************************************
@@ -162,8 +162,10 @@ enum uvec_order {UVEC_ASCEND, UVEC_DESCEND
 #endif
 	};
 
-int uvec_ctor(uvec *uv, int cap);
-int uvec_dtor(uvec *uv);
+uvec *uvec_ctor(int cap);
+int uvec_dtor(uvec **uv);
+int uvec_init(uvec *uv, int cap);
+int uvec_close(uvec *uv);
 int uvec_exists(uvec const *uv);
 int uvec_capacity(uvec const *uv);
 int uvec_number(uvec const *uv);

@@ -27,7 +27,7 @@ void printout(uvec *uv, char const *head, int err, char const *ans) {
 	printout(&##v, #c , estat, a);
 
 int main() {
-	uvec u,v,w;
+	uvec u,v,w, *x;
 	int estat=0;
 	int i;
 	char buffer[128];
@@ -36,16 +36,20 @@ int main() {
 	":xyz",":ABC",":aaa",":bbb",":XYZ",
 	":AAA",":bb" ,":abc",":ABC", (char *) NULL};
 
-	_CHECK(uvec_ctor(&u,30), u,
+	_CHECK(uvec_init(&u,30), u,
 	"e:0 c:30 n:0 r:")
-	_CHECK(uvec_ctor(&u,20), u,
-	"e:-1 c:30 n:0 r:")
-	_CHECK(uvec_dtor(&u), u,
+	_CHECK(uvec_init(&u,20), u,
+	"e:-2 c:30 n:0 r:")
+	_CHECK(uvec_close(&u), u,
 	"e:0 c:-1 n:-1 r:")
-	_CHECK(uvec_ctor(&u,-30), v,
-	"e:-2 c:-1 n:-1 r:")
-	_CHECK(uvec_ctor(&u,10), u,
+	_CHECK(uvec_init(&u,-30), v,
+	"e:-3 c:-1 n:-1 r:")
+	_CHECK(uvec_init(&u,10), u,
 	"e:0 c:10 n:0 r:")
+	_CHECK(((x = uvec_ctor(25))==(uvec *)NULL), *x,
+	"e:0 c:25 n:0 r:")
+	_CHECK(uvec_dtor(&x), *x,
+	"e:0 c:-1 n:-1 r:")
 
 	_CHECK(uvec_add(&u, ";00"), u,
 	"e:0 c:10 n:1 r:;00")
@@ -90,7 +94,7 @@ int main() {
 	"e:-1 c:14 n:10 r:;00:01:02x03:04:05:06:07x08:09")
 	_CHECK(uvec_delete(&u, uvec_end(&u) + 2), u,
 	"e:-2 c:14 n:10 r:;00:01:02x03:04:05:06:07x08:09")
-	_CHECK(uvec_dtor(&u), u,
+	_CHECK(uvec_close(&u), u,
 	"e:0 c:-1 n:-1 r:")
 
 /* next batch */
@@ -106,7 +110,7 @@ int main() {
 	_CHECK(uvec_dup(&w,UVEC_ASCEND), w,
 	"e:0 c:5 n:1 r::ABC")
 #endif
-	_CHECK(uvec_dtor(&v), v,
+	_CHECK(uvec_close(&v), v,
 	"e:0 c:-1 n:-1 r:")
 	_CHECK(uvec_copy(&v,&u), v,
 	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
@@ -119,7 +123,7 @@ int main() {
 	"e:0 c:5 n:1 r::ABC")
 #endif
 #ifndef NO_STRCASECMP
-	_CHECK(uvec_dtor(&v), v,
+	_CHECK(uvec_close(&v), v,
 	"e:0 c:-1 n:-1 r:")
 	_CHECK(uvec_copy(&v,&u), v,
 	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
@@ -131,7 +135,7 @@ int main() {
 	_CHECK(uvec_dup(&w,UVEC_CASE_ASCEND), w,
 	"e:0 c:10 n:7 r::aaa:AAA:ABC:abc:ABC:xyz:XYZ")
 #endif
-	_CHECK(uvec_dtor(&v), v,
+	_CHECK(uvec_close(&v), v,
 	"e:0 c:-1 n:-1 r:")
 	_CHECK(uvec_copy(&v,&u), v,
 	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
@@ -145,20 +149,20 @@ int main() {
 #endif
 #endif
 
-	_CHECK(uvec_dtor(&v), v,
+	_CHECK(uvec_close(&v), v,
 	"e:0 c:-1 n:-1 r:")
 	_CHECK(uvec_copy(&v,&u), v,
 	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
 	_CHECK(uvec_reverse(&v), v,
 	"e:0 c:10 n:9 r::ABC:abc:bb:AAA:XYZ:bbb:aaa:ABC:xyz")
 #ifndef NO_URAND
-	_CHECK(uvec_dtor(&v), v,
+	_CHECK(uvec_close(&v), v,
 	"e:0 c:-1 n:-1 r:")
 	_CHECK(uvec_copy(&v,&u), v,
 	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")
 	_CHECK(uvec_randomize(&v, 51258), v,
 	"e:0 c:10 n:9 r::abc:ABC:ABC:bb:aaa:XYZ:bbb:AAA:xyz")
-	_CHECK(uvec_dtor(&v), v,
+	_CHECK(uvec_close(&v), v,
 	"e:0 c:-1 n:-1 r:")
 	_CHECK(uvec_copy(&v,&u), v,
 	"e:0 c:10 n:9 r::xyz:ABC:aaa:bbb:XYZ:AAA:bb:abc:ABC")

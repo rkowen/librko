@@ -116,8 +116,8 @@ int minish_exec(uvec *mshargv, minish_fdlist *fdlist, int *signal) {
 #ifdef TEST
 
 int main () {
-	minish_fdlist fdlist;
-	uvec msharg;
+	minish_fdlist *fdlist;
+	uvec *msharg;
 	int command=0, retval, sigval;
 
 /* redirect stdout to exectest.out */
@@ -126,17 +126,17 @@ int main () {
 
 /* ---------------------------------------------------------------------- */
 /* command mtest/right this is the "right" line of text > exectest.out */
-	if (minish_fdlist_ctor(&fdlist)) rkoperror("main");
-	if (uvec_ctor(&msharg,10)) rkoperror("main");
+	if (!(fdlist = minish_fdlist_ctor())) rkoperror("main");
+	if (!(msharg = uvec_ctor(10))) rkoperror("main");
 
-	if (minish_fdlist_add(&fdlist, MINISH_FD_WRITE, 1, "exectest.out"))
+	if (minish_fdlist_add(fdlist, MINISH_FD_WRITE, 1, "exectest.out"))
 		rkoperror("main");
-	if (uvec_add(&msharg, "mtest/right")) rkoperror("main");
-	if (uvec_add(&msharg, "this is the")) rkoperror("main");
-	if (uvec_add(&msharg, "\"right\"")) rkoperror("main");
-	if (uvec_add(&msharg, "line of text")) rkoperror("main");
+	if (uvec_add(msharg, "mtest/right")) rkoperror("main");
+	if (uvec_add(msharg, "this is the")) rkoperror("main");
+	if (uvec_add(msharg, "\"right\"")) rkoperror("main");
+	if (uvec_add(msharg, "line of text")) rkoperror("main");
 
-	retval = minish_exec(&msharg, &fdlist, &sigval);
+	retval = minish_exec(msharg, fdlist, &sigval);
 	printf("%d: retval = %d, sigval = %d\n", ++command, retval, sigval);
 	fflush(stdout);
 
@@ -144,17 +144,17 @@ int main () {
 	if (uvec_dtor(&msharg)) rkoperror("main");
 /* ---------------------------------------------------------------------- */
 /* command mtest/wrong this is the "wrong" line of text >> exectest.out */
-	if (minish_fdlist_ctor(&fdlist)) rkoperror("main");
-	if (uvec_ctor(&msharg,10)) rkoperror("main");
+	if (!(fdlist = minish_fdlist_ctor())) rkoperror("main");
+	if (!(msharg = uvec_ctor(10))) rkoperror("main");
 
-	if (minish_fdlist_add(&fdlist, MINISH_FD_APPEND, 1, "exectest.out"))
+	if (minish_fdlist_add(fdlist, MINISH_FD_APPEND, 1, "exectest.out"))
 		rkoperror("main");
-	if (uvec_add(&msharg, "mtest/wrong")) rkoperror("main");
-	if (uvec_add(&msharg, "this is the")) rkoperror("main");
-	if (uvec_add(&msharg, "\"wrong\"")) rkoperror("main");
-	if (uvec_add(&msharg, "line of text")) rkoperror("main");
+	if (uvec_add(msharg, "mtest/wrong")) rkoperror("main");
+	if (uvec_add(msharg, "this is the")) rkoperror("main");
+	if (uvec_add(msharg, "\"wrong\"")) rkoperror("main");
+	if (uvec_add(msharg, "line of text")) rkoperror("main");
 
-	retval = minish_exec(&msharg, &fdlist, &sigval);
+	retval = minish_exec(msharg, fdlist, &sigval);
 	printf("%d: retval = %d, sigval = %d\n", ++command, retval, sigval);
 	fflush(stdout);
 
@@ -162,18 +162,18 @@ int main () {
 	if (uvec_dtor(&msharg)) rkoperror("main");
 /* ---------------------------------------------------------------------- */
 /* command mtest/rsignal SIGCONT a "right signal" line of text >> exectest.out */
-	if (minish_fdlist_ctor(&fdlist)) rkoperror("main");
-	if (uvec_ctor(&msharg,10)) rkoperror("main");
+	if (!(fdlist = minish_fdlist_ctor())) rkoperror("main");
+	if (!(msharg = uvec_ctor(10))) rkoperror("main");
 
-	if (minish_fdlist_add(&fdlist, MINISH_FD_APPEND, 1, "exectest.out"))
+	if (minish_fdlist_add(fdlist, MINISH_FD_APPEND, 1, "exectest.out"))
 		rkoperror("main");
-	if (uvec_add(&msharg, "mtest/rsignal")) rkoperror("main");
-	if (uvec_add(&msharg, "SIGCONT")) rkoperror("main");
-	if (uvec_add(&msharg, "a")) rkoperror("main");
-	if (uvec_add(&msharg, "\"right signal\"")) rkoperror("main");
-	if (uvec_add(&msharg, "line of text")) rkoperror("main");
+	if (uvec_add(msharg, "mtest/rsignal")) rkoperror("main");
+	if (uvec_add(msharg, "SIGCONT")) rkoperror("main");
+	if (uvec_add(msharg, "a")) rkoperror("main");
+	if (uvec_add(msharg, "\"right signal\"")) rkoperror("main");
+	if (uvec_add(msharg, "line of text")) rkoperror("main");
 
-	retval = minish_exec(&msharg, &fdlist, &sigval);
+	retval = minish_exec(msharg, fdlist, &sigval);
 	printf("%d: retval = %d, sigval = %d\n", ++command, retval, sigval);
 	fflush(stdout);
 
@@ -181,18 +181,18 @@ int main () {
 	if (uvec_dtor(&msharg)) rkoperror("main");
 /* ---------------------------------------------------------------------- */
 /* command mtest/rsignal SIGHUP a "right signal" line of text >> exectest.out */
-	if (minish_fdlist_ctor(&fdlist)) rkoperror("main");
-	if (uvec_ctor(&msharg,10)) rkoperror("main");
+	if (!(fdlist = minish_fdlist_ctor())) rkoperror("main");
+	if (!(msharg = uvec_ctor(10))) rkoperror("main");
 
-	if (minish_fdlist_add(&fdlist, MINISH_FD_APPEND, 1, "exectest.out"))
+	if (minish_fdlist_add(fdlist, MINISH_FD_APPEND, 1, "exectest.out"))
 		rkoperror("main");
-	if (uvec_add(&msharg, "mtest/rsignal")) rkoperror("main");
-	if (uvec_add(&msharg, "SIGHUP")) rkoperror("main");
-	if (uvec_add(&msharg, "a")) rkoperror("main");
-	if (uvec_add(&msharg, "\"right signal\"")) rkoperror("main");
-	if (uvec_add(&msharg, "line of text")) rkoperror("main");
+	if (uvec_add(msharg, "mtest/rsignal")) rkoperror("main");
+	if (uvec_add(msharg, "SIGHUP")) rkoperror("main");
+	if (uvec_add(msharg, "a")) rkoperror("main");
+	if (uvec_add(msharg, "\"right signal\"")) rkoperror("main");
+	if (uvec_add(msharg, "line of text")) rkoperror("main");
 
-	retval = minish_exec(&msharg, &fdlist, &sigval);
+	retval = minish_exec(msharg, fdlist, &sigval);
 	printf("%d: retval = %d, sigval = %d\n", ++command, retval, sigval);
 	fflush(stdout);
 
@@ -200,18 +200,18 @@ int main () {
 	if (uvec_dtor(&msharg)) rkoperror("main");
 /* ---------------------------------------------------------------------- */
 /* command mtest/rsignal SIGINT a "right signal" line of text >> exectest.out */
-	if (minish_fdlist_ctor(&fdlist)) rkoperror("main");
-	if (uvec_ctor(&msharg,10)) rkoperror("main");
+	if (!(fdlist = minish_fdlist_ctor())) rkoperror("main");
+	if (!(msharg = uvec_ctor(10))) rkoperror("main");
 
-	if (minish_fdlist_add(&fdlist, MINISH_FD_APPEND, 1, "exectest.out"))
+	if (minish_fdlist_add(fdlist, MINISH_FD_APPEND, 1, "exectest.out"))
 		rkoperror("main");
-	if (uvec_add(&msharg, "mtest/rsignal")) rkoperror("main");
-	if (uvec_add(&msharg, "SIGINT")) rkoperror("main");
-	if (uvec_add(&msharg, "a")) rkoperror("main");
-	if (uvec_add(&msharg, "\"right signal\"")) rkoperror("main");
-	if (uvec_add(&msharg, "line of text")) rkoperror("main");
+	if (uvec_add(msharg, "mtest/rsignal")) rkoperror("main");
+	if (uvec_add(msharg, "SIGINT")) rkoperror("main");
+	if (uvec_add(msharg, "a")) rkoperror("main");
+	if (uvec_add(msharg, "\"right signal\"")) rkoperror("main");
+	if (uvec_add(msharg, "line of text")) rkoperror("main");
 
-	retval = minish_exec(&msharg, &fdlist, &sigval);
+	retval = minish_exec(msharg, fdlist, &sigval);
 	printf("%d: retval = %d, sigval = %d\n", ++command, retval, sigval);
 	fflush(stdout);
 

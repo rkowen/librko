@@ -1,5 +1,5 @@
 static const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: uvec.c,v 1.4 1998/10/14 15:16:10 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec.c,v 1.5 1998/10/21 22:30:31 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.0 10/31/97 R.K.Owen,Ph.D.";
 /* uvec.c -
  * This could have easily been made a C++ class, but is
@@ -41,12 +41,33 @@ static char TAG[5] = "UVEC";
 
 /* ---------------------------------------------------------------------- */
 /* uvec_ctor - construct Unix vector to capacity cap
+ * returns NULL if an error, else the memory location  if OK.
+ * uvec_ctor will call uvec_init() to set things up.
+ */
+uvec *uvec_ctor(int cap) {
+	uvec *uv = (uvec *) NULL;
+
+	if (!(uv = (uvec *) malloc(sizeof(uvec)))) {
+#ifdef RKOERROR
+		(void) rkocpyerror("uvec_ctor : uvec malloc error!");
+		rkoerrno = RKOMEMERR;
+#endif
+		return uv;
+	}
+	if (uvec_init(uv,cap)) {
+		free(uv);
+		uv = (uvec *) NULL;
+	}
+	return uv;
+}
+/* ---------------------------------------------------------------------- */
+/* uvec_init - construct Unix vector to capacity cap
  * returns <0 if an error, else 0 if OK as well as all the other functions
  */
-int uvec_ctor(uvec *uv, int cap) {
+int uvec_init(uvec *uv, int cap) {
 	if (uv == (uvec *) NULL) {
 #ifdef RKOERROR
-		(void) rkocpyerror("uvec_ctor : null pointer!");
+		(void) rkocpyerror("uvec_init : null pointer!");
 		rkoerrno = RKOUSEERR;
 #endif
 		return -1;
@@ -54,21 +75,21 @@ int uvec_ctor(uvec *uv, int cap) {
 /* can't guarantee that struct will be initialized to 0 hence use "tag" */
 	if (!strncmp(uv->tag,TAG, 5)) {
 #ifdef RKOERROR
-		(void) rkocpyerror("uvec_ctor : already initialized!");
+		(void) rkocpyerror("uvec_init : already initialized!");
 		rkoerrno = RKOUSEERR;
 #endif
 		return -2;
 	}
 	if (cap < 1) {
 #ifdef RKOERROR
-		(void) rkocpyerror("uvec_ctor : invalid capacity!");
+		(void) rkocpyerror("uvec_init : invalid capacity!");
 		rkoerrno = RKOUSEERR;
 #endif
 		return -3;
 	}
 	if (!(uv->vector = (char **) calloc(cap, sizeof(char *)))) {
 #ifdef RKOERROR
-		(void) rkocpyerror("uvec_ctor : malloc error!");
+		(void) rkocpyerror("uvec_init : malloc error!");
 		rkoerrno = RKOMEMERR;
 #endif
 		return -4;
@@ -82,8 +103,16 @@ int uvec_ctor(uvec *uv, int cap) {
 	return 0;
 }
 /* ---------------------------------------------------------------------- */
-/* uvec_dtor - destroy the uvec */
-int uvec_dtor(uvec *uv) {
+/* uvec_dtor - destroy the uvec (calls uvec_close also) */
+int uvec_dtor(uvec **uv) {
+	int retval = 0;
+	if ((retval = uvec_close(*uv))) return retval;
+	free (*uv);
+	return retval;
+}
+/* ---------------------------------------------------------------------- */
+/* uvec_close - destroy the uvec contents */
+int uvec_close(uvec *uv) {
 	int i;
 
 	if (uv == (uvec *) NULL) {
@@ -278,11 +307,15 @@ int uvec_exists(uvec const *uv) {
 		retval = 0;
 	} else {
 		if (strncmp(uv->tag,TAG, 5)) {
+#ifdef RKOERROR
 			(void) rkocpyerror("uvec_exists : uvec doesn't exist!");
 			rkoerrno = RKOUSEERR;
+#endif
 			retval = 0;
 		} else {
+#ifdef RKOERROR
 			rkoerrno = RKO_OK;
+#endif
 			retval = 1;
 		}
 	}
@@ -298,7 +331,6 @@ int uvec_capacity(uvec const *uv) {
 	} else {
 #ifdef RKOERROR
 		(void) rkopsterror("uvec_capacity : ");
-		rkoerrno = RKOUSEERR;
 #endif
 		return -1;
 	}
@@ -313,7 +345,6 @@ int uvec_number(uvec const *uv) {
 	} else {
 #ifdef RKOERROR
 		(void) rkopsterror("uvec_number : ");
-		rkoerrno = RKOUSEERR;
 #endif
 		return -1;
 	}
@@ -328,7 +359,6 @@ int uvec_end(uvec const *uv) {
 	} else {
 #ifdef RKOERROR
 		(void) rkopsterror("uvec_end : ");
-		rkoerrno = RKOUSEERR;
 #endif
 		return -1;
 	}
@@ -343,7 +373,6 @@ char ** uvec_vector(uvec const *uv) {
 	} else {
 #ifdef RKOERROR
 		(void) rkopsterror("uvec_vector : ");
-		rkoerrno = RKOUSEERR;
 #endif
 		return (char **) NULL;
 	}
@@ -472,7 +501,7 @@ int uvec_copy_vec(uvec *u, char **vec, int number) {
 		number = ++num;
 	}
 
-	if (rstat = uvec_ctor(u, number)) {
+	if (rstat = uvec_init(u, number)) {
 #ifdef RKOERROR
 		(void) rkopsterror("uvec_copy_vec : ");
 		return rstat - 128;

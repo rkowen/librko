@@ -1,7 +1,7 @@
 #ifndef _MINISH_H_
 #  define _MINISH_H_
 /* 
- * RCSID @(#)$Id: minish.h,v 1.2 1998/10/15 06:28:29 rk Exp $
+ * RCSID @(#)$Id: minish.h,v 1.3 1998/10/21 22:30:32 rk Exp $
  */
 /*
  *********************************************************************
@@ -51,8 +51,10 @@ struct minish_fdlist_elem {
 	char *file;			/* file name		*/
 };
 
-int minish_fdlist_ctor(minish_fdlist *fdl);
-int minish_fdlist_dtor(minish_fdlist *fdl);
+minish_fdlist *minish_fdlist_ctor();
+int minish_fdlist_init(minish_fdlist *fdl);
+int minish_fdlist_close(minish_fdlist *fdl);
+int minish_fdlist_dtor(minish_fdlist **fdl);
 int minish_fdlist_exists(minish_fdlist *fdl);
 int minish_fdlist_add(minish_fdlist *fdl, minish_fd_action action, int fd, ...);
 int minish_fdlist_dump(minish_fdlist *fdl, FILE *file);

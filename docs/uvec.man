@@ -1,5 +1,5 @@
 .\" USMID %W%
-.\" RCSID @(#)$Id: uvec.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" RCSID @(#)$Id: uvec.man,v 1.2 1998/10/21 22:30:32 rk Exp $
 .\" LIBDIR
 .TH "UVEC" "3rko" "31 Oct 1997"
 .SH NAME
@@ -24,8 +24,10 @@ strings.
  #endif
  		};
 
- int uvec_ctor(uvec *uv, int cap);
- int uvec_dtor(uvec *uv);
+ uvec *uvec_ctor(uvec *uv, int cap);
+ int uvec_dtor(uvec **uv);
+ int uvec_init(uvec *uv, int cap);
+ int uvec_close(uvec *uv);
  int uvec_exists(uvec const *uv);
  int uvec_capacity(uvec const *uv);
  int uvec_number(uvec const *uv);
@@ -57,7 +59,7 @@ A Unix vector is a list of char strings, terminated by a
 and char **environ.
 .P
 All the functions,
-except for the accessor functions,
+except for the accessor and constructor functions,
 return 0 if no error or return <0 otherwise.
 
 .TP 15
@@ -67,6 +69,14 @@ construct Unix vector to capacity ``cap''.
 .TP
 .I uvec_dtor
 destroy the Unix vector.
+
+.TP
+.I uvec_init
+initialize Unix vector to capacity ``cap''.
+
+.TP
+.I uvec_close
+destroy the Unix vector contents.
 .TP
 .I uvec_exists
 returns 0 if the vector is not constructed.
@@ -136,34 +146,34 @@ If seed <=0 then will "randomly" choose one.
 #include "librko.h"
 
 int main() {
-	uvec u;
+	uvec *u;
 	int estat=0;
 	char buffer[128];
 	char **vec;
 	int i;
 
-	if(uvec_ctor(&u,10)) rkoperror("main");
+	if(!(u = uvec_ctor(10))) rkoperror("main");
 
 	for (i = 0; i < 12; ++i) {
 		(void) sprintf(buffer, ":%0.2d:", i);
-		if (uvec_add(&u, buffer)) rkoperror("main");
+		if (uvec_add(u, buffer)) rkoperror("main");
 	}
 	/* can access the elements ``directly'' */
-	*(uvec_vector(&u)[0]) = 'x';
-	*(uvec_vector(&u)[5]) = 'x';
+	*(uvec_vector(u)[0]) = 'x';
+	*(uvec_vector(u)[5]) = 'x';
 
-	if(uvec_pop(&u)) rkoperror("main");
-	if(uvec_pop(&u)) rkoperror("main");
+	if(uvec_pop(u)) rkoperror("main");
+	if(uvec_pop(u)) rkoperror("main");
 
-	vec = uvec_vector(&u);
-	if (uvec_exists(&u)) {
+	vec = uvec_vector(u);
+	if (uvec_exists(u)) {
 		for (i = 0; *vec != (char *) NULL; ++i, ++vec) {
 			printf("\t-%s-", *vec);
 			if (!((i+1)%5)) printf("\n");
 		}
 		printf("\n");
 		printf("\tend = %d, number = %d, capacity = %d\n",
-			uvec_end(&u), uvec_number(&u), uvec_capacity(&u));
+			uvec_end(u), uvec_number(u), uvec_capacity(u));
 	}
 
 	if(uvec_dtor(&u)) rkoperror("main");
