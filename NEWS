@@ -1,4 +1,8 @@
 
+librko-1.0.1	2002/10/21
+* added NEWS & ChangeLog.
+* fixed spawn3 stderr buffer
+
 librko-1.0.0	2002/10/21
 * first release with a working configure, using automake/autoconf etc.
 * added spawn3
