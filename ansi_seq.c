@@ -1,5 +1,5 @@
-static const char RCSID[]="@(#)$Id: ansi_seq.c,v 1.4 1999/09/09 21:30:43 rk Exp $";
-static char AUTHOR[]="@(#)ansi_seq 1.1 12/21/95 R.K.Owen,PhD";
+static const char RCSID[]="@(#)$Id: ansi_seq.c,v 1.5 2002/02/15 23:01:55 rk Exp $";
+static const char AUTHOR[]="@(#)ansi_seq 1.1 12/21/95 R.K.Owen,PhD";
 
 /* ansi_seq - creates a char * string that is the ANSI color and
  *	attribute sequence.
@@ -37,7 +37,7 @@ static char AUTHOR[]="@(#)ansi_seq 1.1 12/21/95 R.K.Owen,PhD";
 
 #include <stdio.h>
 #include <unistd.h>
-#include "librko.h"
+#include "ansi_seq.h"
 
 const char *ANSI_Attributes[ATTRIB_NUM] = {
   "none", "bold", "underscore", "blink", "reverse", "concealed"};

@@ -23,6 +23,9 @@ LIBOBJS	=$(OBJS:%.o=../$(LIB)(%.o))
 
 all: ../$(LIB)
 
+mall:
+	@$(ECHO) "minish not doing anything"
+
 ../$(LIB) : $(LIBOBJS)
 	$(AR) $(ARFLAGS) $@ $?
 #	-$(RM) -f $?

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: divdiff.c,v 1.4 1999/09/09 21:30:43 rk Exp $";
+static const char RCSID[]="@(#)$Id: divdiff.c,v 1.5 2002/02/15 23:01:55 rk Exp $";
 const char AUTHOR[]="@(#)divdiff 1.1 05/12/94 R.K.Owen,Ph.D.";
 /*
  * divdiffcoef(opt,N,t,g,c) computes the divided difference coefficients
@@ -131,7 +131,7 @@ extern "C" {
 /* opt != 0 then input n-th derivative without 1/n! factor */
 /* if opt < 0 then free-up memory and exit */
 int divdiffcoef(int opt, int N, PRECISION *t, PRECISION *g, PRECISION *c) {
-	register int i, j, j1, ji, iji1;
+	register int i, j=0, j1, ji, iji1;
 	static int Nidx, *idx;
 	PRECISION cj, cj1;
 

@@ -8,18 +8,30 @@ include ../Makefile.inc
 OBJS	=urand.o
 #requires GNU "make"
 LIBOBJS	=$(OBJS:%.o=../$(LIB)(%.o))
+MLIBOBJS	=$(OBJS:%_m.o=../$(MLIB)(%_m.o))
 
 .DEFAULT:
 	$(MAKE) help
 
 all: ../$(LIB) urand.3
 
+mall: ../$(MLIB)
+
 ../$(LIB) : $(LIBOBJS)
 	$(AR) $(ARFLAGS) $@ $?
 	-$(RM) -f $?
 
+../$(MLIB) : $(MLIBOBJS)
+	$(AR) $(ARFLAGS) $@ $?
+	-$(RM) -f $?
+
 .c.o :
+	@$(ECHO) ">>>> .c.o $* $< $@"
 	./script.csh "$(CC) $(CFLAGS)"
+
+.c_m.o :
+	@$(ECHO) ">>>> .c_m.o $* $< $@"
+	./script.csh "$(CC) $(CFLAGS) -DMEMDEBUG"
 
 .man.3 :
 	$(NROFF) $(MAN) $< > $@

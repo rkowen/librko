@@ -1,12 +1,15 @@
 /* quick & dirty program to create an ANSI color sequence
- * by R.K. Owen, Ph.D.  12/21/95
+ * by R.K. Owen, Ph.D.  1995/12/21
  */
 
 #include <stdio.h>
-#if 0
-#  include "ansi_seq.h"
+
+#include "ansi_seq.h"
+
+#ifndef _color_
+#  define __MAIN__ main
 #else
-#  include "librko.h"
+#  define __MAIN__ tansi_seq
 #endif
 
 char *attribchar[ATTRIB_NUM] = {
@@ -18,7 +21,7 @@ char *fgcolornum[COLOR_NUM] = {
 char *bgcolornum[COLOR_NUM] = {
   "40",    "41",   "42",   "43",     "44",   "45",      "46",   "47"};
 
-int main(int argc, char *argv[]) {
+int __MAIN__(int argc, char *argv[]) {
 	int i,ii,j,k;
 	char word[] = " AaBbCc ";
 

@@ -61,7 +61,7 @@ uninstall :
 		\$(ROOT)/man/cat1/$PkgNm.1
 
 $PkgNm : $Pkg
-	\$(CC) \$(CFLAGS) -o $PkgNm $Code
+	\$(CC) \$(CFLAGS) -D_${PkgNm}_ -o $PkgNm $Code
 
 $PkgNm.1 : $PkgNm.man
 	\$(NROFF) -man $PkgNm.man > $PkgNm.1

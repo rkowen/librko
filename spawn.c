@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: spawn.c,v 1.3 1999/09/09 21:30:44 rk Exp $";
+static const char RCSID[]="@(#)$Id: spawn.c,v 1.4 2002/02/15 23:01:55 rk Exp $";
 static const char AUTHOR[]="@(#)spawn 1.0 11/06/98 R.K.Owen,Ph.D.";
 /* spawn.c - routine for fork/exec/dup/pipe a child process and tie its
  *	input/output back to be written/read by the caller.
@@ -38,7 +38,6 @@ int spawn(FILE **childin, FILE **childout, char **argv) {
 	int parent_rfd, parent_wfd;
 	int child_rfd,  child_wfd;
 	int child_pid = 0;
-	FILE * returnfile = (FILE *) NULL;
 
 	/* open pipes for two one-way communication */
 	if(pipe(pipepath1) < 0 || pipe(pipepath2) < 0) {

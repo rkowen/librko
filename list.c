@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: list.c,v 1.6 2002/02/10 08:02:28 rk Exp $";
+static const char RCSID[]="@(#)$Id: list.c,v 1.7 2002/02/15 23:01:55 rk Exp $";
 static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 /* list.c -
  * This could have easily been made a C++ class, but is
@@ -31,6 +31,9 @@ static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#ifdef MEMDEBUG
+#  include "memdebug.h"
+#endif
 #include "rkoerror.h"
 #include "list.h"
 

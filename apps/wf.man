@@ -1,0 +1,45 @@
+.\" LIBDIR
+.TH "wf" "1rko" "14 Feb 2002"
+.SH NAME
+wf \- performs a word frequency count on the input text files
+.SH SYNOPSIS
+
+ wf \fR[\fB-h\fR][\fB-c\fR][\fB-n\fR][\fB-o\fR output ][\fB--\fR] [input \.\.\.]
+
+.SH DESCRIPTION
+.I wf
+\- performs a word frequency count.
+
+.TP 15
+-h
+this helpful message
+.TP
+-c
+Let the word count be case sensitive (else
+.I wf
+will force everything to lowercase).
+.TP
+-n
+output the aggregate word count and unique word count.
+.TP
+-o output
+send the output to this file
+.TP
+--
+stop option parsing (useful for filenames that start with `-')
+.TP
+input \.\.\.
+process any number of input files and when it see's a `-` it will
+take
+.IR stdin .
+When no files are given then
+.I wf
+will act like a filter.
+
+.SH SEE ALSO
+wc(1),sort(1)
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

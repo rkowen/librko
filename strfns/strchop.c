@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: strchop.c,v 1.5 2002/02/08 23:10:22 rk Exp $";
+static const char RCSID[]="@(#)$Id: strchop.c,v 1.6 2002/02/15 23:01:55 rk Exp $";
 static const char AUTHOR[]="@(#)strchop 1.0 1995/10/05 R.K.Owen,Ph.D.";
 
 /* strchop - chops a string at the spaces (as determined by isspace())
@@ -56,6 +56,9 @@ char *strchop(const char *string, int chop_len,
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#ifdef MEMDEBUG
+#  include "memdebug.h"
+#endif
 #ifdef RKOERROR
 #  include "rkoerror.h"
 #endif

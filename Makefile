@@ -14,25 +14,45 @@ SRCS	=invoke.c timedfgets.c rkoerror.c memdebug.c strmem.c wcstrcmp.c \
 DIRS	= minish urand
 
 # requires a GNU "make" for the following
-LIBOBJS	=$(SRCS:%.c=$(LIB)(%.o))
+LIBOBJS		=$(SRCS:%.c=$(LIB)(%.o))
+MLIBOBJS	=$(SRCS:%.c=$(MLIB)(%_m.o))
 
 OBJS	=$(SRCS:.c=.o)
 DOCS	=$(SRCS:.c=.3)
 DOCSL	=librko.3 $(DOCS)
 
-.SUFFIXES: .3 .man
+.SUFFIXES:
+.SUFFIXES: .c _m.o _m.a .o .a .3 .man
+
+.c_m.a:
+	@$(ECHO) "==== .c_m.a: $* $< $@"
+	$(CC) -c $(CFLAGS) -DMEMDEBUG $<
+	$(AR) $(ARFLAGS) $@ $*.o
+	-$(RM) -f $*.o
 
 .c.a:
+	@$(ECHO) "==== .c.a: $* $< $@"
 	$(CC) -c $(CFLAGS) $<
 	$(AR) $(ARFLAGS) $@ $*.o
 	-$(RM) -f $*.o
 
 .o.a:
+	@$(ECHO) "==== .o.a: $* $< $@"
 	$(AR) $(ARFLAGS) $@ $*.o
 	-$(RM) -f $*.o
 
-#.c.o :
-#	$(CC) $(CFLAGS) -c $<
+_m.o.a:
+	@$(ECHO) "==== _m.o.a: $* $< $@"
+	$(AR) $(ARFLAGS) $@ $*.o
+	-$(RM) -f $*.o
+
+.c.o :
+	@$(ECHO) "==== .c.o: $* $< $@"
+	$(CC) -c $(CFLAGS) $<
+
+.c_m.o :
+	@$(ECHO) "==== .c_m.o: $* $< $@"
+	$(CC) -o $@ -c $(CFLAGS) -DMEMDEBUG $<
 
 .man.3 :
 	$(NROFF) $(MAN) $< > $@
@@ -43,6 +63,12 @@ all : $(LIB) $(DOCSL)
 		($(CD) $$d; $(MAKE) all ) ; \
 	done
 
+mall : $(MLIB)
+	-@for d in $(DIRS); do \
+		$(ECHO) "making $$d"; \
+		($(CD) $$d; $(MAKE) mall ) ; \
+	done
+
 test :
 	-@for d in $(DIRS); do \
 		$(ECHO) "making $$d"; \
@@ -51,7 +77,10 @@ test :
 	cd tests; $(ECHO) "making tests"; $(MAKE) test
 
 $(LIB): $(LIBOBJS)
-	@echo lib is now up-to-date
+	@echo librko is now up-to-date
+
+$(MLIB): $(MLIBOBJS)
+	@echo librko_m is now up-to-date
 
 #$(LIB) : $(OBJS) librko.h
 #	-$(RM) $(LIB)
@@ -92,14 +121,25 @@ shar : clobber
 #
 # the following are individual packages for distribution
 #
-alltgz : FTP/color.tgz FTP/mexpn.tgz FTP/netup.tgz FTP/memory.tgz \
-	 FTP/istext.tgz
+alltgz : FTP/color.tgz FTP/mexpn.tgz FTP/netup.tgz FTP/memdebug.tgz \
+	 FTP/istext.tgz FTP/wf.tgz
 
-FTP/color.tgz : apps/color.c ansi_seq.c librko.h apps/color.man
+FTP/color.tgz : apps/color.c ansi_seq.c ansi_seq.h apps/color.man \
+		tests/tansi_seq.c
 	./setupmake color apps/color.c ansi_seq.c \
-		librko.h apps/color.man
+		ansi_seq.h apps/color.man tests/tansi_seq.c
 	$(TAR) -czvf FTP/color.tgz	color
 	$(RM) -rf			color
+
+FTP/istext.tgz : istext.c apps/istextmain.c apps/istext.man
+	./setupmake istext istext.c apps/istextmain.c apps/istext.man
+	$(TAR) -czvf FTP/istext.tgz	istext
+	$(RM) -rf			istext
+
+FTP/memory.tgz : memdebug.c memdebug.h memdebug.man
+	./setupmake memory memdebug.c memdebug.h memdebug.man
+	$(TAR) -czvf FTP/memory.tgz	memory
+	$(RM) -rf			memory
 
 FTP/mexpn.tgz : apps/mexpn.c gethostbyX.c tcp_connect.c timedfgets.c \
 		rkoerror.c librko.h apps/mexpn.man
@@ -115,15 +155,13 @@ FTP/netup.tgz : apps/netup.c gethostbyX.c tcp_connect.c \
 	$(TAR) -czvf FTP/netup.tgz	netup
 	$(RM) -rf			netup
 
-FTP/memory.tgz : memory.c librko.h memory.man
-	./setupmake memory amemory.c librko.h memory.man
-	$(TAR) -czvf FTP/memory.tgz	memory
-	$(RM) -rf			memory
-
-FTP/istext.tgz : istext.c apps/istextmain.c apps/istext.man
-	./setupmake istext istext.c apps/istextmain.c apps/istext.man
-	$(TAR) -czvf FTP/istext.tgz	istext
-	$(RM) -rf			istext
+FTP/wf.tgz :	apps/wf.c avec.c avec.h uvec.c uvec.h iprime.c iprime.h \
+		isqrt.c isqrt.h
+	./setupmake wf \
+		apps/wf.c avec.c avec.h uvec.c uvec.h iprime.c iprime.h \
+		isqrt.c isqrt.h
+	$(TAR) -czvf FTP/wf.tgz		wf
+	$(RM) -rf			wf
 
 #
 # Helpful info
@@ -161,3 +199,9 @@ clobber : wipe
 	-$(RM) urand/urand.o
 	-$(CD) metropolis; make clobber
 	-$(CD) minish; make clobber
+
+#
+# list of dependencies
+#
+iprime.o : isqrt.o
+avec.o : iprime.o

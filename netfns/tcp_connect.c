@@ -39,6 +39,7 @@ static const char AUTHOR[]="@(#)tcp_connect 1.0 03/26/96 R.K.Owen,Ph.D.";
 #  define	_XOPEN_SOURCE_EXTENDED	1
 #endif
 #include <string.h>
+#include <unistd.h>	/* close */
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -47,7 +48,7 @@ static const char AUTHOR[]="@(#)tcp_connect 1.0 03/26/96 R.K.Owen,Ph.D.";
 #if	!(defined(_CRAY) || defined(_AIX))
 #  define HERRNO_LEN 128
 /* quick routine that should have been provided with herror */
-static const char *hstrerror(int hh_errno) {
+static char const *hstrerror(int hh_errno) {
 	extern int h_errno;
 	char *ptr;
 

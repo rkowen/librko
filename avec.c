@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec.c,v 1.7 2002/02/15 05:30:55 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec.c,v 1.8 2002/02/15 23:01:55 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -31,6 +31,9 @@ static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 #include <stdarg.h>
 #include <string.h>
 #include <time.h>
+#ifdef MEMDEBUG
+#  include "memdebug.h"
+#endif
 #include "avec.h"
 #include "iprime.h"
 #ifdef HAVE_STRMALLOC
@@ -56,6 +59,61 @@ char const *_s, *_t
 
 
 static char TAG[5] = "AVEC";
+
+/* ---------------------------------------------------------------------- */
+/* Implement AVEC_COUNT
+ * put the count into the (void *) ptr
+ * but limited to the unsigned integer size that fits
+ */
+int avec_count_insert (void **data, va_list ap) {
+	int retval = 1;
+	if (!data) return -1;
+
+	if (*data == (void *) NULL) retval = 0;
+
+	if (sizeof(void *) == sizeof(unsigned int)) {
+		((unsigned int) *data)++;
+	} else if (sizeof(void *) == sizeof(unsigned short)) {
+		((unsigned short) *data)++;
+	} else if (sizeof(void *) == sizeof(unsigned long)) {
+		((unsigned long) *data)++;
+	} else {	/* hope for the best */
+		((unsigned int) *data)++;
+	}
+	return retval;
+}
+
+int avec_count_delete (void **data, va_list ap) {
+	int retval = 1;
+	if (!data) return -1;
+
+	if (sizeof(void *) == sizeof(unsigned int)) {
+		((unsigned int) *data)--;
+	} else if (sizeof(void *) == sizeof(unsigned short)) {
+		((unsigned short) *data)--;
+	} else if (sizeof(void *) == sizeof(unsigned long)) {
+		((unsigned long) *data)--;
+	} else {	/* hope for the best */
+		((unsigned int) *data)--;
+	}
+
+	if (*data == (void *) NULL) retval = 0;
+
+	return retval;
+}
+
+int avec_count_close (void **data, va_list ap) {
+	if (!data) return -1;
+	*data = (void *) NULL;
+	return 0;
+}
+
+avec_fns count_fns = {
+	AVEC_COUNT,
+	avec_count_insert,
+	avec_count_delete,
+	avec_count_close
+};
 
 /* ---------------------------------------------------------------------- */
 /* wrappers for the StdC string functions
@@ -144,6 +202,10 @@ int avec_set_fns(enum avec_def_fns type, avec_fns *fns) {
 		default_fns.data_del = stdc_fns.data_del;
 		default_fns.data_rm = stdc_fns.data_rm;
 #endif
+	} else if (type == AVEC_COUNT) {
+		default_fns.data_add = count_fns.data_add;
+		default_fns.data_del = count_fns.data_del;
+		default_fns.data_rm = count_fns.data_rm;
 	} else if (type == AVEC_USER) {
 		if (fns == (avec_fns*) NULL
 		|| fns->data_add == NULL

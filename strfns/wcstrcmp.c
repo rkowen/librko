@@ -1,5 +1,5 @@
-static const char RCSID[]="@(#)$Id: wcstrcmp.c,v 1.4 1999/09/09 21:30:44 rk Exp $";
-static char AUTHOR[]="@(#)wcstrcmp 1.1 08/09/95 R.K.Owen,PhD";
+static const char RCSID[]="@(#)$Id: wcstrcmp.c,v 1.5 2002/02/15 23:01:55 rk Exp $";
+static const char AUTHOR[]="@(#)wcstrcmp 1.1 08/09/95 R.K.Owen,PhD";
 
 /* wcstrcmp - compares two strings, where one can contain wildcard characters.
  *   the allowed wild cards are '*' to match any number of characters and

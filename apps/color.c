@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "librko.h"
+#include "ansi_seq.h"
 
 void usage(char *ProgName) {
 	int i;
@@ -22,9 +22,12 @@ void usage(char *ProgName) {
 "	and foreground character color. Each one is output as processed and\n"
 "	errors are ignored.\n"
 "\n"
-"usage: %s%s%s %s[attribute]%s %s[-bgcolor]%s %s[+fgcolor]%s"
+"usage: %s%s%s [-t|%s[attribute]%s %s[-bgcolor]%s %s[+fgcolor]%s]"
 "\n"
-"where: either the number or name (or beginning part thereof) is specified\n",
+"where:\n"
+"	-t	print out color test only\n\n"
+"or:	use the number or name (or beginning part thereof)\n"
+"	to set that attribute\n",
 		ansi_seq(BOLD, BLACK, RED),
 		ProgName,
 		ansi_seq(NONE, BLACK, WHITE),
@@ -100,6 +103,9 @@ int main(int argc, char *argv[]) {
 			ansiattcol = ANSI_Colors;
 			uplimit = COLOR_NUM;
 		} else if (**argv == '-') {
+			if (*(*argv + 1) == 't') {
+				return tansi_seq(0, NULL);
+			}
 			ansifn = ansi_bgcolor;
 			(*argv)++;
 			ansiattcol = ANSI_Colors;

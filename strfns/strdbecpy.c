@@ -1,5 +1,5 @@
-static char RCSID[]="@(#)$Id: strdbecpy.c,v 1.4 1999/09/09 21:30:44 rk Exp $";
-static char AUTHOR[]="@(#)strdbecpy 1.1 11/14/97 R.K.Owen,PhD";
+static const char RCSID[]="@(#)$Id: strdbecpy.c,v 1.5 2002/02/15 23:01:55 rk Exp $";
+static const char AUTHOR[]="@(#)strdbecpy 1.1 11/14/97 R.K.Owen,PhD";
 
 /* strDBEcpy - breaks apart a UNIX filename into its path, basename, and
  *	extension.  As an example: /dir1/dir2/file.d would be decomposed to

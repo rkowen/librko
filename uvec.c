@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: uvec.c,v 1.13 2002/02/08 23:10:22 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec.c,v 1.14 2002/02/15 23:01:55 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 /* uvec.c -
  * This could have easily been made a C++ class, but is
@@ -33,6 +33,9 @@ static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 #include <stdarg.h>
 #include <string.h>
 #include <time.h>
+#ifdef MEMDEBUG
+#  include "memdebug.h"
+#endif
 #include "uvec.h"
 #ifdef HAVE_STRMALLOC
 #  include "strmalloc.h"

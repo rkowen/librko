@@ -6,6 +6,7 @@
 #  customize for your own environment
 #
 LIB	= librko.a
+MLIB	= librko_m.a
 PERM	= 644
 #OWN	= rk
 #GRP	= owen

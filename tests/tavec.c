@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#ifdef MEMDEBUG
+#  include "memdebug.h"
+#endif
 #include "rkoerror.h"
 #include "strmalloc.h"
 #include "uvec.h"
@@ -32,6 +35,46 @@ int printout(avec *av, char const *head, int err, char const *ans) {
 		strcat(testbuf, uvec2str(uv, "|"));
 		free((void *)vec);
 		uvec_dealloc(&uv);
+	}
+	if (strcmp(testbuf, ans)) {
+		printf("FAIL:%-20s=\n    <\t%s\n    >\t%s\n",head,testbuf,ans);
+		return 1;
+	} else {
+		printf("OK  :%-20s=\n\t%s\n",head,testbuf);
+		return 0;
+	}
+# ifdef RKOERROR
+	if (rkoerrno != RKO_OK) {
+		printf("%s\n", rkostrerror());
+	}
+# endif
+}
+
+int printcount(avec *av, char const *head, int err, char const *ans) {
+	char const * const * vec;
+	int const * ivec;
+	uvec *uv;
+	int count = 0, i;
+	char ibuf[64];
+
+	sprintf(testbuf,"e:%d c:%d n:%d",
+		err, avec_capacity(av), avec_number(av));
+	if (avec_exists(av)) {
+		strcat(testbuf," k:");
+		vec = avec_keys(av);
+		uv = uvec_alloc();
+		uvec_copy_vec(uv, vec, 0);
+		count = uvec_number(uv);
+		strcat(testbuf, uvec2str(uv, "|"));
+		free((void *)vec);
+		uvec_dealloc(&uv);
+
+		strcat(testbuf," v:");
+		ivec = (int const *) avec_values(av);
+		for (i = 0; i < count; i++) {
+			sprintf(ibuf, " %d", ivec[i]);
+			strcat(testbuf,ibuf);
+		}
 	}
 	if (strcmp(testbuf, ans)) {
 		printf("FAIL:%-20s=\n    <\t%s\n    >\t%s\n",head,testbuf,ans);
@@ -132,6 +175,10 @@ int verify(avec *av, char const *head) {
 	count++; estat = c; \
 	results += printout(&(v), #c, estat, a);
 
+#define _COUNT(c, v, a) \
+	count++; estat = c; \
+	results += printcount(&(v), #c, estat, a);
+
 int str_Xmalloc (void **data, va_list ap) {
 	char *newstr;
 	char const *str = va_arg(ap,char *);
@@ -161,7 +208,7 @@ avec_fns user_fns = {
 };
 
 int main () {
-	avec *x, *y;
+	avec *x, *y, *z;
 	int count=0, results=0;
 	int estat;
 	void **values, **vptr;
@@ -279,6 +326,40 @@ int main () {
 		strfree((char **)vptr);
 		vptr++;
 	}
+	printf("========================\n");
+
+	avec_set_fns(AVEC_COUNT, NULL);
+	z = avec_ctor(10);
+	_COUNT(avec_number(z),*z,
+		"e:0 c:11 n:0 k: v:");
+	_COUNT(avec_capacity(z),*z,
+		"e:11 c:11 n:0 k: v:");
+	_COUNT(avec_resize_percentage(z,0),*z,
+		"e:0 c:11 n:0 k: v:");
+	_COUNT(avec_resize_percentage(z,40),*z,
+		"e:0 c:11 n:0 k: v:");
+	_COUNT(avec_resize_percentage(z,0),*z,
+		"e:40 c:11 n:0 k: v:");
+	_COUNT(avec_insert(z,"first"),*z,
+		"e:0 c:11 n:1 k:first v: 1");
+	_COUNT(avec_insert(z,"first"),*z,
+		"e:1 c:11 n:1 k:first v: 2");
+	_COUNT(avec_insert(z,"second"),*z,
+		"e:0 c:11 n:2 k:second|first v: 1 2");
+	_COUNT(avec_insert(z,"first"),*z,
+		"e:1 c:11 n:2 k:second|first v: 1 3");
+	_COUNT(avec_delete(z,"second"),*z,
+		"e:0 c:11 n:1 k:first v: 3");
+	_COUNT(avec_delete(z,"first"),*z,
+		"e:1 c:11 n:1 k:first v: 2");
+	_COUNT(avec_insert(z,"third"),*z,
+		"e:0 c:11 n:2 k:third|first v: 1 2");
+	_COUNT(avec_insert(z,"second"),*z,
+		"e:0 c:11 n:3 k:second|third|first v: 1 1 2");
+	_COUNT(avec_insert(z,"third"),*z,
+		"e:1 c:11 n:3 k:second|third|first v: 1 2 2");
+	_COUNT(avec_delete(z,"third"),*z,
+		"e:1 c:11 n:3 k:second|third|first v: 1 1 2");
 	printf("========================\n");
 
 	if (results) {

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: nameread.c,v 1.4 1999/09/09 21:30:44 rk Exp $";
+static const char RCSID[]="@(#)$Id: nameread.c,v 1.5 2002/02/15 23:01:55 rk Exp $";
 static const char AUTHOR[]="@(#)nameread 1.0 01/01/94 R.K.Owen,Ph.D.";
 
 /* nameread.c - reads a line of text and finds the integer variable name 
@@ -55,7 +55,7 @@ static const char delimit[] = " \t\v\a\b";
 int nametol(const char *line, const char *name, long *value) {
 	int retval = 0;
 	char *ptr = (char *) line;
-	char *endptr, *tmp;
+	char *endptr;
 	char *eq;
 	int len = (int) strlen(name);
 	long tmpval;
@@ -96,7 +96,7 @@ int nametol(const char *line, const char *name, long *value) {
 int nametod(const char *line, const char *name, double *value) {
 	int retval = 0;
 	char *ptr = (char *) line;
-	char *endptr, *tmp;
+	char *endptr;
 	char *eq;
 	int len = (int) strlen(name);
 	double tmpval;

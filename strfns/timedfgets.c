@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: timedfgets.c,v 1.6 1999/09/09 21:30:44 rk Exp $";
+static const char RCSID[]="@(#)$Id: timedfgets.c,v 1.7 2002/02/15 23:01:55 rk Exp $";
 static const char AUTHOR[]="@(#)timedfgets 1.0 03/26/96 R.K.Owen,Ph.D.";
 /* timedfgets  -  performs an fgets and times out if input is
  * not received by the specified amount of time.
@@ -28,6 +28,7 @@ static const char AUTHOR[]="@(#)timedfgets 1.0 03/26/96 R.K.Owen,Ph.D.";
 #include <stdio.h>
 #include <signal.h>
 #include <setjmp.h>
+#include <unistd.h>	/* alarm */
 #ifdef RKOERROR
 #  include "librko.h"
 #endif

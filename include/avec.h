@@ -1,7 +1,7 @@
 #ifndef _AVEC_H_
 #  define _AVEC_H_
 /* 
- * RCSID @(#)$Id: avec.h,v 1.6 2002/02/15 05:30:55 rk Exp $
+ * RCSID @(#)$Id: avec.h,v 1.7 2002/02/15 23:01:55 rk Exp $
  */
 /*
  *********************************************************************
@@ -25,9 +25,11 @@
 extern "C" {
 #  endif
 
+#  include <stdarg.h>	/* va_list */
+
 /* Associative Vector (hash array) package */
 
-enum avec_def_fns {AVEC_DEFAULT, AVEC_USER, AVEC_STDC
+enum avec_def_fns {AVEC_DEFAULT, AVEC_USER, AVEC_COUNT, AVEC_STDC
 #  ifdef HAVE_STRMALLOC
 	, AVEC_STRMALLOC
 #endif
@@ -59,8 +61,8 @@ typedef struct {
 } avec;
 
 
-int   avec_set_fns(enum avec_def_fns type, avec_fns *fns);
-enum  avec_def_fns avec_get_fns(void);
+int                avec_set_fns(enum avec_def_fns type, avec_fns *fns);
+enum avec_def_fns  avec_get_fns(void);
 
 avec  *avec_ctor_(int cap, avec_fns fns);
 avec  *avec_ctor(int cap);

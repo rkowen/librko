@@ -1,5 +1,5 @@
-static const char RCSID[]="@(#)$Id: macrosub.c,v 1.6 1999/11/02 18:23:55 rk Exp $";
-static char AUTHOR[]="@(#)macrosub.c 1.0 08/30/94 R.K.Owen,PhD";
+static const char RCSID[]="@(#)$Id: macrosub.c,v 1.7 2002/02/15 23:01:55 rk Exp $";
+static const char AUTHOR[]="@(#)macrosub.c 1.0 08/30/94 R.K.Owen,PhD";
 
 /* macstrncpy(string1,string2,n) - Macro string copy
  *   Copies string2 to string1 where string2 may contain single letter
@@ -46,6 +46,9 @@ static char AUTHOR[]="@(#)macrosub.c 1.0 08/30/94 R.K.Owen,PhD";
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef MEMDEBUG
+#  include "memdebug.h"
+#endif
 #include "librko.h"
 
 #define MACRODEPTH	10

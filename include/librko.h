@@ -1,7 +1,7 @@
 #ifndef _LIBRKO_H_
 #  define _LIBRKO_H_
 /* 
- * RCSID @(#)$Id: librko.h,v 1.20 2002/02/10 08:02:28 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.21 2002/02/15 23:01:55 rk Exp $
  */
 /*
  *********************************************************************
@@ -46,18 +46,19 @@ extern "C" {
      typedef int INTEGER;
 #  endif
 
+#  include "memdebug.h"
+#  include "rkoerror.h"
 #  include "clocker.h"
 #  include "gcd.h"
 #  include "iprime.h"
 #  include "isqrt.h"
 #  include "istext.h"
-#  include "list.h"
-#  include "memdebug.h"
-#  include "rkoerror.h"
 #  include "strchop.h"
 #  include "strmalloc.h"
-#  include "urand.h"
+#  include "list.h"
 #  include "uvec.h"
+#  include "avec.h"
+#  include "urand.h"
 
 FILE * invoke(char ** argv);
 FILE * prefilter(FILE *instream, char ** argv);
@@ -119,51 +120,6 @@ void ranperm(int low, int high, int *cut, PRECISION (*ranfn)(void));
 void idxswap(int *index, int swap1, int swap2);
 void idxperm(int low, int high, int *index, int *work, int cut);
 void idxrevr(int *index, int cut1, int cut2);
-
-/* ANSI_SEQ definitions */
-
-/* define this if there is no isatty() call available */
-#  if 0
-#    define NO_ISATTY
-#  endif
-
-
-#  define ATTRIB_NUM	6
-typedef enum {
-   NONE,   BOLD,   UNDERSCORE,   BLINK,   REVERSE,   CONCEALED}
-	ansi_attributes;
-
-#  define COLOR_NUM	8
-typedef enum {
-   BLACK,   RED,   GREEN,   YELLOW,   BLUE,   MAGENTA,   CYAN,   WHITE}
-	ansi_colors;
-
-extern const char *ANSI_Colors[COLOR_NUM];
-extern const char *ANSI_Attributes[ATTRIB_NUM];
-
-#  define ANSISEQ_LEN	16
-#  define ANSISEQ_NUM	32
-
-int set_ansi_tty(int ans);
-const char *ansi_seq(ansi_attributes a, ansi_colors b, ansi_colors f);
-const char *ansi_color(ansi_colors b, ansi_colors f);
-const char *ansi_fgcolor(ansi_colors f);
-const char *ansi_bgcolor(ansi_colors b);
-const char *ansi_attribute(ansi_attributes a);
-
-/* Associative Vector (hash array) package */
-
-typedef struct {
-	char * key;			/* key for associative array */
-	uvec * set;			/* container for strings */
-} avec_element;
-
-typedef struct {
-	char tag[5];			/* name tag for this type */
-	avec_element **hash;		/* container for keys & strings */
-	int number;			/* current number of list */
-	int capacity;			/* the possible capacity of vector */
-} avec;
 
 #  ifdef __cplusplus
 	}
