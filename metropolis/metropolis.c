@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: metropolis.c,v 1.3 1999/03/25 15:08:44 rk Exp $";
+static const char RCSID[]="@(#)$Id: metropolis.c,v 1.4 1999/09/09 21:31:08 rk Exp $";
 static const char AUTHOR[]="@(#)metropolis 02/11/93 1.0 R.K.Owen,PhD";
 /*
  * metropolis - will perform the Metropolis algorithm to minimize the
@@ -61,7 +61,7 @@ static const char AUTHOR[]="@(#)metropolis 02/11/93 1.0 R.K.Owen,PhD";
  * or intends  to,  must  contact  the  author,  R.K.Owen,  and
  * license this software.
  *
- * last known email: rkowen@ckns.net
+ * last known email: librko@kooz.sj.ca.us
  *                   rk@owen.sj.ca.us
  */
 

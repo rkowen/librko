@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: gcd.c,v 1.4 1998/11/24 05:57:03 rk Exp $";
+static const char RCSID[]="@(#)$Id: gcd.c,v 1.5 1999/09/09 21:30:43 rk Exp $";
 static const char AUTHOR[]="@(#)gcd 1.0 11/17/98 R.K.Owen,Ph.D.";
 /* gcd.c -
  * implements Euclid's greatest common divisor algorith
@@ -18,7 +18,7 @@ static const char AUTHOR[]="@(#)gcd 1.0 11/17/98 R.K.Owen,Ph.D.";
  * notice remains in this software and is made available to all
  * recipients of this software.
  *
- * last known email: rkowen@ckns.net
+ * last known email: librko@kooz.sj.ca.us
  *                   rk@owen.sj.ca.us
  *
  *********************************************************************

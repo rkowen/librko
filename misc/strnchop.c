@@ -1,5 +1,5 @@
-static const char RCSID[]="@(#)$Id: strnchop.c,v 1.3 1999/03/25 15:08:53 rk Exp $";
-static char AUTHOR[]="@(#)$Id: strnchop.c,v 1.3 1999/03/25 15:08:53 rk Exp $";
+static const char RCSID[]="@(#)$Id: strnchop.c,v 1.4 1999/09/09 21:31:16 rk Exp $";
+static char AUTHOR[]="@(#)$Id: strnchop.c,v 1.4 1999/09/09 21:31:16 rk Exp $";
 
 /* strnchop - chops a string of specific length at the spaces (as
  *	determined by isspace())
@@ -31,6 +31,10 @@ char *strnchop(const char *string, size_t *string_length, int chop_len,
  * modified	RKO		01/27/98
  *
  * $Log: strnchop.c,v $
+ * Revision 1.4  1999/09/09 21:31:16  rk
+ *
+ * Updated the email address to librko@kooz.sj.ca.us
+ *
  * Revision 1.3  1999/03/25 15:08:53  rk
  *
  * Removed all USMID %W% lines.  I will never use SCCS, so they were unnecessary.
@@ -66,7 +70,7 @@ char *strnchop(const char *string, size_t *string_length, int chop_len,
  * recipients of this software.
  *
  * last known email: rk@owen.sj.ca.us
- *                   rkowen@ckns.net
+ *                   librko@kooz.sj.ca.us
  *
  *********************************************************************
  */

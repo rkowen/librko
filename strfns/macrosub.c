@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: macrosub.c,v 1.4 1998/11/18 15:34:40 rk Exp $";
+static const char RCSID[]="@(#)$Id: macrosub.c,v 1.5 1999/09/09 21:30:44 rk Exp $";
 static char AUTHOR[]="@(#)macrosub.c 1.0 08/30/94 R.K.Owen,PhD";
 
 /* macstrncpy(string1,string2,n) - Macro string copy
@@ -37,7 +37,7 @@ static char AUTHOR[]="@(#)macrosub.c 1.0 08/30/94 R.K.Owen,PhD";
  * notice remains in this software and is made available to all
  * recipients of this software.
  *
- * last known email: rkowen@ckns.net
+ * last known email: librko@kooz.sj.ca.us
  *                   rk@owen.sj.ca.us
  *
  *********************************************************************

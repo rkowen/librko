@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: strmalloc.c,v 1.2 1999/09/09 16:23:12 rk Exp $";
+static const char RCSID[]="@(#)$Id: strmalloc.c,v 1.3 1999/09/09 21:30:44 rk Exp $";
 static const char AUTHOR[]="@(#)strmalloc 1.0 09/01/1999 R.K.Owen,Ph.D.";
 /* strmalloc - adds a strdup-like routine for copying strings
  * strfree - frees the string memory storage.
@@ -19,6 +19,7 @@ static const char AUTHOR[]="@(#)strmalloc 1.0 09/01/1999 R.K.Owen,Ph.D.";
  * recipients of this software.
  *
  * last known email: rk@owen.sj.ca.us
+ *                   librko@kooz.sj.ca.us
  *
  *********************************************************************
  */

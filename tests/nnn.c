@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: nnn.c,v 1.3 1999/03/25 15:08:56 rk Exp $";
+static const char RCSID[]="@(#)$Id: nnn.c,v 1.4 1999/09/09 21:31:22 rk Exp $";
 static const char AUTHOR[]="@(#)nameread 1.0 01/01/94 R.K.Owen,Ph.D.";
 
 /* nameread.c - reads a line of text and finds the integer variable name 
@@ -33,7 +33,7 @@ static const char AUTHOR[]="@(#)nameread 1.0 01/01/94 R.K.Owen,Ph.D.";
  * recipients of this software.
  *
  * last known email: rk@owen.sj.ca.us
- *                   rkowen@ckns.net
+ *                   librko@kooz.sj.ca.us
  *
  *********************************************************************
  */

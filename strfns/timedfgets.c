@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: timedfgets.c,v 1.5 1998/11/19 21:31:14 rk Exp $";
+static const char RCSID[]="@(#)$Id: timedfgets.c,v 1.6 1999/09/09 21:30:44 rk Exp $";
 static const char AUTHOR[]="@(#)timedfgets 1.0 03/26/96 R.K.Owen,Ph.D.";
 /* timedfgets  -  performs an fgets and times out if input is
  * not received by the specified amount of time.
@@ -16,7 +16,7 @@ static const char AUTHOR[]="@(#)timedfgets 1.0 03/26/96 R.K.Owen,Ph.D.";
  * notice remains in this software and is made available to all
  * recipients of this software.
  *
- * last known email: rkowen@ckns.net
+ * last known email: librko@kooz.sj.ca.us
  *                   rk@owen.sj.ca.us
  *
  *********************************************************************

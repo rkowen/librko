@@ -1,5 +1,5 @@
 static const char AUTHOR[]="@(#)urand 06/02/94 1.3 R.K.Owen,PhD";
-static const char RCSID[]="$Id: urand.c,v 1.3 1999/03/25 15:08:58 rk Exp $";
+static const char RCSID[]="$Id: urand.c,v 1.4 1999/09/09 21:31:24 rk Exp $";
 /*      URAND IS A UNIFORM RANDOM NUMBER GENERATOR BASED  ON  THEORY  AND
  *  SUGGESTIONS  GIVEN  IN  D.E. KNUTH (1969),  VOL  2.   THE INTEGER  IY
  *  SHOULD BE INITIALIZED TO AN ARBITRARY INTEGER PRIOR TO THE FIRST CALL
@@ -29,6 +29,10 @@ static const char RCSID[]="$Id: urand.c,v 1.3 1999/03/25 15:08:58 rk Exp $";
  * 06/02/94 RKO, optimized some math operations (iy = iy-m2-m2)
  * 06/03/94 RKO, added many NO.. cpp optional code sections
  * $Log: urand.c,v $
+ * Revision 1.4  1999/09/09 21:31:24  rk
+ *
+ * Updated the email address to librko@kooz.sj.ca.us
+ *
  * Revision 1.3  1999/03/25 15:08:58  rk
  *
  * Removed all USMID %W% lines.  I will never use SCCS, so they were unnecessary.
@@ -63,7 +67,7 @@ static const char RCSID[]="$Id: urand.c,v 1.3 1999/03/25 15:08:58 rk Exp $";
  * notice remains in this software and is made available to all
  * recipients of this software.
  *
- * last known email: rkowen@ckns.net
+ * last known email: librko@kooz.sj.ca.us
  *                   rk@owen.sj.ca.us
  *
  *********************************************************************

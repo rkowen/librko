@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: idxperm.c,v 1.3 1999/03/25 15:08:44 rk Exp $";
+static const char RCSID[]="@(#)$Id: idxperm.c,v 1.4 1999/09/09 21:31:08 rk Exp $";
 static const char AUTHOR[]="@(#)idxperm 02/15/93 1.0 R.K.Owen,PhD";
 /*
  * idxperm - permutes the sequences in index[].
@@ -23,7 +23,7 @@ static const char AUTHOR[]="@(#)idxperm 02/15/93 1.0 R.K.Owen,PhD";
  * or intends  to,  must  contact  the  author,  R.K.Owen,  and
  * license this software.
  *
- * last known email: rkowen@ckns.net
+ * last known email: librko@kooz.sj.ca.us
  *                   rk@owen.sj.ca.us
  */
 

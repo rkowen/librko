@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: ansi_seq.c,v 1.3 1999/03/25 15:08:31 rk Exp $";
+static const char RCSID[]="@(#)$Id: ansi_seq.c,v 1.4 1999/09/09 21:30:43 rk Exp $";
 static char AUTHOR[]="@(#)ansi_seq 1.1 12/21/95 R.K.Owen,PhD";
 
 /* ansi_seq - creates a char * string that is the ANSI color and
@@ -30,7 +30,7 @@ static char AUTHOR[]="@(#)ansi_seq 1.1 12/21/95 R.K.Owen,PhD";
  * recipients of this software.
  *
  * last known email: rk@owen.sj.ca.us
- *                   rkowen@ckns.net
+ *                   librko@kooz.sj.ca.us
  *
  *********************************************************************
  */

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: memdebug.c,v 1.3 1998/11/11 21:18:12 rk Exp $";
+static const char RCSID[]="@(#)$Id: memdebug.c,v 1.4 1999/09/09 21:30:44 rk Exp $";
 static char AUTHOR[]="@(#)memory 1.0 02/10/95 R.K.Owen,PhD";
 
 /* memory - provides a front-end for the memory allocation routines to
@@ -21,7 +21,7 @@ static char AUTHOR[]="@(#)memory 1.0 02/10/95 R.K.Owen,PhD";
  * notice remains in this software and is made available to all
  * recipients of this software.
  *
- * last known email: rkowen@ckns.net
+ * last known email: librko@kooz.sj.ca.us
  *                   rk@owen.sj.ca.us
  *
  *********************************************************************

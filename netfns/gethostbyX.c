@@ -20,7 +20,7 @@ static const char AUTHOR[]="@(#)gethostbyX 1.0 03/26/96 R.K.Owen,Ph.D.";
  * recipients of this software.
  *
  * last known email: rk@owen.sj.ca.us
- *                   rkowen@ckns.net
+ *                   librko@kooz.sj.ca.us
  *
  *********************************************************************
  */

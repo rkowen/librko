@@ -1,4 +1,4 @@
-static char RCSID[]="@(#)$Id: strdbecpy.c,v 1.3 1998/11/04 20:57:06 rk Exp $";
+static char RCSID[]="@(#)$Id: strdbecpy.c,v 1.4 1999/09/09 21:30:44 rk Exp $";
 static char AUTHOR[]="@(#)strdbecpy 1.1 11/14/97 R.K.Owen,PhD";
 
 /* strDBEcpy - breaks apart a UNIX filename into its path, basename, and
@@ -39,7 +39,7 @@ static char AUTHOR[]="@(#)strdbecpy 1.1 11/14/97 R.K.Owen,PhD";
  * notice remains in this software and is made available to all
  * recipients of this software.
  *
- * last known email: rkowen@ckns.net
+ * last known email: librko@kooz.sj.ca.us
  *                   rk@owen.sj.ca.us
  *
  *********************************************************************

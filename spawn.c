@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: spawn.c,v 1.2 1998/11/16 04:25:32 rk Exp $";
+static const char RCSID[]="@(#)$Id: spawn.c,v 1.3 1999/09/09 21:30:44 rk Exp $";
 static const char AUTHOR[]="@(#)spawn 1.0 11/06/98 R.K.Owen,Ph.D.";
 /* spawn.c - routine for fork/exec/dup/pipe a child process and tie its
  *	input/output back to be written/read by the caller.
@@ -17,7 +17,7 @@ static const char AUTHOR[]="@(#)spawn 1.0 11/06/98 R.K.Owen,Ph.D.";
  * notice remains in this software and is made available to all
  * recipients of this software.
  *
- * last known email: rkowen@ckns.net
+ * last known email: librko@kooz.sj.ca.us
  *                   rk@owen.sj.ca.us
  *
  *********************************************************************

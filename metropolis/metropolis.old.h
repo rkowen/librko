@@ -19,7 +19,7 @@
  * or intends  to,  must  contact  the  author,  R.K.Owen,  and
  * license this software.
  *
- * last known email: rkowen@ckns.net
+ * last known email: librko@kooz.sj.ca.us
  *                   rk@owen.sj.ca.us
  */
 

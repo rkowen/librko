@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: coexec.c,v 1.3 1999/03/25 15:08:31 rk Exp $";
+static const char RCSID[]="@(#)$Id: coexec.c,v 1.4 1999/09/09 21:30:44 rk Exp $";
 static const char AUTHOR[]="@(#)prefilter 1.0 03/26/96 R.K.Owen,Ph.D.";
 /* prefilter.c - routine for fork/exec/dup/pipe a child process
  *	that filters the stdin (similar to popen(,"a"))
@@ -18,7 +18,7 @@ static const char AUTHOR[]="@(#)prefilter 1.0 03/26/96 R.K.Owen,Ph.D.";
  * notice remains in this software and is made available to all
  * recipients of this software.
  *
- * last known email: rkowen@ckns.net
+ * last known email: librko@kooz.sj.ca.us
  *                   rk@owen.sj.ca.us
  *
  *********************************************************************

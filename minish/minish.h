@@ -1,7 +1,7 @@
 #ifndef _MINISH_H_
 #  define _MINISH_H_
 /* 
- * RCSID @(#)$Id: minish.h,v 1.3 1998/10/21 22:30:32 rk Exp $
+ * RCSID @(#)$Id: minish.h,v 1.4 1999/09/09 21:31:11 rk Exp $
  */
 /*
  *********************************************************************
@@ -16,7 +16,7 @@
  * notice remains in this software and is made available to all
  * recipients of this software.
  *
- * last known email: rkowen@ckns.net
+ * last known email: librko@kooz.sj.ca.us
  *                   rk@owen.sj.ca.us
  *
  *********************************************************************

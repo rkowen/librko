@@ -32,7 +32,7 @@ static const char AUTHOR[]="@(#)nameread 1.0 01/01/94 R.K.Owen,Ph.D.";
  * recipients of this software.
  *
  * last known email: rk@owen.sj.ca.us
- *                   rkowen@ckns.net
+ *                   librko@kooz.sj.ca.us
  *                   smbd89a@prodigy.com
  *
  *********************************************************************

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: dirtree.c,v 1.7 1998/11/23 15:55:12 rk Exp $";
+static const char RCSID[]="@(#)$Id: dirtree.c,v 1.8 1999/09/09 21:30:43 rk Exp $";
 static const char AUTHOR[]="@(#)dirtree 1.0 10/31/98 R.K.Owen,Ph.D.";
 /* dirtree - recurses through a directory tree and executes
  *	four user functions
@@ -38,7 +38,7 @@ static const char AUTHOR[]="@(#)dirtree 1.0 10/31/98 R.K.Owen,Ph.D.";
  * notice remains in this software and is made available to all
  * recipients of this software.
  *
- * last known email: rkowen@ckns.net
+ * last known email: librko@kooz.sj.ca.us
  *                   rk@owen.sj.ca.us
  *
  *********************************************************************

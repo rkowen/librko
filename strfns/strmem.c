@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: strmem.c,v 1.3 1999/03/25 15:08:31 rk Exp $";
+static const char RCSID[]="@(#)$Id: strmem.c,v 1.4 1999/09/09 21:30:44 rk Exp $";
 static char AUTHOR[]="@(#)strmem 1.1 08/09/95 R.K.Owen,PhD";
 
 /* strmem - allocates/deallocates collected string pool memory.  Instead of
@@ -44,7 +44,7 @@ void strmemfree(char **ChArSpAcE, char ***charspace);
  * recipients of this software.
  *
  * last known email: rk@owen.sj.ca.us
- *                   rkowen@ckns.net
+ *                   librko@kooz.sj.ca.us
  *
  *********************************************************************
  */

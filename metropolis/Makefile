@@ -1,4 +1,4 @@
-# RCSID = @(#)$Id: Makefile,v 1.3 1999/03/25 15:08:44 rk Exp $  
+# RCSID = @(#)$Id: Makefile,v 1.4 1999/09/09 21:31:08 rk Exp $  
 #
 # This Makefile will build a variety of test programs for each of the
 #   modules.  After that you can just include the $METOBJ macro in
@@ -16,7 +16,7 @@
 # notice remains in this software and is made available to all
 # recipients of this software.
 #
-# last known email: rkowen@ckns.net
+# last known email: librko@kooz.sj.ca.us
 #                   rk@owen.sj.ca.us
 #
 #********************************************************************

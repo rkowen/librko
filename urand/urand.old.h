@@ -43,7 +43,7 @@ extern "C" {
  * recipients of this software.
  *
  * last known email: rk@owen.sj.ca.us
- *                   rkowen@ckns.net
+ *                   librko@kooz.sj.ca.us
  *                   smbd89a@prodigy.com
  *
  *********************************************************************

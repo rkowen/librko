@@ -1,5 +1,5 @@
-static const char RCSID[]="@(#)$Id: strchop.c,v 1.3 1999/03/25 15:08:31 rk Exp $";
-static char AUTHOR[]="@(#)$Id: strchop.c,v 1.3 1999/03/25 15:08:31 rk Exp $";
+static const char RCSID[]="@(#)$Id: strchop.c,v 1.4 1999/09/09 21:30:44 rk Exp $";
+static char AUTHOR[]="@(#)$Id: strchop.c,v 1.4 1999/09/09 21:30:44 rk Exp $";
 
 /* strchop - chops a string at the spaces (as determined by isspace())
  *	and behaves in the same manner as strtok in some aspects.
@@ -26,6 +26,10 @@ char *strchop(const char *string, int chop_len,
  * author	R.K.Owen,Ph.D.	10/05/95
  *
  * $Log: strchop.c,v $
+ * Revision 1.4  1999/09/09 21:30:44  rk
+ *
+ * Updated the email address to librko@kooz.sj.ca.us
+ *
  * Revision 1.3  1999/03/25 15:08:31  rk
  *
  * Removed all USMID %W% lines.  I will never use SCCS, so they were unnecessary.
@@ -61,7 +65,7 @@ char *strchop(const char *string, int chop_len,
  * recipients of this software.
  *
  * last known email: rk@owen.sj.ca.us
- *                   rkowen@ckns.net
+ *                   librko@kooz.sj.ca.us
  *
  *********************************************************************
  */
