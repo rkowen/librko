@@ -21,5 +21,11 @@ lextest : lex.yy.c
 lex.yy.c : minish.lex
 	$(LEX) minish.lex
 
-clobber:
-	$(RM) -f *.o core a.out lex.yy.c y.tab.c
+clean :
+	$(RM) -f *.o a.out core
+
+wipe : clean
+	$(RM) lextest yacctest
+
+clobber: wipe
+	$(RM) -f lex.yy.c y.tab.c
