@@ -5,7 +5,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "../librko.h"
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+#include "librko.h"
 
 int main() {
 

@@ -1,6 +1,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #include "uvec.h"
 #ifdef HAVE_STRMALLOC
 #  include "strmalloc.h"

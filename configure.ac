@@ -1,6 +1,6 @@
 dnl
 dnl File:	configure.ac
-dnl Revision:	$Id: configure.ac,v 1.2 2002/06/24 19:20:09 rk Exp $
+dnl Revision:	$Id: configure.ac,v 1.3 2002/07/08 15:55:09 rk Exp $
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl You need autoconf 2.52 or better
@@ -53,6 +53,8 @@ AH_TOP([
 #    define _INTEGER_
      typedef int INTEGER;
 #  endif
+
+#define RKOERROR
 
 ])
 dnl ---------------------------------------------------------------------------

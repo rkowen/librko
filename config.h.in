@@ -20,6 +20,8 @@
      typedef int INTEGER;
 #  endif
 
+#define RKOERROR
+
 
 
 /* Define to 1 if you have the `alarm' function. */

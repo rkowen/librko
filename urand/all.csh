@@ -17,16 +17,19 @@ endif
 set echo
 #
 setenv CC	"$*"
-setenv CFLAGS	"-I. -I.."
-setenv LDFLAGS	"-L. -L.. -lrko"
+setenv CFLAGS	"-I. -I.. -I../include"
+#setenv LDFLAGS	"-L. -L.. -lrko"
+setenv LDFLAGS
 #
+# pre-create urand.o
+$CC $CFLAGS -c urand.c
 # create timing tests
-$CC -DOPEQ tmadd.c $CFLAGS $LDFLAGS && ./a.out
-$CC        tmadd.c $CFLAGS $LDFLAGS && ./a.out
-$CC -DOPEQ tmsub.c $CFLAGS $LDFLAGS && ./a.out
-$CC        tmsub.c $CFLAGS $LDFLAGS && ./a.out
-$CC -DOPEQ tmdiv.c $CFLAGS $LDFLAGS && ./a.out
-$CC        tmdiv.c $CFLAGS $LDFLAGS && ./a.out
+$CC -DOPEQ tmadd.c $CFLAGS $LDFLAGS ./urand.o ../clocker.o && ./a.out
+$CC        tmadd.c $CFLAGS $LDFLAGS ./urand.o ../clocker.o && ./a.out
+$CC -DOPEQ tmsub.c $CFLAGS $LDFLAGS ./urand.o ../clocker.o && ./a.out
+$CC        tmsub.c $CFLAGS $LDFLAGS ./urand.o ../clocker.o && ./a.out
+$CC -DOPEQ tmdiv.c $CFLAGS $LDFLAGS ./urand.o ../clocker.o && ./a.out
+$CC        tmdiv.c $CFLAGS $LDFLAGS ./urand.o ../clocker.o && ./a.out
 rm -f a.out
 #
 #

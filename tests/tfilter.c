@@ -8,6 +8,9 @@
 #include <string.h>
 #include <unistd.h>	/* sleep */
 #include <sys/wait.h>	/* wait */
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #include "coexec.h"
 
 #define MAXTEST 8

@@ -4,6 +4,9 @@
 #include <string.h>
 #include <sys/wait.h>
 #include "coexec.h"
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #include "uvec.h"
 #ifdef RKOERROR
 extern int rkoerrno;

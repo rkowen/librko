@@ -1,5 +1,8 @@
 /* tclocker - just a simple test for the clocker function */
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #include "clocker.h"
 
 #define ABS(a) ((a) < 0.0 ? -(a) : (a))

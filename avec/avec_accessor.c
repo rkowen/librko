@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec_accessor.c,v 1.1 2002/06/24 21:55:06 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec_accessor.c,v 1.2 2002/07/08 15:55:09 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -20,7 +20,7 @@ static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 #include "config.h"
 #include "avec.h"
 #include "avec_.h"
-#ifdef HAVE_STRMALLOC
+#ifdef RKOERROR
 #  include "rkoerror.h"
 #endif
 

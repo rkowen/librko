@@ -3,6 +3,9 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>		/* exit() */
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #include "librko.h"
 
 main(int argc, char **argv) {

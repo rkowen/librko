@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/wait.h>
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #include "coexec.h"
 #include "uvec.h"
 #ifdef RKOERROR

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: macrosub.c,v 1.8 2002/06/27 22:07:46 rk Exp $";
+static const char RCSID[]="@(#)$Id: macrosub.c,v 1.9 2002/07/08 15:55:09 rk Exp $";
 static const char AUTHOR[]="@(#)macrosub.c 1.0 08/30/94 R.K.Owen,PhD";
 
 /* macstrncpy(string1,string2,n) - Macro string copy
@@ -36,10 +36,15 @@ static const char AUTHOR[]="@(#)macrosub.c 1.0 08/30/94 R.K.Owen,PhD";
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+#ifdef RKOERROR
+#  include "rkoerror.h"
+#endif
 #ifdef MEMDEBUG
 #  include "memdebug.h"
 #endif
-#include "config.h"
 
 #define MACRODEPTH	10
 #define MACRONUM	54

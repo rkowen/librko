@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include <limits.h>
 #include "isqrt.h"	/* ulsqrt */
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #include "iprime.h"
 
 #define TESTOUT(NM, TYPE, arg) \

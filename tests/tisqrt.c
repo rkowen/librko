@@ -6,6 +6,9 @@
 #include <stdio.h>
 #include <math.h>
 #include <limits.h>
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #include "isqrt.h"
 
 #define TESTOUT(NM, TYPE, arg) \

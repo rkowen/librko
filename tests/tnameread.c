@@ -38,13 +38,16 @@ static const char AUTHOR[]="@(#)nameread 1.0 01/01/94 R.K.Owen,Ph.D.";
  *********************************************************************
  */
 
-#  include <stdio.h>
-#  include "librko.h"
+#include <stdio.h>
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+#include "librko.h"
 
-#  define ITEST(a,b)	if ( a == b ) printf("OK  ");\
+#define ITEST(a,b)	if ( a == b ) printf("OK  ");\
 			else {printf("FAIL");totresult++;}\
 			printf(" %s = %d : %d\n", #a, a, b);
-#  define RTEST(a,b)	if ( a == b ) printf("OK  ");\
+#define RTEST(a,b)	if ( a == b ) printf("OK  ");\
 			else {printf("FAIL");totresult++;}\
 			printf(" %s = %g : %g\n", #a, a, b);
 int main() {

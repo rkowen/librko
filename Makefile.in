@@ -142,6 +142,10 @@ strfns = \
 	strfns/strmem.c strfns/timedfgets.c strfns/wcstrcmp.c
 
 
+urand_srcs = \
+	urand/urand.c
+
+
 uvec_srcs = \
 	uvec/str2uvec.c uvec/uvec2str.c uvec/uvec2uvec.c		\
 	uvec/uvec_accessor.c uvec/uvec_add.c uvec/uvec_alloc.c		\
@@ -156,37 +160,38 @@ uvec_srcs = \
 lib_LIBRARIES = librko.a
 
 librko_a_SOURCES = \
-	ansi_seq.c \
-	$(avec_srcs) \
-	clocker.c \
-	$(coexec_srcs) \
-	dirtree.c \
-	$(igcd_srcs) \
-	$(iprime_srcs) \
-	$(isqrt_srcs) \
-	$(list_srcs) \
-	memdbg.c \
-	memdebug.c \
-	$(netfns) \
-	$(numfns) \
-	rkoerror.c \
-	$(strfns) \
-	$(uvec_srcs) \
+	ansi_seq.c 		\
+	$(avec_srcs) 		\
+	clocker.c 		\
+	$(coexec_srcs) 		\
+	dirtree.c 		\
+	$(igcd_srcs) 		\
+	$(iprime_srcs) 		\
+	$(isqrt_srcs) 		\
+	$(list_srcs) 		\
+	memdbg.c 		\
+	memdebug.c 		\
+	$(netfns) 		\
+	$(numfns) 		\
+	rkoerror.c 		\
+	$(strfns) 		\
+	$(urand_srcs) 		\
+	$(uvec_srcs) 		\
 	version.c
 
 
 man3_MANS = \
-	docs/ansi_seq.man docs/avec.man docs/clocker.man \
-	docs/coexec.man docs/dirtree.man docs/divdiff.man \
-	docs/filter.man docs/foptim.man docs/fzeroin.man \
-	docs/gcd.man docs/gethostbyX.man docs/invoke.man \
-	docs/iprime.man docs/isqrt.man docs/istext.man \
-	docs/Librko.man docs/list.man docs/macrosub.man \
-	docs/memdbg.man docs/memdebug.man docs/nameread.man \
-	docs/rkoerror.man docs/spawn.man docs/strchop.man \
-	docs/strdbecpy.man docs/strmalloc.man docs/strmem.man \
-	docs/tcp_connect.man docs/timedfgets.man docs/uvec.man \
-	docs/wcstrcmp.man
+	docs/ansi_seq.man docs/avec.man docs/clocker.man 		\
+	docs/coexec.man docs/dirtree.man docs/divdiff.man 		\
+	docs/filter.man docs/foptim.man docs/fzeroin.man 		\
+	docs/gcd.man docs/gethostbyX.man docs/invoke.man 		\
+	docs/iprime.man docs/isqrt.man docs/istext.man 			\
+	docs/Librko.man docs/list.man docs/macrosub.man 		\
+	docs/memdbg.man docs/memdebug.man docs/nameread.man 		\
+	docs/rkoerror.man docs/spawn.man docs/strchop.man 		\
+	docs/strdbecpy.man docs/strmalloc.man docs/strmem.man 		\
+	docs/tcp_connect.man docs/timedfgets.man docs/uvec.man 		\
+	docs/urand.man docs/wcstrcmp.man
 
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -239,7 +244,8 @@ am__objects_9 = strfns/istext.$(OBJEXT) strfns/macrosub.$(OBJEXT) \
 	strfns/strdbecpy.$(OBJEXT) strfns/strmalloc.$(OBJEXT) \
 	strfns/strmem.$(OBJEXT) strfns/timedfgets.$(OBJEXT) \
 	strfns/wcstrcmp.$(OBJEXT)
-am__objects_10 = uvec/str2uvec.$(OBJEXT) uvec/uvec2str.$(OBJEXT) \
+am__objects_10 = urand/urand.$(OBJEXT)
+am__objects_11 = uvec/str2uvec.$(OBJEXT) uvec/uvec2str.$(OBJEXT) \
 	uvec/uvec2uvec.$(OBJEXT) uvec/uvec_accessor.$(OBJEXT) \
 	uvec/uvec_add.$(OBJEXT) uvec/uvec_alloc.$(OBJEXT) \
 	uvec/uvec_close.$(OBJEXT) uvec/uvec_copy.$(OBJEXT) \
@@ -256,7 +262,8 @@ am_librko_a_OBJECTS = ansi_seq.$(OBJEXT) $(am__objects_1) \
 	$(am__objects_3) $(am__objects_4) $(am__objects_5) \
 	$(am__objects_6) memdbg.$(OBJEXT) memdebug.$(OBJEXT) \
 	$(am__objects_7) $(am__objects_8) rkoerror.$(OBJEXT) \
-	$(am__objects_9) $(am__objects_10) version.$(OBJEXT)
+	$(am__objects_9) $(am__objects_10) $(am__objects_11) \
+	version.$(OBJEXT)
 librko_a_OBJECTS = $(am_librko_a_OBJECTS)
 
 DEFS = @DEFS@
@@ -341,7 +348,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	strfns/$(DEPDIR)/strmem.Po \
 @AMDEP_TRUE@	strfns/$(DEPDIR)/timedfgets.Po \
 @AMDEP_TRUE@	strfns/$(DEPDIR)/wcstrcmp.Po \
-@AMDEP_TRUE@	uvec/$(DEPDIR)/str2uvec.Po \
+@AMDEP_TRUE@	urand/$(DEPDIR)/urand.Po uvec/$(DEPDIR)/str2uvec.Po \
 @AMDEP_TRUE@	uvec/$(DEPDIR)/uvec2str.Po \
 @AMDEP_TRUE@	uvec/$(DEPDIR)/uvec2uvec.Po \
 @AMDEP_TRUE@	uvec/$(DEPDIR)/uvec_accessor.Po \
@@ -659,6 +666,14 @@ strfns/timedfgets.$(OBJEXT): strfns/timedfgets.c strfns/.dirstamp \
 	strfns/$(DEPDIR)/.dirstamp
 strfns/wcstrcmp.$(OBJEXT): strfns/wcstrcmp.c strfns/.dirstamp \
 	strfns/$(DEPDIR)/.dirstamp
+urand/.dirstamp:
+	@$(mkinstalldirs) urand
+	@: > urand/.dirstamp
+urand/$(DEPDIR)/.dirstamp:
+	@$(mkinstalldirs) urand/$(DEPDIR)
+	@: > urand/$(DEPDIR)/.dirstamp
+urand/urand.$(OBJEXT): urand/urand.c urand/.dirstamp \
+	urand/$(DEPDIR)/.dirstamp
 uvec/.dirstamp:
 	@$(mkinstalldirs) uvec
 	@: > uvec/.dirstamp
@@ -799,6 +814,7 @@ mostlyclean-compile:
 	-rm -f strfns/strmem.$(OBJEXT)
 	-rm -f strfns/timedfgets.$(OBJEXT)
 	-rm -f strfns/wcstrcmp.$(OBJEXT)
+	-rm -f urand/urand.$(OBJEXT)
 	-rm -f uvec/str2uvec.$(OBJEXT)
 	-rm -f uvec/uvec2str.$(OBJEXT)
 	-rm -f uvec/uvec2uvec.$(OBJEXT)
@@ -843,6 +859,8 @@ distclean-compile:
 	-rm -f numfns/.dirstamp
 	-rm -f strfns/$(DEPDIR)/.dirstamp
 	-rm -f strfns/.dirstamp
+	-rm -f urand/$(DEPDIR)/.dirstamp
+	-rm -f urand/.dirstamp
 	-rm -f uvec/$(DEPDIR)/.dirstamp
 	-rm -f uvec/.dirstamp
 
@@ -934,6 +952,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@strfns/$(DEPDIR)/strmem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@strfns/$(DEPDIR)/timedfgets.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@strfns/$(DEPDIR)/wcstrcmp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@urand/$(DEPDIR)/urand.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@uvec/$(DEPDIR)/str2uvec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@uvec/$(DEPDIR)/uvec2str.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@uvec/$(DEPDIR)/uvec2uvec.Po@am__quote@
@@ -959,7 +978,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@uvec/$(DEPDIR)/vec2uvec.Po@am__quote@
 
 distclean-depend:
-	-rm -rf ./$(DEPDIR) avec/$(DEPDIR) coexec/$(DEPDIR) igcd/$(DEPDIR) iprime/$(DEPDIR) isqrt/$(DEPDIR) list/$(DEPDIR) netfns/$(DEPDIR) numfns/$(DEPDIR) strfns/$(DEPDIR) uvec/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) avec/$(DEPDIR) coexec/$(DEPDIR) igcd/$(DEPDIR) iprime/$(DEPDIR) isqrt/$(DEPDIR) list/$(DEPDIR) netfns/$(DEPDIR) numfns/$(DEPDIR) strfns/$(DEPDIR) urand/$(DEPDIR) uvec/$(DEPDIR)
 
 .c.o:
 @AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
@@ -1945,6 +1964,12 @@ strfns/wcstrcmp.obj: strfns/wcstrcmp.c
 @AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o strfns/wcstrcmp.obj `cygpath -w strfns/wcstrcmp.c`
 
+urand/urand.obj: urand/urand.c
+@AMDEP_TRUE@	source='urand/urand.c' object='urand/urand.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='urand/$(DEPDIR)/urand.Po' tmpdepfile='urand/$(DEPDIR)/urand.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o urand/urand.obj `cygpath -w urand/urand.c`
+
 uvec/str2uvec.o: uvec/str2uvec.c
 @AMDEP_TRUE@	source='uvec/str2uvec.c' object='uvec/str2uvec.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='uvec/$(DEPDIR)/str2uvec.Po' tmpdepfile='uvec/$(DEPDIR)/str2uvec.TPo' @AMDEPBACKSLASH@
@@ -2474,6 +2499,9 @@ uninstall-man: uninstall-man3
 	uninstall-info-am uninstall-libLIBRARIES uninstall-man \
 	uninstall-man3
 
+
+urand/urand.o : urand/urand.c urand/urand_.c clocker.o
+	cd urand; ./all.csh $(CC)
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

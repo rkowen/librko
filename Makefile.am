@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.6 2002/06/30 04:07:13 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.7 2002/07/08 15:55:09 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -66,6 +66,9 @@ strfns = \
 	strfns/strchop.c strfns/strdbecpy.c strfns/strmalloc.c		\
 	strfns/strmem.c strfns/timedfgets.c strfns/wcstrcmp.c
 
+urand_srcs = \
+	urand/urand.c
+
 uvec_srcs =  \
 	uvec/str2uvec.c uvec/uvec2str.c uvec/uvec2uvec.c		\
 	uvec/uvec_accessor.c uvec/uvec_add.c uvec/uvec_alloc.c		\
@@ -78,35 +81,38 @@ uvec_srcs =  \
 
 lib_LIBRARIES		= librko.a
 
-librko_a_SOURCES	= \
-	ansi_seq.c \
-	$(avec_srcs) \
-	clocker.c \
-	$(coexec_srcs) \
-	dirtree.c \
-	$(igcd_srcs) \
-	$(iprime_srcs) \
-	$(isqrt_srcs) \
-	$(list_srcs) \
-	memdbg.c \
-	memdebug.c \
-	$(netfns) \
-	$(numfns) \
-	rkoerror.c \
-	$(strfns) \
-	$(uvec_srcs) \
+librko_a_SOURCES	=	\
+	ansi_seq.c 		\
+	$(avec_srcs) 		\
+	clocker.c 		\
+	$(coexec_srcs) 		\
+	dirtree.c 		\
+	$(igcd_srcs) 		\
+	$(iprime_srcs) 		\
+	$(isqrt_srcs) 		\
+	$(list_srcs) 		\
+	memdbg.c 		\
+	memdebug.c 		\
+	$(netfns) 		\
+	$(numfns) 		\
+	rkoerror.c 		\
+	$(strfns) 		\
+	$(urand_srcs) 		\
+	$(uvec_srcs) 		\
 	version.c
 
 man3_MANS =  \
-	docs/ansi_seq.man docs/avec.man docs/clocker.man \
-	docs/coexec.man docs/dirtree.man docs/divdiff.man \
-	docs/filter.man docs/foptim.man docs/fzeroin.man \
-	docs/gcd.man docs/gethostbyX.man docs/invoke.man \
-	docs/iprime.man docs/isqrt.man docs/istext.man \
-	docs/Librko.man docs/list.man docs/macrosub.man \
-	docs/memdbg.man docs/memdebug.man docs/nameread.man \
-	docs/rkoerror.man docs/spawn.man docs/strchop.man \
-	docs/strdbecpy.man docs/strmalloc.man docs/strmem.man \
-	docs/tcp_connect.man docs/timedfgets.man docs/uvec.man \
-	docs/wcstrcmp.man
+	docs/ansi_seq.man docs/avec.man docs/clocker.man 		\
+	docs/coexec.man docs/dirtree.man docs/divdiff.man 		\
+	docs/filter.man docs/foptim.man docs/fzeroin.man 		\
+	docs/gcd.man docs/gethostbyX.man docs/invoke.man 		\
+	docs/iprime.man docs/isqrt.man docs/istext.man 			\
+	docs/Librko.man docs/list.man docs/macrosub.man 		\
+	docs/memdbg.man docs/memdebug.man docs/nameread.man 		\
+	docs/rkoerror.man docs/spawn.man docs/strchop.man 		\
+	docs/strdbecpy.man docs/strmalloc.man docs/strmem.man 		\
+	docs/tcp_connect.man docs/timedfgets.man docs/uvec.man 		\
+	docs/urand.man docs/wcstrcmp.man
 
+urand/urand.o : urand/urand.c urand/urand_.c clocker.o
+	cd urand; ./all.csh $(CC)

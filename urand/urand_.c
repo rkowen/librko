@@ -6,7 +6,7 @@
 #  endif
 
 #  ifndef MAXDIM
-#    define MAXDIM 100000
+#    define MAXDIM 1000000
 #  endif
 
 int tcmp(const void *t1, const void *t2) {

@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <math.h>
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #include "librko.h"
 
 #define hpi 1.57079632679490

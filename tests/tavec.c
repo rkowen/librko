@@ -4,11 +4,14 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
-#ifdef MEMDEBUG
-#  include "memdebug.h"
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
 #endif
 #ifdef RKOERROR
 #  include "rkoerror.h"
+#endif
+#ifdef MEMDEBUG
+#  include "memdebug.h"
 #endif
 #ifdef HAVE_STRMALLOC
 #  include "strmalloc.h"

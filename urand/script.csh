@@ -16,7 +16,7 @@ endif
 set echo
 #
 setenv CC	"$*"
-setenv CFLAGS	"-I. -I.."
+setenv CFLAGS	"-I. -I.. -I../include -Iinclude"
 setenv LDFLAGS	"-L. -L.. -lrko"
 #
 # run initial timing test

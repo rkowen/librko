@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #include "strchop.h"
 #ifdef RKOERROR
 #  include "rkoerror.h"

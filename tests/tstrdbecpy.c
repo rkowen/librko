@@ -1,4 +1,7 @@
 #include <stdio.h>
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 #include "librko.h"
 
 void testout(	char *path, char *base, char *ext,

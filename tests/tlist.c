@@ -3,8 +3,14 @@
 #include <stdarg.h>
 #include <string.h>
 
-#define RKOERROR
-#include "rkoerror.h"
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+#ifdef RKOERROR
+#  include "rkoerror.h"
+#else
+#define rkoperror(a)
+#endif
 #include "list.h"
 #ifdef MEMDEBUG
 #  include "memdebug.h"

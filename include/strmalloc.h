@@ -1,26 +1,16 @@
 #ifndef _STRMALLOC_H_
 #  define _STRMALLOC_H_
 /* 
- * RCSID @(#)$Id: strmalloc.h,v 1.1 2002/02/08 16:26:01 rk Exp $
+ * RCSID @(#)$Id: strmalloc.h,v 1.2 2002/07/08 15:55:09 rk Exp $
  */
-/*
- *********************************************************************
- *
- *     This software is copyrighted by R.K.Owen,Ph.D. 2001
- *
- * The author, R.K.Owen, of this software is not liable for any
- * problems WHATSOEVER which may result from use  or  abuse  of
- * this software. The author, R.K.Owen, grants unlimited rights
- * to anyone who uses and modifies this  software  for  private
- * non-commercial  use  as  long  as  this copyright and rights
- * notice remains in this software and is made available to all
- * recipients of this software.
- *
- * last known email: librko@kooz.sj.ca.us
- *                   rk@owen.sj.ca.us
- *
- *********************************************************************
- */
+/** ** Copyright *********************************************************** **
+ ** 									     **
+ ** Copyright 2001 by R.K.Owen,Ph.D.		                      	     **
+ ** last known email: librko@kooz.sj.ca.us				     **
+ **                   rk@owen.sj.ca.us					     **
+ ** see LICENSE.LGPL, which must be provided, for details		     **
+ ** 									     **
+ ** ************************************************************************ **/
 
 #include <string.h>
 
@@ -28,9 +18,20 @@
 extern "C" {
 #  endif
 
-char *strnmalloc(char const *in, size_t n);
-char *strmalloc(char const *in);
-int strfree(char **str);
+/* old interface */
+char	*strnmalloc(	char const *in, size_t n);
+char	*strmalloc(	char const *in);
+int	 strfree(	char **str);
+
+/* new interface */
+char	*str_nmalloc(	char const *in, size_t n);
+char	*str_malloc(	char const *in);
+int	 str_free(	char **str);
+size_t	 str_sizeof(	char const *str);
+char	*str_ncpy(	char **str, char *in, size_t n);
+char	*str_cpy(	char **str, char *in);
+char	*str_ncat(	char **str, char *in, size_t n);
+char	*str_cat(	char **str, char *in);
 
 #  ifdef __cplusplus
 	}
