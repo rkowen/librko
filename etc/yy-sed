@@ -1,0 +1,144 @@
+#!/bin/sh
+#set -xv
+
+usage() {
+cat <<!
+
+Globally searches through stdin ... changing lex/yacc
+references to use a different prefix instead of the typical "yy".
+It's based on a sed script given in the O'Reilly nutshell book on
+"lex & yacc" by John R. Levine, Tony Mason, & Doug Brown.
+
+usage $0 [-h][-l|-y|-b] -p prefix <file.in >file.out
+
+where	-h|--help		= this help info
+	-l|--lex		= switch lex references
+	-y|--yacc		= switch yacc references
+	-b|--both		= handle both lex/yacc references (default)
+	-p|--prefix prefix	= what prefix to use instead of "yy"
+	file.in			= input file
+	file.out		= output file
+
+!
+}
+
+sedlex () {
+# change lex external references
+#  need to make sure it's an isolated C name
+	ppre="\([^a-zA-Z_]\)"
+	ppost="\([^a-zA-Z_]\)"
+sed \
+	-e "s/${ppre}yyback${ppost}/\1${prefix}back\2/g" \
+	-e "s/${ppre}yybgin${ppost}/\1${prefix}bgin\2/g" \
+	-e "s/${ppre}yycrank${ppost}/\1${prefix}crank\2/g" \
+	-e "s/${ppre}yyerror${ppost}/\1${prefix}error\2/g" \
+	-e "s/${ppre}yyestate${ppost}/\1${prefix}estate\2/g" \
+	-e "s/${ppre}yyextra${ppost}/\1${prefix}extra\2/g" \
+	-e "s/${ppre}yyfnd${ppost}/\1${prefix}fnd\2/g" \
+	-e "s/${ppre}yyin${ppost}/\1${prefix}in\2/g" \
+	-e "s/${ppre}yyinput${ppost}/\1${prefix}input\2/g" \
+	-e "s/${ppre}yyleng${ppost}/\1${prefix}leng\2/g" \
+	-e "s/${ppre}yylex${ppost}/\1${prefix}lex\2/g" \
+	-e "s/${ppre}yylineno${ppost}/\1${prefix}lineno\2/g" \
+	-e "s/${ppre}yylook${ppost}/\1${prefix}look\2/g" \
+	-e "s/${ppre}yylsp${ppost}/\1${prefix}lsp\2/g" \
+	-e "s/${ppre}yylstate${ppost}/\1${prefix}lstate\2/g" \
+	-e "s/${ppre}yylval${ppost}/\1${prefix}lval\2/g" \
+	-e "s/${ppre}yymatch${ppost}/\1${prefix}match\2/g" \
+	-e "s/${ppre}yymorfg${ppost}/\1${prefix}morfg\2/g" \
+	-e "s/${ppre}yyolsp${ppost}/\1${prefix}olsp\2/g" \
+	-e "s/${ppre}yyout${ppost}/\1${prefix}out\2/g" \
+	-e "s/${ppre}yyoutput${ppost}/\1${prefix}output\2/g" \
+	-e "s/${ppre}yyprevious${ppost}/\1${prefix}previous\2/g" \
+	-e "s/${ppre}yysbuf${ppost}/\1${prefix}sbuf\2/g" \
+	-e "s/${ppre}yysptr${ppost}/\1${prefix}sptr\2/g" \
+	-e "s/${ppre}yysvec${ppost}/\1${prefix}svec\2/g" \
+	-e "s/${ppre}yytchar${ppost}/\1${prefix}tchar\2/g" \
+	-e "s/${ppre}yytext${ppost}/\1${prefix}text\2/g" \
+	-e "s/${ppre}yytop${ppost}/\1${prefix}top\2/g" \
+	-e "s/${ppre}yyunput${ppost}/\1${prefix}unput\2/g" \
+	-e "s/${ppre}yyvstop${ppost}/\1${prefix}vstop\2/g" \
+	-e "s/${ppre}yywrap${ppost}/\1${prefix}wrap\2/g"
+}
+
+sedyacc () {
+# yacc external references
+#  need to make sure it's an isolated C name
+	ppre="\([^a-zA-Z_]\)"
+	ppost="\([^a-zA-Z_]\)"
+sed \
+	-e "s/${ppre}yyact${ppost}/\1${prefix}act\2/g" \
+	-e "s/${ppre}yychar${ppost}/\1${prefix}char\2/g" \
+	-e "s/${ppre}yychk${ppost}/\1${prefix}chk\2/g" \
+	-e "s/${ppre}yydebug${ppost}/\1${prefix}debug\2/g" \
+	-e "s/${ppre}yydef${ppost}/\1${prefix}def\2/g" \
+	-e "s/${ppre}yyerrflag${ppost}/\1${prefix}errflag\2/g" \
+	-e "s/${ppre}yyerror${ppost}/\1${prefix}error\2/g" \
+	-e "s/${ppre}yyexca${ppost}/\1${prefix}exca\2/g" \
+	-e "s/${ppre}yylex${ppost}/\1${prefix}lex\2/g" \
+	-e "s/${ppre}yylval${ppost}/\1${prefix}lval\2/g" \
+	-e "s/${ppre}yynerrs${ppost}/\1${prefix}nerrs\2/g" \
+	-e "s/${ppre}yypact${ppost}/\1${prefix}pact\2/g" \
+	-e "s/${ppre}yyparse${ppost}/\1${prefix}parse\2/g" \
+	-e "s/${ppre}yypgo${ppost}/\1${prefix}pgo\2/g" \
+	-e "s/${ppre}yyps${ppost}/\1${prefix}ps\2/g" \
+	-e "s/${ppre}yypv${ppost}/\1${prefix}pv\2/g" \
+	-e "s/${ppre}yyr1${ppost}/\1${prefix}r1\2/g" \
+	-e "s/${ppre}yyr2${ppost}/\1${prefix}r2\2/g" \
+	-e "s/${ppre}yyreds${ppost}/\1${prefix}reds\2/g" \
+	-e "s/${ppre}yys${ppost}/\1${prefix}s\2/g" \
+	-e "s/${ppre}yystate${ppost}/\1${prefix}state\2/g" \
+	-e "s/${ppre}yytmp${ppost}/\1${prefix}tmp\2/g" \
+	-e "s/${ppre}yytoks${ppost}/\1${prefix}toks\2/g" \
+	-e "s/${ppre}yyv${ppost}/\1${prefix}v\2/g" \
+	-e "s/${ppre}yyval${ppost}/\1${prefix}val\2/g"
+}
+
+if [ $# -lt 2 ]; then
+	usage
+	exit 1
+fi
+
+prefix=
+lsed=1
+ysed=1
+
+while [ x"$1" != x"" ]
+do
+	case $1 in
+	-h*|--h*)	usage
+			exit
+			;;
+	-b*|--b*)	lsed=1; ysed=1
+			;;
+	-l*|--l*)	lsed=1; ysed=0
+			;;
+	-y*|--y*)	lsed=0; ysed=1
+			;;
+	-p|--prefix)	shift; prefix=$1
+			;;
+	*)		usage
+			exit 2
+			;;
+	esac
+
+	shift
+done
+
+if [ x"$prefix" = x"" ]; then
+	usage
+	echo "needs a prefix"
+	exit 3
+fi
+
+#echo lsed=$lsed ysed=$ysed prefix=$prefix
+
+if [ $lsed -eq 1 -a $ysed -eq 1 ]; then
+	sedlex | sedyacc
+elif [ $lsed -eq 1 -a $ysed -eq 0 ]; then
+	sedlex
+elif [ $lsed -eq 0 -a $ysed -eq 1 ]; then
+	sedyacc
+fi
+
+exit
