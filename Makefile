@@ -69,6 +69,9 @@ mall : $(MLIB)
 		($(CD) $$d; $(MAKE) mall ) ; \
 	done
 
+memdbg : memdbg.c
+	$(CC) -o memdbg $(CFLAGS) memdbg.c -L. -lrko
+
 test :
 	-@for d in $(DIRS); do \
 		$(ECHO) "making $$d"; \
@@ -155,11 +158,11 @@ FTP/netup.tgz : apps/netup.c gethostbyX.c tcp_connect.c \
 	$(TAR) -czvf FTP/netup.tgz	netup
 	$(RM) -rf			netup
 
-FTP/wf.tgz :	apps/wf.c avec.c avec.h uvec.c uvec.h iprime.c iprime.h \
-		isqrt.c isqrt.h
+FTP/wf.tgz :	apps/wf.c apps/wf.man \
+		avec.c avec.h uvec.c uvec.h iprime.c iprime.h isqrt.c isqrt.h
 	./setupmake wf \
-		apps/wf.c avec.c avec.h uvec.c uvec.h iprime.c iprime.h \
-		isqrt.c isqrt.h
+		apps/wf.c apps/wf.man \
+		avec.c avec.h uvec.c uvec.h iprime.c iprime.h isqrt.c isqrt.h
 	$(TAR) -czvf FTP/wf.tgz		wf
 	$(RM) -rf			wf
 

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec.c,v 1.8 2002/02/15 23:01:55 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec.c,v 1.9 2002/02/19 02:27:33 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -378,14 +378,13 @@ static avec_element **avec_hash_search(enum avec_search type,
 	while (inc < av->capacity && av->hash[hv]) {
 	/* there is an entry here ... see if it matches */
 		STRCMP(av->hash[hv]->key, key, tv);
-		if (tv) {	/* no match - keep going */
-			hv += ++inc;
-			hv %= av->capacity;
-			inc++;
-		} else {	/* found match */
+		if (!tv) {	/* found match */
 			if (type == AVEC_MATCH || type == AVEC_INSERT)
 				return &(av->hash[hv]);
 		}
+		hv += ++inc;
+		hv %= av->capacity;
+		inc++;
 	}
 	/* found empty slot */
 	if (type == AVEC_NEXT || type == AVEC_INSERT) return &(av->hash[hv]);
