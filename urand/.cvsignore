@@ -1,8 +1,9 @@
+*.o
+.deps
+.dirstamp
 .opt
-testf
-testhf
-testi
 tmadd
 tmdiv
 tmsub
 urand.3
+

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: list_ctor.c,v 1.1 2002/06/27 22:07:46 rk Exp $";
+static const char RCSID[]="@(#)$Id: list_ctor.c,v 1.2 2002/07/18 05:10:36 rk Exp $";
 static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 /* list.c -
  * This could have easily been made a C++ class, but is
@@ -19,12 +19,9 @@ static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 
 #include <stdlib.h>
 #include <stdarg.h>
-#include "list.h"
+#include "list_.h"
 #ifdef MEMDEBUG
 #  include "memdebug.h"
-#endif
-#ifdef RKOERROR
-#  include "rkoerror.h"
 #endif
 
 /* warning sizeof(list) does not necessarily give the correct memory size

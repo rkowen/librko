@@ -1,7 +1,7 @@
 #ifndef _LIST_H_
 #  define _LIST_H_
 /* 
- * RCSID @(#)$Id: list.h,v 1.6 2002/07/16 21:33:36 rk Exp $
+ * RCSID @(#)$Id: list.h,v 1.7 2002/07/18 05:10:36 rk Exp $
  */
 /** ** Copyright *********************************************************** **
  ** 									     **
@@ -56,6 +56,7 @@ struct list_elem {
 list *list_ctor(const char *tag,
 	int (addfn)(void **, va_list), int (delfn)(void **, va_list));
 int list_dtor(list **lst, char const *tag, ...);
+
 int list_exists(list const *lst, const char *tag);
 int list_sizeof(list const *lst, const char *tag);
 int list_number(list const *lst, const char *tag);
@@ -63,7 +64,8 @@ list_elem *list_first(list const *lst, const char *tag);
 list_elem *list_last(list const *lst, const char *tag);
 
 int list_append(list *lst, char const *tag, list_elem *here, ...);
-int list_append_(list *lst, char const *tag, list_elem *here, va_list vargs);
+int list_insert(list *lst, char const *tag, list_elem *here, ...);
+int list_delete(list *lst, char const *tag, list_elem *here, ...);
 
 int list_unshift(list *lst, char const *tag, ...);
 int list_shift(list *lst, char const *tag, ...);

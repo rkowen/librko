@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: list_push.c,v 1.2 2002/07/16 21:33:36 rk Exp $";
+static const char RCSID[]="@(#)$Id: list_push.c,v 1.3 2002/07/18 05:10:36 rk Exp $";
 static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 /* list.c -
  * This could have easily been made a C++ class, but is
@@ -19,13 +19,7 @@ static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 
 #include <stdlib.h>
 #include <stdarg.h>
-#include "list.h"
-#ifdef MEMDEBUG
-#  include "memdebug.h"
-#endif
-#ifdef RKOERROR
-#  include "rkoerror.h"
-#endif
+#include "list_.h"
 
 /* ---------------------------------------------------------------------- */
 /* list_push - add 1 element to the end of list */

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: list_number.c,v 1.1 2002/06/27 22:07:46 rk Exp $";
+static const char RCSID[]="@(#)$Id: list_number.c,v 1.2 2002/07/18 05:10:36 rk Exp $";
 static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 /* list.c -
  * This could have easily been made a C++ class, but is
@@ -17,13 +17,7 @@ static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
  ** 									     **
  ** ************************************************************************ **/
 
-#include "list.h"
-#ifdef MEMDEBUG
-#  include "memdebug.h"
-#endif
-#ifdef RKOERROR
-#  include "rkoerror.h"
-#endif
+#include "list_.h"
 
 int list_number(list const *lst, const char *tag) {
 	if (list_exists(lst, tag)) {

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: list_pop.c,v 1.2 2002/07/18 05:10:36 rk Exp $";
+static const char RCSID[]="@(#)$Id: list_delete.c,v 1.1 2002/07/18 05:10:36 rk Exp $";
 static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 /* list.c -
  * This could have easily been made a C++ class, but is
@@ -22,35 +22,57 @@ static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 #include "list_.h"
 
 /* -------------------------------------------------------------------- */
-/* list_pop - delete off 1 element at the end of list 			*/
+/* list_delete - remove the given element element from list		*/
 /* -------------------------------------------------------------------- */
-int list_pop(list *lst, char const *tag, ...) {
-	int retval = 0;
-	va_list args;
+int list_delete_(list *lst, char const *tag, list_elem *here, va_list vargs) {
 
-	if (!list_exists(lst, tag)) {
+	int retval = 0;
+	list_elem *eptr = (list_elem *) NULL;
+	list_elem *nptr = (list_elem *) NULL;
+
+	if (!here) {
 #ifdef RKOERROR
-		(void) rkopsterror("list_pop : ");
+		(void) rkocpyerror("list_delete_ : NULL element");
+		rkoerrno = RKOUSEERR;
 #endif
 		return -1;
 	}
 
-	if (lst->last == (list_elem *) NULL) {		/* already empty */
-		return 1;				/* not an error */
-	}
+	/* get current pointers */
+	eptr = here->prev;
+	nptr = here->next;
 
-	va_start(args, tag);	/* get ready to pass extra args */
-
-	if ((retval = list_delete_(lst,tag, lst->last, args))) {
+	/* delete element */
+	if ((retval = list_del_elem_(lst,tag,here,vargs))) {
 #ifdef RKOERROR
-		(void) rkopsterror("list_pop : ");
+		(void) rkopsterror("list_delete_ : ");
 #endif
 		return retval;
 	}
 
+	/* fix up pointers */
+	if (eptr)	eptr->next = nptr;
+	else		lst->first = nptr;
+	if (nptr)	nptr->prev = eptr;
+	else		lst->last  = eptr;
+
+	lst->number--;
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
-	va_end(args);
+unwind:
+	return retval;
+}
+
+int list_delete(list *lst, char const *tag, list_elem *here, ...) {
+
+	int retval = 0;
+	va_list vargs;
+
+	va_start(vargs, tag);	/* get ready to pass extra args */
+
+	retval = list_delete_(lst, tag, here, vargs);
+
+	va_end(vargs);
 	return retval;
 }

@@ -175,6 +175,18 @@ int main() {
 		list_push(listobj, tagint, 2))
 	_ZTEST(listobj, tagint, int_type, "=3=4:3:2:",
 		list_unshift(listobj, tagint, 4))
+	/*---*/
+	_ZTEST(listobj, tagint, int_type, "=4=4:5:3:2:",
+		list_append(listobj, tagint,list_first(listobj,tagint), 5))
+	_ZTEST(listobj, tagint, int_type, "=5=4:5:3:6:2:",
+		list_insert(listobj, tagint,list_last(listobj,tagint), 6))
+	_ZTEST(listobj, tagint, int_type, "=4=5:3:6:2:",
+		list_delete(listobj, tagint,list_first(listobj,tagint)))
+	_ZTEST(listobj, tagint, int_type, "=3=5:3:6:",
+		list_delete(listobj, tagint,list_last(listobj,tagint)))
+	_ZTEST(listobj, tagint, int_type, "=2=5:6:",
+		list_delete(listobj, tagint,list_first(listobj,tagint)->next))
+	/*---*/
 	_ZTEST(listobj, tagint, int_type, "=-1=",
 		list_dtor(&listobj, tagint))
 
@@ -224,6 +236,18 @@ int main() {
 		list_push(listobj, tagflt, 2.2))
 	_ZTEST(listobj, tagflt, flt_type, "=3=4.4:3.3:2.2:",
 		list_unshift(listobj, tagflt, 4.4))
+	/*---*/
+	_ZTEST(listobj, tagflt, flt_type, "=4=4.4:5.5:3.3:2.2:",
+		list_append(listobj, tagflt,list_first(listobj,tagflt), 5.5))
+	_ZTEST(listobj, tagflt, flt_type, "=5=4.4:5.5:3.3:6.6:2.2:",
+		list_insert(listobj, tagflt,list_last(listobj,tagflt), 6.6))
+	_ZTEST(listobj, tagflt, flt_type, "=4=5.5:3.3:6.6:2.2:",
+		list_delete(listobj, tagflt,list_first(listobj,tagflt)))
+	_ZTEST(listobj, tagflt, flt_type, "=3=5.5:3.3:6.6:",
+		list_delete(listobj, tagflt,list_last(listobj,tagflt)))
+	_ZTEST(listobj, tagflt, flt_type, "=2=5.5:6.6:",
+		list_delete(listobj, tagflt,list_first(listobj,tagflt)->next))
+	/*---*/
 	_ZTEST(listobj, tagflt, flt_type, "=-1=",
 		list_dtor(&listobj, tagflt))
 
@@ -273,6 +297,18 @@ int main() {
 		list_push(listobj, tagmix, 2, 2.2))
 	_ZTEST(listobj, tagmix, mix_type, "=3=4|4.4:3|3.3:2|2.2:",
 		list_unshift(listobj, tagmix, 4, 4.4))
+	/*---*/
+	_ZTEST(listobj, tagmix, mix_type, "=4=4|4.4:5|5.5:3|3.3:2|2.2:",
+		list_append(listobj, tagmix,list_first(listobj,tagmix), 5, 5.5))
+	_ZTEST(listobj, tagmix, mix_type, "=5=4|4.4:5|5.5:3|3.3:6|6.6:2|2.2:",
+		list_insert(listobj, tagmix,list_last(listobj,tagmix), 6, 6.6))
+	_ZTEST(listobj, tagmix, mix_type, "=4=5|5.5:3|3.3:6|6.6:2|2.2:",
+		list_delete(listobj, tagmix,list_first(listobj,tagmix)))
+	_ZTEST(listobj, tagmix, mix_type, "=3=5|5.5:3|3.3:6|6.6:",
+		list_delete(listobj, tagmix,list_last(listobj,tagmix)))
+	_ZTEST(listobj, tagmix, mix_type, "=2=5|5.5:6|6.6:",
+		list_delete(listobj, tagmix,list_first(listobj,tagmix)->next))
+	/*---*/
 	_ZTEST(listobj, tagmix, mix_type, "=-1=",
 		list_dtor(&listobj, tagmix))
 

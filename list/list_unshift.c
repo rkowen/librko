@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: list_unshift.c,v 1.1 2002/06/27 22:07:46 rk Exp $";
+static const char RCSID[]="@(#)$Id: list_unshift.c,v 1.2 2002/07/18 05:10:36 rk Exp $";
 static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 /* list.c -
  * This could have easily been made a C++ class, but is
@@ -19,63 +19,19 @@ static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 
 #include <stdlib.h>
 #include <stdarg.h>
-#include "list.h"
-#ifdef MEMDEBUG
-#  include "memdebug.h"
-#endif
-#ifdef RKOERROR
-#  include "rkoerror.h"
-#endif
+#include "list_.h"
 
 /* ---------------------------------------------------------------------- */
 /* list_unshift - add 1 element to the beginning of list */
 int list_unshift(list *lst, char const *tag, ...) {
 
 	int retval = 0;
-	void *ptr = (void *) NULL;
-	list_elem *eptr = (list_elem *) NULL;
-	va_list args;
+	va_list vargs;
 
-	if (!list_exists(lst, tag)) {
-#ifdef RKOERROR
-		(void) rkopsterror("list_unshift : ");
-#endif
-		return -1;
-	}
+	va_start(vargs, tag);	/* get ready to pass extra args */
 
-	va_start(args, tag);	/* get ready to pass extra args */
-	if ((retval = (lst->addfn)(&ptr, args)) != 0) {
-#ifdef RKOERROR
-		(void) rkocpyerror("list_unshift : user function error!");
-		rkoerrno = RKOMEMERR;
-#endif
-		goto unwind;
-	}
-	if ((eptr = (list_elem *)malloc(sizeof(list_elem)))
-	== (list_elem *) NULL) {
-#ifdef RKOERROR
-		(void) rkocpyerror("list_unshift : malloc error!");
-		rkoerrno = RKOMEMERR;
-#endif
-		(void) (lst->delfn)(&ptr, args);
-		goto unwind;
-	}
-	eptr->object = ptr;
-	eptr->prev = (list_elem *) NULL;
-	eptr->next = (list_elem *) NULL;
+	retval = list_insert_(lst, tag, NULL, vargs);
 
-	if (lst->first != (list_elem *) NULL) {
-		eptr->next = lst->first;
-		lst->first->prev = eptr;
-	}
-	lst->first = eptr;
-	if (lst->last == (list_elem *) NULL) {
-		lst->last = eptr;
-	}
-	lst->number++;
-#ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#endif
-unwind: va_end(args);
+	va_end(vargs);
 	return retval;
 }

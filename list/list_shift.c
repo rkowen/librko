@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: list_shift.c,v 1.1 2002/06/27 22:07:46 rk Exp $";
+static const char RCSID[]="@(#)$Id: list_shift.c,v 1.2 2002/07/18 05:10:36 rk Exp $";
 static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 /* list.c -
  * This could have easily been made a C++ class, but is
@@ -19,20 +19,13 @@ static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 
 #include <stdlib.h>
 #include <stdarg.h>
-#include "list.h"
-#ifdef MEMDEBUG
-#  include "memdebug.h"
-#endif
-#ifdef RKOERROR
-#  include "rkoerror.h"
-#endif
+#include "list_.h"
 
-/* ---------------------------------------------------------------------- */
-/* list_shift - delete off 1 element at the beginning of list */
+/* -------------------------------------------------------------------- */
+/* list_shift - delete off 1 element at the beginning of list 		*/
+/* -------------------------------------------------------------------- */
 int list_shift(list *lst, char const *tag, ...) {
 	int retval = 0;
-	void *ptr = (void *) NULL;
-	list_elem *eptr = (list_elem *) NULL;
 	va_list args;
 
 	if (!list_exists(lst, tag)) {
@@ -42,33 +35,22 @@ int list_shift(list *lst, char const *tag, ...) {
 		return -1;
 	}
 
-	if (lst->first == (list_elem *) NULL) {		/* already empty */
+	if (lst->last == (list_elem *) NULL) {		/* already empty */
 		return 1;				/* not an error */
 	}
 
-	eptr = lst->first;
-	ptr = eptr->object;
-
 	va_start(args, tag);	/* get ready to pass extra args */
-	if ((retval = (lst->delfn)(&ptr, args)) != 0) {
+
+	if ((retval = list_delete_(lst,tag, lst->first, args))) {
 #ifdef RKOERROR
-		(void) rkocpyerror("list_shift : user function error!");
-		rkoerrno = RKOMEMERR;
+		(void) rkopsterror("list_shift : ");
 #endif
-		goto unwind;
+		return retval;
 	}
 
-	lst->first = eptr->next;
-	if (lst->first == (list_elem *) NULL) {
-		lst->last = (list_elem *) NULL;
-	} else {
-		lst->first->prev = (list_elem *) NULL;
-	}
-	lst->number--;
-	free(eptr);
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
-unwind: va_end(args);
+	va_end(args);
 	return retval;
 }
