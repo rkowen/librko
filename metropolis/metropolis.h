@@ -2,7 +2,7 @@
 /*
  * metropolis.h - the include file for the metropolis set of functions
  *
- * author	R.K.Owen,Ph.D.	02/11/93
+ * author	R.K.Owen,Ph.D.	02/11/1993
  */
 
 #ifndef _METROPOLIS_H_

@@ -1,4 +1,4 @@
-# RCSID = @(#)$Id: Makefile,v 1.4 1999/09/09 21:31:08 rk Exp $  
+# RCSID = @(#)$Id: Makefile,v 1.5 2005/03/06 02:58:13 rk Exp $  
 #
 # This Makefile will build a variety of test programs for each of the
 #   modules.  After that you can just include the $METOBJ macro in
@@ -10,11 +10,10 @@
 #
 # The author, R.K.Owen, of this software is not liable for any
 # problems WHATSOEVER which may result from use  or  abuse  of
-# this software. The author, R.K.Owen, grants unlimited rights
-# to anyone who uses and modifies this  software  for  private
-# non-commercial  use  as  long  as  this copyright and rights
-# notice remains in this software and is made available to all
-# recipients of this software.
+# this software.
+# The author, R.K.Owen, licenses this software under the
+# GNU LESSER GENERAL PUBLIC LICENSE
+# which can be found at http://www.gnu.org
 #
 # last known email: librko@kooz.sj.ca.us
 #                   rk@owen.sj.ca.us

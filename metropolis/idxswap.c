@@ -1,25 +1,20 @@
-static const char RCSID[]="@(#)$Id: idxswap.c,v 1.4 1999/09/09 21:31:08 rk Exp $";
+static const char RCSID[]="@(#)$Id: idxswap.c,v 1.5 2005/03/06 02:58:13 rk Exp $";
 static const char AUTHOR[]="@(#)idxswap 02/15/93 1.0 R.K.Owen,PhD";
 /*
  * idxswap - swaps the elements in index[] pointed to by swap1 & swap2.
  *   The user must ensure that swap1 & swap2 are within ranges.
  *
- * author	R.K.Owen,Ph.D.	02/15/93
+ * author	R.K.Owen,Ph.D.	02/15/1993
  */
 /* 
  *     This software is copyrighted by R.K.Owen,Ph.D. 1996
  * 
  * The author, R.K.Owen, of this software is not liable for any
  * problems WHATSOEVER which may result from use  or  abuse  of
- * this  software.  The author, R.K.Owen, grants limited rights
- * to anyone who uses and modifies this  software  for  private
- * non-commercial  use  as  long  as  this copyright and rights
- * notice remains in this software and is made available to all
- * recipients of this software.
- * 
- * Anyone  who  includes this software in a commercial package,
- * or intends  to,  must  contact  the  author,  R.K.Owen,  and
- * license this software.
+ * this  software.
+ * The author, R.K.Owen, licenses this software under the
+ * GNU LESSER GENERAL PUBLIC LICENSE
+ * which can be found at http://www.gnu.org
  *
  * last known email: librko@kooz.sj.ca.us
  *                   rk@owen.sj.ca.us

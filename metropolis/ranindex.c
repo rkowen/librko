@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: ranindex.c,v 1.4 1999/09/09 21:31:08 rk Exp $";
+static const char RCSID[]="@(#)$Id: ranindex.c,v 1.5 2005/03/06 02:58:13 rk Exp $";
 static const char AUTHOR[]="@(#)ranindex 02/10/93 1.0 R.K.Owen,PhD";
 /*
  * ranindex - will randomly rearrange the integer sequence [low,high-1]
@@ -9,22 +9,17 @@ static const char AUTHOR[]="@(#)ranindex 02/10/93 1.0 R.K.Owen,PhD";
  *
  *   ranindex returns 0 if successful, 1 otherwise.
  *
- * author	R.K.Owen,Ph.D.	02/10/93
+ * author	R.K.Owen,Ph.D.	02/10/1993
  */
 /* 
  *     This software is copyrighted by R.K.Owen,Ph.D. 1996
  * 
  * The author, R.K.Owen, of this software is not liable for any
  * problems WHATSOEVER which may result from use  or  abuse  of
- * this  software.  The author, R.K.Owen, grants limited rights
- * to anyone who uses and modifies this  software  for  private
- * non-commercial  use  as  long  as  this copyright and rights
- * notice remains in this software and is made available to all
- * recipients of this software.
- * 
- * Anyone  who  includes this software in a commercial package,
- * or intends  to,  must  contact  the  author,  R.K.Owen,  and
- * license this software.
+ * this  software.
+ * The author, R.K.Owen, licenses this software under the
+ * GNU LESSER GENERAL PUBLIC LICENSE
+ * which can be found at http://www.gnu.org
  *
  * last known email: librko@kooz.sj.ca.us
  *                   rk@owen.sj.ca.us
