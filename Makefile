@@ -68,11 +68,11 @@ installlib : $(LIB)
 	$(INSTALL) librko.h $(INCDIR) $(PERM) $(OWN) $(GRP)
 
 installdoc : $(DOCSL)
-	-for f in $(DOCSL); do \
-		$(INSTALL) $$f $(MANDIR)/man3 $(PERM) $(OWN) $(GRP) ; done
 	-for f in $(DOCSL); do xxx=`$(BSNM) $$f .3`; \
-		$(INSTALL) $$xxx.man $(MANDIR)/cat3/$$f $(PERM) $(OWN) $(GRP);\
+		$(INSTALL) $$xxx.man $(MANDIR)/man3/$$f $(PERM) $(OWN) $(GRP);\
 		done
+	-for f in $(DOCSL); do \
+		$(INSTALL) $$f $(MANDIR)/cat3 $(PERM) $(OWN) $(GRP) ; done
 
 uninstall : uninstalllib uninstalldoc
 
