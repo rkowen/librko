@@ -43,7 +43,13 @@ runall : $(EXE)
 	$(CC) $(CFLAGS) -o $@ $< -L.. -lrko -lm
 
 birdy : birdy.c
-	$(CC) -o birdy $<
+	$(CC) -DRKOERROR $(CFLAGS) -o birdy $<
+
+kitty : kitty.c
+	$(CC) -DRKOERROR $(CFLAGS) -o kitty $<
+
+doggy : doggy.c
+	$(CC) -DRKOERROR $(CFLAGS) -o doggy $<
 
 tdir :
 	tar -xf tdir.tar
