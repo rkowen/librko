@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: timedfgets.c,v 1.4 1998/11/18 19:03:22 rk Exp $";
+static const char RCSID[]="@(#)$Id: timedfgets.c,v 1.5 1998/11/19 21:31:14 rk Exp $";
 static const char AUTHOR[]="@(#)timedfgets 1.0 03/26/96 R.K.Owen,Ph.D.";
 /* timedfgets  -  performs an fgets and times out if input is
  * not received by the specified amount of time.
@@ -31,23 +31,24 @@ static const char AUTHOR[]="@(#)timedfgets 1.0 03/26/96 R.K.Owen,Ph.D.";
 #ifdef RKOERROR
 #  include "librko.h"
 #endif
-#ifndef SA_RESTART
-#  define NO_SA_RESTART
-#endif
 
-static jmp_buf TFGSjumpbuffer;		/* longjump global variable */
+/* need to use the POSIX sigjmp_buf to save the current signal mask
+ * else if you make repeated calls, then the second SIGALRM will
+ * not be caught, and it will hang in the read()
+ */
+static sigjmp_buf TFGSjumpbuffer;	/* siglongjump global variable */
 
 static void TFGSsigalrm_handler(int signum) {
 	/* alarm went off - the timedfgets has timed out - jump back */
-	longjmp(TFGSjumpbuffer, 1);
+	siglongjmp(TFGSjumpbuffer, 1);
 }
 
 int timedfgets(char *buf, int size, FILE *stream, int seconds) {
 
 	struct sigaction newsigalrm, oldsigalrm;/* ALRM interrupt */
-	int jumpval;				/* longjump return value */
+	int jumpval = 0;			/* longjump return value */
 	unsigned old_alarm_time, new_alarm_time;/* alarm times */
-	int returnstatus = (int) NULL;		/* this function status */
+	int returnstatus = 0;			/* this function status */
 
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
@@ -55,7 +56,7 @@ int timedfgets(char *buf, int size, FILE *stream, int seconds) {
 	/* set-up interrupt for SIGALRM */
 	newsigalrm.sa_handler = TFGSsigalrm_handler;
 	sigemptyset(&newsigalrm.sa_mask);
-#ifndef NO_SA_RESTART
+#ifdef SA_RESTART
 	newsigalrm.sa_flags = SA_RESTART;
 #endif
 
@@ -68,7 +69,7 @@ int timedfgets(char *buf, int size, FILE *stream, int seconds) {
 	}
 
 	/* set place for longjump */
-	jumpval = setjmp(TFGSjumpbuffer);
+	jumpval = sigsetjmp(TFGSjumpbuffer,1);
 
 	/* is this the first time through, or did we longjump here? */
 	switch (jumpval) {

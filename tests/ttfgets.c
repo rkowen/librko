@@ -3,37 +3,39 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>		/* exit() */
-#include <signal.h>
-#include <setjmp.h>
 #include "librko.h"
 
 main(int argc, char **argv) {
 	char buffer[512];
-	int status ;
-	int seconds = 5 ;
+	int status;
+	int seconds = 4 ;
+	int i;
 	
-	fprintf (stderr, "You have %d seconds to enter some text: ", seconds);
+	for (i=1; i <= 2; ++i ) {
+		fprintf (stderr, "You have %d seconds to enter some text: ",
+		i*seconds);
 
-	status = timedfgets(buffer, sizeof (buffer), stdin, seconds) ;
+		status = timedfgets(buffer, sizeof (buffer), stdin, i*seconds);
 
-	if (status < 0) {
-		if (rkoerrno == RKO_OK) {
-			if (errno == EINTR) {
-				fprintf (stderr,
-					"Time out! %d seconds have elapsed!\n",
-					seconds);
-			}
-			if (errno == EIO) {
-				fprintf (stderr,
+		if (status < 0) {
+			if (rkoerrno == RKO_OK) {
+				if (errno == EINTR) {
+					fprintf (stderr,
+				"Time out! %d seconds have elapsed!\n",
+						i*seconds);
+				}
+				if (errno == EIO) {
+					fprintf (stderr,
 				"No data read, hit EOF within %d seconds.\n",
-					seconds);
+						i*seconds);
+				}
+			} else {
+				rkoperror(argv[0]);
 			}
 		} else {
-			rkoperror(argv[0]);
+			fprintf (stderr, "Input received: %s", buffer);
 		}
-	} else {
-		fprintf (stderr, "\nInput received: %s", buffer);
 	}
 
-	exit (status) ;
+	return status;
 }
