@@ -16,28 +16,30 @@ char testbuf[512];
 
 int printout(avec *av, char const *head, int err, char const *ans) {
 	char const * const * vec;
+	char **vptr;
 	char *sptr;
-	uvec *uv;
+	uvec *uk;
 	sprintf(testbuf,"e:%d c:%d n:%d",
 		err, avec_capacity(av), avec_number(av));
 	if (avec_exists(av)) {
 		strcat(testbuf," k:");
 		vec = avec_keys(av);
-		uv = uvec_alloc();
-		uvec_copy_vec(uv, vec, 0);
-		strcat(testbuf, sptr = uvec2str(uv, "|"));
+		uk = uvec_alloc();
+		uvec_copy_vec(uk, vec, 0);
+		uvec_sort(uk, UVEC_ASCEND);
+		strcat(testbuf, sptr = uvec2str(uk, "|"));
 		strfree(&sptr);
 		free((void *)vec);
-		uvec_dtor(&uv);
 
+		vptr = uvec_vector(uk);
 		strcat(testbuf," v:");
-		vec = (char const * const *) avec_values(av);
-		uv = uvec_alloc();
-		uvec_copy_vec(uv, vec, 0);
-		strcat(testbuf, sptr = uvec2str(uv, "|"));
-		strfree(&sptr);
-		free((void *)vec);
-		uvec_dtor(&uv);
+		while (*vptr) {
+			strcat(testbuf,avec_lookup(av,*vptr));
+			vptr++;
+			if (*vptr) strcat(testbuf,"|");
+		}
+
+		uvec_dtor(&uk);
 	}
 	if (strcmp(testbuf, ans)) {
 		printf("FAIL:%-20s=\n    <\t%s\n    >\t%s\n",head,testbuf,ans);
@@ -55,10 +57,9 @@ int printout(avec *av, char const *head, int err, char const *ans) {
 
 int printcount(avec *av, char const *head, int err, char const *ans) {
 	char const * const * vec;
-	int const * ivec;
+	char **vptr;
 	char *sptr;
-	uvec *uv;
-	int count = 0, i;
+	uvec *uk;
 	char ibuf[64];
 
 	sprintf(testbuf,"e:%d c:%d n:%d",
@@ -66,21 +67,22 @@ int printcount(avec *av, char const *head, int err, char const *ans) {
 	if (avec_exists(av)) {
 		strcat(testbuf," k:");
 		vec = avec_keys(av);
-		uv = uvec_alloc();
-		uvec_copy_vec(uv, vec, 0);
-		count = uvec_number(uv);
-		strcat(testbuf, sptr = uvec2str(uv, "|"));
+		uk = uvec_alloc();
+		uvec_copy_vec(uk, vec, 0);
+		uvec_sort(uk, UVEC_ASCEND);
+		strcat(testbuf, sptr = uvec2str(uk, "|"));
 		strfree(&sptr);
 		free((void *)vec);
-		uvec_dtor(&uv);
 
+		vptr = uvec_vector(uk);
 		strcat(testbuf," v:");
-		ivec = (int const *) avec_values(av);
-		for (i = 0; i < count; i++) {
-			sprintf(ibuf, " %d", ivec[i]);
+		while (*vptr) {
+			sprintf(ibuf, " %d", (int) avec_lookup(av,*vptr));
 			strcat(testbuf,ibuf);
+			vptr++;
 		}
-		free((void *) ivec);
+
+		uvec_dtor(&uk);
 	}
 	if (strcmp(testbuf, ans)) {
 		printf("FAIL:%-20s=\n    <\t%s\n    >\t%s\n",head,testbuf,ans);
@@ -237,41 +239,41 @@ int main () {
 	_CHECK(avec_insert(x,"first","=1="),*x,
 		"e:0 c:11 n:1 k:first v:=1=");
 	_CHECK(avec_insert(x,"second","=2="),*x,
-		"e:0 c:11 n:2 k:second|first v:=2=|=1=");
+		"e:0 c:11 n:2 k:first|second v:=1=|=2=");
 	_CHECK(avec_insert(x,"foo","=bar="),*x,
-		"e:0 c:11 n:3 k:second|foo|first v:=2=|=bar=|=1=");
+		"e:0 c:11 n:3 k:first|foo|second v:=1=|=bar=|=2=");
 	_CHECK(avec_remove(x,"foo","=bar="),*x,
-		"e:0 c:11 n:2 k:second|first v:=2=|=1=");
+		"e:0 c:11 n:2 k:first|second v:=1=|=2=");
 	_CHECK(avec_insert(x,"second","#2#"),*x,
-		"e:1 c:11 n:2 k:second|first v:=2=|=1=");
+		"e:1 c:11 n:2 k:first|second v:=1=|=2=");
 	_CHECK(avec_insert(x,"third","=3="),*x,
-		"e:0 c:11 n:3 k:second|third|first v:=2=|=3=|=1=");
+		"e:0 c:11 n:3 k:first|second|third v:=1=|=2=|=3=");
 	_CHECK(avec_delete(x,"second"),*x,
-		"e:0 c:11 n:2 k:third|first v:=3=|=1=");
+		"e:0 c:11 n:2 k:first|third v:=1=|=3=");
 	_CHECK(avec_insert(x,"second","=2="),*x,
-		"e:0 c:11 n:3 k:second|third|first v:=2=|=3=|=1=");
+		"e:0 c:11 n:3 k:first|second|third v:=1=|=2=|=3=");
 	_CHECK(avec_insert(x,"fourth","=4="),*x,
-	"e:0 c:11 n:4 k:second|third|first|fourth v:=2=|=3=|=1=|=4=");
+	"e:0 c:11 n:4 k:first|fourth|second|third v:=1=|=4=|=2=|=3=");
 	_CHECK(avec_insert(x,"fifth","=5="),*x,
-	"e:0 c:23 n:5 k:first|second|third|fourth|fifth v:=1=|=2=|=3=|=4=|=5=");
+	"e:0 c:23 n:5 k:fifth|first|fourth|second|third v:=5=|=1=|=4=|=2=|=3=");
 	_CHECK(avec_insert(x,"sixth","=6="),*x,
-	"e:0 c:23 n:6 k:first|sixth|second|third|fourth|fifth v:=1=|=6=|=2=|=3=|=4=|=5=");
+	"e:0 c:23 n:6 k:fifth|first|fourth|second|sixth|third v:=5=|=1=|=4=|=2=|=6=|=3=");
 	_CHECK(avec_delete(x,"forth"),*x,
-	"e:-1 c:23 n:6 k:first|sixth|second|third|fourth|fifth v:=1=|=6=|=2=|=3=|=4=|=5=");
+	"e:-1 c:23 n:6 k:fifth|first|fourth|second|sixth|third v:=5=|=1=|=4=|=2=|=6=|=3=");
 	_CHECK(avec_delete(x,"second"),*x,
-	"e:0 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
+	"e:0 c:23 n:5 k:fifth|first|fourth|sixth|third v:=5=|=1=|=4=|=6=|=3=");
 	_CHECK(avec_resize(x,4),*x,
-	"e:-3 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
+	"e:-3 c:23 n:5 k:fifth|first|fourth|sixth|third v:=5=|=1=|=4=|=6=|=3=");
 	_CHECK(avec_increase(x,4),*x,
-	"e:-2 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
+	"e:-2 c:23 n:5 k:fifth|first|fourth|sixth|third v:=5=|=1=|=4=|=6=|=3=");
 	_CHECK(avec_decrease(x,4),*x,
-	"e:-3 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
+	"e:-3 c:23 n:5 k:fifth|first|fourth|sixth|third v:=5=|=1=|=4=|=6=|=3=");
 	_CHECK(avec_decrease(x,25),*x,
-	"e:-2 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
+	"e:-2 c:23 n:5 k:fifth|first|fourth|sixth|third v:=5=|=1=|=4=|=6=|=3=");
 	_CHECK(avec_resize(x,14),*x,
-	"e:0 c:17 n:5 k:fourth|first|third|fifth|sixth v:=4=|=1=|=3=|=5=|=6=");
+	"e:0 c:17 n:5 k:fifth|first|fourth|sixth|third v:=5=|=1=|=4=|=6=|=3=");
 	_CHECK(avec_resize(x,6),*x,
-	"e:0 c:7 n:5 k:first|fourth|fifth|third|sixth v:=1=|=4=|=5=|=3=|=6=");
+	"e:0 c:7 n:5 k:fifth|first|fourth|sixth|third v:=5=|=1=|=4=|=6=|=3=");
 
 	count++;
 	results += verify(x, "Default avec_fns");
@@ -296,41 +298,41 @@ int main () {
 	_CHECK(avec_insert(y,"first","=1="),*y,
 		"e:0 c:11 n:1 k:first v:=1=");
 	_CHECK(avec_insert(y,"second","=2="),*y,
-		"e:0 c:11 n:2 k:second|first v:=2=|=1=");
+		"e:0 c:11 n:2 k:first|second v:=1=|=2=");
 	_CHECK(avec_insert(y,"foo","=bar="),*y,
-		"e:0 c:11 n:3 k:second|foo|first v:=2=|=bar=|=1=");
-	_CHECK(avec_remove(y,"foo"),*y,
-		"e:0 c:11 n:2 k:second|first v:=2=|=1=");
+		"e:0 c:11 n:3 k:first|foo|second v:=1=|=bar=|=2=");
+	_CHECK(avec_remove(y,"foo","=bar="),*y,
+		"e:0 c:11 n:2 k:first|second v:=1=|=2=");
 	_CHECK(avec_insert(y,"second","#2#"),*y,
-		"e:1 c:11 n:2 k:second|first v:=2=#2#|=1=");
+		"e:1 c:11 n:2 k:first|second v:=1=|=2=#2#");
 	_CHECK(avec_insert(y,"third","=3="),*y,
-		"e:0 c:11 n:3 k:second|third|first v:=2=#2#|=3=|=1=");
+		"e:0 c:11 n:3 k:first|second|third v:=1=|=2=#2#|=3=");
 	_CHECK(avec_delete(y,"second"),*y,
-		"e:0 c:11 n:2 k:third|first v:=3=|=1=");
+		"e:0 c:11 n:2 k:first|third v:=1=|=3=");
 	_CHECK(avec_insert(y,"second","=2="),*y,
-		"e:0 c:11 n:3 k:second|third|first v:=2=|=3=|=1=");
+		"e:0 c:11 n:3 k:first|second|third v:=1=|=2=|=3=");
 	_CHECK(avec_insert(y,"fourth","=4="),*y,
-	"e:0 c:11 n:4 k:second|third|first|fourth v:=2=|=3=|=1=|=4=");
+	"e:0 c:11 n:4 k:first|fourth|second|third v:=1=|=4=|=2=|=3=");
 	_CHECK(avec_insert(y,"fifth","=5="),*y,
-	"e:0 c:23 n:5 k:first|second|third|fourth|fifth v:=1=|=2=|=3=|=4=|=5=");
+	"e:0 c:23 n:5 k:fifth|first|fourth|second|third v:=5=|=1=|=4=|=2=|=3=");
 	_CHECK(avec_insert(y,"sixth","=6="),*y,
-	"e:0 c:23 n:6 k:first|sixth|second|third|fourth|fifth v:=1=|=6=|=2=|=3=|=4=|=5=");
+	"e:0 c:23 n:6 k:fifth|first|fourth|second|sixth|third v:=5=|=1=|=4=|=2=|=6=|=3=");
 	_CHECK(avec_delete(y,"forth"),*y,
-	"e:-1 c:23 n:6 k:first|sixth|second|third|fourth|fifth v:=1=|=6=|=2=|=3=|=4=|=5=");
+	"e:-1 c:23 n:6 k:fifth|first|fourth|second|sixth|third v:=5=|=1=|=4=|=2=|=6=|=3=");
 	_CHECK(avec_delete(y,"second"),*y,
-	"e:0 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
+	"e:0 c:23 n:5 k:fifth|first|fourth|sixth|third v:=5=|=1=|=4=|=6=|=3=");
 	_CHECK(avec_resize(y,4),*y,
-	"e:-3 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
+	"e:-3 c:23 n:5 k:fifth|first|fourth|sixth|third v:=5=|=1=|=4=|=6=|=3=");
 	_CHECK(avec_increase(y,4),*y,
-	"e:-2 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
+	"e:-2 c:23 n:5 k:fifth|first|fourth|sixth|third v:=5=|=1=|=4=|=6=|=3=");
 	_CHECK(avec_decrease(y,4),*y,
-	"e:-3 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
+	"e:-3 c:23 n:5 k:fifth|first|fourth|sixth|third v:=5=|=1=|=4=|=6=|=3=");
 	_CHECK(avec_decrease(y,25),*y,
-	"e:-2 c:23 n:5 k:first|sixth|third|fourth|fifth v:=1=|=6=|=3=|=4=|=5=");
+	"e:-2 c:23 n:5 k:fifth|first|fourth|sixth|third v:=5=|=1=|=4=|=6=|=3=");
 	_CHECK(avec_resize(y,14),*y,
-	"e:0 c:17 n:5 k:fourth|first|third|fifth|sixth v:=4=|=1=|=3=|=5=|=6=");
+	"e:0 c:17 n:5 k:fifth|first|fourth|sixth|third v:=5=|=1=|=4=|=6=|=3=");
 	_CHECK(avec_resize(y,6),*y,
-	"e:0 c:7 n:5 k:first|fourth|fifth|third|sixth v:=1=|=4=|=5=|=3=|=6=");
+	"e:0 c:7 n:5 k:fifth|first|fourth|sixth|third v:=5=|=1=|=4=|=6=|=3=");
 
 	count++;
 	results += verify(y, "User avec_fns");
@@ -364,25 +366,25 @@ int main () {
 	_COUNT(avec_insert(z,"first"),*z,
 		"e:1 c:11 n:1 k:first v: 2");
 	_COUNT(avec_insert(z,"second"),*z,
-		"e:0 c:11 n:2 k:second|first v: 1 2");
+		"e:0 c:11 n:2 k:first|second v: 2 1");
 	_COUNT(avec_insert(z,"foo"),*z,
-		"e:0 c:11 n:3 k:second|foo|first v: 1 1 2");
+		"e:0 c:11 n:3 k:first|foo|second v: 2 1 1");
 	_COUNT(avec_remove(z,"foo"),*z,
-		"e:0 c:11 n:2 k:second|first v: 1 2");
+		"e:0 c:11 n:2 k:first|second v: 2 1");
 	_COUNT(avec_insert(z,"first"),*z,
-		"e:1 c:11 n:2 k:second|first v: 1 3");
+		"e:1 c:11 n:2 k:first|second v: 3 1");
 	_COUNT(avec_delete(z,"second"),*z,
 		"e:0 c:11 n:1 k:first v: 3");
 	_COUNT(avec_delete(z,"first"),*z,
 		"e:1 c:11 n:1 k:first v: 2");
 	_COUNT(avec_insert(z,"third"),*z,
-		"e:0 c:11 n:2 k:third|first v: 1 2");
+		"e:0 c:11 n:2 k:first|third v: 2 1");
 	_COUNT(avec_insert(z,"second"),*z,
-		"e:0 c:11 n:3 k:second|third|first v: 1 1 2");
+		"e:0 c:11 n:3 k:first|second|third v: 2 1 1");
 	_COUNT(avec_insert(z,"third"),*z,
-		"e:1 c:11 n:3 k:second|third|first v: 1 2 2");
+		"e:1 c:11 n:3 k:first|second|third v: 2 1 2");
 	_COUNT(avec_delete(z,"third"),*z,
-		"e:1 c:11 n:3 k:second|third|first v: 1 1 2");
+		"e:1 c:11 n:3 k:first|second|third v: 2 1 1");
 	_CHECK(avec_dtor(&z),*z,
 		"e:0 c:-1 n:-1");
 	printf("========================\n");
