@@ -211,7 +211,7 @@ wipe : clean
 	-$(RM) FTP/*.tgz
 
 clobber : wipe
-	-$(RM) $(LIB)
+	-$(RM) $(LIB) $(MLIB)
 	-$(RM) urand/urand.o
 	-$(CD) metropolis; make clobber
 	-$(CD) minish; make clobber
