@@ -1,7 +1,7 @@
 #ifndef _AVEC_H_
 #  define _AVEC_H_
 /* 
- * RCSID @(#)$Id: avec.h,v 1.4 2002/02/13 23:00:59 rk Exp $
+ * RCSID @(#)$Id: avec.h,v 1.5 2002/02/14 21:11:58 rk Exp $
  */
 /*
  *********************************************************************
@@ -37,8 +37,9 @@ enum avec_def_fns {AVEC_DEFAULT, AVEC_USER, AVEC_STDC
 typedef struct {
 	/* store the data type - user can ignore this */
 	enum avec_def_fns	type;
-	int  (*data_add)(void **,va_list); /* allocate a data element */
-	int  (*data_del)(void **,va_list); /* dealloc  a data element */
+	int  (*data_add)(void **,va_list); /* allocate data element for insert*/
+	int  (*data_del)(void **,va_list); /* dealloc  data element for delete*/
+	int  (*data_rm)(void **,va_list);  /* remove   data element for close*/
 } avec_fns;
 	
 typedef struct {

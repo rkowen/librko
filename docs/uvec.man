@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: uvec.man,v 1.10 2002/02/12 23:00:26 rk Exp $
+.\" RCSID @(#)$Id: uvec.man,v 1.11 2002/02/14 21:11:58 rk Exp $
 .\" LIBDIR
 .TH "UVEC" "3rko" "31 Oct 1997"
 .SH NAME
@@ -128,7 +128,7 @@ using the default set of string functions.
 
 .TP
 .I uvec_dtor
-destroy the Unix vector.
+destroy the Unix vector and it's contents.
 
 .TP
 .I uvec_alloc_
@@ -142,7 +142,7 @@ using the default set of string functions.
 
 .TP
 .I uvec_dealloc
-Deallocate the uninitialized uvec object (vector is not touched)
+Deallocate the uvec object (vector is not touched)
 
 .TP
 .I uvec_init_
