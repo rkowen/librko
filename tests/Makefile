@@ -74,5 +74,5 @@ clean :
 	-$(RM) *.o *_m.o a.out core
 
 clobber : clean
-	-$(RM) *.x .m
+	-$(RM) *.x *.m
 	-$(RM) -rf tdir
