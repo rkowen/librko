@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: prefile.c,v 1.1 2003/08/25 18:12:50 rk Exp $";
+static const char RCSID[]="@(#)$Id: prefile.c,v 1.2 2003/08/25 19:13:09 rk Exp $";
 static const char AUTHOR[]="@(#)coexec 1.0 2002/02/28 R.K.Owen,Ph.D.";
 /** ** Copyright *********************************************************** **
  ** 									     **
@@ -12,6 +12,7 @@ static const char AUTHOR[]="@(#)coexec 1.0 2002/02/28 R.K.Owen,Ph.D.";
 
 #include <stdio.h>
 #include <stdlib.h>			/* memset,getenv */
+#include <string.h>			/* strrchr */
 #include <sys/types.h>			/* wait */
 #include <sys/wait.h>			/* wait */
 
