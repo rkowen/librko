@@ -4,7 +4,8 @@
 SRCS = \
 	tansi_seq.c tfoptim.c tfzeroin.c tmacrosub.c \
 	tmemory.c tnameread.c tstrchop.c tstrmem.c tstrtok.c \
-	ttfgets.c twcstrcmp.c tuvec.c tstrdbecpy.c tlist.c
+	ttfgets.c twcstrcmp.c tuvec.c tstrdbecpy.c tlist.c \
+	tdirtree.c
 
 # requires a GNU "make" for the following
 OBJS = $(SRCS:.c=.o)
