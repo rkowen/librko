@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: dirtree.c,v 1.8 1999/09/09 21:30:43 rk Exp $";
+static const char RCSID[]="@(#)$Id: dirtree.c,v 1.9 2002/09/13 01:50:44 rk Exp $";
 static const char AUTHOR[]="@(#)dirtree 1.0 10/31/98 R.K.Owen,Ph.D.";
 /* dirtree - recurses through a directory tree and executes
  *	four user functions
@@ -23,26 +23,16 @@ static const char AUTHOR[]="@(#)dirtree 1.0 10/31/98 R.K.Owen,Ph.D.";
  *			directory links then set < 0.  If set = 0 then
  *			don't follow any symbolic links.
  *
- * by R.K. Owen,Ph.D.   10/29/98
+ * by R.K. Owen,Ph.D.   1998/10/29
  */
-/*
- *********************************************************************
- *
- *     This software is copyrighted by R.K.Owen,Ph.D. 1998
- *
- * The author, R.K.Owen, of this software is not liable for any
- * problems WHATSOEVER which may result from use  or  abuse  of
- * this software. The author, R.K.Owen, grants unlimited rights
- * to anyone who uses and modifies this  software  for  private
- * non-commercial  use  as  long  as  this copyright and rights
- * notice remains in this software and is made available to all
- * recipients of this software.
- *
- * last known email: librko@kooz.sj.ca.us
- *                   rk@owen.sj.ca.us
- *
- *********************************************************************
- */
+/** ** Copyright *********************************************************** **
+ ** 									     **
+ ** Copyright 1998 by R.K.Owen,Ph.D.		                      	     **
+ ** last known email: librko@kooz.sj.ca.us				     **
+ **                   rk@owen.sj.ca.us					     **
+ ** see LICENSE.LGPL, which must be provided, for details		     **
+ ** 									     **
+ ** ************************************************************************ **/
 
 #include <stdio.h>
 #include <strings.h>

@@ -1,7 +1,7 @@
 #ifndef _UVEC_H_
 #  define _UVEC_H_
 /* 
- * RCSID @(#)$Id: uvec.h,v 1.5 2002/06/27 22:21:38 rk Exp $
+ * RCSID @(#)$Id: uvec.h,v 1.6 2002/09/13 01:50:44 rk Exp $
  */
 /** ** Copyright *********************************************************** **
  ** 									     **
@@ -58,8 +58,11 @@ typedef struct {
 	uvec_str  str_fns;		/* which string functions to use */
 } uvec;
 
-int    uvec_set_strfns(enum uvec_def_str_fns type, uvec_str *strfns);
-enum   uvec_def_str_fns uvec_get_strfns(void);
+int       uvec_set_def_strfns(enum uvec_def_str_fns type, uvec_str *strfns);
+uvec_str *uvec_get_def_strfns(void);
+int       uvec_set_strfns(uvec *uv, uvec_str *strfns);
+uvec_str *uvec_get_strfns(uvec *uv);
+
 
 uvec  *uvec_ctor_(int cap, uvec_str strfns);
 uvec  *uvec_ctor(int cap);
@@ -102,6 +105,7 @@ uvec  *str2uvec(char const *token, char const *string);
 uvec  *vec2uvec(char const * const *vec, int num);
 uvec  *uvec2uvec(uvec const *uv);
 char  *uvec2str(uvec const *uv, char const *token);
+int    uvec_strfree(uvec const *uv, char **str);
 
 #  ifdef __cplusplus
 	}

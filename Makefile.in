@@ -156,7 +156,7 @@ uvec_srcs = \
 	uvec/uvec_dealloc.c uvec/uvec_dtor.c uvec/uvec_init.c		\
 	uvec/uvec_insert.c uvec/uvec_push.c uvec/uvec_randomize.c	\
 	uvec/uvec_reverse.c uvec/uvec_shift.c uvec/uvec_sort.c		\
-	uvec/uvec_strfns.c uvec/vec2uvec.c
+	uvec/uvec_strfns.c uvec/uvec_strfree.c uvec/vec2uvec.c
 
 
 lib_LIBRARIES = librko.a
@@ -261,7 +261,7 @@ am__objects_11 = uvec/str2uvec.$(OBJEXT) uvec/uvec2str.$(OBJEXT) \
 	uvec/uvec_push.$(OBJEXT) uvec/uvec_randomize.$(OBJEXT) \
 	uvec/uvec_reverse.$(OBJEXT) uvec/uvec_shift.$(OBJEXT) \
 	uvec/uvec_sort.$(OBJEXT) uvec/uvec_strfns.$(OBJEXT) \
-	uvec/vec2uvec.$(OBJEXT)
+	uvec/uvec_strfree.$(OBJEXT) uvec/vec2uvec.$(OBJEXT)
 am_librko_a_OBJECTS = ansi_seq.$(OBJEXT) $(am__objects_1) \
 	clocker.$(OBJEXT) $(am__objects_2) dirtree.$(OBJEXT) \
 	$(am__objects_3) $(am__objects_4) $(am__objects_5) \
@@ -381,6 +381,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	uvec/$(DEPDIR)/uvec_shift.Po \
 @AMDEP_TRUE@	uvec/$(DEPDIR)/uvec_sort.Po \
 @AMDEP_TRUE@	uvec/$(DEPDIR)/uvec_strfns.Po \
+@AMDEP_TRUE@	uvec/$(DEPDIR)/uvec_strfree.Po \
 @AMDEP_TRUE@	uvec/$(DEPDIR)/vec2uvec.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -747,6 +748,8 @@ uvec/uvec_sort.$(OBJEXT): uvec/uvec_sort.c uvec/.dirstamp \
 	uvec/$(DEPDIR)/.dirstamp
 uvec/uvec_strfns.$(OBJEXT): uvec/uvec_strfns.c uvec/.dirstamp \
 	uvec/$(DEPDIR)/.dirstamp
+uvec/uvec_strfree.$(OBJEXT): uvec/uvec_strfree.c uvec/.dirstamp \
+	uvec/$(DEPDIR)/.dirstamp
 uvec/vec2uvec.$(OBJEXT): uvec/vec2uvec.c uvec/.dirstamp \
 	uvec/$(DEPDIR)/.dirstamp
 librko.a: $(librko_a_OBJECTS) $(librko_a_DEPENDENCIES) 
@@ -866,6 +869,7 @@ mostlyclean-compile:
 	-rm -f uvec/uvec_shift.$(OBJEXT)
 	-rm -f uvec/uvec_sort.$(OBJEXT)
 	-rm -f uvec/uvec_strfns.$(OBJEXT)
+	-rm -f uvec/uvec_strfree.$(OBJEXT)
 	-rm -f uvec/vec2uvec.$(OBJEXT)
 
 distclean-compile:
@@ -1010,6 +1014,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@uvec/$(DEPDIR)/uvec_shift.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@uvec/$(DEPDIR)/uvec_sort.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@uvec/$(DEPDIR)/uvec_strfns.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@uvec/$(DEPDIR)/uvec_strfree.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@uvec/$(DEPDIR)/vec2uvec.Po@am__quote@
 
 distclean-depend:
@@ -2340,6 +2345,18 @@ uvec/uvec_strfns.obj: uvec/uvec_strfns.c
 @AMDEP_TRUE@	depfile='uvec/$(DEPDIR)/uvec_strfns.Po' tmpdepfile='uvec/$(DEPDIR)/uvec_strfns.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o uvec/uvec_strfns.obj `cygpath -w uvec/uvec_strfns.c`
+
+uvec/uvec_strfree.o: uvec/uvec_strfree.c
+@AMDEP_TRUE@	source='uvec/uvec_strfree.c' object='uvec/uvec_strfree.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='uvec/$(DEPDIR)/uvec_strfree.Po' tmpdepfile='uvec/$(DEPDIR)/uvec_strfree.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o uvec/uvec_strfree.o `test -f 'uvec/uvec_strfree.c' || echo '$(srcdir)/'`uvec/uvec_strfree.c
+
+uvec/uvec_strfree.obj: uvec/uvec_strfree.c
+@AMDEP_TRUE@	source='uvec/uvec_strfree.c' object='uvec/uvec_strfree.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='uvec/$(DEPDIR)/uvec_strfree.Po' tmpdepfile='uvec/$(DEPDIR)/uvec_strfree.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o uvec/uvec_strfree.obj `cygpath -w uvec/uvec_strfree.c`
 
 uvec/vec2uvec.o: uvec/vec2uvec.c
 @AMDEP_TRUE@	source='uvec/vec2uvec.c' object='uvec/vec2uvec.o' libtool=no @AMDEPBACKSLASH@

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: memdebug.c,v 1.6 2002/02/21 18:05:34 rk Exp $";
+static const char RCSID[]="@(#)$Id: memdebug.c,v 1.7 2002/09/13 01:50:44 rk Exp $";
 static const char AUTHOR[]="@(#)memdebug 1.0 02/10/95 R.K.Owen,PhD";
 
 /* memory - provides a front-end for the memory allocation routines to
@@ -8,24 +8,14 @@ static const char AUTHOR[]="@(#)memdebug 1.0 02/10/95 R.K.Owen,PhD";
  *		m_calloc, m_free, m_malloc, m_realloc
  *	the output goes to stderr.
  */
-/*
- *********************************************************************
- *
- *     This software is copyrighted by R.K.Owen,Ph.D. 1997
- *
- * The author, R.K.Owen, of this software is not liable for any
- * problems WHATSOEVER which may result from use  or  abuse  of
- * this software. The author, R.K.Owen, grants unlimited rights
- * to anyone who uses and modifies this  software  for  private
- * non-commercial  use  as  long  as  this copyright and rights
- * notice remains in this software and is made available to all
- * recipients of this software.
- *
- * last known email: librko@kooz.sj.ca.us
- *                   rk@owen.sj.ca.us
- *
- *********************************************************************
- */
+/** ** Copyright *********************************************************** **
+ ** 									     **
+ ** Copyright 1997 by R.K.Owen,Ph.D.		                      	     **
+ ** last known email: librko@kooz.sj.ca.us				     **
+ **                   rk@owen.sj.ca.us					     **
+ ** see LICENSE.LGPL, which must be provided, for details		     **
+ ** 									     **
+ ** ************************************************************************ **/
 
 #include <stdlib.h>
 #include <stdio.h>

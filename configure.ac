@@ -1,6 +1,6 @@
 dnl
 dnl File:	configure.ac
-dnl Revision:	$Id: configure.ac,v 1.3 2002/07/08 15:55:09 rk Exp $
+dnl Revision:	$Id: configure.ac,v 1.4 2002/09/13 01:50:44 rk Exp $
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl You need autoconf 2.52 or better
@@ -57,6 +57,19 @@ AH_TOP([
 #define RKOERROR
 
 ])
+dnl ---------------------------------------------------------------------------
+AH_TEMPLATE([HAVE_STRMALLOC],[The librko library comes with it's own
+strmalloc routines which have some built in safety features missing
+from the Std-C string routines.  If this is enabled then some of
+the auxillary routines will use strmalloc.  Disabling it won't cause the
+library to not build the strmalloc routines.])dnl
+AC_ARG_ENABLE(strmalloc,
+	AC_HELP_STRING([--enable-strmalloc],
+		[use librko strmalloc routines [[yes]]]),
+	if test "$enablelevel" = "yes"; then
+		AC_DEFINE(HAVE_STRMALLOC,1)
+	fi,	AC_DEFINE(HAVE_STRMALLOC,1)
+)dnl
 dnl ---------------------------------------------------------------------------
 # Checks for header files.
 AC_HEADER_DIRENT

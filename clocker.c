@@ -1,26 +1,16 @@
-static const char RCSID[]="@(#)$Id: clocker.c,v 1.4 2002/02/10 08:02:28 rk Exp $";
+static const char RCSID[]="@(#)$Id: clocker.c,v 1.5 2002/09/13 01:50:44 rk Exp $";
 static const char AUTHOR[]="@(#)clocker 1.0 2002/02/08 R.K.Owen,Ph.D.";
-/*
- *********************************************************************
- *
- *     This software is copyrighted by R.K.Owen,Ph.D. 2002
- *
- * The author, R.K.Owen, of this software is not liable for any
- * problems WHATSOEVER which may result from use  or  abuse  of
- * this software. The author, R.K.Owen, grants unlimited rights
- * to anyone who uses and modifies this  software  for  private
- * non-commercial  use  as  long  as  this copyright and rights
- * notice remains in this software and is made available to all
- * recipients of this software.
- *
- * last known email: librko@kooz.sj.ca.us
- *                   rk@owen.sj.ca.us
- *
- *********************************************************************
- */
 /* clocker - interfaces with the POSIX times() routine, since I found that
  *	the ANSI/Std C clock() doesn't always work.
  */
+/** ** Copyright *********************************************************** **
+ ** 									     **
+ ** Copyright 2002 by R.K.Owen,Ph.D.		                      	     **
+ ** last known email: librko@kooz.sj.ca.us				     **
+ **                   rk@owen.sj.ca.us					     **
+ ** see LICENSE.LGPL, which must be provided, for details		     **
+ ** 									     **
+ ** ************************************************************************ **/
 
 #if defined(_AIX)
 #  define _POSIX_SOURCE

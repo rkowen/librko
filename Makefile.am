@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.10 2002/07/18 20:44:32 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.11 2002/09/13 01:50:44 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -79,7 +79,7 @@ uvec_srcs =  \
 	uvec/uvec_dealloc.c uvec/uvec_dtor.c uvec/uvec_init.c		\
 	uvec/uvec_insert.c uvec/uvec_push.c uvec/uvec_randomize.c	\
 	uvec/uvec_reverse.c uvec/uvec_shift.c uvec/uvec_sort.c		\
-	uvec/uvec_strfns.c uvec/vec2uvec.c
+	uvec/uvec_strfns.c uvec/uvec_strfree.c uvec/vec2uvec.c
 
 lib_LIBRARIES		= librko.a
 

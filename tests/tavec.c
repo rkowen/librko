@@ -18,7 +18,7 @@
 #else
 #  define strmalloc(a)  strdup(a)
 #  define strnmalloc(a,b)  strcpy((char *) malloc((b)),(a))
-#  define strfree(a)  free(*a)
+#  define strfree(a)  (free(*a),0)
 #endif
 #include "uvec.h"
 #include "avec.h"

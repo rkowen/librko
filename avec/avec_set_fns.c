@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec_set_fns.c,v 1.1 2002/06/24 21:55:06 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec_set_fns.c,v 1.2 2002/09/13 01:50:44 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -134,7 +134,7 @@ static avec_fns stdc_fns = {
 /* ---------------------------------------------------------------------- */
 /* wrappers for the strmalloc string functions
  */
-static int str_malloc (void **data, va_list ap) {
+static int str_malloc_ (void **data, va_list ap) {
 	char const *str = va_arg(ap,char *);
 	if (!data) return -1;
 	if (*data) return 1;
@@ -142,23 +142,23 @@ static int str_malloc (void **data, va_list ap) {
 	return -2;
 }
 
-static int str_free (void **data, va_list ap) {
+static int str_free_ (void **data, va_list ap) {
 	strfree((char **) data);
 	return 0;
 }
 
 static avec_fns strmalloc_fns = {
 	AVEC_STRMALLOC,
-	str_malloc,
-	str_free,
-	str_free
+	str_malloc_,
+	str_free_,
+	str_free_
 };
 
 avec_fns default_fns = {
 	AVEC_STRMALLOC,
-	str_malloc,
-	str_free,
-	str_free
+	str_malloc_,
+	str_free_,
+	str_free_
 };
 #else
 avec_fns default_fns = {

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: uvec_copy_vec.c,v 1.3 2002/06/27 22:21:38 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec_copy_vec.c,v 1.4 2002/09/13 01:50:44 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 /* uvec.c -
  *  uvec_copy_vec  copy   an   existing   char  vector  to  an
@@ -30,7 +30,7 @@ int uvec_copy_vec(uvec *u, char const * const *vec, int number) {
 		number = ++num;
 	}
 
-	if ((rstat = uvec_init(u, number))) {
+	if ((rstat = uvec_init_(u, number,u->str_fns))) {
 #ifdef RKOERROR
 		(void) rkopsterror("uvec_copy_vec : ");
 #endif

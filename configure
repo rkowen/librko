@@ -833,6 +833,7 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --disable-dependency-tracking Speeds up one-time builds
   --enable-dependency-tracking  Do not reject slow dependency extractors
+  --enable-strmalloc      use librko strmalloc routines [yes]
 
 Some influential environment variables:
   CC          C compiler command
@@ -3503,7 +3504,23 @@ fi
 
 
 
-# Checks for header files.
+
+# Check whether --enable-strmalloc or --disable-strmalloc was given.
+if test "${enable_strmalloc+set}" = set; then
+  enableval="$enable_strmalloc"
+  if test "$enablelevel" = "yes"; then
+		cat >>confdefs.h <<\_ACEOF
+#define HAVE_STRMALLOC 1
+_ACEOF
+
+	fi
+else
+  cat >>confdefs.h <<\_ACEOF
+#define HAVE_STRMALLOC 1
+_ACEOF
+
+
+fi; # Checks for header files.
 
 
 

@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: ansi_seq.c,v 1.5 2002/02/15 23:01:55 rk Exp $";
+static const char RCSID[]="@(#)$Id: ansi_seq.c,v 1.6 2002/09/13 01:50:44 rk Exp $";
 static const char AUTHOR[]="@(#)ansi_seq 1.1 12/21/95 R.K.Owen,PhD";
 
 /* ansi_seq - creates a char * string that is the ANSI color and
@@ -16,24 +16,14 @@ static const char AUTHOR[]="@(#)ansi_seq 1.1 12/21/95 R.K.Owen,PhD";
  *
  * by R.K. Owen, Ph.D.  12/21/95
  */
-/*
- *********************************************************************
- *
- *     This software is copyrighted by R.K.Owen,Ph.D. 1997
- *
- * The author, R.K.Owen, of this software is not liable for any
- * problems WHATSOEVER which may result from use  or  abuse  of
- * this software. The author, R.K.Owen, grants unlimited rights
- * to anyone who uses and modifies this  software  for  private
- * non-commercial  use  as  long  as  this copyright and rights
- * notice remains in this software and is made available to all
- * recipients of this software.
- *
- * last known email: rk@owen.sj.ca.us
- *                   librko@kooz.sj.ca.us
- *
- *********************************************************************
- */
+/** ** Copyright *********************************************************** **
+ ** 									     **
+ ** Copyright 1997 by R.K.Owen,Ph.D.		                      	     **
+ ** last known email: librko@kooz.sj.ca.us				     **
+ **                   rk@owen.sj.ca.us					     **
+ ** see LICENSE.LGPL, which must be provided, for details		     **
+ ** 									     **
+ ** ************************************************************************ **/
 
 #include <stdio.h>
 #include <unistd.h>
