@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.11 2002/09/13 01:50:44 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.12 2002/10/02 16:14:40 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -14,7 +14,7 @@
 
 AUTOMAKE_OPTIONS=foreign subdir-objects no-installinfo
 
-ACLOCAL_AMFLAGS=-I $(srcdir)/config
+ACLOCAL_AMFLAGS=-I config
 
 AM_CPPFLAGS = -I$(srcdir)/include -I$(srcdir)
 
