@@ -19,7 +19,9 @@
 #include "librko.h"
 #include "minish.h"
 
+#ifdef _CRAY
 extern char *minish_yytext;
+#endif
 
 static int linenum = 0;
 static int statnum = 0;
