@@ -27,7 +27,7 @@ help :
 	@echo "	clean	- remove .o files"
 	@echo "	clobber	- do clean and remove all executables"
 	
-all : $(EXES)
+all : $(EXES) tdir
 
 runall : $(EXE)
 	-for f in $(EXES) ; do echo ===$$f===; ./$$f ; done 2>&1 | more
@@ -38,8 +38,12 @@ runall : $(EXE)
 .o.x :
 	$(CC) $(CFLAGS) -o $@ $< -L.. -lrko -lm
 
+tdir :
+	tar -xf tdir.tar
+
 clean :
 	-$(RM) *.o a.out core
 
 clobber : clean
 	-$(RM) *.x
+	-$(RM) -rf tdir

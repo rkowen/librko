@@ -2,7 +2,7 @@
 #  define _LIBRKO_H_
 /* 
  * USMID %W%
- * RCSID @(#)$Id: librko.h,v 1.6 1998/11/11 21:18:12 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.7 1998/11/12 22:26:24 rk Exp $
  */
 /*
  *********************************************************************
@@ -54,6 +54,9 @@ int timedfgets(char *buf, int size, FILE *stream, int seconds);
 struct hostent *gethostbyX(char *hostX);
 int tcp_connect(char *hostname, int port_num);
 int tcp_close(int sd);
+int dirtree(int sort, int dirlvl, int lnklvl, const char *dir,
+	int (dirfn)(const char *), int (filefn)(const char *),
+	int (direnter)(const char *), int (dirleave)(const char *));
 
 char *strchop(const char *string, int chop_len,
         size_t *str_len, char **next);

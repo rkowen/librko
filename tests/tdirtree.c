@@ -54,30 +54,6 @@ int leavedir(const char *dirname) {
 	return 0;
 }
 
-int listdir(const char *dirname) {
-	int i;
-
-	for (i = 0; i < level; ++i) {
-		printf("\t");
-	}
-	printf(">>> %s\n", dirname);
-	return 0;
-}
-
-int listfile(const char *filename) {
-	struct stat sbuf;
-	int i;
-
-	(void) lstat(filename, &sbuf);
-	if (!S_ISDIR(sbuf.st_mode)) {
-		for (i = 0; i < level; ++i) {
-			printf("\t");
-		}
-		printf("%s%s\n", filename, strfilemode(sbuf.st_mode));
-	}
-	return 0;
-}
-
 int trimlistdir(const char *dirname) {
 	int i;
 	char basename[FILENAME_MAX];
@@ -130,30 +106,49 @@ int main(int argc, char *argv[]) {
 	int err = 0;
 
 	PrgName = *argv++;
-	printf("\nSorted list with full path names\n");
-	listdir(".");
-	if (err = dirtree(1,".", listdir, listfile, enterdir, leavedir)) {
+	printf("\nSorted list with `basenames' only, no dir links\n");
+	if (err = dirtree(-1, -1, 0, "tdir",
+	trimlistdir, trimlistfile, enterdir, leavedir)) {
 #ifdef RKOERROR
 		rkoperror(PrgName);
 #endif
 		return err;
 	}
-	printf("\nUnsorted list with full path names\n");
-	if (err = dirtree(0,".", listdir, listfile, enterdir, leavedir)) {
+	printf("\nSorted list with `basenames' of directories only\n");
+	if (err = dirtree(-1, -1, -1, "tdir",
+	trimlistdir, NULL, enterdir, leavedir)) {
 #ifdef RKOERROR
 		rkoperror(PrgName);
 #endif
 		return err;
 	}
-	printf("\nSorted list with `basenames' only\n");
-	if (err = dirtree(1,".", trimlistdir, trimlistfile, enterdir, leavedir)) {
+	printf("\nSorted list of directories, but don't follow links\n");
+	if (err = dirtree(-1, -1, 0, "tdir",
+	trimlistdir, NULL, enterdir, leavedir)) {
 #ifdef RKOERROR
 		rkoperror(PrgName);
 #endif
 		return err;
 	}
-	printf("\nSecond sorted list with `basenames' only and a missing fn\n");
-	if (err = dirtree(1,".", NULL, trimlist, enterdir, leavedir)) {
+	printf("\nSorted list of directories, follow 1 links\n");
+	if (err = dirtree(-1, -1, 1, "tdir",
+	trimlistdir, NULL, enterdir, leavedir)) {
+#ifdef RKOERROR
+		rkoperror(PrgName);
+#endif
+		return err;
+	}
+	printf("\nSorted list of directories, descend 2 dir levels, no links\n");
+	if (err = dirtree(-1, 2, 0, "tdir",
+	trimlistdir, NULL, enterdir, leavedir)) {
+#ifdef RKOERROR
+		rkoperror(PrgName);
+#endif
+		return err;
+	}
+	printf("\nSorted list of directories, no dir levels, no links\n");
+	if (err = dirtree(-1, 0, 0, "tdir",
+	trimlistdir, NULL, enterdir, leavedir)) {
 #ifdef RKOERROR
 		rkoperror(PrgName);
 #endif

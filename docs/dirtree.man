@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: dirtree.man,v 1.1 1998/11/04 22:55:24 rk Exp $
+.\" RCSID @(#)$Id: dirtree.man,v 1.2 1998/11/12 22:26:23 rk Exp $
 .\" LIBDIR
 .TH "DIRTREE" "3rko" "31 October 1998"
 .SH NAME
@@ -6,20 +6,21 @@ dirtree \- recurses through a directory tree and executes four user functions
 .SH SYNOPSIS
 
 .nf
- #include "librko.h"
- int dirtree(int sort, const char *dir,
+#include "librko.h"
+int dirtree(int sort, int dirlvl, int lnklvl, const char *dir,
 	int (dirfn)(const char *), int (filefn)(const char *),
 	int (direnter)(const char *), int (dirleave)(const char *));
 .fi
 
 .SH DESCRIPTION
-.I dirtree - recurses through a directory tree and executes
+.I dirtree
+\- recurses through a directory tree and executes
 four user functions, where each function is passed the full
 path name for the given file or directory and returns 0 on
 success, else non-zero otherwise:
 .TP 15
 .I direnter
-entry into dirtree() & before entry into the directory
+entry into dirtree() & before reading the directory
 
 .TP
 .I dirfn
@@ -40,17 +41,30 @@ depth-first walk through the directory structure, and will perform
 the user action on all files in the directory before recursing through
 subdirectories.
 
+.P
 .I dirtree
-does not change the current working directory, that
-can be performed by the user functions.  If a given
-user function is NULL, then that action will be skipped.
-.I dirtree
-sorts all lists and perform all recursions and file
-actions on these ASCII alphabetically sorted lists if the
-sort argument is non-zero, else
-.I dirtree
-will process the
-lists as given in the directory file.
+also has the following parameters:
+.TP 15
+.I sort
+if non-zero dirtree sorts all lists and perform
+all recursions and file actions on these ASCII
+alphabetically sorted lists, else dirtree will
+process the lists as given in the directory
+files.
+
+.TP
+.I dirlvl
+if > 0 then descend only to the dirlvl-th
+subdirectory.  To descend into all the
+directories then set < 0.  If set = 0 then
+process only the entries in the given directory.
+
+.TP
+.I lnklvl
+if > 0 then follow only the lnklvl-th
+subdirectory symbolic link.  To follow all the
+directory links then set < 0.  If set = 0 then
+don't follow any symbolic links.
 
 .SH EXAMPLES
 

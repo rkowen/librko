@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: dirtree.c,v 1.5 1998/11/06 21:39:49 rk Exp $";
+static const char RCSID[]="@(#)$Id: dirtree.c,v 1.6 1998/11/12 22:26:23 rk Exp $";
 static const char AUTHOR[]="@(#)dirtree 1.0 10/31/98 R.K.Owen,Ph.D.";
 /* dirtree - recurses through a directory tree and executes
  *	four user functions
@@ -9,12 +9,21 @@ static const char AUTHOR[]="@(#)dirtree 1.0 10/31/98 R.K.Owen,Ph.D.";
  *	dirtree does not change the current working directory, that
  *	can be performed by the user functions.  If a given
  *	user function is NULL, then that action will be skipped.
- *	dirtree sorts all lists and perform all recursions and file
- *	actions on these ASCII alphabetically sorted lists it the
- *	sort argument is non-zero, else dirtree will process the
- *	lists as given in the directory files.
+ *		sort =	if non-zero dirtree sorts all lists and perform
+ *			all recursions and file actions on these ASCII
+ *			alphabetically sorted lists, else dirtree will
+ *			process the lists as given in the directory
+ *			files.
+ *		dirlvl=	if > 0 then descend only to the dirlvl-th
+ *			subdirectory.  To descend into all the
+ *			directories then set < 0.  If set = 0 then
+ *			process only the entries in the given directory.
+ *		lnklvl=	if > 0 then follow only the lnklvl-th
+ *			subdirectory symbolic link.  To follow all the
+ *			directory links then set < 0.  If set = 0 then
+ *			don't follow any symbolic links.
  *
- * by R.K. Owen,Ph.D.	10/29/98
+ * by R.K. Owen,Ph.D.   10/29/98
  */
 /*
  *********************************************************************
@@ -38,15 +47,15 @@ static const char AUTHOR[]="@(#)dirtree 1.0 10/31/98 R.K.Owen,Ph.D.";
 #include <stdio.h>
 #include <strings.h>
 #include <sys/types.h>
-#include <sys/stat.h>		/* lstat */
+#include <sys/stat.h>		/* stat/lstat */
 #include <dirent.h>
-#include <unistd.h>		/* lstat, getcwd, chdir */
+#include <unistd.h>		/* stat/lstat, getcwd, chdir */
 #include "librko.h"
 #ifdef RKOERROR
 extern int rkoerrno;
 #endif
 
-int dirtree(int sort, const char *dir,
+int dirtree(int sort, int dirlvl, int lnklvl, const char *dir,
 	int (dirfn)(const char *), int (filefn)(const char *),
 	int (direnter)(const char *), int (dirleave)(const char *)) {
 
@@ -59,6 +68,7 @@ int dirtree(int sort, const char *dir,
 	char	thislevel[FILENAME_MAX];	/* full path name */
 	char	nextlevel[FILENAME_MAX];	/* subdirectory name */
 	int	err;
+	int	nextlnklvl = lnklvl-1;		/* what to pass to next level */
 
 	/* execute user direnter function */
 	if (direnter != (int (*)(const char *)) NULL) {
@@ -141,9 +151,20 @@ int dirtree(int sort, const char *dir,
 		(void) strcpy(nextlevel, thislevel);
 		(void) strcat(nextlevel, "/");	/* posix defined */
 		(void) strcat(nextlevel, de->d_name);
-		if((err = lstat(nextlevel, &sbuf))) {
-			continue;
+#ifdef S_ISLNK		/* only worry about soft links if they exist at all */
+		if (lnklvl) {
+#endif
+			if((err = stat(nextlevel, &sbuf))) {
+				continue;
+			}
+#ifdef S_ISLNK
+		} else {
+			nextlnklvl = 0;	/* pass 0 to next level */
+			if((err = lstat(nextlevel, &sbuf))) {
+				continue;
+			}
 		}
+#endif
 		/* put directory entries into a list */
 		if (S_ISDIR(sbuf.st_mode)) {
 			if (uvec_add(dirvec, de->d_name)) {
@@ -200,7 +221,7 @@ int dirtree(int sort, const char *dir,
 			}
 		}
 	}
-	/* now recurse through tree */
+	/* now recurse through tree - if desired */
 #ifdef RKOERROR
 	rkocpyerror(": dirtree");
 #endif
@@ -209,19 +230,22 @@ int dirtree(int sort, const char *dir,
 		(void) strcpy(nextlevel, thislevel);
 		(void) strcat(nextlevel, "/");		/* posix defined */
 		(void) strcat(nextlevel, *vecptr);
+
 		/* execute user function on dir */
 		if (dirfn != (int (*)(const char *)) NULL) {
 			(void) dirfn(nextlevel);
 		}
-		if ((err = dirtree(sort, nextlevel,
-		dirfn, filefn, direnter, dirleave)) != 0) {
+		if (dirlvl) {
+			if ((err = dirtree(sort, dirlvl-1, nextlnklvl, nextlevel,
+			dirfn, filefn, direnter, dirleave)) != 0) {
 #ifdef RKOERROR
-			rkopsterror(") ");
-			rkopsterror(*vecptr);
-			rkopsterror("dir(");
-			rkoerrno = RKOUSEERR;
+				rkopsterror(") ");
+				rkopsterror(*vecptr);
+				rkopsterror("dir(");
+				rkoerrno = RKOUSEERR;
 #endif
-			return err;
+				return err;
+			}
 		}
 	}
 
@@ -229,7 +253,7 @@ int dirtree(int sort, const char *dir,
 	(void) uvec_dtor(&regvec);
 	(void) closedir(dr);
 
-	/* execute user direnter function */
+	/* execute user dirleave function */
 	if (dirleave != (int (*)(const char *)) NULL) {
 		if (dirleave(dir) < 0) {
 #ifdef RKOERROR
