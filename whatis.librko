@@ -23,6 +23,13 @@ divdiff(3rko)    - osculatory (kissing) interpolates a function via divided diff
 gcd(3rko)        - Greatest Common Divisor
 isqrt(3rko)      - integer sqrt
 iprime(3rko)     - finds the lowest prime factor
+clocker(3rko)    - a timer function
+urand(3rko)      - uniformly distributed pseudo-random numbers
+irand(3rko)      - see urand(3rko)
+setseed(3rko)    - see urand(3rko)
+getseed(3rko)    - see urand(3rko)
+geturand(3rko)   - see urand(3rko)
+getirand(3rko)   - see urand(3rko)
 memory(3rko)     - a set of macros for detecting memory leaks
 ansi_seq(3rko)   - returns ANSI sequences for screen character attributes and colors
 ansi_color(3rko) - see ansi_seq(3rko)

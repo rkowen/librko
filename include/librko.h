@@ -1,7 +1,7 @@
 #ifndef _LIBRKO_H_
 #  define _LIBRKO_H_
 /* 
- * RCSID @(#)$Id: librko.h,v 1.16 1999/09/11 08:02:07 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.17 1999/09/14 21:31:09 rk Exp $
  */
 /*
  *********************************************************************
@@ -29,6 +29,7 @@
 
 #  include <stdio.h>
 #  include <stdarg.h>
+#  include <time.h>		/* clock_t */
 #  include <netdb.h>		/* gethostbyname, gethostbyaddr */
 
 #  ifdef __cplusplus
@@ -117,6 +118,12 @@ __IPRIME(uprime,unsigned int)
 __IPRIME(lprime,long)
 __IPRIME(ulprime,unsigned long)
 #undef __IPRIME
+
+/* clock timer */
+typedef clock_t clocker_t;
+typedef enum {_SET = 0, _RESET, _READ, _PER_SEC} clocker_action;
+clock_t clocker_tick(clocker_t *clock_variable, clocker_action what_to_do);
+double clocker(clocker_t *clock_variable, clocker_action what_to_do);
 
 /* urand declarations */
 INTEGER irand(void);

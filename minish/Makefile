@@ -19,7 +19,7 @@ all: ../$(LIB)
 
 ../$(LIB) : $(LIBOBJS)
 	$(AR) $(ARFLAGS) $@ $?
-	-$(RM) -f $?
+#	-$(RM) -f $?
 
 tall: $(OBJS)
 

@@ -1,0 +1,47 @@
+.\" RCSID @(#)$Id: clocker.man,v 1.1 1999/09/14 21:31:09 rk Exp $
+.\" LIBDIR
+.TH "CLOCKER" "3rko" "9 Sept 1999"
+.SH NAME
+clocker \- a timer function.
+.SH SYNOPSIS
+
+ #include "librko.h"
+ typedef clock_t clocker_t;
+ typedef enum {_SET = 0, _RESET, _READ, _PER_SEC}
+     clocker_action;
+ clock_t clocker_tick(clocker_t *clock_variable,
+     clocker_action what_to_do);
+ double  clocker     (clocker_t *clock_variable,
+     clocker_action what_to_do);
+
+.SH DESCRIPTION
+.I clocker
+is a simple function that interfaces to the POSIX
+.I times()
+and in certain aspects it duplicates the Std-C
+.IR clock() ,
+but only better.  It only looks at the user time.
+.TP 15
+_SET
+sets the timer and returns 0.0 if no error
+.TP
+_RESET
+returns the current time and resets the timer
+.TP
+_READ
+returns the current time and continues on
+.TP
+_PER_SEC
+returns the number of ticks per sec
+
+.SH SEE ALSO
+times(2),clock(3)
+
+.SH DIAGNOSTICS
+If it returns a value less than 0, this indicates an exceptional
+error.
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS
