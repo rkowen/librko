@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./tests/Makefile.am
-## Versions:    $Id: Makefile.am,v 1.5 2002/10/21 19:42:16 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.6 2003/08/25 18:12:50 rk Exp $
 ## Created:     2002/06/24
 ##
 ###########################################################################
@@ -24,7 +24,7 @@ test_progs = \
 	tfoptim.x tfzeroin.x tigcd.x tinvoke.x tiprime.x	\
 	tisqrt.x tlist.x tmacrosub.x tmemdbg.x tnameread.x	\
 	tspawn.x tspawn3.x tstrchop.x tstrdbecpy.x tstrmalloc.x	\
-	tstrmem.x ttfgets.x tuvec.x twcstrcmp.x
+	tstrmem.x ttfgets.x tuvec.x twcstrcmp.x tprefile.x
 
 # requires GNU make
 test_sources = $(test_progs:.x=.c)
@@ -56,8 +56,9 @@ tlist_x_SOURCES			= tlist.c
 tmacrosub_x_SOURCES		= tmacrosub.c
 tmemdbg_x_SOURCES		= tmemdbg.c
 tnameread_x_SOURCES		= tnameread.c
-tspawn_x_SOURCES		= tspawn.c
+tprefile_x_SOURCES		= tprefile.c
 tspawn3_x_SOURCES		= tspawn3.c
+tspawn_x_SOURCES		= tspawn.c
 tstrchop_x_SOURCES		= tstrchop.c
 tstrdbecpy_x_SOURCES		= tstrdbecpy.c
 tstrmalloc_x_SOURCES		= tstrmalloc.c

@@ -1,0 +1,93 @@
+.\" RCSID @(#)$Id: prefile.man,v 1.1 2003/08/25 18:12:50 rk Exp $
+.\" LIBDIR
+.TH "PREFILE" "3rko" "21 Aug 2003"
+.SH NAME
+prefile \- checks whether the given file exists and returns the
+file name.
+If not then it
+checks for common compressed versions (by adding .gz, .Z, .z to the
+file name) until found, and uncompresses it to a temporary file
+and returns the temporary file's name.
+.P
+If the filename is already indicative of compression then it will
+uncompress and return the temporary file's name.
+.P
+The temporary file name is stored in a static char array
+and is wiped out with subsequent calls.
+If multiple files are to be used simultaneously, then the
+the temporary file names will need to be duplicated elsewhere
+and removed individually after reading.
+(However, for Unix OSes, the file can be opened then safely deleted
+with
+.I unlink_prefile()
+and continued to be read, since the i-node is still active until
+the file is closed.)
+
+.P
+.I prefile()
+uses the
+.I $TMPDIR
+environment variable for placing the temporary files if given, else
+it defaults to /tmp .
+
+.SH SYNOPSIS
+
+.nf
+#include <stdio.h>
+#include "coexec.h"
+
+char *prefile(char *infile);
+int   unlink_prefile(void);
+.fi
+
+.SH DESCRIPTION
+.TP 17
+.I prefile
+returns a pointer to the temporary file name
+or to infile if it exists.
+If a compressed file is found instead then the generated temporary
+file is the uncompressed contents.
+An error returns (char *) NULL.
+.TP
+.I unlink_prefile
+removes the temporary file (if one was generated).  In UNIX it is safe
+to open the temporary file and remove said file.  The current process
+will continue to read from the temporary file and once the file is
+closed or the process exits then it will vanish from existence.
+Returns 0 on success else the return value from Std-C remove(3).
+
+.SH SEE ALSO
+coexec(3rko),invoke(3rko),
+fopen(3),fclose(3),remove(3)
+
+.SH NOTES
+The following code fragments lack suitable error checking.
+
+.nf
+ char *inname;
+ FILE *in;
+ ...
+ inname = prefile('some_file');
+ in = fopen(inname,"r");
+ unlink_prefile();
+ ...
+ while (!(fgets(buffer, MAXBUFF, in), feof(in))) {
+   ...
+ }
+ ...
+ fclose(in);
+.fi
+
+.SH DIAGNOSTICS
+
+The errors are handled by rkoperror() (if RKOERROR is defined),
+else it goes to stderr.
+In either case, all child process errors go to stderr.
+
+.SH BUGS
+None discovered yet.
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

@@ -1,7 +1,7 @@
 #ifndef _COEXEC_H_
 #  define _COEXEC_H_
 /* 
- * RCSID @(#)$Id: coexec.h,v 1.3 2002/10/21 17:17:04 rk Exp $
+ * RCSID @(#)$Id: coexec.h,v 1.4 2003/08/25 18:12:50 rk Exp $
  */
 /** ** Copyright *********************************************************** **
  ** 									     **
@@ -27,6 +27,9 @@ int   closefilter(FILE *filterstream);
 FILE *invoke(char **argv);
 int   spawn( FILE **childin, FILE **childout, char **argv);
 int   spawn3(FILE **childin, FILE **childout, FILE **childerr, char **argv);
+
+char *prefile(char *infile);
+int   unlink_prefile(void);
 
 #  ifdef __cplusplus
 	}

@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: coexec.man,v 1.1 2002/03/01 05:23:28 rk Exp $
+.\" RCSID @(#)$Id: coexec.man,v 1.2 2003/08/25 18:12:50 rk Exp $
 .\" LIBDIR
 .TH "COEXEC" "3rko" "28 Feb 2002"
 .SH NAME
@@ -19,38 +19,51 @@ int   closefilter(FILE *filterstream);
 
 FILE *invoke(char **argv);
 int   spawn(FILE **childin, FILE **childout, char **argv);
+int   spawn3(FILE **childin, FILE **childout, FILE **childerr,char **argv);
 
+char *prefile(char *infile);
+int   unlink_prefile(void);
+
+#  ifdef __cplusplus
+	}
+#  endif
+#endif /* _COEXEC_H_ */
 .fi
 
 .SH DESCRIPTION
+.TP 15
 .I invoke
 returns a file pointer to the stdout of the child process, unless
 there is an error, then it returns (FILE *) NULL.
-.br
+.TP
 .I spawn
 sets up a child process and communications to the process via the
 stdin and stdout FILE streams.
-.br
 .I argv
 is a command vector, where argv[0] is the executable to run, and
 argv[1],... are the commandline options.
 Must have the last one argv[N] = NULL to terminate the vector.
+.TP
+.I preprocess
+open a process to filter the given input stream.
+.TP
+.I postprocess
+open a process to filter the given output stream.
+.TP
+.I prefilter
+same as
+.I prepocess
+except tied to STDIN
+.TP
+.I postfilter
+same as
+.I postpocess
+except tied to STDOUT
 
 .SH SEE ALSO
-coexec(3rko),invoke(3rko),spawn(3rko),uvec(3rko),
+coexec(3rko),invoke(3rko),spawn(3rko),spawn3(3rko),filter(3rko),
+prefile(3rko),uvec(3rko),
 execvp(2),fork(2),pipe(2),fclose(3),wait(2),system(3)
-
-.SH NOTES
-
-After the output is read and an EOF is received, the calling program should
-close the file stream and wait for the child process.
-
- FILE *childoutput;
- ...
- childoutput = invoke(argv);
- ...
- fclose(childoutput);
- wait(NULL);
 
 .SH DIAGNOSTICS
 

@@ -1,6 +1,6 @@
 dnl
 dnl File:	configure.ac
-dnl Revision:	$Id: configure.ac,v 1.8 2002/10/22 21:39:45 rk Exp $
+dnl Revision:	$Id: configure.ac,v 1.9 2003/08/25 18:12:50 rk Exp $
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl You need autoconf 2.52 or better
@@ -10,29 +10,37 @@ dnl
 dnl ---------------------------------------------------------------------------
 AC_INIT(librko, @VERSION@, [librko(at)kooz.sj.ca.us])
 AC_CONFIG_AUX_DIR(config)
-AM_INIT_AUTOMAKE(librko,1.0.1)
+AM_INIT_AUTOMAKE(librko,1.0.2)
 AC_CONFIG_SRCDIR([version.c.in])
 AM_CONFIG_HEADER([config.h])
 AM_PROG_CC_C_O
 AC_PREREQ(2.52)
 
 dnl ---------------------------------------------------------------------------
-# Checks for programs.
+dnl Checks for programs.
+dnl
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_RANLIB
 AC_PROG_MAKE_SET
+AH_TEMPLATE([GZIP],[Location of the gzip program])dnl
+LR_CHECK_PROGS([GZIP],[gzip],[$PATH])dnl
+AH_TEMPLATE([UNCOMPRESS],[Location of the uncompress program
+	(only needed if gzip is not found)])dnl
+LR_CHECK_PROGS([UNCOMPRESS],[uncompress],[$PATH])dnl
 
 dnl ---------------------------------------------------------------------------
-# Checks for libraries.
-# FIXME: Replace `main' with a function in `-ll':
-# AC_CHECK_LIB([l], [main])
-# FIXME: Replace `main' with a function in `-lm':
+dnl Checks for libraries.
+dnl
+AC_PROG_CC
+dnl FIXME: Replace `main' with a function in `-ll':
+dnl AC_CHECK_LIB([l], [main])
+dnl FIXME: Replace `main' with a function in `-lm':
 AC_CHECK_LIB([m], [sqrt])
-# FIXME: Replace `main' with a function in `-lrko':
-# AC_CHECK_LIB([rko], [main])
-# FIXME: Replace `main' with a function in `-lrko_m':
-# AC_CHECK_LIB([rko_m], [main])
+dnl FIXME: Replace `main' with a function in `-lrko':
+dnl AC_CHECK_LIB([rko], [main])
+dnl FIXME: Replace `main' with a function in `-lrko_m':
+dnl AC_CHECK_LIB([rko_m], [main])
 
 dnl ---------------------------------------------------------------------------
 dnl Autoheader "templates" (was in acconfig.h)
@@ -64,7 +72,8 @@ AH_TEMPLATE([HAVE_STRMALLOC],[The librko library comes with it's own
 strmalloc routines which have some built in safety features missing
 from the Std-C string routines.  If this is enabled then some of
 the auxillary routines will use strmalloc.  Disabling it won't cause the
-library to not build the strmalloc routines.])dnl
+library to not build the strmalloc routines - just not to preferentially
+use them.])dnl
 AC_ARG_ENABLE(strmalloc,
 	AC_HELP_STRING([--enable-strmalloc],
 		[use librko strmalloc routines [[yes]]]),

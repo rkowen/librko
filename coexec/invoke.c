@@ -1,7 +1,5 @@
-static const char RCSID[]="@(#)$Id: invoke.c,v 1.1 2002/06/30 04:07:13 rk Exp $";
-static const char AUTHOR[]="@(#)coexec 1.0 2002/02/28 R.K.Owen,Ph.D.";
-/* coexec.c - contains all the co-executable routines
- */
+static const char RCSID[]="@(#)$Id: invoke.c,v 1.2 2003/08/25 18:12:50 rk Exp $";
+static const char AUTHOR[]="@(#)invoke.c 1.0 2002/02/28 R.K.Owen,Ph.D.";
 /** ** Copyright *********************************************************** **
  ** 									     **
  ** Copyright 2001 by R.K.Owen,Ph.D.		                      	     **
