@@ -4,7 +4,7 @@
 
 char testbuf[256];
 
-void printout(uvec *uv, char const *head, int err, char const *ans) {
+int printout(uvec *uv, char const *head, int err, char const *ans) {
 	int i;
 	char **argv = uv->vector;
 	sprintf(testbuf,"e:%d c:%d n:%d r:",
@@ -22,18 +22,21 @@ void printout(uvec *uv, char const *head, int err, char const *ans) {
 #endif
 	) {
 		printf("FAIL:%-20s=\n    <\t%s\n    >\t%s\n",head,testbuf,ans);
+		return 1;
 	} else {
 		printf("OK  :%-20s=\n\t%s\n",head,testbuf);
+		return 0;
 	}
 }
 
 #define _CHECK(c,v,a) \
 	estat = c; \
-	printout(&##v, #c , estat, a);
+	results += printout(&##v, #c , estat, a);
 
 int main() {
 	uvec u,v,w, *x;
-	int estat=0;
+	int estat = 0;
+	int results = 0;
 	int i;
 	char buffer[128];
 	char **vec;
@@ -177,5 +180,10 @@ int main() {
 	"e:0 c:10 n:9 r::abc:ABC:ABC:bb:aaa:XYZ:bbb:AAA:xyz")
 #endif /* NO_URAND */
 
-	return 0;
+	if (results) {
+		printf("There were %d test failures\n", results);
+	} else {
+		printf("There were no test failures\n", results);
+	}
+	return results;
 }

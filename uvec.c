@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: uvec.c,v 1.6 1998/11/18 18:37:51 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec.c,v 1.7 1999/09/09 16:23:12 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.0 10/31/97 R.K.Owen,Ph.D.";
 /* uvec.c -
  * This could have easily been made a C++ class, but is
@@ -124,7 +124,7 @@ int uvec_close(uvec *uv) {
 	}
 	*(uv->tag) = '\0';
 	for (i = 0; i < uv->number; ++i) {
-		free(uv->vector[i]);
+		strfree(&(uv->vector[i]));
 		uv->vector[i] = (char *) NULL;
 	}
 	free(uv->vector);
@@ -195,21 +195,11 @@ static int uvec_malloc(uvec *uv, char const *str, int place) {
 #endif
 		return -1;
 	}
-	if (!(uv->vector[place] = (char *)
-	malloc((strlen(str) + 1)*sizeof(char)))) {
+	if (!(uv->vector[place] = strmalloc(str))) {
 #ifdef RKOERROR
-		(void) rkocpyerror("uvec_malloc : malloc error!");
-		rkoerrno = RKOMEMERR;
+		(void) rkopsterror("uvec_malloc : ");
 #endif
 		return -2;
-	}
-	if (uv->vector[place] != strcpy(uv->vector[place], str)) {
-#ifdef RKOERROR
-		(void) rkocpyerror("uvec_malloc : strcpy error!");
-		rkoerrno = RKOGENERR;
-#endif
-		free(uv->vector[place]);
-		return -3;
 	}
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
@@ -261,7 +251,7 @@ static int uvec_shift(uvec *uv, int start, int end, int newstart) {
 	}
 	if (newstart < start) {			/* shift upwards */
 		for (i = newstart; i < start; ++i) {
-			free(uv->vector[i]);	/* dealloc elements */
+			strfree(&(uv->vector[i]));	/* dealloc elements */
 			uv->vector[i] = (char *) NULL;
 		}
 		for (i = start; i < end; ++i) {
@@ -282,7 +272,7 @@ static int uvec_shift(uvec *uv, int start, int end, int newstart) {
 			}
 		}
 		for (i = end; i < n; ++i) {
-			free(uv->vector[i]);	/* dealloc elements */
+			strfree(&(uv->vector[i]));	/* dealloc elements */
 			uv->vector[i] = (char *) NULL;
 		}
 		for (i = end - 1; i >= start; --i) {
@@ -436,7 +426,7 @@ int uvec_delete(uvec *uv, int place) {
 		return rstat - 128;
 	}
 	--(uv->number);
-	free(uv->vector[uv->number]);
+	strfree(&(uv->vector[uv->number]));
 	uv->vector[uv->number] = (char *) NULL;
 
 	if (uv->number < uv->capacity/2) {

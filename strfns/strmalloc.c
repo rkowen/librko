@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: strmalloc.c,v 1.1 1999/09/09 05:46:49 rk Exp $";
+static const char RCSID[]="@(#)$Id: strmalloc.c,v 1.2 1999/09/09 16:23:12 rk Exp $";
 static const char AUTHOR[]="@(#)strmalloc 1.0 09/01/1999 R.K.Owen,Ph.D.";
 /* strmalloc - adds a strdup-like routine for copying strings
  * strfree - frees the string memory storage.
@@ -62,11 +62,12 @@ char *strmalloc(const char *in) {
 
 void strfree(char **str) {
 	size_t sizeit;
-	char *ptr = *str - sizeof(size_t) - sizeof(id);
+	char *ptr;
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
-	if (*str != (char *) NULL) {
+	if (str != (char **) NULL && *str != (char *) NULL) {
+		ptr = *str - sizeof(size_t) - sizeof(id);
 		if (strncmp(ptr, id, sizeof(id))) {
 			rkoerrno = RKOUSEERR;
 			(void) rkocpyerror("strfree : invalid string object!");
