@@ -1,7 +1,7 @@
 #ifndef _MEMDEBUG_H_
 #  define _MEMDEBUG_H_
 /* 
- * RCSID @(#)$Id: memdebug.h,v 1.3 2002/02/21 18:05:34 rk Exp $
+ * RCSID @(#)$Id: memdebug.h,v 1.4 2002/02/22 17:11:36 rk Exp $
  */
 /*
  *********************************************************************
@@ -36,6 +36,7 @@ extern "C" {
 
 #  ifdef MEMDEBUG
 
+#    include <stdio.h>	/* FILE */
 #    include <stdlib.h>	/* calloc, free, malloc, realloc */
 
 FILE *memdebug_output(FILE *output);
