@@ -33,21 +33,16 @@ INSTALL	= etc/cpset
 SHAR	= etc/mkshar
 
 LIB	=librko.a
-LIBOBJS	=$(LIB)(invoke.o) $(LIB)(timedfgets.o) $(LIB)(rkoerror.o) \
-	 $(LIB)(memory.o) $(LIB)(strmem.o) $(LIB)(wcstrcmp.o) \
-	 $(LIB)(nameread.o) $(LIB)(foptim.o) $(LIB)(fzeroin.o) \
-	 $(LIB)(divdiff.o) $(LIB)(urand.o) $(LIB)(strchop.o) \
-	 $(LIB)(ansi_seq.o) $(LIB)(gethostbyX.o) $(LIB)(tcp_connect.o) \
-	 $(LIB)(macrosub.o) $(LIB)(uvec.o) $(LIB)(strdbecpy.o) \
-	 $(LIB)(istext.o)
-OBJS	=invoke.o timedfgets.o rkoerror.o memory.o strmem.o wcstrcmp.o \
-	 nameread.o foptim.o fzeroin.o divdiff.o urand.o strchop.o \
-	 ansi_seq.o gethostbyX.o tcp_connect.o macrosub.o uvec.o \
-	 strdbecpy.o istext.o
-DOCS	=invoke.3 timedfgets.3 rkoerror.3 memory.3 strmem.3 wcstrcmp.3 \
-	 nameread.3 foptim.3 fzeroin.3 divdiff.3 urand.3 strchop.3 \
-	 ansi_seq.3 gethostbyX.3 tcp_connect.3 macrosub.3 uvec.3 \
-	 strdbecpy.3 istext.3
+SRCS	=invoke.c timedfgets.c rkoerror.c memory.c strmem.c wcstrcmp.c \
+	 nameread.c foptim.c fzeroin.c divdiff.c urand.c strchop.c \
+	 ansi_seq.c gethostbyX.c tcp_connect.c macrosub.c uvec.c \
+	 strdbecpy.c istext.c
+
+# requires a GNU "make" for the following
+LIBOBJS	=$(SRCS:%.c=$(LIB)(%.o))
+
+OBJS	=$(SRCS:.c=.o)
+DOCS	=$(SRCS:.c=.3)
 DOCSL	=librko.3 $(DOCS)
 
 .SUFFIXES: .3 .man
