@@ -40,12 +40,13 @@ for (errsum = 0, i = (unsigned long) lo; i < (unsigned long) hi; ++i, ++tot) { \
 
 long tsqrt(double a) {
 	double t;
-	long lt;
+	unsigned long lt;
 	if (a < 0.0) return 0;
 	lt = t = sqrt(a);
-	if (lt*lt <= (long) a) return lt;
+	if (lt*lt <= (unsigned long) a) return lt;
+	/* watch for round-up errors */
 	t = (double) lt;
-	while (t*t >= (long) a) t = --lt;
+	while (t*t >= a) t = --lt;
 	return lt;
 } 
 
