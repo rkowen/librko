@@ -1,5 +1,7 @@
+static const char RCSID[]="@(#)$Id: fdlist.c,v 1.10 2002/02/22 20:09:53 rk Exp $";
+static const char AUTHOR[]="@(#)fdlist 1.0 1998/10/14 R.K.Owen,Ph.D.";
 /* fdlist - tracks the file descriptors / files & actions
- * by R.K. Owen,Ph.D. 10/14/1998
+ * by R.K. Owen,Ph.D. 1998/10/14
  */
 /*
  *********************************************************************
@@ -21,13 +23,18 @@
  */
 
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include <sys/types.h>	/* open */
 #include <sys/stat.h>	/* open */
 #include <fcntl.h>	/* open */
 #include <unistd.h>	/* dup2, close */
-#include "librko.h"
+#include "rkoerror.h"
 #include "minish.h"
+#ifdef MEMDEBUG
+#  include "memdebug.h"
+#endif
 
 #define TAG_LEN		7
 static char TAG[TAG_LEN] = "FDLIST";
@@ -194,6 +201,7 @@ int minish_fdlist_dtor(minish_fdlist **fdl) {
 	int retval = 0;
 	if ((retval = minish_fdlist_close(*fdl))) return retval;
 	free(*fdl);
+	*fdl = (minish_fdlist *) NULL;
 	return retval;
 }
 
@@ -406,52 +414,47 @@ int minish_fdlist_process(minish_fdlist *fdl) {
 
 #ifdef FDTEST
 
+#define _CHECK(c)	fprintf(stderr,"%s\n",#c); \
+	if (c) rkoperror("fdtest")
+
 int main () {
 	minish_fdlist *listA = (minish_fdlist *) NULL;
 	char buffer[200];
 
-	if (minish_fdlist_dump(listA, stderr)) rkoperror("main");
-	if (!(listA = minish_fdlist_ctor())) rkoperror("main");
-	if (minish_fdlist_dump(listA, stderr)) rkoperror("main");
-	if (minish_fdlist_add(listA, MINISH_FD_REDIRECT, -1, 99))
-		rkoperror("main");
-	if (minish_fdlist_add(listA, MINISH_FD_REDIRECT, 0, 99))
-		rkoperror("main");
-	if (minish_fdlist_add(listA, MINISH_FD_WRITE,
-		1, "stdout_file")) rkoperror("main");
-	if (minish_fdlist_add(listA, MINISH_FD_APPEND,
-		2, "stderr_file")) rkoperror("main");
-	if (minish_fdlist_add(listA, MINISH_FD_READ,
-		3, "file_3_read")) rkoperror("main");
-	if (minish_fdlist_add(listA, MINISH_FD_WRITE,
-		3, "file_3_write")) rkoperror("main");
-	if (minish_fdlist_add(listA, MINISH_FD_READWRITE,
-		4, "file_4_readwrite")) rkoperror("main");
-	if (minish_fdlist_add(listA, MINISH_FD_APPEND,
-		5, "file_5_append")) rkoperror("main");
-	if (minish_fdlist_add(listA, MINISH_FD_CLOSE,
-		6)) rkoperror("main");
-	if (minish_fdlist_dump(listA, stderr)) rkoperror("main");
+	_CHECK(minish_fdlist_dump(listA, stderr));
+	_CHECK(!(listA = minish_fdlist_ctor()));
+	_CHECK(minish_fdlist_dump(listA, stderr));
+	_CHECK(minish_fdlist_add(listA, MINISH_FD_REDIRECT, -1, 99));
+	_CHECK(minish_fdlist_add(listA, MINISH_FD_REDIRECT, 0, 99));
+	_CHECK(minish_fdlist_add(listA, MINISH_FD_WRITE, 1, "stdout_file"));
+	_CHECK(minish_fdlist_add(listA, MINISH_FD_APPEND, 2, "stderr_file"));
+	_CHECK(minish_fdlist_add(listA, MINISH_FD_READ, 3, "file_3_read"));
+	_CHECK(minish_fdlist_add(listA, MINISH_FD_WRITE, 3, "file_3_write"));
+	_CHECK(minish_fdlist_add(listA, MINISH_FD_READWRITE,
+		4, "file_4_readwrite"));
+	_CHECK(minish_fdlist_add(listA, MINISH_FD_APPEND, 5, "file_5_append"));
+	_CHECK(minish_fdlist_add(listA, MINISH_FD_CLOSE, 6));
+	_CHECK(minish_fdlist_dump(listA, stderr));
 
-	if (minish_fdlist_close(listA)) rkoperror("main");
+	_CHECK(minish_fdlist_close(listA));
 
 /* this is the actual list to I/O */
-	if (!(listA = minish_fdlist_ctor())) rkoperror("main");
+	_CHECK(!(listA = minish_fdlist_ctor()));
 /* send stdout to "fdtest.out" */
-	if (minish_fdlist_add(listA, MINISH_FD_WRITE, 
-		STDOUT_FILENO, "fdtest.out")) rkoperror("main");
+	_CHECK(minish_fdlist_add(listA, MINISH_FD_WRITE, 
+		STDOUT_FILENO, "fdtest.out"));
 /* redirect stderr to stdout */
-	if (minish_fdlist_add(listA, MINISH_FD_REDIRECT, 
-		STDERR_FILENO, STDOUT_FILENO)) rkoperror("main");
-	if (minish_fdlist_add(listA, MINISH_FD_READWRITE, 
-		3, "fdtest.3inout")) rkoperror("main");
-	if (minish_fdlist_add(listA, MINISH_FD_APPEND, 
-		4, "fdtest.4out")) rkoperror("main");
+	_CHECK(minish_fdlist_add(listA, MINISH_FD_REDIRECT, 
+		STDERR_FILENO, STDOUT_FILENO));
+	_CHECK(minish_fdlist_add(listA, MINISH_FD_READWRITE, 
+		3, "fdtest.3inout"));
+	_CHECK(minish_fdlist_add(listA, MINISH_FD_APPEND, 
+		4, "fdtest.4out"));
 
-	if (minish_fdlist_dump(listA, stderr)) rkoperror("main");
+	_CHECK(minish_fdlist_dump(listA, stderr));
 
 /* process file requests */
-	if (minish_fdlist_process(listA)) rkoperror("main");
+	_CHECK(minish_fdlist_process(listA));
 
 /* write something to the files */
 	strcpy(buffer,"fdtest -> stdout\n");
@@ -469,7 +472,7 @@ int main () {
 	strcpy(buffer,"fdtest -> append\n");
 	write(4, buffer, strlen(buffer));
 
-	if (minish_fdlist_dtor(&listA)) rkoperror("main");
+	if (minish_fdlist_dtor(&listA)) rkoperror("fdtest");
 
 	return 0;
 }

@@ -20,8 +20,11 @@ static int yygrowstack();
 
 #include <stdio.h>
 #include <unistd.h>
-#include "librko.h"
 #include "minish.h"
+#include "uvec.h"
+#ifdef MEMDEBUG
+#  include "memdebug.h"
+#endif
 
 #ifdef _CRAY
 extern char *minish_yytext;
@@ -63,7 +66,7 @@ void dump_uvec(char *string, uvec *m_uvec) {
 }
 #endif /* YACCTEST */
 
-#line 67 "y.tab.c"
+#line 70 "y.tab.c"
 #define YYERRCODE 256
 #define COMMAND 257
 #define EOC 258
@@ -207,7 +210,7 @@ short *yyss;
 short *yysslim;
 YYSTYPE *yyvs;
 int yystacksize;
-#line 387 "minish.yacc"
+#line 390 "minish.yacc"
  /* start of programs */
 
 /* eliminates a useless warning */
@@ -234,7 +237,7 @@ int main(void) {
 	return minish_yyparse();
 }
 #endif /* YACCTEST */
-#line 238 "y.tab.c"
+#line 241 "y.tab.c"
 /* allocate initial stack or double stack size, up to YYMAXDEPTH */
 static int yygrowstack()
 {
@@ -430,7 +433,7 @@ yyreduce:
     switch (yyn)
     {
 case 4:
-#line 77 "minish.yacc"
+#line 80 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("statement: %d\n", ++statnum);
@@ -438,7 +441,7 @@ case 4:
 		}
 break;
 case 5:
-#line 84 "minish.yacc"
+#line 87 "minish.yacc"
 {
 			fdnum = -1;
 #if defined(YACCTEST) || defined(DEBUG)
@@ -459,7 +462,7 @@ case 5:
 		}
 break;
 case 8:
-#line 107 "minish.yacc"
+#line 110 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("option:%s\n", minish_yytext);
@@ -469,7 +472,7 @@ case 8:
 		}
 break;
 case 12:
-#line 124 "minish.yacc"
+#line 127 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("redirect:stdin/out:%s\n", minish_yytext);
@@ -486,7 +489,7 @@ case 12:
 		}
 break;
 case 13:
-#line 139 "minish.yacc"
+#line 142 "minish.yacc"
 {
 			fdnum = yyvsp[-2];
 #if defined(YACCTEST) || defined(DEBUG)
@@ -498,7 +501,7 @@ case 13:
 		}
 break;
 case 14:
-#line 151 "minish.yacc"
+#line 154 "minish.yacc"
 {
 			fdnum = STDOUT_FILENO;
 			action = MINISH_FD_WRITE;
@@ -510,7 +513,7 @@ case 14:
 		}
 break;
 case 15:
-#line 161 "minish.yacc"
+#line 164 "minish.yacc"
 {
 			fdnum = STDOUT_FILENO;
 			action = MINISH_FD_APPEND;
@@ -522,7 +525,7 @@ case 15:
 		}
 break;
 case 16:
-#line 171 "minish.yacc"
+#line 174 "minish.yacc"
 {
 			fdnum = STDIN_FILENO;
 			action = MINISH_FD_READ;
@@ -534,7 +537,7 @@ case 16:
 		}
 break;
 case 17:
-#line 181 "minish.yacc"
+#line 184 "minish.yacc"
 {
 			fdnum = STDIN_FILENO;
 			action = MINISH_FD_READWRITE;
@@ -546,7 +549,7 @@ case 17:
 		}
 break;
 case 18:
-#line 193 "minish.yacc"
+#line 196 "minish.yacc"
 {
 			fdnum = yyvsp[-2];
 			fdnum2 = yyvsp[0];
@@ -559,14 +562,14 @@ case 18:
 		}
 break;
 case 19:
-#line 206 "minish.yacc"
+#line 209 "minish.yacc"
 {
 			if (uvec_add(statement,minish_yytext))
 				rkoperror("minish : yacc : fd-red");
 		}
 break;
 case 20:
-#line 213 "minish.yacc"
+#line 216 "minish.yacc"
 {
 			fdnum = STDIN_FILENO;
 #if defined(YACCTEST) || defined(DEBUG)
@@ -579,7 +582,7 @@ case 20:
 		}
 break;
 case 21:
-#line 224 "minish.yacc"
+#line 227 "minish.yacc"
 {
 			fdnum = STDOUT_FILENO;
 #if defined(YACCTEST) || defined(DEBUG)
@@ -592,7 +595,7 @@ case 21:
 		}
 break;
 case 22:
-#line 235 "minish.yacc"
+#line 238 "minish.yacc"
 {
 			fdnum = yyvsp[-1];
 #if defined(YACCTEST) || defined(DEBUG)
@@ -605,7 +608,7 @@ case 22:
 		}
 break;
 case 23:
-#line 248 "minish.yacc"
+#line 251 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("file:%s\n", minish_yytext);
@@ -614,7 +617,7 @@ case 23:
 		}
 break;
 case 25:
-#line 257 "minish.yacc"
+#line 260 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("eoc:%s\n", minish_yytext);
@@ -642,7 +645,7 @@ case 25:
 		}
 break;
 case 26:
-#line 283 "minish.yacc"
+#line 286 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("eoc:%s\n", minish_yytext);
@@ -670,7 +673,7 @@ case 26:
 		}
 break;
 case 27:
-#line 309 "minish.yacc"
+#line 312 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("eoc:%s\n", minish_yytext);
@@ -698,7 +701,7 @@ case 27:
 		}
 break;
 case 28:
-#line 337 "minish.yacc"
+#line 340 "minish.yacc"
 {
 			minish_yyval = yyvsp[0];
 #if defined(YACCTEST) || defined(DEBUG)
@@ -712,7 +715,7 @@ case 28:
 		}
 break;
 case 29:
-#line 350 "minish.yacc"
+#line 353 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			printf("word:%s\n", minish_yytext);
@@ -722,7 +725,7 @@ case 29:
 		}
 break;
 case 30:
-#line 359 "minish.yacc"
+#line 362 "minish.yacc"
 {
 #if defined(YACCTEST) || defined(DEBUG)
 			dump_uvec("<argv>", minish_argv);
@@ -750,7 +753,7 @@ case 30:
 				rkoperror("minish : yacc : eol : fd : dtor");
 		}
 break;
-#line 754 "y.tab.c"
+#line 757 "y.tab.c"
     }
     yyssp -= yym;
     minish_yystate = *yyssp;

@@ -1,6 +1,19 @@
-main : minish_fdlist_dump : minish_fdlist_exists : null pointer!
+minish_fdlist_dump(listA, stderr)
+fdtest : minish_fdlist_dump : minish_fdlist_exists : null pointer!
+!(listA = minish_fdlist_ctor())
+minish_fdlist_dump(listA, stderr)
 <minish_fdlist_dump>
-main : minish_fdlist_add : invalid fd
+minish_fdlist_add(listA, MINISH_FD_REDIRECT, -1, 99)
+fdtest : minish_fdlist_add : invalid fd
+minish_fdlist_add(listA, MINISH_FD_REDIRECT, 0, 99)
+minish_fdlist_add(listA, MINISH_FD_WRITE, 1, "stdout_file")
+minish_fdlist_add(listA, MINISH_FD_APPEND, 2, "stderr_file")
+minish_fdlist_add(listA, MINISH_FD_READ, 3, "file_3_read")
+minish_fdlist_add(listA, MINISH_FD_WRITE, 3, "file_3_write")
+minish_fdlist_add(listA, MINISH_FD_READWRITE, 4, "file_4_readwrite")
+minish_fdlist_add(listA, MINISH_FD_APPEND, 5, "file_5_append")
+minish_fdlist_add(listA, MINISH_FD_CLOSE, 6)
+minish_fdlist_dump(listA, stderr)
 <minish_fdlist_dump>
   fd= 0 fd2=99 file=(none)                    action= REDIRECT
   fd= 1 fd2=-1 file=stdout_file               action=    WRITE
@@ -10,8 +23,16 @@ main : minish_fdlist_add : invalid fd
   fd= 4 fd2=-1 file=file_4_readwrite          action=READWRITE
   fd= 5 fd2=-1 file=file_5_append             action=   APPEND
   fd= 6 fd2=-1 file=(none)                    action=    CLOSE
+minish_fdlist_close(listA)
+!(listA = minish_fdlist_ctor())
+minish_fdlist_add(listA, MINISH_FD_WRITE, STDOUT_FILENO, "fdtest.out")
+minish_fdlist_add(listA, MINISH_FD_REDIRECT, STDERR_FILENO, STDOUT_FILENO)
+minish_fdlist_add(listA, MINISH_FD_READWRITE, 3, "fdtest.3inout")
+minish_fdlist_add(listA, MINISH_FD_APPEND, 4, "fdtest.4out")
+minish_fdlist_dump(listA, stderr)
 <minish_fdlist_dump>
   fd= 1 fd2=-1 file=fdtest.out                action=    WRITE
   fd= 2 fd2= 1 file=(none)                    action= REDIRECT
   fd= 3 fd2=-1 file=fdtest.3inout             action=READWRITE
   fd= 4 fd2=-1 file=fdtest.4out               action=   APPEND
+minish_fdlist_process(listA)

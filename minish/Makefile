@@ -2,7 +2,9 @@
 # Makefile for minish
 #
 include ../Makefile.inc
-.SUFFIXES: .c .o
+
+.SUFFIXES:
+.SUFFIXES: .c .o _m.o
 
 CC	=gcc
 LD	=gcc -o
@@ -11,28 +13,35 @@ YACC	=yacc
 YYFLAGS	=-v -d -t
 RM	=rm
 YYSED	=../etc/yy-sed
+MEMDBG	=../memdbg
 #
 #MSHFLAGS=-I.. -DTEST
 MSHFLAGS=-I..
 OBJS	=minish.o minish-yacc.o mshexec.o fdlist.o
 #requires GNU "make"
 LIBOBJS	=$(OBJS:%.o=../$(LIB)(%.o))
+MLIBOBJS=$(OBJS:%.o=../$(LIB)(%_m.o))
 
 .DEFAULT:
 	$(MAKE) help
 
-all: ../$(LIB)
+all: $(LIBOBJS)
 
-mall:
+mall: $(MLIBOBJS)
 	@$(ECHO) "minish not doing anything"
 
 ../$(LIB) : $(LIBOBJS)
 	$(AR) $(ARFLAGS) $@ $?
 #	-$(RM) -f $?
 
+../$(MLIB) : $(MLIBOBJS)
+	$(AR) $(ARFLAGS) $@ $?
+#	-$(RM) -f $?
+
 tall: $(OBJS)
 
-TESTS	= shtest exectest yacctest lextest
+TESTS	= shtest   exectest   yacctest   lextest
+TESTS_M	= shtest_m exectest_m yacctest_m lextest_m
 
 help:
 	@$(ECHO) "make		- makes all the minish object files"
@@ -47,11 +56,21 @@ help:
 test : runshtest
 
 .c.o :
+	@$(ECHO) ">>> .c.o $* $< $@"
 	$(CC) -c $(MSHFLAGS) $(CFLAGS) $<
+
+.c_m.o :
+	@$(ECHO) ">>> .c_m.o $* $< $@"
+	$(CC) -o $@ -c $(MSHFLAGS) $(CFLAGS) -DMEMDEBUG $<
 
 shtest : minish.o minish-yacc.o mshexec.o fdlist.o minish-tab.h
 	$(CC) $(MSHFLAGS) $(CFLAGS) -o shtest tminish.c \
 		minish.o minish-yacc.o mshexec.o fdlist.o \
+		-ll -L.. -lrko
+
+shtest_m : minish_m.o minish-yacc_m.o mshexec_m.o fdlist_m.o minish-tab.h
+	$(CC) $(MSHFLAGS) $(CFLAGS) -DMEMDEBUG -o shtest_m tminish.c \
+		minish_m.o minish-yacc_m.o mshexec_m.o fdlist_m.o \
 		-ll -L.. -lrko
 
 exectest : mshexec.c fdlist.o
@@ -59,14 +78,31 @@ exectest : mshexec.c fdlist.o
 		-ll -L.. -lrko
 	-$(RM) mshexec.o
 
+exectest_m : mshexec.c fdlist_m.o
+	$(CC) $(MSHFLAGS) $(CFLAGS) -DMEMDEBUG -o exectest_m -DEXECTEST \
+		mshexec.c fdlist_m.o \
+		-ll -L.. -lrko
+	-$(RM) mshexec_m.o
+
 #yacctest : y.tab.c lex.yy.c fdlist.o
 yacctest : minish-yacc.c minish-lex.c fdlist.o
-	$(CC) $(MSHFLAGS) $(CFLAGS) -o yacctest -DYACCTEST minish-yacc.c fdlist.o \
+	$(CC) $(MSHFLAGS) $(CFLAGS) -o yacctest \
+		-DYACCTEST minish-yacc.c fdlist.o \
 		-ll -L.. -lrko
 	-$(RM) minish-yacc.o
 
+yacctest_m : minish-yacc.c minish-lex.c fdlist_m.o
+	$(CC) $(MSHFLAGS) $(CFLAGS) -DMEMDEBUG -o yacctest_m \
+		-DYACCTEST minish-yacc.c fdlist_m.o \
+		-ll -L.. -lrko
+	-$(RM) minish-yacc_m.o
+
 minish-yacc.o : minish-yacc.c minish-lex.c minish-tab.h
 	$(CC) -c $(MSHFLAGS) $(CFLAGS) -DFLEX_STRING $<
+
+minish-yacc_m.o : minish-yacc.c minish-lex.c minish-tab.h
+	$(CC) -o minish-yacc_m.o -c $(MSHFLAGS) $(CFLAGS) -DMEMDEBUG \
+		-DFLEX_STRING $<
 
 minish-yacc.c : y.tab.c
 	$(YYSED) --prefix minish_yy < $< > minish-yacc.c
@@ -85,11 +121,21 @@ lextest : minish-lex.c minish-tab.h
 	$(CC) $(MSHFLAGS) $(CFLAGS) -o lextest -DLEXTEST minish-lex.c
 	-$(RM) minish-lex.o
 
+lextest_m : minish-lex.c minish-tab.h
+	$(CC) $(MSHFLAGS) $(CFLAGS) -DMEMDEBUG -o lextest_m -DLEXTEST \
+		minish-lex.c
+	-$(RM) minish-lex_m.o
+
 lex.yy.c : minish.lex
 	$(LEX) $(LEXFLAGS) minish.lex
 
 fdtest/fdtest : fdlist.c
-	$(CC) $(MSHFLAGS) $(CFLAGS) -o fdtest/fdtest -DFDTEST fdlist.c -L.. -lrko
+	$(CC) $(MSHFLAGS) $(CFLAGS) -o fdtest/fdtest \
+		-DFDTEST fdlist.c -L.. -lrko
+
+fdtest/fdtest_m : fdlist.c
+	$(CC) $(MSHFLAGS) $(CFLAGS) -DMEMDEBUG -o fdtest/fdtest_m \
+		-DFDTEST fdlist.c -L.. -lrko
 
 mtest : mtest/right mtest/wrong mtest/rsignal
 
@@ -127,6 +173,31 @@ runlextest : lextest
 runfdtest : fdtest/fdtest
 	-@(cd fdtest; ./fdtest.sh)
 
+runtest_m : runfdtest_m runlextest_m runyacctest_m runexectest_m runshtest_m
+
+runshtest_m : shtest_m mtest_m
+	-@./shtest_m
+	-@if diff shtest.out cmp/shtest.cmp ; then \
+		echo shtest OK ; else echo shtest FAILED ; fi
+
+runexectest_m : exectest_m mtest_m
+	-@./exectest_m
+	-@if diff exectest.out cmp/exectest.cmp ; then \
+		echo exectest OK ; else echo exectest FAILED ; fi
+
+runyacctest_m : yacctest_m
+	-@./yacctest_m > yacctest.out
+	-@if diff yacctest.out cmp/yacctest.cmp ; then \
+		echo yacctest OK ; else echo yacctest FAILED ; fi
+
+runlextest_m : lextest_m
+	-@./lextest_m > lextest.out
+	-@if diff lextest.out cmp/lextest.cmp ; then \
+		echo lextest OK ; else echo lextest FAILED ; fi
+
+runfdtest_m : fdtest/fdtest_m $(MEMDBG)
+	-@fdtest/fdtest_m 2>&1 | $(MEMDBG)
+
 clean :
 	-$(RM) -f *.o a.out core y.output
 	-$(RM) -f fdtest/fdtest fdtest/fdtest.*out
@@ -134,7 +205,7 @@ clean :
 	-$(RM) -f lextest.out yacctest.out exectest.out shtest.out
 
 wipe : clean
-	-$(RM) $(TESTS)
+	-$(RM) $(TESTS) $(TESTS_M)
 
 clobber: wipe
 

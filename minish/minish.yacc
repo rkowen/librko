@@ -16,8 +16,11 @@
 
 #include <stdio.h>
 #include <unistd.h>
-#include "librko.h"
 #include "minish.h"
+#include "uvec.h"
+#ifdef MEMDEBUG
+#  include "memdebug.h"
+#endif
 
 #ifdef _CRAY
 extern char *minish_yytext;
