@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.13 2002/10/21 17:17:04 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.14 2002/10/21 19:42:16 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -16,6 +16,7 @@ AUTOMAKE_OPTIONS=foreign subdir-objects no-installinfo
 
 ACLOCAL_AMFLAGS=-I config
 
+SUBDIRS = . tests
 AM_CPPFLAGS = -I$(srcdir)/include -I$(srcdir)
 
 avec_srcs = \
@@ -82,6 +83,26 @@ uvec_srcs =  \
 	uvec/uvec_reverse.c uvec/uvec_shift.c uvec/uvec_sort.c		\
 	uvec/uvec_strfns.c uvec/uvec_strfree.c uvec/vec2uvec.c
 
+include_HEADERS =		\
+	include/ansi_seq.h	\
+	include/avec.h		\
+	include/clocker.h	\
+	include/coexec.h	\
+	include/igcd.h		\
+	include/iprime.h	\
+	include/isqrt.h		\
+	include/istext.h	\
+	include/librko.h	\
+	include/list.h		\
+	include/memdebug.h	\
+	include/numfns.h	\
+	include/rkoerror.h	\
+	include/strchop.h	\
+	include/strfns.h	\
+	include/strmalloc.h	\
+	include/urand.h		\
+	include/uvec.h
+
 lib_LIBRARIES		= librko.a
 
 librko_a_SOURCES	=	\
@@ -117,5 +138,33 @@ man3_MANS =  \
 	docs/tcp_connect.man docs/timedfgets.man docs/uvec.man 		\
 	docs/urand.man docs/wcstrcmp.man
 
+special_includes=	\
+	avec/avec_.h igcd/igcd_.h iprime/iprime_.h isqrt/isqrt_.h	\
+	list/list_.h
+
+EXTRA_DIST=				\
+		$(man3_MANS)		\
+		include			\
+		$(special_includes)	\
+		urand			\
+		config			\
+		tests			\
+		docs
+
+dist-hook:
+	rm -rf `find $(distdir) -name CVS -print`
+	rm -rf `find $(distdir) -name Makefile -print`
+	rm -rf `find $(distdir) -name .deps -print`
+
 urand/urand.o : urand/urand.c urand/urand_.c clocker.o
 	cd urand; ./all.csh $(CC)
+
+help:
+	@echo ""
+	@echo "make		- compiles sources to library"
+	@echo "make all		- same as above"
+	@echo "make install	- copy library & man pages to destination"
+	@echo "make clean	- cleans out most useless files"
+	@echo "make dist-gzip	- makes a .tar.gz tarball"
+	@echo "make distclean	- cleans & removes most made files"
+	@echo ""

@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./tests/Makefile.am
-## Versions:    $Id: Makefile.am,v 1.4 2002/10/21 17:17:04 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.5 2002/10/21 19:42:16 rk Exp $
 ## Created:     2002/06/24
 ##
 ###########################################################################
@@ -16,7 +16,8 @@ AUTOMAKE_OPTIONS=foreign no-installinfo no-installman
 
 AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir) -I$(srcdir)
 
-helper_progs = doggy kitty birdy tweety
+helper_progs   = doggy   kitty   birdy   tweety
+helper_sources = doggy.c kitty.c birdy.c tweety.c
 
 test_progs = \
 	tansi_seq.x tavec.x tclocker.x tdirtree.x tfilter.x	\
@@ -24,6 +25,9 @@ test_progs = \
 	tisqrt.x tlist.x tmacrosub.x tmemdbg.x tnameread.x	\
 	tspawn.x tspawn3.x tstrchop.x tstrdbecpy.x tstrmalloc.x	\
 	tstrmem.x ttfgets.x tuvec.x twcstrcmp.x
+
+# requires GNU make
+test_sources = $(test_progs:.x=.c)
 
 noinst_PROGRAMS =	$(helper_progs)			\
 			$(test_progs)
@@ -62,15 +66,20 @@ ttfgets_x_SOURCES		= ttfgets.c
 tuvec_x_SOURCES			= tuvec.c
 twcstrcmp_x_SOURCES		= twcstrcmp.c
 
+EXTRA_DIST=				\
+	$(helper_sources)		\
+	$(test_sources)
+
 help : 
+	@echo ""
 	@echo "Targets:"
 	@echo "	all	- create all the test executables"
 #	@echo "	mall	- create all the test memory debug executables"
 	@echo "	runall	- run all the tests"
 	@echo "	test	- both of above"
 	@echo "	help	- this info"
-	@echo "	clean	- remove .o files"
-	@echo "	clobber	- do clean and remove all executables"
+	@echo "	clean	- cleans out most useless files"
+	@echo ""
 	
 EXES = $(test_progs)
 
@@ -79,8 +88,3 @@ runall : $(EXES)
 
 test : all runall
 
-clean :
-	-rm -f *.o *_m.o a.out core
-
-clobber : clean
-	-rm -f $(EXES)

@@ -1,0 +1,64 @@
+.\" RCSID @(#)$Id: spawn3.man,v 1.1 2002/10/21 19:42:16 rk Exp $
+.\" LIBDIR
+.TH "SPAWN" "3rko" "2 Jun 1995"
+.SH NAME
+spawn \- spawn a child process with stdin and stdout stream communication.
+
+.SH SYNOPSIS
+
+.nf
+#include <stdio.h>
+#include "coexec.h"
+
+int spawn(FILE **childin, FILE **childout, FILE **childerr, char **argv);
+.fi
+
+.SH DESCRIPTION
+.I spawn
+sets up a child process and communications to the process via the
+stdin, stdout, and stderr FILE streams.
+.I argv
+is a command vector, where argv[0] is the executable to run, and
+argv[1],... are the commandline options.
+Must have the last one argv[N] = NULL to terminate the vector.
+
+.I spawn
+returns the child pid if successful, else < 0 an error.
+Pass in the address to the FILE streams
+.IR childin , childout ,
+and
+.I childerr
+for communication to the spawned process.
+
+.SH SEE ALSO
+coexec(3rko),invoke(3rko),spawn(3rko),uvec(3rko),
+execvp(2),fork(2),pipe(2),fclose(3),wait(2),waitpid(2),system(3)
+
+.SH NOTES
+
+After the output is read and an EOF is received, the calling program should
+close the file stream and wait for the child process.
+
+ FILE *childin, *childout, *childerr;
+ ...
+ if (childpid = spawn(&childin, &childout, argv) < 0) {
+	fprintf(stderr,"failed to spawn '%s'\n", *argv);
+ }
+ ...
+ fclose(childin);
+ fclose(childout);
+ fclose(childerr);
+ waitpid(childpid,NULL,0);
+
+.SH DIAGNOSTICS
+
+The errors are handled by rkoperror() (if RKOERROR is defined),
+else it goes to stderr.
+
+.SH BUGS
+None discovered yet.
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS
