@@ -1,0 +1,52 @@
+.\" RCSID @(#)$Id: isqrt.man,v 1.1 1998/11/24 05:57:03 rk Exp $
+.\" LIBDIR
+.TH "ISQRT" "3rko" "26 Nov 1998"
+.SH NAME
+isqrt \- integer sqrt
+.SH SYNOPSIS
+
+.nf
+#include "librko.h"
+
+char chsqrt(char n);
+char scsqrt(signed char n);
+char ucsqrt(unsigned char n);
+char hsqrt(short n);
+char uhsqrt(unsigned short n);
+char isqrt(int n);
+char uisqrt(unsigned int n);
+char lsqrt(long n);
+char ulsqrt(unsigned long n);
+.fi
+
+.SH DESCRIPTION
+The
+.I isqrt
+collection returns the nearest lower integer square root for the given
+integer argument.  It uses a method similar and augmenting the one
+described by Arne Steinarson.
+.P
+It finds the lowest even power of two (2^(2n)) that contains the argument,
+shifting the argument to the right by 2*n bits (which corresponds to
+division by 2^(2n)).  This leaves a value between [0,1), which is
+used to search a lookup table (LUT).  The table is accurate to 8 bits.
+Once the value is found in the LUT, the value is left shifted by n bits,
+which corresponds to multiplication by 2^n.
+Finally, the Newton method to quadratically converge to a more accurate
+value.
+.P
+Here's roughly an example of what's going on.  Take the isqrt(10000).
+
+.SH SEE ALSO
+sqrt(3),gcd(3rko)
+
+.SH NOTES
+
+.SH DIAGNOSTICS
+
+.SH BUGS
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

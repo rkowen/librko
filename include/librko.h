@@ -2,7 +2,7 @@
 #  define _LIBRKO_H_
 /* 
  * USMID %W%
- * RCSID @(#)$Id: librko.h,v 1.10 1998/11/19 23:05:14 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.11 1998/11/24 05:57:03 rk Exp $
  */
 /*
  *********************************************************************
@@ -80,7 +80,7 @@ int istext(int c);
 /* useful integer functions */
 /* GCD - greatest common divisor */
 #define __GCD(NM, TYPE) TYPE NM(TYPE a, TYPE b);
-__GCD(cgcd,char)
+__GCD(chgcd,char)
 __GCD(scgcd,signed char)
 __GCD(ucgcd,unsigned char)
 __GCD(hgcd,short)
@@ -90,6 +90,19 @@ __GCD(ugcd,unsigned int)
 __GCD(lgcd,long)
 __GCD(ulgcd,unsigned long)
 #undef __GCD
+
+/* integer sqrt */
+#define __ISQRT(NM, TYPE) TYPE NM(TYPE a);
+__ISQRT(chsqrt,char)
+__ISQRT(scsqrt,signed char)
+__ISQRT(ucsqrt,unsigned char)
+__ISQRT(hsqrt,short)
+__ISQRT(uhsqrt,unsigned short)
+__ISQRT(isqrt,int)
+__ISQRT(usqrt,unsigned int)
+__ISQRT(lsqrt,long)
+__ISQRT(ulsqrt,unsigned long)
+#undef __ISQRT
 
 /* urand declarations */
 INTEGER irand(void);

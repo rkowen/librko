@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: gcd.c,v 1.3 1998/11/21 15:04:42 rk Exp $";
+static const char RCSID[]="@(#)$Id: gcd.c,v 1.4 1998/11/24 05:57:03 rk Exp $";
 static const char AUTHOR[]="@(#)gcd 1.0 11/17/98 R.K.Owen,Ph.D.";
 /* gcd.c -
  * implements Euclid's greatest common divisor algorith
@@ -41,7 +41,7 @@ TYPE NM(unsigned TYPE a, unsigned TYPE b) { unsigned TYPE t; \
 }
 
 /* just like templates - almost */
-_GCD(cgcd,char)
+_GCD(chgcd,char)
 _GCD(scgcd,signed char)
 _UGCD(ucgcd,char)
 _GCD(hgcd,short)

@@ -37,9 +37,9 @@ int main() {
 	TESTOUT(scgcd, signed char, 18, 35, 1);
 	TESTOUT(scgcd, signed char, -18, 35, 0);
 	TESTOUT(scgcd, signed char, 0, 35, 0);
-	TESTOUT(cgcd, char, 48, 42, 6);
-	TESTOUT(cgcd, char, 18, 35, 1);
-	TESTOUT(cgcd, char, 0, 35, 0);
+	TESTOUT(chgcd, char, 48, 42, 6);
+	TESTOUT(chgcd, char, 18, 35, 1);
+	TESTOUT(chgcd, char, 0, 35, 0);
 	TESTOUT(ucgcd, unsigned char, 48, 42, 6);
 	TESTOUT(ucgcd, unsigned char, 18, 35, 1);
 	TESTOUT(ucgcd, unsigned char, 0, 35, 0);
