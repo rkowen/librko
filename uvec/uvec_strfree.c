@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: uvec_strfree.c,v 1.1 2002/09/13 01:50:44 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec_strfree.c,v 1.2 2002/10/11 21:53:05 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 /* uvec.c -
  *  uvec_strfree       free a uvec2str allocated string
@@ -29,7 +29,7 @@ int uvec_strfree(uvec const *uv, char **str) {
 	
 	if (uvec_exists(uv)) {
 		/* free string */
-		if (retval=(uv->str_fns.str_free)(str)) {
+		if ((retval=(uv->str_fns.str_free)(str))) {
 #ifdef RKOERROR
 			if (rkoerrno == RKO_OK) rkoerrno = RKOGENERR;
 			rkopsterror("uvec_strfree : ");

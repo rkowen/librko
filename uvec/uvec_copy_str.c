@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: uvec_copy_str.c,v 1.4 2002/09/13 01:50:44 rk Exp $";
+static const char RCSID[]="@(#)$Id: uvec_copy_str.c,v 1.5 2002/10/11 21:53:05 rk Exp $";
 static const char AUTHOR[]="@(#)uvec 1.1 10/31/2001 R.K.Owen,Ph.D.";
 /* uvec.c -
  * uvec_copy_str create a uvec from a token delimited string.
@@ -85,7 +85,7 @@ int uvec_copy_str(uvec *u, char const *token, char const *string) {
 			fraglen = tokptr - ptr;
 			uvec_nadd(u, ptr, fraglen + 1);
 			ptr = uvec_vector(u)[uvec_end(u)];
-			*(ptr + fraglen) = '\0';
+			*((char *) ptr + fraglen) = '\0';
 		}
 		ptr = tokptr + toklen;
 	}
