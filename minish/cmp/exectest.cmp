@@ -1,0 +1,14 @@
+this is the "right" line of text 
+1: retval = 0, sigval = 0
+this is the "wrong" line of text 
+2: retval = 1, sigval = 0
+a "right signal" line of text 
+SIGCONT=18
+exit normally with SIGCONT
+3: retval = 0, sigval = 0
+a "right signal" line of text 
+SIGHUP=1
+4: retval = -1, sigval = 1
+a "right signal" line of text 
+SIGINT=2
+5: retval = -1, sigval = 2

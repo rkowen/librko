@@ -46,17 +46,17 @@ runtest : runfdtest runlextest runyacctest runexectest
 
 runexectest : exectest mtest
 	-@./exectest
-	-@if diff exectest.out exectest.cmp ; then \
+	-@if diff exectest.out cmp/exectest.cmp ; then \
 		echo exectest OK ; else echo exectest FAILED ; fi
 
 runyacctest : yacctest
 	-@./yacctest > yacctest.out
-	-@if diff yacctest.out yacctest.cmp ; then \
+	-@if diff yacctest.out cmp/yacctest.cmp ; then \
 		echo yacctest OK ; else echo yacctest FAILED ; fi
 
 runlextest : lextest
 	-@./lextest > lextest.out
-	-@if diff lextest.out lextest.cmp ; then \
+	-@if diff lextest.out cmp/lextest.cmp ; then \
 		echo lextest OK ; else echo lextest FAILED ; fi
 
 runfdtest : fdtest/fdtest
@@ -66,7 +66,7 @@ clean :
 	-$(RM) -f *.o a.out core y.output
 	-$(RM) -f fdtest/fdtest fdtest/fdtest.*out
 	-$(RM) -f mtest/right mtest/wrong mtest/rsignal mtest/core
-	-$(RM) -f exectest.out
+	-$(RM) -f lextest.out yacctest.out exectest.out
 
 wipe : clean
 	-$(RM) lextest yacctest

@@ -1,0 +1,269 @@
+command:xxx
+<argv>: xxx 
+eol: linenum = 1
+<line>: xxx 
+<minish_fdlist_dump>
+statement: 1
+command:xxx
+<argv>: xxx 
+eol: linenum = 2
+<line>: xxx 
+<minish_fdlist_dump>
+statement: 2
+command:xxx1
+word:-e
+option:-e
+word:what is this string?
+option:what is this string?
+eoc:;
+<argv>: xxx1 -e what is this string? 
+<minish_fdlist_dump>
+statement: 3
+command:xxx2
+word:-2
+option:-2
+word:what's # for?
+option:what's # for?
+<argv>: xxx2 -2 what's # for? 
+eol: linenum = 3
+<line>: xxx1 -e what is this string? ; xxx2 -2 what's # for? 
+<minish_fdlist_dump>
+statement: 4
+command:xxx1
+word:-e
+option:-e
+word:what is this string?
+option:what is this string?
+eoc:;
+<argv>: xxx1 -e what is this string? 
+<minish_fdlist_dump>
+statement: 5
+command:xxx2
+word:-2
+option:-2
+word:Say what?
+option:Say what?
+<argv>: xxx2 -2 Say what? 
+eol: linenum = 4
+<line>: xxx1 -e what is this string? ; xxx2 -2 Say what? 
+<minish_fdlist_dump>
+statement: 6
+command:xxx1
+word:-e
+option:-e
+word:1
+option:1
+eoc:&&
+<argv>: xxx1 -e 1 
+<minish_fdlist_dump>
+statement: 7
+command:xxx2
+word:-x
+option:-x
+eoc:;
+<argv>: xxx2 -x 
+<minish_fdlist_dump>
+statement: 8
+command:xxx3
+<argv>: xxx3 
+eol: linenum = 5
+<line>: xxx1 -e 1 && xxx2 -x ; xxx3 
+<minish_fdlist_dump>
+statement: 9
+command:xxx1
+word:-e
+option:-e
+word:1
+option:1
+eoc:||
+<argv>: xxx1 -e 1 
+<minish_fdlist_dump>
+statement: 10
+command:xxx2
+word:-x
+option:-x
+eoc:&&
+<argv>: xxx2 -x 
+<minish_fdlist_dump>
+statement: 11
+command:xxx3
+<argv>: xxx3 
+eol: linenum = 6
+<line>: xxx1 -e 1 || xxx2 -x && xxx3 
+<minish_fdlist_dump>
+statement: 12
+command:xxx
+redirect:<
+word:file
+file:file
+redirect:stdin/out:file
+<argv>: xxx 
+eol: linenum = 7
+<line>: xxx < file 
+<minish_fdlist_dump>
+  fd= 0 fd2=-1 file=file                      action=     READ
+statement: 13
+command:xxx
+redirect:>
+word:file
+file:file
+redirect:stdin/out:file
+<argv>: xxx 
+eol: linenum = 8
+<line>: xxx > file 
+<minish_fdlist_dump>
+  fd= 1 fd2=-1 file=file                      action=    WRITE
+statement: 14
+command:xxx
+redirect:>>
+word:file
+file:file
+redirect:stdin/out:file
+<argv>: xxx 
+eol: linenum = 9
+<line>: xxx >> file 
+<minish_fdlist_dump>
+  fd= 1 fd2=-1 file=file                      action=   APPEND
+statement: 15
+command:xxx
+redirect:<>
+word:file
+file:file
+redirect:stdin/out:file
+<argv>: xxx 
+eol: linenum = 10
+<line>: xxx <> file 
+<minish_fdlist_dump>
+  fd= 0 fd2=-1 file=file                      action=READWRITE
+  fd= 1 fd2= 1 file=(none)                    action= REDIRECT
+statement: 16
+command:xxx
+redirect:<
+word:file1
+file:file1
+redirect:stdin/out:file1
+redirect:>
+word:file2
+file:file2
+redirect:stdin/out:file2
+<argv>: xxx 
+eol: linenum = 11
+<line>: xxx < file1 > file2 
+<minish_fdlist_dump>
+  fd= 0 fd2=-1 file=file1                     action=     READ
+  fd= 1 fd2=-1 file=file2                     action=    WRITE
+statement: 17
+command:xxx
+number:3
+redirect:>
+word:file3
+file:file3
+redirect:3:file3
+number:2
+redirect:>>
+word:file2
+file:file2
+redirect:2:file2
+number:1
+number:2
+redirect:1 to 2
+<argv>: xxx 
+eol: linenum = 12
+<line>: xxx (3) > file3 (2) >> file2 (1) >& (2) 
+<minish_fdlist_dump>
+  fd= 3 fd2=-1 file=file3                     action=    WRITE
+  fd= 2 fd2=-1 file=file2                     action=   APPEND
+  fd= 1 fd2= 2 file=(none)                    action= REDIRECT
+statement: 18
+command:xxx
+number:3
+redirect:<
+word:file3
+file:file3
+redirect:3:file3
+<argv>: xxx 
+eol: linenum = 13
+<line>: xxx (3) < file3 
+<minish_fdlist_dump>
+  fd= 3 fd2=-1 file=file3                     action=     READ
+statement: 19
+command:xxx
+number:3
+redirect:<>
+word:file3
+file:file3
+redirect:3:file3
+<argv>: xxx 
+eol: linenum = 14
+<line>: xxx (3) <> file3 
+<minish_fdlist_dump>
+  fd= 3 fd2=-1 file=file3                     action=READWRITE
+statement: 20
+command:xxx
+close:1:
+<argv>: xxx 
+eol: linenum = 15
+<line>: xxx >& 
+<minish_fdlist_dump>
+  fd= 1 fd2=-1 file=(none)                    action=    CLOSE
+statement: 21
+command:xxx
+close:0:
+<argv>: xxx 
+eol: linenum = 16
+<line>: xxx <& 
+<minish_fdlist_dump>
+  fd= 0 fd2=-1 file=(none)                    action=    CLOSE
+statement: 22
+command:xxx
+word:2
+option:2
+number:2
+number:1
+redirect:2 to 1
+word:1
+option:1
+<argv>: xxx 2 1 
+eol: linenum = 17
+<line>: xxx 2 (2) >& (1) 1 
+<minish_fdlist_dump>
+  fd= 2 fd2= 1 file=(none)                    action= REDIRECT
+statement: 23
+command:xxx
+word:2
+option:2
+number:2
+close:2:
+word:1
+option:1
+<argv>: xxx 2 1 
+eol: linenum = 18
+<line>: xxx 2 (2) >& 1 
+<minish_fdlist_dump>
+  fd= 2 fd2=-1 file=(none)                    action=    CLOSE
+statement: 24
+command:xxx
+number:2
+number:1
+redirect:2 to 1
+<argv>: xxx 
+eol: linenum = 19
+<line>: xxx (2) >& (1) 
+<minish_fdlist_dump>
+  fd= 2 fd2= 1 file=(none)                    action= REDIRECT
+statement: 25
+command:xxx1
+number:2
+number:1
+redirect:2 to 1
+eoc:;
+<argv>: xxx1 
+<minish_fdlist_dump>
+  fd= 2 fd2= 1 file=(none)                    action= REDIRECT
+statement: 26
+command:xxx2
+<argv>: xxx2 
+eol: linenum = 20
+<line>: xxx1 (2) >& (1) ; xxx2 
+<minish_fdlist_dump>
+statement: 27
