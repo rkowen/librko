@@ -1,7 +1,7 @@
 #ifndef _MEMDEBUG_H_
 #  define _MEMDEBUG_H_
 /* 
- * RCSID @(#)$Id: memdebug.h,v 1.1 2002/02/08 23:10:22 rk Exp $
+ * RCSID @(#)$Id: memdebug.h,v 1.2 2002/02/10 08:02:28 rk Exp $
  */
 /*
  *********************************************************************
@@ -20,8 +20,6 @@
  *                   rk@owen.sj.ca.us
  *
  *********************************************************************
- */
-/* define HAVE_STRCASECMP if function exists
  */
 #  ifdef __cplusplus
 extern "C" {
@@ -48,6 +46,7 @@ void *m_realloc(void *rptr, size_t size, char *file, int line);
 #    define   free(a)		m_free((a),		__FILE__, __LINE__)
 #    define   malloc(a)		m_malloc((a),		__FILE__, __LINE__)
 #    define   realloc(a,b)	m_realloc((a),(b),	__FILE__, __LINE__)
+#  endif
 
 #  ifdef __cplusplus
 	}

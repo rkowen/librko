@@ -1,12 +1,12 @@
-#ifndef _RKOERROR
-#  define _RKOERROR
+#ifndef _CLOCKER_H_
+#  define _CLOCKER_H_
 /* 
- * RCSID @(#)$Id: rkoerror.h,v 1.2 2002/02/10 08:02:28 rk Exp $
+ * RCSID @(#)$Id: clocker.h,v 1.1 2002/02/10 08:02:28 rk Exp $
  */
 /*
  *********************************************************************
  *
- *     This software is copyrighted by R.K.Owen,Ph.D. 1997
+ *     This software is copyrighted by R.K.Owen,Ph.D. 2001
  *
  * The author, R.K.Owen, of this software is not liable for any
  * problems WHATSOEVER which may result from use  or  abuse  of
@@ -21,31 +21,22 @@
  *
  *********************************************************************
  */
-
 #  ifdef __cplusplus
 extern "C" {
 #  endif
 
-/* librko - error message package */
+#include <time.h>
 
-extern int rkoerrno;
+/* clock timer */
+typedef clock_t clocker_t;
 
-#define	RKO_OK		0
-#define	RKOGENERR	1
-#define	RKOSIGERR	2
-#define	RKOSIGNAL	3
-#define	RKOMEMERR	4
-#define	RKOIOERR	5
-#define	RKOUSEERR	6
-#define	RKO_MSG		99
+typedef   enum {_SET = 0, _RESET, _READ, _PER_SEC} clocker_action;
 
-void rkoperror(const char *s);
-char *rkostrerror(void);
-char *rkocpyerror(const char *s);
-char *rkocaterror(const char *s);
-char *rkopsterror(const char *s);
+clocker_t   clocker_tick(clocker_t *clock_variable, clocker_action what_to_do);
+
+double    clocker(clocker_t *clock_variable, clocker_action what_to_do);
 
 #  ifdef __cplusplus
 	}
 #  endif
-#endif /* _RKOERROR_H_ */
+#endif /* _CLOCKER_H_ */

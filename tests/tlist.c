@@ -3,7 +3,9 @@
 #include <stdarg.h>
 #include <string.h>
 
-#include "librko.h"
+#define RKOERROR
+#include "rkoerror.h"
+#include "list.h"
 
 typedef struct mix mix;
 struct mix {
@@ -63,7 +65,7 @@ int delmix(void **ptr, va_list ap) {
 /*----- test, display & compare details -----*/
 enum test_types {int_type, flt_type, mix_type};
 
-void comptest(list *lst, const char *tag, enum test_types ttypes,
+int comptest(list *lst, const char *tag, enum test_types ttypes,
 	char *expected, char *command) {
 
 	char buffer[512];
@@ -92,24 +94,27 @@ void comptest(list *lst, const char *tag, enum test_types ttypes,
 	if (strcmp(buffer,expected)) {
 		printf("    >%s\nFAIL:%s\n     %s <- expected\n",
 			command, buffer, expected);
+		return 1;
 	} else {
 		printf("    >%s\nOK  :%s\n", command, buffer);
+		return 0;
 	}
 }
 
 #  define _ZTEST(l, tg, tt, e, comm) \
 	if (comm) rkoperror("test"); \
-	comptest(l, tg, tt, e, #comm);
+	count++;results+=comptest(l, tg, tt, e, #comm);
 
 #  define _NTEST(l, tg, tt, e, comm) \
 	if (!comm) rkoperror("test"); \
-	comptest(l, tg, tt, e, #comm);
+	count++;results+=comptest(l, tg, tt, e, #comm);
 
 int main() {
 	list *listobj = (list *) NULL;
 	const char tagint[] = "INTS";
 	const char tagflt[] = "FLOATS";
 	const char tagmix[] = "MIXED";
+	int results=0, count=0;
 
 /* add elements to int list */
 	_ZTEST(listobj, tagint, int_type, "=-1=",
@@ -258,5 +263,10 @@ int main() {
 	_ZTEST(listobj, tagmix, mix_type, "=-1=",
 		list_dtor(&listobj, tagmix))
 
-	return 0;
+	if (results) {
+		printf("There were %d failures in %d tests\n", results, count);
+	} else {
+		printf("There were no failures in %d tests\n", count);
+	}
+	return results;
 }

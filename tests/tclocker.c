@@ -1,6 +1,6 @@
 /* tclocker - just a simple test for the clocker function */
 
-#include "librko.h"
+#include "clocker.h"
 
 #define ABS(a) ((a) < 0.0 ? -(a) : (a))
 
@@ -18,14 +18,14 @@ int looptest() {
 
 int main(int argc, char *argv[]) {
 
-	double x;
 	double t1, t2, t3, small;
 	clocker_t cc1, cc2, tick;
 
 /* make sure things run */
 	t1 = clocker(&cc1, _SET);
 	if ( t1 != 0.0 ) {
-		printf("FAIL: clocker() not valid on this platform - %" FMT "f\n");
+		printf("FAIL: clocker() not valid on this platform "
+			"- %%" FMT "f\n");
 		return 1;
 	}
 	(void) looptest();

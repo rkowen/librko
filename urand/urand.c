@@ -1,5 +1,5 @@
 static const char AUTHOR[]="@(#)urand 06/02/94 1.3 R.K.Owen,PhD";
-static const char RCSID[]="$Id: urand.c,v 1.5 1999/09/14 19:53:46 rk Exp $";
+static const char RCSID[]="$Id: urand.c,v 1.6 2002/02/10 08:02:39 rk Exp $";
 /*      URAND IS A UNIFORM RANDOM NUMBER GENERATOR BASED  ON  THEORY  AND
  *  SUGGESTIONS  GIVEN  IN  D.E. KNUTH (1969),  VOL  2.   THE INTEGER  IY
  *  SHOULD BE INITIALIZED TO AN ARBITRARY INTEGER PRIOR TO THE FIRST CALL
@@ -25,39 +25,6 @@ static const char RCSID[]="$Id: urand.c,v 1.5 1999/09/14 19:53:46 rk Exp $";
  * #define NOADDMULT	- if wordlength for addtion is same as multiplication
  * #define NOOPADD	- if using ^m is faster than -=m2, -=m2
  * #define NOOPSUB	- if using ^m is faster than +=m2, +=m2
- *
- * 06/02/94 RKO, optimized some math operations (iy = iy-m2-m2)
- * 06/03/94 RKO, added many NO.. cpp optional code sections
- * $Log: urand.c,v $
- * Revision 1.5  1999/09/14 19:53:46  rk
- *
- * Modified all the timing programs to use clocker(3rko) and to
- * compute the mean average for comparisons.
- *
- * Revision 1.4  1999/09/09 21:31:24  rk
- *
- * Updated the email address to librko@kooz.sj.ca.us
- *
- * Revision 1.3  1999/03/25 15:08:58  rk
- *
- * Removed all USMID %W% lines.  I will never use SCCS, so they were unnecessary.
- *
- * Revision 1.2  1998/10/14 15:16:10  rk
- *
- * added .sed for easy "global" changes, and updated the email address
- *
- * Revision 1.1.1.1  1998/10/07 16:19:56  rk
- *
- * Initial checkin of librko to CVS.
- *
- *
- * Revision 1.5  1996/03/26  16:46:24  rk
- * changed email addresses
- *
- * Revision 1.4  1995/08/11  20:15:47  rkowen
- * Added the HACK_INLINE because can't rely on compiler to do it for you.
- * Note that it uses urand.in
- *
  */
 /*
  *********************************************************************

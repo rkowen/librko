@@ -1,11 +1,11 @@
-.\" RCSID @(#)$Id: istext.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" RCSID @(#)$Id: istext.man,v 1.2 2002/02/10 08:02:28 rk Exp $
 .\" LIBDIR
 .TH "ISTEXT" "3rko" "21 May 1998"
 .SH NAME
 istext \- returns 0 or 1 if the character is a text character
 .SH SYNOPSIS
 
- #include "librko.h"
+ #include "istext.h"
  int istext(int c);
 
 .SH DESCRIPTION

@@ -1,12 +1,12 @@
-#ifndef _RKOERROR
-#  define _RKOERROR
+#ifndef _ISTEXT_H_
+#  define _ISTEXT_H_
 /* 
- * RCSID @(#)$Id: rkoerror.h,v 1.2 2002/02/10 08:02:28 rk Exp $
+ * RCSID @(#)$Id: istext.h,v 1.1 2002/02/10 08:02:28 rk Exp $
  */
 /*
  *********************************************************************
  *
- *     This software is copyrighted by R.K.Owen,Ph.D. 1997
+ *     This software is copyrighted by R.K.Owen,Ph.D. 2002
  *
  * The author, R.K.Owen, of this software is not liable for any
  * problems WHATSOEVER which may result from use  or  abuse  of
@@ -21,31 +21,13 @@
  *
  *********************************************************************
  */
-
 #  ifdef __cplusplus
 extern "C" {
 #  endif
 
-/* librko - error message package */
-
-extern int rkoerrno;
-
-#define	RKO_OK		0
-#define	RKOGENERR	1
-#define	RKOSIGERR	2
-#define	RKOSIGNAL	3
-#define	RKOMEMERR	4
-#define	RKOIOERR	5
-#define	RKOUSEERR	6
-#define	RKO_MSG		99
-
-void rkoperror(const char *s);
-char *rkostrerror(void);
-char *rkocpyerror(const char *s);
-char *rkocaterror(const char *s);
-char *rkopsterror(const char *s);
+int istext(int c);
 
 #  ifdef __cplusplus
 	}
 #  endif
-#endif /* _RKOERROR_H_ */
+#endif /* _ISTEXT_H_ */

@@ -1,5 +1,5 @@
-static const char RCSID[]="@(#)$Id: list.c,v 1.5 1999/09/09 21:30:43 rk Exp $";
-static const char AUTHOR[]="@(#)list 1.0 10/31/98 R.K.Owen,Ph.D.";
+static const char RCSID[]="@(#)$Id: list.c,v 1.6 2002/02/10 08:02:28 rk Exp $";
+static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 /* list.c -
  * This could have easily been made a C++ class, but is
  * confined to C for easy portability.
@@ -31,7 +31,8 @@ static const char AUTHOR[]="@(#)list 1.0 10/31/98 R.K.Owen,Ph.D.";
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
-#include "librko.h"
+#include "rkoerror.h"
+#include "list.h"
 
 /* warning sizeof(list) does not necessarily give the correct memory size
  * since we make it "expandable" to handle a variable size tag
