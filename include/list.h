@@ -1,7 +1,7 @@
 #ifndef _LIST_H_
 #  define _LIST_H_
 /* 
- * RCSID @(#)$Id: list.h,v 1.1 2002/02/10 08:02:28 rk Exp $
+ * RCSID @(#)$Id: list.h,v 1.2 2002/02/22 17:13:25 rk Exp $
  */
 /*
  *********************************************************************
@@ -52,7 +52,7 @@ struct list_elem {
 	void *object;			/* pointer to object of interest */
 };
 
-/* shield users from  certain internal details */
+/* shield users from certain internal details */
 #define LIST_OBJECT(le)	((le)->object)
 #define LIST_NEXT(le)	((le)->next)
 #define LIST_PREV(le)	((le)->prev)
