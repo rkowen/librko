@@ -1,7 +1,7 @@
 #ifndef _AVEC_H_
 #  define _AVEC_H_
 /* 
- * RCSID @(#)$Id: avec.h,v 1.2 2002/02/12 06:03:02 rk Exp $
+ * RCSID @(#)$Id: avec.h,v 1.3 2002/02/12 23:00:26 rk Exp $
  */
 /*
  *********************************************************************
@@ -42,8 +42,8 @@ typedef struct {
 } avec_fns;
 	
 typedef struct {
-	char		 *key;		/* key for associative array */
-	void		 *data;		/* container for datam */
+	char const	 *key;		/* key for associative array */
+	void		 *data;		/* container for datum */
 } avec_element;
 
 typedef struct {
@@ -78,9 +78,12 @@ int    avec_decrease(avec *av, int newcap);
 int    avec_insert(avec *av, char const *key, ...);
 int    avec_delete(avec *av, char const *key, ...);
 void  *avec_lookup(avec *av, char const *key);
-char **avec_keys(avec *av);
-void  *avec_walk(avec *av);
-void  *avec_walk_r(avec *av, void **ptrptr);
+
+avec_element  **avec_walk_r(avec *av, avec_element **ptrptr);
+avec_element  **avec_walk(avec *av);
+char const * const *avec_keys(avec *av);
+void **avec_values(avec *av);
+avec_element const * const *avec_hash(avec *av);
 
 #  ifdef __cplusplus
 	}

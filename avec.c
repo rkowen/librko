@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec.c,v 1.3 2002/02/12 06:03:02 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec.c,v 1.4 2002/02/12 23:00:26 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -65,15 +65,15 @@ static char TAG[5] = "AVEC";
  */
 int stdc_malloc (void **data, va_list ap) {
 	char const *str = va_arg(ap,char *);
-	/* fprintf(stderr, "stdc malloc\n"); */
-	if((data = calloc((strlen(str)+1),sizeof(char)))) {
+	if (!data) return -1;
+	if (*data) return 1;
+	if((*data = calloc((strlen(str)+1),sizeof(char)))) {
 		(void) strcpy((char *) *data, str);
 		return 0;
 	}
-	return -1;
+	return -2;
 }
 int stdc_free (void **data, va_list ap) {
-	/* fprintf(stderr, "stdc free\n"); */
 	free(*data);
 	*data = (char *) NULL;
 	return 0;
@@ -92,13 +92,13 @@ avec_fns stdc_fns = {
  */
 int str_malloc (void **data, va_list ap) {
 	char const *str = va_arg(ap,char *);
-	/* fprintf(stderr, "str_malloc\n"); */
-	if((data = (void *) strmalloc(str))) return 0;
-	return -1;
+	if (!data) return -1;
+	if (*data) return 1;
+	if((*data = (void *) strmalloc(str))) return 0;
+	return -2;
 }
 
 int str_free (void **data, va_list ap) {
-	/* fprintf(stderr, "str_free\n"); */
 	strfree((char **) data);
 	return 0;
 }
@@ -188,10 +188,10 @@ static int avec_dealloc_element(avec_element **element) {
 		return -1;
 	}
 	if ((*element)->key) {
-		*((*element)->key) = '\0';
-		free((*element)->key);
+		free((void *)(*element)->key);
+		(char *)((*element)->key) = '\0';
 	}
-	free(element);
+	free((void *) *element);
 	*element = (avec_element *) NULL;
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
@@ -232,7 +232,7 @@ static int avec_alloc_element(char const *key, avec_element **element) {
 		goto unwind2;
 	}
 /* copy key over */
-	strcpy((*element)->key, key);
+	strcpy((char *)(*element)->key, key);
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
@@ -251,13 +251,22 @@ enum avec_search {AVEC_MATCH, AVEC_NEXT};
  * type=AVEC_MATCH - return the matching hash element else NULL
  * type=AVEC_NEXT  - return the next empty hash element else NULL
  */
-static avec_element *avec_hash_search(avec_enum avec_search type,
+static avec_element **avec_hash_search(enum avec_search type,
 		avec *av, char const *key) {
-	avec_element *retval = (avec_element *) NULL;
+	avec_element **retval = (avec_element **) NULL;
 	SETUP;
 	unsigned int	hv,		/* hash value */
 			inc = 0,	/* increment for quadratic hashing */
 			tv;		/* boolean test result */
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	if (!avec_exists(av)) {
+#ifdef RKOERROR
+		(void) rkopsterror("avec_hash_search : ");
+#endif
+		return retval;
+	}
 /* check if key is OK */
 	if ((!key) || (!*key)) {
 #ifdef RKOERROR
@@ -278,14 +287,17 @@ static avec_element *avec_hash_search(avec_enum avec_search type,
 			hv %= av->capacity;
 			inc++;
 		} else {	/* found match */
-			if (type == AVEC_MATCH) return av->hash[hv];
-			else if(type == AVEC_NEXT) return retval;
+			return &(av->hash[hv]);
 		}
 	}
-	if (av->hash[hv]) {
-	}
+	/* found empty slot */
+	if (type == AVEC_NEXT) return &(av->hash[hv]);
+	else if(type == AVEC_MATCH) return retval;
+
+	/* shouldn't get here */
 #ifdef RKOERROR
-	rkoerrno = RKO_OK;
+	rkocpyerror("avec_hash_search : shouldn't get here!");
+	rkoerrno = RKOGENERR;
 #endif
 	return retval;
 }
@@ -561,56 +573,35 @@ int avec_number(avec const *av) {
 
 /* ---------------------------------------------------------------------- */
 /* avec_insert - insert an element into the hash table,
- * returns 0 if no existing element is there and insert was successful.
- * Else it returns 1 if the key already exists,
+ * returns 0 if the insert was successful.
+ * Else it returns 1 if the key already exists and the default data fns
+ * are used.
  * and < 0 if an error occured.
  */
 int avec_insert(avec *av, char const *key, ...) {
 	va_list vargs;
+	int		  retval;	/* user data_add return value */
+	avec_element	**elem;		/* place to insert value */
 
-	unsigned int	hv,		/* hash value */
-			inc = 0,	/* increment for quadratic hashing */
-			tv;		/* boolean test result */
-	int		retval;		/* user data_add return value */
-
-	if (!avec_exists(av)) {
+	if (!(elem = avec_hash_search(AVEC_NEXT, av,key))) {
 #ifdef RKOERROR
-		(void) rkopsterror("avec_insert : ");
+		rkopsterror("avec_insert : ");
 #endif
 		return -1;
 	}
-	if (! key  || ! *key) {
-#ifdef RKOERROR
-		(void) rkocpyerror("avec_insert : NULL key string!");
-		rkoerrno = RKOUSEERR;
-#endif
-		return -2;
-	}
-/* get the HASH of the key */
-	HASH(key,hv, av->capacity);
-/* start search */
-	while (inc < av->capacity && av->hash[hv]) {
-	/* there is an entry here ... see if it matches */
-		STRCMP(av->hash[hv]->key, key, tv);
-		if (tv) {	/* no match - keep going */
-			hv += ++inc;
-			hv %= av->capacity;
-			inc++;
-		} else {	/* found match */
-			return 1;
-		}
-	}
-	if (av->hash[hv] == (void *) NULL) {	/* add element */
+
+	/* get variable arg pointer */
+	va_start(vargs,key);
+
+	if (*elem == (avec_element *) NULL) {	/* add element */
 		/* alloc element */
-		if (avec_alloc_element(key, &(av->hash[hv]))) {
+		if (avec_alloc_element(key, elem)) {
 #ifdef RKOERROR
 			rkopsterror("avec_insert : ");
 #endif
-			return -3;
+			return -2;
 		}
-		/* get variable arg pointer */
-		va_start(vargs,key);
-		retval = (av->fns.data_add)(&(av->hash[hv]->data), vargs);
+		retval = (av->fns.data_add)(&((*elem)->data), vargs);
 		if (retval) {
 #ifdef RKOERROR
 			if (! rkostrerror() ) {
@@ -619,47 +610,46 @@ int avec_insert(avec *av, char const *key, ...) {
 			}
 			rkopsterror("avec_insert : ");
 #endif
-			return retval - 128;
+			return retval;
 		}
+		av->number++;
+		return 0;
+	} else { /* value already exists - pass off to data_add anyways */
+		retval = (av->fns.data_add)(&((*elem)->data), vargs);
+#ifdef RKOERROR
+		if (retval < 0) {
+			if (! rkostrerror() ) {
+				rkocpyerror("unspecified user data_add error2");
+				rkoerrno = RKOUSEERR;
+			}
+			rkopsterror("avec_insert : ");
+		}
+#endif
+		return retval;
 	}
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
-	av->number++;
-	return 0;
+	return 1;
 }
 
 /* ---------------------------------------------------------------------- */
-/* avec_delete - delete an element of the key
+/* avec_delete - delete an element of the key and returns 0 if successful
+ * else returns < 0 if an error
  */
 int avec_delete(avec *av, char const *key, ...) {
-	int retval;
 	va_list vargs;
+	int retval;
+	avec_element	**elem;		/* place to insert value */
 
-	if (!avec_exists(av)) {
+	if (!(elem = avec_hash_search(AVEC_MATCH, av,key))) {
 #ifdef RKOERROR
-		(void) rkopsterror("avec_insert : ");
+		rkopsterror("avec_delete : ");
 #endif
 		return -1;
 	}
-	if (! key  || ! *key) {
-#ifdef RKOERROR
-		(void) rkocpyerror("avec_insert : NULL key string!");
-		rkoerrno = RKOUSEERR;
-#endif
-		return -2;
-	}
-/* get the HASH of the key */
-	HASH(key,hv, av->capacity);
-	if (av->number <= 0) {
-#ifdef RKOERROR
-		(void) rkocpyerror("avec_delete : empty vector!");
-		rkoerrno = RKOUSEERR;
-#endif
-		return -3;
-	}
 	va_start(vargs, key);
-	retval = (av->fns.data_del)(&(av->hash[av->number]->data),vargs);
+	retval = (av->fns.data_del)(&((*elem)->data),vargs);
 	if (retval) {
 #ifdef RKOERROR
 		if (! rkostrerror() ) {
@@ -668,10 +658,10 @@ int avec_delete(avec *av, char const *key, ...) {
 		}
 		rkopsterror("avec_delete : ");
 #endif
-		return retval - 128;
+		return retval;
 	}
-	av->hash[av->number]->data = (char *) NULL;
-	(void) avec_dealloc_element(av->hash[hv]);
+	(*elem)->data = (char *) NULL;
+	(void) avec_dealloc_element(elem);
 	av->number--;
 
 #ifdef RKOERROR
@@ -681,58 +671,249 @@ int avec_delete(avec *av, char const *key, ...) {
 }
 
 /* ---------------------------------------------------------------------- */
-/* avec_keys - returns all the keys in a NULL terminated vector
+/* avec_lookup - returns a pointer to the data associated with the key
+ * else returns NULL
  */
-int avec_keys(avec *av) {
-	avec_element *elem = 
+void *avec_lookup(avec *av, char const *key) {
+	avec_element	**elem;		/* place to insert value */
+	void *retval = (void *) NULL;
 
-	if (! key  || ! *key) {
+	if (!(elem = avec_hash_search(AVEC_MATCH, av,key))) {
 #ifdef RKOERROR
-		(void) rkocpyerror("avec_insert : NULL key string!");
-		rkoerrno = RKOUSEERR;
+		rkopsterror("avec_lookup : ");
 #endif
-		return -1;
+		return retval;
 	}
-	if (av->number <= 0) {
-#ifdef RKOERROR
-		(void) rkocpyerror("avec_delete : empty vector!");
-		rkoerrno = RKOUSEERR;
-#endif
-		return -2;
-	}
-	(av->fns.data_del)(&(av->hash[av->number]->data),args);
-	av->hash[av->number]->data = (char *) NULL;
-	av->number--;
+	return (*elem)->data;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* avec_walk_r - returns all the keys in a NULL terminated vector
+ * else returns NULL
+ * Can pass a NULL ptrptr on first call.
+ */
+avec_element **avec_walk_r(avec *av, avec_element **ptrptr) {
+	avec_element **retval = (avec_element **) NULL;
 
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
-	return 0;
+	if (!avec_exists(av)) {
+#ifdef RKOERROR
+		(void) rkopsterror("avec_walk_r : ");
+#endif
+		return retval;
+	}
+
+	/* make sure have a value in ptrptr */
+	if (ptrptr == (avec_element **) NULL) ptrptr = av->hash;
+
+	while ((++ptrptr - av->hash) < av->capacity) {
+		if (ptrptr && *ptrptr) {	/* found an element */
+			return ptrptr;
+		}
+	}
+	
+	return retval;
+}
+
+/* ---------------------------------------------------------------------- */
+/* avec_walk - returns all the keys in a NULL terminated vector
+ * else returns NULL, but is not thread safe
+ * First call gives the avec, subsequent calls need to have NULL passed in.
+ */
+avec_element **avec_walk(avec *av) {
+	static avec *av_;
+	static avec_element **ptrptr_;
+	if (av) {	/* first time through */
+		av_ = av;
+		ptrptr_ = av->hash;
+	}
+
+	ptrptr_ = avec_walk_r(av_, ptrptr_);
+	return ptrptr_;
+}
+
+/* ---------------------------------------------------------------------- */
+/* avec_keys - returns all the keys in a NULL terminated vector
+ * else returns NULL
+ */
+char const * const *avec_keys(avec *av) {
+	char const * const *retval = (char const * const *) NULL;
+	char const **ptr;
+	avec_element **aeptr;
+
+	if (!avec_exists(av)) {
+#ifdef RKOERROR
+		(void) rkopsterror("avec_keys : ");
+#endif
+		return retval;
+	}
+	if (!(retval = (char const * const *)
+			calloc(av->capacity, sizeof(char const *)))) {
+#ifdef RKOERROR
+		(void) rkocpyerror("avec_keys : malloc error!");
+		rkoerrno = RKOMEMERR;
+#endif
+		return retval;
+	}
+
+	if (!av->capacity) return retval;	/* empty vector */
+	aeptr = avec_walk_r(av, NULL);
+	ptr = (char const **) retval;
+	do {
+		*ptr = (*aeptr)->key;
+		ptr++;
+	} while ((aeptr = avec_walk_r(av,aeptr)));
+
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	return retval;
+}
+
+/* ---------------------------------------------------------------------- */
+/* avec_values - returns all the keys in a NULL terminated vector
+ * else returns NULL
+ */
+void **avec_values(avec *av) {
+	void **retval = (void **) NULL;
+	void **ptr;
+	avec_element **aeptr;
+
+	if (!avec_exists(av)) {
+#ifdef RKOERROR
+		(void) rkopsterror("avec_values : ");
+#endif
+		return retval;
+	}
+	if (!(retval = (void **) calloc(av->capacity, sizeof(void *)))) {
+#ifdef RKOERROR
+		(void) rkocpyerror("avec_values : malloc error!");
+		rkoerrno = RKOMEMERR;
+#endif
+		return retval;
+	}
+
+	if (!av->capacity) return retval;	/* empty vector */
+	aeptr = avec_walk_r(av, NULL);
+	ptr = retval;
+	do {
+		*ptr = (*aeptr)->data;
+		ptr++;
+	} while ((aeptr = avec_walk_r(av,aeptr)));
+
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+	return retval;
+}
+
+/* ---------------------------------------------------------------------- */
+/* avec_hash - returns a restrictive pointer to the hash
+ * else returns NULL
+ */
+avec_element const * const *avec_hash(avec *av) {
+	if (!avec_exists(av)) {
+#ifdef RKOERROR
+		(void) rkopsterror("avec_hash : ");
+#endif
+	}
+	return (avec_element const * const *) av->hash;
 }
 
 /* rudimentary test code */
 
 #include <stdio.h>
+#include "uvec.h"
 
-#define _STEST(e, comm) \
-	if ((comm) != e) {results++; printf("FAIL");} \
-	else printf("OK  ");\
-	count++; printf(" %s\n",#comm);
+char testbuf[512];
+
+int printout(avec *av, char const *head, int err, char const *ans) {
+	char const * const * vec;
+	uvec *uv;
+	sprintf(testbuf,"e:%d c:%d n:%d",
+		err, avec_capacity(av), avec_number(av));
+	if (avec_exists(av)) {
+		strcat(testbuf," k:");
+		vec = avec_keys(av);
+		uv = uvec_alloc();
+		uvec_copy_vec(uv, vec, 0);
+		strcat(testbuf, uvec2str(uv, "|"));
+		free((void *)vec);
+		uvec_dealloc(&uv);
+
+		strcat(testbuf," v:");
+		vec = (char const * const *) avec_values(av);
+		uv = uvec_alloc();
+		uvec_copy_vec(uv, vec, 0);
+		strcat(testbuf, uvec2str(uv, "|"));
+		free((void *)vec);
+		uvec_dealloc(&uv);
+	}
+	if (strcmp(testbuf, ans)) {
+		printf("FAIL:%-20s=\n    <\t%s\n    >\t%s\n",head,testbuf,ans);
+		return 1;
+	} else {
+		printf("OK  :%-20s=\n\t%s\n",head,testbuf);
+		return 0;
+	}
+}
+
+#define _CHECK(c, v, a) \
+	count++; estat = c; \
+	results += printout(&(v), #c, estat, a);
 
 int main () {
 	avec u,v, *x, *y;
 	int count=0, results=0;
-	int e;
+	int estat;
+	avec_element **aeptr;
+	char const * const *vec;
+	uvec *uvk, *uvd;
+	char **ptr;
+	char *keys[] = {
+		"first",
+		"second",
+		"third",
+		(char *) NULL
+	};
 
-	x = avec_ctor(100);
+	x = avec_ctor(10);
 	printf ("num=%d\n", avec_number(x));
 	printf ("cap=%d\n", avec_capacity(x));
-	_STEST(0, avec_insert(x,"first","This is the first value"));
-	printf ("num=%d\n", avec_number(x));
-	_STEST(1, avec_insert(x,"first","This is not the first value"));
-	printf ("num=%d\n", avec_number(x));
-	_STEST(0, avec_insert(x,"second","This is the second value"));
-	printf ("num=%d\n", avec_number(x));
+	_CHECK(avec_insert(x,"first","=1="),*x,
+		"e:0 c:11 n:1 k:first v:=1=");
+	_CHECK(avec_insert(x,"second","=2="),*x,
+		"e:0 c:11 n:2 k:second|first v:=2=|=1=");
+	_CHECK(avec_insert(x,"second","#2#"),*x,
+		"e:1 c:11 n:2 k:second|first v:=2=|=1=");
+	_CHECK(avec_insert(x,"third","=3="),*x,
+		"e:0 c:11 n:3 k:second|third|first v:=2=|=3=|=1=");
+	_CHECK(avec_delete(x,"second"),*x,
+		"e:0 c:11 n:2 k:third|first v:=3=|=1=");
+
+	aeptr = avec_walk(x);
+	do {
+		printf("key: %s val: %s\n",
+			(*aeptr)->key, (char *)(*aeptr)->data);
+	} while ((aeptr = avec_walk(NULL)));
+
+	vec = avec_keys(x);
+	uvec_copy_vec(uvk, vec, 0);
+	printf("keys=%s\n", uvec2str(uvk, " | "));
+
+	vec = (char const * const *) avec_values(x);
+	uvec_copy_vec(uvd, vec, 0);
+	printf("values=%s\n", uvec2str(uvd, " | "));
+
+	ptr = keys;
+	while (*ptr) {
+		printf("%s -> %s\n", *ptr, (char *) avec_lookup(x, *ptr));
+		ptr++;
+	}
+
 	return 0;
 }
 
