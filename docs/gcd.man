@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: gcd.man,v 1.1 1998/11/19 22:58:42 rk Exp $
+.\" RCSID @(#)$Id: gcd.man,v 1.2 1998/11/21 15:04:42 rk Exp $
 .\" LIBDIR
 .TH "GCD" "3rko" "17 Nov 1998"
 .SH NAME
@@ -9,6 +9,7 @@ gcd \- Greatest Common Divisor
 #include "librko.h"
 
 char cgcd(char n, char m);
+signed char scgcd(signed char n, signed char m);
 unsigned char ucgcd(unsigned char n, unsigned char m);
 short hgcd(short n, short m);
 unsigned short uhgcd(unsigned short n, unsigned short m);

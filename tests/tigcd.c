@@ -15,6 +15,7 @@ if((res = NM(arg1,arg2)) != result) {\
 	TESTOUT(NM, TYPE, 2322, 654, 6); \
 	TESTOUT(NM, TYPE, 654, 2322, 6); \
 	TESTOUT(NM, TYPE, -654, 2322, 0); \
+	TESTOUT(NM, TYPE, 0, 322, 0); \
 	TESTOUT(NM, TYPE, 18, 35, 1); \
 	TESTOUT(NM, TYPE, 48, 42, 6); \
 	TESTOUT(NM, TYPE, 100, 300, 100); \
@@ -23,6 +24,7 @@ if((res = NM(arg1,arg2)) != result) {\
 #define UTESTOUT(NM, TYPE) \
 	TESTOUT(NM, TYPE, 2322, 654, 6); \
 	TESTOUT(NM, TYPE, 654, 2322, 6); \
+	TESTOUT(NM, TYPE, 0, 322, 0); \
 	TESTOUT(NM, TYPE, 18, 35, 1); \
 	TESTOUT(NM, TYPE, 48, 42, 6); \
 	TESTOUT(NM, TYPE, 100, 300, 100); \
@@ -34,10 +36,13 @@ int main() {
 	TESTOUT(scgcd, signed char, 48, 42, 6);
 	TESTOUT(scgcd, signed char, 18, 35, 1);
 	TESTOUT(scgcd, signed char, -18, 35, 0);
+	TESTOUT(scgcd, signed char, 0, 35, 0);
 	TESTOUT(cgcd, char, 48, 42, 6);
 	TESTOUT(cgcd, char, 18, 35, 1);
+	TESTOUT(cgcd, char, 0, 35, 0);
 	TESTOUT(ucgcd, unsigned char, 48, 42, 6);
 	TESTOUT(ucgcd, unsigned char, 18, 35, 1);
+	TESTOUT(ucgcd, unsigned char, 0, 35, 0);
 	MTESTOUT(hgcd,short)
 	UTESTOUT(uhgcd,unsigned short)
 	MTESTOUT(igcd,int)

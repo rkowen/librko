@@ -12,13 +12,24 @@ strmem(3rko)     - allocates/deallocates collected string pool memory
 strmemalloc(3rko)- see strmem(3rko)
 strmemfree(3rko) - see strmem(3rko)
 wcstrcmp(3rko)   - compares two strings, one contains wildcard characters.
-istext(3rko)	 - returns 0 or 1 if the character is a text character
+istext(3rko)     - returns 0 or 1 if the character is a text character
 nameread(3rko)   - namelist-like read a line of text for variables and values
 nametol(3rko)    - see nameread(3rko)
 nametod(3rko)    - see nameread(3rko)
+dirtree(3rko)    - recurses through a directory tree and executes four user functions
 foptim(3rko)     - finds the minimum or maximum of f(x) in the interval [ax,bx]
 fzeroin(3rko)    - finds the zero of (f(x) - y0) in the interval [ax,bx]
 divdiff(3rko)    - osculatory (kissing) interpolates a function via divided difference
+gcd(3rko)        - Greatest Common Divisor
+cgcd             - see gdc(3rko)
+scgcd            - see gdc(3rko)
+ucgcd            - see gdc(3rko)
+hgcd             - see gdc(3rko)
+uhgcd            - see gdc(3rko)
+igcd             - see gdc(3rko)
+ugcd             - see gdc(3rko)
+lgcd             - see gdc(3rko)
+ulgcd            - see gdc(3rko)
 memory(3rko)     - a set of macros for detecting memory leaks
 ansi_seq(3rko)   - returns ANSI sequences for screen character attributes and colors
 ansi_color(3rko) - see ansi_seq(3rko)
@@ -38,9 +49,22 @@ uvec_insert      - see uvec(3rko)
 uvec_delete      - see uvec(3rko)
 uvec_add         - see uvec(3rko)
 uvec_pop         - see uvec(3rko)
+list(3rko)       - generic list ``object'' for Std-C that can contain any sort of data type or struct.
+list_ctor        - see list(3rko)
+list_dtor        - see list(3rko)
+list_exists      - see list(3rko)
+list_sizeof      - see list(3rko)
+list_number      - see list(3rko)
+list_first       - see list(3rko)
+list_last        - see list(3rko)
+list_add         - see list(3rko)
+list_del         - see list(3rko)
+list_push        - see list(3rko)
+list_pop         - see list(3rko)
 rkoerror(3rko)   - a package error message routines for librko
 rkoperror(3rko)  - see rkoerror(3rko)
 rkostrerror(3rko)- see rkoerror(3rko)
 rkocpyerror(3rko)- see rkoerror(3rko)
 rkocaterror(3rko)- see rkoerror(3rko)
 rkopsterror(3rko)- see rkoerror(3rko)
+

@@ -1,9 +1,9 @@
-static const char RCSID[]="@(#)$Id: gcd.c,v 1.2 1998/11/19 23:05:14 rk Exp $";
+static const char RCSID[]="@(#)$Id: gcd.c,v 1.3 1998/11/21 15:04:42 rk Exp $";
 static const char AUTHOR[]="@(#)gcd 1.0 11/17/98 R.K.Owen,Ph.D.";
 /* gcd.c -
  * implements Euclid's greatest common divisor algorith
  * for a number of integer types.
- * returns 0 if a user error (such as one of the arguments is negative)
+ * returns 0 if a user error (such as one of the arguments is non-positive)
  */
 /*
  *********************************************************************
@@ -26,7 +26,7 @@ static const char AUTHOR[]="@(#)gcd 1.0 11/17/98 R.K.Owen,Ph.D.";
 
 #define _GCD(NM, TYPE) \
 TYPE NM(TYPE a, TYPE b) { TYPE t; \
-	if (a < 0 || b < 0) return 0; \
+	if (a <= 0 || b <= 0) return 0; \
 	if (a < b) { /* swap */ t = a; a = b; b = t; } \
 	while ((t = a%b) > 1) { a = b; b = t; } \
 	if (t)	return t; else	return b; \
@@ -34,6 +34,7 @@ TYPE NM(TYPE a, TYPE b) { TYPE t; \
 
 #define _UGCD(NM, TYPE) \
 TYPE NM(unsigned TYPE a, unsigned TYPE b) { unsigned TYPE t; \
+	if (a == 0 || b == 0) return 0; \
 	if (a < b) { /* swap */ t = a; a = b; b = t; } \
 	while ((t = a%b) > 1) { a = b; b = t; } \
 	if (t)	return t; else	return b; \
