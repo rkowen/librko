@@ -6,8 +6,8 @@
 #  customize for your own environment
 #
 PERM	= 644
-OWN	= rkowen
-GRP	= usg
+#OWN	= rk
+#GRP	= owen
 ROOT	= $(HOME)
 LIBDIR	= $(ROOT)/lib
 INCDIR	= $(ROOT)/include
