@@ -1,6 +1,6 @@
-CC	=gcc
-LD	=gcc -o
-LEX	=lex
+CC	=cc
+LD	=cc -o
+LEX	=flex
 LEXFLAGS=
 YACC	=yacc
 YYFLAGS	=-v -d -t
@@ -22,11 +22,13 @@ shtest : minish.c minish-yacc.o mshexec.o fdlist.o
 exectest : mshexec.c fdlist.o
 	$(CC) $(CFLAGS) -o exectest -DEXECTEST mshexec.c fdlist.o \
 		-ll -L.. -lrko
+	-$(RM) mshexec.o
 
 #yacctest : y.tab.c lex.yy.c fdlist.o
 yacctest : minish-yacc.c minish-lex.c fdlist.o
 	$(CC) $(CFLAGS) -o yacctest -DYACCTEST minish-yacc.c fdlist.o \
 		-ll -L.. -lrko
+	-$(RM) minish-yacc.o
 
 minish-yacc.o : minish-yacc.c minish-lex.c
 	$(CC) -c $(CFLAGS) -DFLEX_STRING $<
@@ -45,7 +47,8 @@ y.tab.c y.tab.h : minish.yacc
 
 #lextest : lex.yy.c y.tab.h
 lextest : minish-lex.c minish-tab.h
-	$(CC) $(CFLAGS) -o lextest -DLEXTEST minish-lex.c -ll
+	$(CC) $(CFLAGS) -o lextest -DLEXTEST minish-lex.c
+	-$(RM) minish-lex.o
 
 lex.yy.c : minish.lex
 	$(LEX) $(LEXFLAGS) minish.lex

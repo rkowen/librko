@@ -19,6 +19,8 @@
 #include "librko.h"
 #include "minish.h"
 
+extern char *minish_yytext;
+
 static int linenum = 0;
 static int statnum = 0;
 static int fdnum = 0;

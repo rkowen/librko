@@ -22,7 +22,11 @@
 
 #include <sys/types.h>	/* fork, waitpid */
 #include <unistd.h>	/* fork, execvp */
-#include <wait.h>	/* waitpid */
+#ifdef _CRAY
+#  include <sys/wait.h>	/* waitpid */
+#else
+#  include <wait.h>	/* waitpid */
+#endif
 #include "librko.h"	/* uvec */
 #include "minish.h"	/* fdlist */
 
