@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: strmalloc.c,v 1.7 2002/07/08 15:55:09 rk Exp $";
+static const char RCSID[]="@(#)$Id: strmalloc.c,v 1.8 2002/07/08 16:29:21 rk Exp $";
 static const char AUTHOR[]="@(#)strmalloc 1.0 09/01/1999 R.K.Owen,Ph.D.";
 /* str_malloc	- adds a strdup-like routine for copying strings.
  * str_nmalloc	- same as above with over allocation.
@@ -63,8 +63,8 @@ char *str_nmalloc(char const *in, size_t n) {
 	return out;
 }
 
-char *strnmalloc(char const *in) {
-	return str_nmalloc(in);
+char *strnmalloc(char const *in, size_t n) {
+	return str_nmalloc(in, n);
 }
 
 char *str_malloc(char const *in) {
