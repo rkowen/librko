@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: isqrt.c,v 1.3 1999/09/09 21:30:43 rk Exp $";
+static const char RCSID[]="@(#)$Id: isqrt.c,v 1.4 1999/09/09 22:27:28 rk Exp $";
 static const char AUTHOR[]="@(#)isqrt 1.0 11/26/98 R.K.Owen,Ph.D.";
 /* isqrt.c -
  * finds the the integer sqrt of the given integer.
@@ -70,7 +70,7 @@ TYPE NM(TYPE a) { \
 /* need to use the sign bit when near 0, hence the call to the signed
  * version; however if near unsigned maximum value, the signed version
  * sees it as negative and returns 0, then the unsigned version can
- * safely care on. */
+ * safely carry on. */
 
 #define _USQRT(NM, TYPE, SNM, STYPE) \
 TYPE NM(TYPE a) { \
