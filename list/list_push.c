@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: list_push.c,v 1.1 2002/06/27 22:07:46 rk Exp $";
+static const char RCSID[]="@(#)$Id: list_push.c,v 1.2 2002/07/16 21:33:36 rk Exp $";
 static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 /* list.c -
  * This could have easily been made a C++ class, but is
@@ -32,50 +32,12 @@ static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 int list_push(list *lst, char const *tag, ...) {
 
 	int retval = 0;
-	void *ptr = (void *) NULL;
-	list_elem *eptr = (list_elem *) NULL;
-	va_list args;
+	va_list vargs;
 
-	if (!list_exists(lst, tag)) {
-#ifdef RKOERROR
-		(void) rkopsterror("list_push : ");
-#endif
-		return -1;
-	}
+	va_start(vargs, tag);	/* get ready to pass extra args */
 
-	va_start(args, tag);	/* get ready to pass extra args */
-	if ((retval = (lst->addfn)(&ptr, args)) != 0) {
-#ifdef RKOERROR
-		(void) rkocpyerror("list_push : user function error!");
-		rkoerrno = RKOMEMERR;
-#endif
-		goto unwind;
-	}
-	if ((eptr = (list_elem *)malloc(sizeof(list_elem)))
-	== (list_elem *) NULL) {
-#ifdef RKOERROR
-		(void) rkocpyerror("list_push : malloc error!");
-		rkoerrno = RKOMEMERR;
-#endif
-		(void) (lst->delfn)(&ptr, args);
-		goto unwind;
-	}
-	eptr->object = ptr;
-	eptr->prev = (list_elem *) NULL;
-	eptr->next = (list_elem *) NULL;
+	retval = list_append_(lst, tag, NULL, vargs);
 
-	if (lst->first == (list_elem *) NULL) {
-		lst->first = eptr;
-	}
-	if (lst->last != (list_elem *) NULL) {
-		eptr->prev = lst->last;
-		lst->last->next = eptr;
-	}
-	lst->last = eptr;
-	lst->number++;
-#ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#endif
-unwind: va_end(args);
+	va_end(vargs);
 	return retval;
 }

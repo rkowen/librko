@@ -1,7 +1,7 @@
 #ifndef _LIST_H_
 #  define _LIST_H_
 /* 
- * RCSID @(#)$Id: list.h,v 1.5 2002/06/27 22:07:46 rk Exp $
+ * RCSID @(#)$Id: list.h,v 1.6 2002/07/16 21:33:36 rk Exp $
  */
 /** ** Copyright *********************************************************** **
  ** 									     **
@@ -61,6 +61,10 @@ int list_sizeof(list const *lst, const char *tag);
 int list_number(list const *lst, const char *tag);
 list_elem *list_first(list const *lst, const char *tag);
 list_elem *list_last(list const *lst, const char *tag);
+
+int list_append(list *lst, char const *tag, list_elem *here, ...);
+int list_append_(list *lst, char const *tag, list_elem *here, va_list vargs);
+
 int list_unshift(list *lst, char const *tag, ...);
 int list_shift(list *lst, char const *tag, ...);
 int list_push(list *lst, char const *tag, ...);

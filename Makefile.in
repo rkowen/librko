@@ -122,6 +122,7 @@ isqrt_srcs = \
 
 
 list_srcs = \
+	list/list_append.c \
 	list/list_ctor.c list/list_dtor.c list/list_exists.c		\
 	list/list_first.c list/list_last.c list/list_number.c		\
 	list/list_pop.c list/list_push.c list/list_shift.c		\
@@ -230,12 +231,12 @@ am__objects_5 = isqrt/isqrt_lut.$(OBJEXT) isqrt/chsqrt.$(OBJEXT) \
 	isqrt/lsqrt.$(OBJEXT) isqrt/scsqrt.$(OBJEXT) \
 	isqrt/ucsrt.$(OBJEXT) isqrt/uhsqrt.$(OBJEXT) \
 	isqrt/uisqrt.$(OBJEXT) isqrt/ulsqrt.$(OBJEXT)
-am__objects_6 = list/list_ctor.$(OBJEXT) list/list_dtor.$(OBJEXT) \
-	list/list_exists.$(OBJEXT) list/list_first.$(OBJEXT) \
-	list/list_last.$(OBJEXT) list/list_number.$(OBJEXT) \
-	list/list_pop.$(OBJEXT) list/list_push.$(OBJEXT) \
-	list/list_shift.$(OBJEXT) list/list_sizeof.$(OBJEXT) \
-	list/list_unshift.$(OBJEXT)
+am__objects_6 = list/list_append.$(OBJEXT) list/list_ctor.$(OBJEXT) \
+	list/list_dtor.$(OBJEXT) list/list_exists.$(OBJEXT) \
+	list/list_first.$(OBJEXT) list/list_last.$(OBJEXT) \
+	list/list_number.$(OBJEXT) list/list_pop.$(OBJEXT) \
+	list/list_push.$(OBJEXT) list/list_shift.$(OBJEXT) \
+	list/list_sizeof.$(OBJEXT) list/list_unshift.$(OBJEXT)
 am__objects_7 = netfns/gethostbyX.$(OBJEXT) netfns/tcp_connect.$(OBJEXT)
 am__objects_8 = numfns/divdiff.$(OBJEXT) numfns/foptim.$(OBJEXT) \
 	numfns/fzeroin.$(OBJEXT)
@@ -323,6 +324,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	isqrt/$(DEPDIR)/lsqrt.Po isqrt/$(DEPDIR)/scsqrt.Po \
 @AMDEP_TRUE@	isqrt/$(DEPDIR)/ucsrt.Po isqrt/$(DEPDIR)/uhsqrt.Po \
 @AMDEP_TRUE@	isqrt/$(DEPDIR)/uisqrt.Po isqrt/$(DEPDIR)/ulsqrt.Po \
+@AMDEP_TRUE@	list/$(DEPDIR)/list_append.Po \
 @AMDEP_TRUE@	list/$(DEPDIR)/list_ctor.Po \
 @AMDEP_TRUE@	list/$(DEPDIR)/list_dtor.Po \
 @AMDEP_TRUE@	list/$(DEPDIR)/list_exists.Po \
@@ -598,6 +600,8 @@ list/.dirstamp:
 list/$(DEPDIR)/.dirstamp:
 	@$(mkinstalldirs) list/$(DEPDIR)
 	@: > list/$(DEPDIR)/.dirstamp
+list/list_append.$(OBJEXT): list/list_append.c list/.dirstamp \
+	list/$(DEPDIR)/.dirstamp
 list/list_ctor.$(OBJEXT): list/list_ctor.c list/.dirstamp \
 	list/$(DEPDIR)/.dirstamp
 list/list_dtor.$(OBJEXT): list/list_dtor.c list/.dirstamp \
@@ -789,6 +793,7 @@ mostlyclean-compile:
 	-rm -f isqrt/uhsqrt.$(OBJEXT)
 	-rm -f isqrt/uisqrt.$(OBJEXT)
 	-rm -f isqrt/ulsqrt.$(OBJEXT)
+	-rm -f list/list_append.$(OBJEXT)
 	-rm -f list/list_ctor.$(OBJEXT)
 	-rm -f list/list_dtor.$(OBJEXT)
 	-rm -f list/list_exists.$(OBJEXT)
@@ -927,6 +932,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@isqrt/$(DEPDIR)/uhsqrt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@isqrt/$(DEPDIR)/uisqrt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@isqrt/$(DEPDIR)/ulsqrt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_append.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_ctor.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_dtor.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@list/$(DEPDIR)/list_exists.Po@am__quote@
@@ -1663,6 +1669,18 @@ isqrt/ulsqrt.obj: isqrt/ulsqrt.c
 @AMDEP_TRUE@	depfile='isqrt/$(DEPDIR)/ulsqrt.Po' tmpdepfile='isqrt/$(DEPDIR)/ulsqrt.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o isqrt/ulsqrt.obj `cygpath -w isqrt/ulsqrt.c`
+
+list/list_append.o: list/list_append.c
+@AMDEP_TRUE@	source='list/list_append.c' object='list/list_append.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_append.Po' tmpdepfile='list/$(DEPDIR)/list_append.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_append.o `test -f 'list/list_append.c' || echo '$(srcdir)/'`list/list_append.c
+
+list/list_append.obj: list/list_append.c
+@AMDEP_TRUE@	source='list/list_append.c' object='list/list_append.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='list/$(DEPDIR)/list_append.Po' tmpdepfile='list/$(DEPDIR)/list_append.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o list/list_append.obj `cygpath -w list/list_append.c`
 
 list/list_ctor.o: list/list_ctor.c
 @AMDEP_TRUE@	source='list/list_ctor.c' object='list/list_ctor.o' libtool=no @AMDEPBACKSLASH@

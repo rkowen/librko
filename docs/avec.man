@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: avec.man,v 1.4 2002/02/22 17:08:34 rk Exp $
+.\" RCSID @(#)$Id: avec.man,v 1.5 2002/07/16 21:33:36 rk Exp $
 .\" LIBDIR
 .TH "avec" "3rko" "31 Oct 1997"
 .SH NAME
@@ -182,7 +182,7 @@ will cause an automatic resizing of the hash to a larger capacity.
 If percent==0 then it returns the current value, or the value 0 if
 no automatic resizing will be done.
 .br
-If percent < 0 then it turns of automatic resizing.
+If percent < 0 then it turns off automatic resizing.
 If 10 < percent < 70 then automatic resizing will kick in if
 number/capacity * 100% > percent.
 
@@ -323,11 +323,10 @@ A zero signals to
 .I avec_insert
 success and to increment the number of elements in the hash
 .P
-There second function in the
+The second function in the
 .I avec_fns
 structure
-.I data_del
-and is
+.IR data_del ,
 .I std_free
 in this case, is called only by
 .I avec_delete
