@@ -1,3 +1,8 @@
+/* doggy - just prepends "doggy:" to each line of stdin and
+ *	sends it to stdout.
+ * by R.K.Owen,Ph.D. 11/17/1998
+ */
+
 #include <stdio.h>
 
 #define MAXBUF	1024
