@@ -1,7 +1,7 @@
 #ifndef _LIBRKO_H_
 #  define _LIBRKO_H_
 /* 
- * RCSID @(#)$Id: librko.h,v 1.21 2002/02/15 23:01:55 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.22 2002/02/27 22:29:53 rk Exp $
  */
 /*
  *********************************************************************
@@ -61,6 +61,7 @@ extern "C" {
 #  include "urand.h"
 
 FILE * invoke(char ** argv);
+int    spawn(FILE **childin, FILE **childout, char ** argv);
 FILE * prefilter(FILE *instream, char ** argv);
 FILE * postfilter(FILE *outstream, char ** argv);
 int closefilter(FILE *filterstream);

@@ -1,6 +1,7 @@
 /* tinvoke - test invoke.c, uses testtext */
 
 #include <stdio.h>
+#include <sys/wait.h>
 #include "librko.h"
 #ifdef RKOERROR
 extern int rkoerrno;

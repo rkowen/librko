@@ -1,6 +1,7 @@
 /* tspawn - test spawn.c, uses testtext & ./birdy */
 
 #include <stdio.h>
+#include <sys/wait.h>
 #include "librko.h"
 #ifdef RKOERROR
 extern int rkoerrno;
@@ -47,7 +48,7 @@ int main(int argc, char *argv[]) {
 	i = 0;
 	while (!(fgets(buffer1, MAXBUFF, in), feof(in))) {
 		(void) fprintf(childin,"%s", buffer1);
-		if (fgets(buffer2, MAXBUFF, childout) <= 0) {
+		if (!fgets(buffer2, MAXBUFF, childout)) {
 			break;
 		}
 

@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/wait.h>	/* wait */
 #include <ctype.h>
 #include "../librko.h"
 
@@ -38,8 +39,9 @@ int main() {
 		fputs(buffer,out);
 		fflush(out);
 	}
+	wait(NULL);
+	fclose(in);
+	fclose(out);
 
-	pclose(in);
-	pclose(out);
 	return EXIT_SUCCESS;
 }
