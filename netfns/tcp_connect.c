@@ -1,4 +1,3 @@
-static const char USMID[]="%W%";
 static const char AUTHOR[]="@(#)tcp_connect 1.0 03/26/96 R.K.Owen,Ph.D.";
 
 /* tcp_connect - connects to a host & port number with the TCP protocol.

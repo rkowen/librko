@@ -1,4 +1,3 @@
-.\" USMID %W%
 .TH REVERSE 1 "24 Nov 1994"
 .SH NAME
 reverse \- reverse the order of lines from a

@@ -1,5 +1,4 @@
-static const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: ranswap.c,v 1.2 1998/10/14 15:16:10 rk Exp $";
+static const char RCSID[]="@(#)$Id: ranswap.c,v 1.3 1999/03/25 15:08:44 rk Exp $";
 static const char AUTHOR[]="@(#)ranswap 02/11/93 1.0 R.K.Owen,PhD";
 /*
  * ranswap - will return two random integer on the interval [low,high-1]

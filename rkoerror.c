@@ -1,5 +1,4 @@
-static const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: rkoerror.c,v 1.2 1998/10/14 15:16:10 rk Exp $";
+static const char RCSID[]="@(#)$Id: rkoerror.c,v 1.3 1999/03/25 15:08:31 rk Exp $";
 static const char AUTHOR[]="@(#)rkoerror 1.0 03/26/96 R.K.Owen,Ph.D.";
 /* rkoerror - contains the librko perror type stuff
  */

@@ -1,5 +1,4 @@
-# USMID = %W%
-# RCSID = @(#)$Id: Makefile,v 1.2 1998/10/14 15:16:10 rk Exp $  
+# RCSID = @(#)$Id: Makefile,v 1.3 1999/03/25 15:08:44 rk Exp $  
 #
 # This Makefile will build a variety of test programs for each of the
 #   modules.  After that you can just include the $METOBJ macro in

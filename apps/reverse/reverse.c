@@ -1,4 +1,3 @@
-static const char USMID[]="%W%";
 static const char AUTHOR[]="@(#)reverse 11/22/94 1.0 R.K.Owen,PhD";
 /*
  * reverse.c - reverse lines from files or stdin

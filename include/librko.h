@@ -1,8 +1,7 @@
 #ifndef _LIBRKO_H_
 #  define _LIBRKO_H_
 /* 
- * USMID %W%
- * RCSID @(#)$Id: librko.h,v 1.11 1998/11/24 05:57:03 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.12 1999/03/25 15:08:31 rk Exp $
  */
 /*
  *********************************************************************

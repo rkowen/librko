@@ -1,5 +1,4 @@
-static char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: strmem.c,v 1.2 1998/10/14 15:16:10 rk Exp $";
+static const char RCSID[]="@(#)$Id: strmem.c,v 1.3 1999/03/25 15:08:31 rk Exp $";
 static char AUTHOR[]="@(#)strmem 1.1 08/09/95 R.K.Owen,PhD";
 
 /* strmem - allocates/deallocates collected string pool memory.  Instead of

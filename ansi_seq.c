@@ -1,5 +1,4 @@
-static char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: ansi_seq.c,v 1.2 1998/10/14 15:16:09 rk Exp $";
+static const char RCSID[]="@(#)$Id: ansi_seq.c,v 1.3 1999/03/25 15:08:31 rk Exp $";
 static char AUTHOR[]="@(#)ansi_seq 1.1 12/21/95 R.K.Owen,PhD";
 
 /* ansi_seq - creates a char * string that is the ANSI color and

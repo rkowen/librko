@@ -1,5 +1,4 @@
-static const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: coexec.c,v 1.2 1998/10/14 15:16:10 rk Exp $";
+static const char RCSID[]="@(#)$Id: coexec.c,v 1.3 1999/03/25 15:08:31 rk Exp $";
 static const char AUTHOR[]="@(#)prefilter 1.0 03/26/96 R.K.Owen,Ph.D.";
 /* prefilter.c - routine for fork/exec/dup/pipe a child process
  *	that filters the stdin (similar to popen(,"a"))

@@ -1,5 +1,4 @@
-.\" USMID %W%
-.\" RCSID @(#)$Id: ansi_seq.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" RCSID @(#)$Id: ansi_seq.man,v 1.2 1999/03/25 15:08:31 rk Exp $
 .\" LIBDIR
 .TH "ANSI_SEQ" "3rko" "12 May 1995"
 .SH NAME

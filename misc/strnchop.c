@@ -1,6 +1,5 @@
-static char USMID[]="$Id: strnchop.c,v 1.2 1998/10/14 15:16:10 rk Exp $";
-static const char RCSID[]="@(#)$Id: strnchop.c,v 1.2 1998/10/14 15:16:10 rk Exp $";
-static char AUTHOR[]="@(#)$Id: strnchop.c,v 1.2 1998/10/14 15:16:10 rk Exp $";
+static const char RCSID[]="@(#)$Id: strnchop.c,v 1.3 1999/03/25 15:08:53 rk Exp $";
+static char AUTHOR[]="@(#)$Id: strnchop.c,v 1.3 1999/03/25 15:08:53 rk Exp $";
 
 /* strnchop - chops a string of specific length at the spaces (as
  *	determined by isspace())
@@ -32,6 +31,10 @@ char *strnchop(const char *string, size_t *string_length, int chop_len,
  * modified	RKO		01/27/98
  *
  * $Log: strnchop.c,v $
+ * Revision 1.3  1999/03/25 15:08:53  rk
+ *
+ * Removed all USMID %W% lines.  I will never use SCCS, so they were unnecessary.
+ *
  * Revision 1.2  1998/10/14 15:16:10  rk
  *
  * added .sed for easy "global" changes, and updated the email address

@@ -1,5 +1,4 @@
-.\" USMID %W%
-.\" RCSID @(#)$Id: uvec.man,v 1.4 1998/11/18 18:37:51 rk Exp $
+.\" RCSID @(#)$Id: uvec.man,v 1.5 1999/03/25 15:08:31 rk Exp $
 .\" LIBDIR
 .TH "UVEC" "3rko" "31 Oct 1997"
 .SH NAME

@@ -1,5 +1,4 @@
-static const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: nameread.c,v 1.2 1998/10/14 15:16:10 rk Exp $";
+static const char RCSID[]="@(#)$Id: nameread.c,v 1.3 1999/03/25 15:08:31 rk Exp $";
 static const char AUTHOR[]="@(#)nameread 1.0 01/01/94 R.K.Owen,Ph.D.";
 
 /* nameread.c - reads a line of text and finds the integer variable name 

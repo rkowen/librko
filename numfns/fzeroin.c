@@ -1,5 +1,4 @@
-static const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: fzeroin.c,v 1.2 1998/10/14 15:16:09 rk Exp $";
+static const char RCSID[]="@(#)$Id: fzeroin.c,v 1.3 1999/03/25 15:08:31 rk Exp $";
 static const char AUTHOR[]="@(#)fzeroin 1.1 04/18/94 R.K.Owen,Ph.D.";
 /*
  * fzeroin() finds the zero of (f(x) - y0) within the interval [ax,bx].

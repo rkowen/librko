@@ -1,4 +1,3 @@
-static const char USMID[]="%W%";
 static const char AUTHOR[]="@(#)nameread 1.0 01/01/94 R.K.Owen,Ph.D.";
 
 /* nameread.c - reads a line of text and finds the integer variable name 

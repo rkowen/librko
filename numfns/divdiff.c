@@ -1,5 +1,4 @@
-const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: divdiff.c,v 1.2 1998/10/14 15:16:09 rk Exp $";
+static const char RCSID[]="@(#)$Id: divdiff.c,v 1.3 1999/03/25 15:08:31 rk Exp $";
 const char AUTHOR[]="@(#)divdiff 1.1 05/12/94 R.K.Owen,Ph.D.";
 /*
  * divdiffcoef(opt,N,t,g,c) computes the divided difference coefficients

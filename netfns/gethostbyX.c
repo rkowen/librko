@@ -1,4 +1,3 @@
-static const char USMID[]="%W%";
 static const char AUTHOR[]="@(#)gethostbyX 1.0 03/26/96 R.K.Owen,Ph.D.";
 
 /* gethostbyX.c - accepts either input sutiable for gethostbyname

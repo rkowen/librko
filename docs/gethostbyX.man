@@ -1,5 +1,4 @@
-.\" USMID %W%
-.\" RCSID @(#)$Id: gethostbyX.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" RCSID @(#)$Id: gethostbyX.man,v 1.2 1999/03/25 15:08:31 rk Exp $
 .\" LIBDIR
 .TH "GETHOSTBYX" "3rko" "26 Mar 1996"
 .SH NAME
