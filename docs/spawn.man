@@ -1,0 +1,26 @@
+.\" RCSID @(#)$Id: spawn.man,v 1.1 1998/11/11 16:53:12 rk Exp $
+.\" LIBDIR
+.TH "XXX" "3rko" "12 May 1995"
+.SH NAME
+xxx \- xxx
+.SH SYNOPSIS
+
+ #include "librko.h"
+ char *xxx (xxx);
+
+.SH DESCRIPTION
+.I xxx
+
+.SH SEE ALSO
+.\" crontab(1),stat(2),libmon(8)
+
+.SH NOTES
+
+.SH DIAGNOSTICS
+
+.SH BUGS
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS
