@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: wcstrcmp.c,v 1.6 2002/06/27 22:07:46 rk Exp $";
+static const char RCSID[]="@(#)$Id: wcstrcmp.c,v 1.7 2002/08/23 15:18:11 rk Exp $";
 static const char AUTHOR[]="@(#)wcstrcmp 1.1 08/09/95 R.K.Owen,PhD";
 
 /* wcstrcmp - compares two strings, where one can contain wildcard characters.
@@ -10,26 +10,16 @@ static const char AUTHOR[]="@(#)wcstrcmp 1.1 08/09/95 R.K.Owen,PhD";
  *   for each of the '\' for the 'C' compilation parsing.
  *   If there is a match then it returns 0, else it is non-zero.
  *
- * author	R.K.Owen,Ph.D.	08/09/95
+ * author	R.K.Owen,Ph.D.	1995/08/09
  */
-/*
- *********************************************************************
- *
- *     This software is copyrighted by R.K.Owen,Ph.D. 1997
- *
- * The author, R.K.Owen, of this software is not liable for any
- * problems WHATSOEVER which may result from use  or  abuse  of
- * this software. The author, R.K.Owen, grants unlimited rights
- * to anyone who uses and modifies this  software  for  private
- * non-commercial  use  as  long  as  this copyright and rights
- * notice remains in this software and is made available to all
- * recipients of this software.
- *
- * last known email: rk@owen.sj.ca.us
- *                   librko@kooz.sj.ca.us
- *
- *********************************************************************
- */
+/** ** Copyright *********************************************************** **
+ ** 									     **
+ ** Copyright 1995 by R.K.Owen,Ph.D.		                      	     **
+ ** last known email: librko@kooz.sj.ca.us				     **
+ **                   rk@owen.sj.ca.us					     **
+ ** see LICENSE.LGPL, which must be provided, for details		     **
+ ** 									     **
+ ** ************************************************************************ **/
 
 /* define TEST to create a stand-alone program to test the routine */
 #if 0

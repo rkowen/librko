@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: strchop.c,v 1.6 2002/02/15 23:01:55 rk Exp $";
+static const char RCSID[]="@(#)$Id: strchop.c,v 1.7 2002/08/23 15:18:11 rk Exp $";
 static const char AUTHOR[]="@(#)strchop 1.0 1995/10/05 R.K.Owen,Ph.D.";
 
 /* strchop - chops a string at the spaces (as determined by isspace())
@@ -23,30 +23,20 @@ char *strchop(const char *string, int chop_len,
  *			  the "chopped" string with length <= chop_len
  *			  else returns NULL if no more to do.
  *
- * author	R.K.Owen,Ph.D.	10/05/95
+ * author	R.K.Owen,Ph.D.	1995/10/05
  *
  */
+/** ** Copyright *********************************************************** **
+ ** 									     **
+ ** Copyright 1995 by R.K.Owen,Ph.D.		                      	     **
+ ** last known email: librko@kooz.sj.ca.us				     **
+ **                   rk@owen.sj.ca.us					     **
+ ** see LICENSE.LGPL, which must be provided, for details		     **
+ ** 									     **
+ ** ************************************************************************ **/
 /*
  * Define:	RKOERROR and load with librko.a for error handling
  *		TEST to run a stand-alone test program
- */
-/*
- *********************************************************************
- *
- *     This software is copyrighted by R.K.Owen,Ph.D. 1997
- *
- * The author, R.K.Owen, of this software is not liable for any
- * problems WHATSOEVER which may result from use  or  abuse  of
- * this software. The author, R.K.Owen, grants unlimited rights
- * to anyone who uses and modifies this  software  for  private
- * non-commercial  use  as  long  as  this copyright and rights
- * notice remains in this software and is made available to all
- * recipients of this software.
- *
- * last known email: rk@owen.sj.ca.us
- *                   librko@kooz.sj.ca.us
- *
- *********************************************************************
  */
 
 #if 0

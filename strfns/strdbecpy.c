@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: strdbecpy.c,v 1.5 2002/02/15 23:01:55 rk Exp $";
+static const char RCSID[]="@(#)$Id: strdbecpy.c,v 1.6 2002/08/23 15:18:11 rk Exp $";
 static const char AUTHOR[]="@(#)strdbecpy 1.1 11/14/97 R.K.Owen,PhD";
 
 /* strDBEcpy - breaks apart a UNIX filename into its path, basename, and
@@ -22,28 +22,18 @@ static const char AUTHOR[]="@(#)strdbecpy 1.1 11/14/97 R.K.Owen,PhD";
  *
  *	returns a pointer to filename
  *
- * author	R.K.Owen,Ph.D.	09/23/94
- * modified	11/14/97
- * modified	11/04/98
+ * author	R.K.Owen,Ph.D.	1994/09/23
+ * modified	1997/11/14
+ * modified	1998/11/04
  */
-/*
- *********************************************************************
- *
- *     This software is copyrighted by R.K.Owen,Ph.D. 1997
- *
- * The author, R.K.Owen, of this software is not liable for any
- * problems WHATSOEVER which may result from use  or  abuse  of
- * this software. The author, R.K.Owen, grants unlimited rights
- * to anyone who uses and modifies this  software  for  private
- * non-commercial  use  as  long  as  this copyright and rights
- * notice remains in this software and is made available to all
- * recipients of this software.
- *
- * last known email: librko@kooz.sj.ca.us
- *                   rk@owen.sj.ca.us
- *
- *********************************************************************
- */
+/** ** Copyright *********************************************************** **
+ ** 									     **
+ ** Copyright 1994 by R.K.Owen,Ph.D.		                      	     **
+ ** last known email: librko@kooz.sj.ca.us				     **
+ **                   rk@owen.sj.ca.us					     **
+ ** see LICENSE.LGPL, which must be provided, for details		     **
+ ** 									     **
+ ** ************************************************************************ **/
 
 #include <stdio.h>
 #include <string.h>
