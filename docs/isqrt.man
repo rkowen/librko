@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: isqrt.man,v 1.2 1998/11/24 19:29:34 rk Exp $
+.\" RCSID @(#)$Id: isqrt.man,v 1.3 1999/09/11 07:30:09 rk Exp $
 .\" LIBDIR
 .TH "ISQRT" "3rko" "26 Nov 1998"
 .SH NAME
@@ -8,15 +8,15 @@ isqrt \- integer sqrt
 .nf
 #include "librko.h"
 
-char chsqrt(char n);
-char scsqrt(signed char n);
-char ucsqrt(unsigned char n);
-char hsqrt(short n);
-char uhsqrt(unsigned short n);
-char isqrt(int n);
-char uisqrt(unsigned int n);
-char lsqrt(long n);
-char ulsqrt(unsigned long n);
+         char  chsqrt(char n);
+  signed char  scsqrt(signed char n);
+unsigned char  ucsqrt(unsigned char n);
+         short  hsqrt(short n);
+unsigned short uhsqrt(unsigned short n);
+         int    isqrt(int n);
+unsigned int   uisqrt(unsigned int n);
+         long   lsqrt(long n);
+unsigned long  ulsqrt(unsigned long n);
 .fi
 
 .SH DESCRIPTION
