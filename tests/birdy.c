@@ -1,3 +1,9 @@
+/* birdy - reads files given on commandline line-by-line and for each line
+ *	it prepends "BOL: " and appends " :EOL" and sends it to stdout.
+ *
+ *	by R.K.Owen, Ph.D.	11/17/1998
+ */
+
 #include <stdio.h>
 
 #define MAXBUF	1024
