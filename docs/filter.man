@@ -1,0 +1,37 @@
+.\" USMID %W%
+.\" RCSID @(#)$Id: filter.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" LIBDIR
+.TH "XXX" "3rko" "12 May 1995"
+.SH NAME
+prefilter \- a popen-like pre-filter to stdin
+.br
+postfilter \- a popen-like post-filter to stdout
+.br
+filterclose \- closes one of the filters
+.SH SYNOPSIS
+
+ #include "librko.h"
+
+ FILE * prefilter(FILE *instream, char ** argv);
+ FILE * postfilter(FILE *instream, char ** argv);
+
+.SH DESCRIPTION
+.I prefilter
+does a fork/exec/dup/pipe to a child process
+that filters the stdin (similar to popen(,"a"))
+returns FILE * of child output stream if successful,
+else NULL if not.
+
+.SH SEE ALSO
+.\" crontab(1),stat(2),libmon(8)
+
+.SH NOTES
+
+.SH DIAGNOSTICS
+
+.SH BUGS
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

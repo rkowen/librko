@@ -1,0 +1,67 @@
+#!/bin/sh
+#set -x
+#
+# simple shell script to perform the same as cpset
+#
+# cpset [-o] object destination [mode [user_id [group_id]]]
+#  -o = move old objects to destination/OLDobject
+#
+# by R.K.Owen,Ph.D., 11/04/94
+#
+# defaults
+OLD=0
+if [ 1 -eq 1 ]
+then
+	MV=mv
+	CP=cp
+	CHMOD=chmod
+	CHOWN=chown
+	CHGRP=chgrp
+else
+	MV="echo mv"
+	CP="echo cp"
+	CHMOD="echo chmod"
+	CHOWN="echo chown"
+	CHGRP="echo chgrp"
+fi
+#
+# check if real version is available
+if [ -f /usr/bin/cpset ]
+then
+	/usr/bin/cpset $*
+else
+# parse command line
+	if [ "$1" = "-o" ]
+	then
+		OLD=1
+		shift
+	fi
+	if [ $# -le 1 ]
+	then
+		echo "cpset [-o] object destination [mode [owner [group]]]"
+		exit 1
+	fi
+	obj=$1
+	objbase=`basename $obj`
+	if ( echo $2 | grep "\." > /dev/null)
+	then
+		dest=`dirname $2`
+		outfile=`basename $2`
+	else
+		dest=$2
+		outfile=$objbase
+	fi
+	mode=${3:-0755}
+	own=${4:-bin}
+	grp=${5:-bin}
+# move the old stuff
+	if [ $OLD -eq 1 ]
+	then
+		$MV $dest/$outfile $dest/OLD$outfile
+	fi
+	$CP $obj $dest/$outfile
+	$CHMOD $mode $dest/$outfile
+	$CHOWN $own $dest/$outfile
+	$CHGRP $grp $dest/$outfile
+fi
+exit

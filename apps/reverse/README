@@ -1,0 +1,29 @@
+reverse.c - is an ANSI C code that reads the lines from either the
+files on the commandline or from stdin and outputs all lines to
+stdout.
+
+The other day I needed to take a file and reverse the lines within
+it so I came up with this code.
+
+This program reads each line and stores it in memory in a linked
+list structure and then outputs from the last structure to the
+first.
+
+To make the executable, first edit the Makefile to tailor it to your
+environment, then execute the following:
+	make
+	make install
+To uninstall everything do the following:
+	make uninstall
+To clean everything do:
+	make clobber
+
+file		description
+-------------	-------------------------------------------------------
+README		this file
+Makefile	input file for make
+Reverse.man	raw man page source
+reverse.c	ANSI C source
+reverse.doc	stripped & formatted man page
+test		directory that contains test scripts and data files
+

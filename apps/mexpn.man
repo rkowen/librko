@@ -1,0 +1,34 @@
+.\" LIBDIR
+.TH "MEXPN" "1rko" "12 May 1996"
+.SH NAME
+mexpn \- prints out the mail alias expansion from a given mail server
+
+.SH SYNOPSIS
+
+ mexpn \fR[\fB-h hostname\fR] username \.\.\.
+        -h hostname     which host to query (default: localhost)
+        username        list of user names to expand mail aliases for
+
+.SH DESCRIPTION
+.I mexpn
+prints out the mail alias expansion from a given mail server.
+This is useful to discover if a given mail address is valid or not.
+However, if you can not establish a connection (and many mail servers
+can not be accessed directly) then nothing can really be said one way or
+the other.
+
+The hostname can be given as a host.domain name or as an IP address.
+
+.SH SEE ALSO
+mail(1)
+
+.SH BUGS
+It seems to work for all the mail servers that the author
+has access to.  Which is surprising since he has
+never looked at the RFC-819,821, or 822 documents which describe
+how email delivery agents interact.
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

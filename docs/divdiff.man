@@ -1,0 +1,162 @@
+.\" USMID %W%
+.\" RCSID @(#)$Id: divdiff.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" LIBDIR
+.TH "divdiff" "3rko" "12 May 1995"
+.SH NAME
+divdiff \- osculatory (kissing) interpolates a function via divided difference
+.SH SYNOPSIS
+
+ #include "librko.h"
+ int divdiffcoef(int opt, int N, PRECISION *t, PRECISION *g, PRECISION *c);
+ PRECISION divdiffeval(int N, PRECISION *t, PRECISION *c, PRECISION x);
+
+.SH DESCRIPTION
+.IR divdiffcoef (opt,N,t,g,c)
+computes the divided difference coefficients
+for the Newton form of osculatory (kissing) interpolation.
+
+Input:
+.TP 15
+opt
+= 0 then derivatives, d^n g(x) / dx^n are scaled by 1/n!
+.TP
+opt
+> 0 derivatives are taken as unscaled
+.TP
+opt
+< 0 free up memory allocated by divdiffcoef
+.TP
+N
+= number of points & derivatives to agree with
+.TP
+t
+= array of ordinate points
+.TP
+g
+= array of abscissa points and derivatives
+
+.PP
+Output:
+.TP 15
+c
+= array of divided difference coefficients [t1,t2,...,t_i]g
+.TP
+return value
+= opt if opt < 0
+.TP
+else
+= 0 if successful and != 0 if not
+
+.PP
+.IR divdiffeval (N,t,g,c,x)
+evaluates the Newton form of osculatory interpolation
+given the coefficients computed by divdiffcoef().
+
+.TP 15
+N
+= number of points & derivatives to agree with.
+.TP
+t
+= array of ordinate points not necessarily in order, except
+points with derivatives must be grouped together
+.TP
+c
+= array of divided difference coefficients [t1,t2,...,t_i]g
+.TP
+x
+= ordinate point to evaluate the interpolation polynomial at.
+.TP
+return value
+= p_N(x) where p_N(x) agrees with g(x) at points given by t[].
+
+.SH SEE ALSO
+.\" crontab(1),stat(2),libmon(8)
+rkoerror(3rko)
+
+.SH NOTES
+
+The type PRECISION is normally set to double in librko.h
+
+Example:	g(t) = 1/t
+
+.RS -.5
+         t[] = {  1/2,   1,    1,       1,      2,    2,      4}
+ opt = 0 g[] = {g(1/2),g(1),g'(1)/1!,g"(1)/2!,g(2),g'(2)/1!,g(4)}
+             = {   2,    1,   -1,       1,     1/2, -1/4,   1/4}
+
+ opt = 1 g[] = {g(1/2),g(1),g'(1),   g"(1),   g(2),g'(2),   g(4)}
+             = {   2,    1,   -1,       2,     1/2, -1/4,   1/4}
+.RE
+
+Divided Difference Table
+
+.RS -.5
+ t	[t]g	...	[t1,t2,...,tn]g		...
+ 1/2	2
+ 		-2
+ 1	1		2
+ 		-1		-2
+ 1	1	---	1		1
+ 		-1	--	-1/2		-1/2
+ 1	1	---	1/2		1/4		1/8
+ 		-1/2		-1/4		-1/16
+ 2	1/2		1/4		1/16
+ 		-1/4		-1/16
+ 2	1/2	----	1/16
+ 		-1/8
+ 4	1/4
+.RE
+
+The underlined values represent scaled derivatives that were entered in
+accordance with the definition:
+
+.RS -.5
+                    {  g^(k)(x)/k!     if t_i = ... = t_(i+k)
+                    {
+ [t_i,...,t_(i+k)]g={[t_i,..,t_(i+k-1)]g - [t_(i+1),..,t_(i+k)]g
+                    {-------------------------------------------
+                    {                t_i - t_(i+k)
+                    {
+                    {                if t_i != t_(i+k)
+.RE
+where [t]g  =  g(t)
+
+The upper edge of the triangle, [t1,t2,...,t_i]g, represents the coefs
+of the Newton interpolation form:
+
+.RS -.5
+ p_N(x) = [t1]g + [t1,t2]g*(x-t1) + [t1,t2,t3]g*(x-t1)*(x-t2)+...
+         + [t1,t2,...,tN]g * (x-t1)*(x-t2)*...*(x-t(N-1))
+    _ N
+  = \\
+    /   [t1,t2,...,t_(i-1)]g * (x-t1)*(x-t2)*...*(x-t_(i-1))
+    - i=1
+.RE
+
+This polynomial agrees with g(x) at the ordinates t1,t2,...,tN
+and if t_i = t_(i+1) = ... = t_(i+k) then the polynomial
+agrees with g(t_i), g'(t_i), g"(t_i), ..., d^k/dx^k g(t_i)
+
+note that in the above example the arrays could have been arranged
+equivalently as:
+
+        t[] = { 1/2, 1, 1, 1, 2, 2, 4}
+ or     t[] = { 1, 1, 1, 1/2, 2, 2, 4}
+ or     t[] = { 2, 2, 4, 1, 1, 1, 1/2}
+ etc.
+
+as long as points with derivatives are grouped together with the
+associated g[] array entries.
+
+See "A Practical Guide to Splines", by Carl De Boor,
+Springer-Verlag, (c)1978
+for more information and theory on the divided difference method.
+
+.SH DIAGNOSTICS
+
+see rkoerror(3rko) and retrieving error messages
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

@@ -1,0 +1,41 @@
+.\" USMID %W%
+.\" RCSID @(#)$Id: strdbecpy.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" LIBDIR
+.TH "STRDBECPY" "3rko" "12 May 1995"
+.SH NAME
+strdbecpy \-
+breaks apart a UNIX filename into its path, basename, and extension.
+.SH SYNOPSIS
+
+ #include "librko.h"
+ char *strDBEcpy(char *path, char *base, char *ext,
+         char dirchar, char extchar, const char *filename);
+
+.SH DESCRIPTION
+.I strDBEcpy
+breaks apart a UNIX filename into its path, basename, and
+extension.  As an example: /dir1/dir2/file.d would be decomposed to
+path = \'\'/dir1/dir2/\'\', base = \'\'file\'\', ext = \'\'.d\'\';
+where the path is tagged by \`\`dirchar\'\' and the extension
+with \`\`extchar\'\'.
+If these special characters are NULL,
+then they will be set to the default of '/' and '.'
+respectively.
+
+.nf
+	Output  path		character array to contain the path
+	Output  base		character array to contain the basename
+	Output  ext		character array to contain the extension
+	Input   dirchar	path character
+	Input   extchar	extension character
+	Input   filename	the filename to decompose
+.fi
+The function returns a pointer to filename.
+
+.SH SEE ALSO
+strcpy(3), basename(1), dirname(1)
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

@@ -1,0 +1,117 @@
+.\" USMID %W%
+.\" RCSID @(#)$Id: ansi_seq.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" LIBDIR
+.TH "ANSI_SEQ" "3rko" "12 May 1995"
+.SH NAME
+ansi_seq \- C functions that return an ANSI sequence to manipulate
+the screen character attributes and colors.
+.SH SYNOPSIS
+
+ #include "librko.h"
+
+ #define ATTRIB_NUM	6
+ typedef enum {
+   NONE,   BOLD,   UNDERSCORE,   BLINK,   REVERSE,   CONCEALED}
+ ansi_attributes;
+
+ #define COLOR_NUM	8
+ typedef enum {
+   BLACK,   RED,   GREEN,   YELLOW,   BLUE,   MAGENTA,   CYAN,   WHITE}
+ ansi_colors;
+
+ extern const char *ANSI_Attributes[ATTRIB_NUM];
+ extern const char *ANSI_Colors[COLOR_NUM];
+
+ #define ANSISEQ_LEN	16
+ #define ANSISEQ_NUM	32
+
+ int set_ansi_tty(int ans);
+ const char *ansi_seq(ansi_attributes a, ansi_colors b, ansi_colors f);
+ const char *ansi_color(ansi_colors b, ansi_colors f);
+ const char *ansi_fgcolor(ansi_colors f);
+ const char *ansi_bgcolor(ansi_colors b);
+ const char *ansi_attribute(ansi_attributes a);
+
+.SH DESCRIPTION
+ANSI sequences are of the form ``^[[xx;xx;xxm'', where ``^['' is
+an escape character and ``xx'' is the ANSI code to set either the
+foreground color, background color, or the character attributes (e.g.
+bold, reverse,
+.IR .etc ).
+If, however, the standard output is not tied to a tty device then the
+following ANSI sequence generating functions will be disabled and will
+return a char * pointer to a '\0', which will signal an empty string
+in most output or string handling routines.  In other words, if the
+stdout is redirected or piped to another process then the ANSI sequences
+are disabled.
+
+.I set_ansi_tty
+will enable/disable the ANSI sequences given whether the input is
+TRUE or FALSE respectively.  (TRUE is non-zero, FALSE is zero.)
+The function returns the previous state.
+
+.I ansi_seq
+sets attribute, background color, and the foreground color in one sequence.
+Note that it returns a pointer to an internal storage area which gets cycled
+through with each call.  There are ANSISEQ_NUM internal buffer areas.
+This allows multiple calls to ansi_seq() within the same printf()
+statement.
+
+.I ansi_color
+sets only the background color and the foreground color.  It behaves in
+the same manner as
+.IR ansi_seq .
+
+.I ansi_fgcolor
+sets only the character foreground color.  It returns a pointer to an internal
+storage area, which is unique to each foreground color sequence.
+
+.I ansi_bgcolor
+sets only the character background color.  It returns a pointer to an internal
+storage area, which is unique to each background color sequence.
+
+.I ansi_attribute
+sets only the character attributes.  It returns a pointer to an internal
+storage area, which is unique to each attribute sequence.
+
+.I ANSI_Colors
+and
+.I ANSI_Attributes
+are char arrays that describe the corresponding ANSI color or attribute.
+
+.SH EXAMPLE
+    int i
+    ...
+    for (i = 0; i < COLOR_NUM; ++i) {
+        (void) printf("%s%-20s%s %d\n",
+            ansi_seq(NONE, WHITE, MAGENTA),
+            ANSI_Colors[i],
+            ansi_seq(NONE, BLACK, WHITE),
+            i);
+    }
+
+This code fragment would print out the color names with MAGENTA characters
+on a WHITE background, followed by the color number with ordinary
+white numbers on a black background.  Since the buffer pointers are
+cycled in each call the second call to ansi_seq() returns a pointer to
+a char * different from the first call.
+
+.SH SEE ALSO
+printf(3), strcpy(3)
+
+.SH BUGS
+There are only a finite number of internal buffers given by ANSISEQ_NUM.
+It is therefore possible to have ``too many'' calls to ansi_seq() such
+that a subsequent call overwrites a buffer area being pointed to by
+a char * ptr, thus changing the ANSI sequence attributes and colors.
+This is not a problem unless the programmer is expecting a specific
+sequence to exist at a later time.  This will result in surprising
+and unexpected attributes and colors.
+Therefore, as in the above example, it's advisable to keep the calls
+to ansi_seq() ``local'' to the printf() statement, or to strcpy() the
+sequence to a local area in the program for persistent sequences.
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

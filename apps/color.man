@@ -1,0 +1,47 @@
+.\" LIBDIR
+.TH "COLOR" "1rko" "12 May 1996"
+.SH NAME
+color \- outputs an ANSI character attribute & color sequence
+
+.SH SYNOPSIS
+
+ color \fR[\fBattribute\fR] [\fB-bgcolor\fR] [\fB+fgcolor\fR]
+
+where: either the number or name (or beginning part thereof) is specified
+.br
+  attribute             bg/fg color
+   1 none               1 black
+   2 bold               2 red
+   3 underscore         3 green
+   4 blink              4 yellow
+   5 reverse            5 blue
+   6 concealed          6 magenta
+                        7 cyan
+                        8 white
+
+.SH DESCRIPTION
+.I color
+outputs an ANSI character attribute & color sequence
+which are of the form ^[[xx;xx;xxm, where ^[ is an <ESC> and
+xx are the proper character codes for attribute, background,
+and foreground character color. Each one is output as processed and
+errors are ignored.
+
+.SH SEE ALSO
+xterm(1),tset(1),stty(1)
+
+.SH NOTES
+
+.I color
+assumes that the ANSI attribute & color sequence means something to
+the terminal,  i.e. that it has vt100-like capability.
+
+.SH BUGS
+
+.I color
+outputs the sequence regardless whether to a terminal device or not.
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

@@ -1,0 +1,35 @@
+.\" USMID %W%
+.\" RCSID @(#)$Id: tcp_connect.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" LIBDIR
+.TH "TCP_CONNECT" "3rko" "26 Mar 1996"
+.SH NAME
+tcp_connect \- opens a TCP/IP connection to a host and specified port
+.br
+tcp_close \- closes a TCP/IP connection
+.SH SYNOPSIS
+
+ #include "librko.h"
+ int tcp_connect(char *hostname, int port_num);
+ int tcp_close(int sd);
+
+.SH DESCRIPTION
+.I tcp_connect
+opens a TCP/IP connection to a host (either given as host domain name or
+as an IP address of 4 octets) and returns a file descriptor.  If it
+fails then it returns a value < 0 and
+.I rkoperror()
+can be used to output the message.
+
+.I tcp_close
+closes the connection opened by
+.I tcp_connect
+and returns 0 if successful, or < 0 if not.
+.I rkoperror()
+contains the error message
+
+.SH SEE ALSO
+gethostbyX(3rko), read(2), write(2), fdopen(2)
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+

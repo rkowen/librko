@@ -1,0 +1,46 @@
+
+librko(3rko)     - an eclectic collection of C functions from R.K.Owen,Ph.D
+invoke(3rko)     - invokes a child process with one-way communication only
+spawn(3rko)      - spawns a child process with two-way communication
+gethostbyX(3rko) - gets the host entry by either name or IP address
+tcp_connect(3rko)- opens a TCP/IP connection to a host & port
+tcp_close(3rko)  - see tcp_connect(3rko)
+timedfgets(3rko) - an fgets that can time-out
+strchop(3rko)    - chops a string at the spaces
+strdbecpy(3rko)  - break apart filename into path, basename, and extension.
+strmem(3rko)     - allocates/deallocates collected string pool memory
+strmemalloc(3rko)- see strmem(3rko)
+strmemfree(3rko) - see strmem(3rko)
+wcstrcmp(3rko)   - compares two strings, one contains wildcard characters.
+istext(3rko)	 - returns 0 or 1 if the character is a text character
+nameread(3rko)   - namelist-like read a line of text for variables and values
+nametol(3rko)    - see nameread(3rko)
+nametod(3rko)    - see nameread(3rko)
+foptim(3rko)     - finds the minimum or maximum of f(x) in the interval [ax,bx]
+fzeroin(3rko)    - finds the zero of (f(x) - y0) in the interval [ax,bx]
+divdiff(3rko)    - osculatory (kissing) interpolates a function via divided difference
+memory(3rko)     - a set of macros for detecting memory leaks
+ansi_seq(3rko)   - returns ANSI sequences for screen character attributes and colors
+ansi_color(3rko) - see ansi_seq(3rko)
+ansi_fgcolor(3rko)- see ansi_seq(3rko)
+ansi_bgcolor(3rko)- see ansi_seq(3rko)
+ansi_attribute(3rko)- see ansi_seq(3rko)
+set_ansi_tty(3rko)- see ansi_seq(3rko)
+uvec(3rko)       - Unix vector, a (char *)NULL terminated vector of character strings
+uvec_ctor        - see uvec(3rko)
+uvec_dtor        - see uvec(3rko)
+uvec_exists      - see uvec(3rko)
+uvec_capacity    - see uvec(3rko)
+uvec_number      - see uvec(3rko)
+uvec_end         - see uvec(3rko)
+uvec_vector      - see uvec(3rko)
+uvec_insert      - see uvec(3rko)
+uvec_delete      - see uvec(3rko)
+uvec_add         - see uvec(3rko)
+uvec_pop         - see uvec(3rko)
+rkoerror(3rko)   - a package error message routines for librko
+rkoperror(3rko)  - see rkoerror(3rko)
+rkostrerror(3rko)- see rkoerror(3rko)
+rkocpyerror(3rko)- see rkoerror(3rko)
+rkocaterror(3rko)- see rkoerror(3rko)
+rkopsterror(3rko)- see rkoerror(3rko)

@@ -1,0 +1,244 @@
+#! /bin/sh 
+#	$Id: mkshar,v 1.1 1998/10/07 16:19:56 rk Exp $
+
+# create shell archives
+# A Jeff Weisberg creation
+# this program is a sufferer of extreme feeping creaturitis
+
+#set -v
+
+initial=00 name="part" delim="CEST_TOUT" prefix="X" size=30000
+verbose=1 recurse=1 fortune=0 exclude=0
+files="" dirs="" readmes=""
+
+help () {
+	cat >&2 << EOHELP
+usage: `basename $0` [-s size] [-f name] [other options] files, dirs, ...
+
+	shar creates shell archives, the following options are accepted:
+
+	-h		print this help
+	-s size		set the max. size of each part
+	-f name		set the name of the parts (or - for stdout)
+	-p C		set the prefix character that goes before each line
+	-d delim	set the end of file delimitor
+	-r		do not recurse
+	-u		append fortune		
+	-i number	set initial part number
+	-q		be quiet
+	-x		produce debugging info
+	-F		exclude dirs named SCCS or RCS
+	-FF		do -F and also exclude files named:
+				a.out core  *.o  *,v
+
+	- options may also be set in the enviornment variable "SHAROPTS"
+	  such as: setenv SHAROPTS "-FF -q -s 60000"
+
+	- when directories are encountered, we will recurse
+
+	- shar will also put README files at the beginning of the archive,
+	  for the benefit of net.folk
+EOHELP
+	exit 0
+}
+
+file () {
+# use the following for Sun
+#	if test -b $this -o -c $this -o -h $this -o -p $this ; then
+# use the following for SGI
+	if test -b $this -o -c $this -o -l $this -o -p $this ; then
+		echo "special file \"$this\" -- not archived" >&2
+	elif test -f $this ; then
+		if test -r $this ; then
+			case $this in
+			  *[Rr][Ee][Aa][Dd][Mm][Ee]*)
+				echo "readmes=\"\$readmes $this\"" ;;
+			  *,v|*.o|core|a.out)
+				test $exclude -lt 2 && echo "files=\"\$files $this\"" ;;
+			  *)
+				echo "files=\"\$files $this\"" ;;
+			esac
+		else
+			echo "\"$this\" is unreadable -- not archived" >&2
+		fi
+	elif test -d $this ; then
+		case $this in
+		  */SCCS|*/RCS)
+			test $exclude -gt 0 && return
+		esac
+		dirs="$dirs $this"
+		# make sure it's not empty
+		test "`basename $this/*`" != "*" -a $recurse -eq 1 &&
+			for f in $this/* ; do
+				this=$f
+				# recurse into it
+				eval `file`
+			done
+		echo "dirs=\"$dirs\"" "files=\"$files\"" "readmes=\"$readmes\""
+	else
+		echo "no such file \"$this\" -- not archived" >&2
+	fi
+}
+
+spit () {
+	test $verbose -eq 1 && echo "$OUTFILE ::" >&2
+	cat  <<- SPAT
+		#! /bin/sh
+		# 0. this is shell archive
+		# 1. Remove everything above the #! /bin/sh line
+		# 2. Save the resulting text in a file
+		# 3. Execute the file with /bin/sh (not csh)
+		# 4. Or use your favorite variant of unshar
+		# 5. To overwrite existing files use "sh -c"
+		#
+		# Created by: `whoami`@`hostname` on `date`
+	SPAT
+	# is there a reliable way to get FQDN into above (hostname won't do it)
+
+	if test "$count" -eq "$initial" ; then
+		echo "# This archive contains:"
+		for x in $dirs $files ; do
+			if test -d $x ; then
+				echo "#	$x/"
+			else
+				echo "#	$x"
+			fi
+		done
+		echo ""
+	else
+		cat <<- SPAT
+			#
+			# This is part $count
+
+		SPAT
+	fi
+}
+
+defc () {
+
+	test $fortune -eq 1 &&
+		cat <<- FECAL
+			sed '$SEDA' << \\$delim
+
+			`fortune|sed $SEDB`
+
+			$delim
+		FECAL
+
+	cat <<- FECAL
+		echo $part$count done.
+		exit 0
+	FECAL
+}
+
+# process cmd line and SHAROPTS
+
+#set -x
+
+set -- $SHAROPTS $*
+while test $# -gt 0 ; do
+	case $1 in
+		# we handle normal "-x" and also GNU style "--word" (ooooh, aaaaah) !!!!
+	  -s|--size)		size=$2 ;	shift	;;
+	  -q|--quiet)		verbose=0 		;;
+	  -f|--file)		name=$2 ; 	shift	;;
+	  -p|--prefix)		prefix=$2 ; 	shift	;;
+	  -d|--delim)		delim=$2 ;	shift	;;
+	  -x|--debug)		set -xv			;;
+	  -h*|--h*)		help			;;
+	  -r|--norecurse)	recurse=0		;;
+	  -i|--initial)		initial=$2 ;	shift	;;
+	  -u|--fortune)		fortune=1		;;
+	  -F)			exclude=1		;;
+	  -FF)			exclude=2		;;
+	  *)			this=$1 ; eval `file`	;;
+	esac
+	shift
+done
+
+# keep the readme files at the top
+files="$readmes $files"
+test "$files" = " " && 
+	cat <<- USAGE >&2 && 
+		usage: `basename $0` [-s size] [-f name] [other options] files, dirs, ...
+		use -h for help
+	USAGE
+	exit 1
+
+# canonicalize initial number
+initial=`expr $initial + 0`
+test $initial -lt 10 && initial=0$initial
+
+# set up some vars.
+count=$initial
+SEDA=s/\^$prefix//
+SEDB=s/\^/$prefix/
+
+if test $name = - ; then
+	OUTFILE=stdout
+	name=stdout
+	count=""
+	size=0
+else	
+	OUTFILE=$name$count
+	exec > $OUTFILE
+fi
+part=`basename $name`
+
+spit
+
+test "$dirs" != "" &&
+	sed 's/^+//' <<- MKDIRS
+		+for x in $dirs ; do
+		+	if test ! -d \$x ; then
+		+		echo "creating directory \$x" ; mkdir \$x
+		+	fi
+		+done
+	MKDIRS
+
+# now create the bleedin' thang
+for f in $files ; do
+	# see if it'll fit
+	set -- `ls -l $f`
+# use the following for Sun
+#	tsize=$4
+# use the following for SGI
+	tsize=$5
+	# size=0 will override test
+	if test $size -ne 0 ; then 
+		set -- `ls -l $OUTFILE`
+# use the following for Sun
+#		total=$4
+# use the following for SGI
+		total=$5
+		if test `expr $total + $tsize` -ge $size ; then 
+			# start a new file
+			defc
+			count=`expr $count + 1`
+			test $count -lt 10 && count=0$count
+			OUTFILE=$name$count
+			exec > $OUTFILE
+			spit
+		fi
+	fi
+	# pop it out into file
+	test $verbose -eq 1 && echo "	a - $f" >&2
+	sed 's/^+//' <<- PLUGH
+		+if test -f $f -a "\$1" != "-c" ; then
+		+	echo "will not overwrite $f"
+		+else
+		+	echo "	x - $f ($tsize bytes)"
+		+	sed '$SEDA' > $f << \\$delim
+	PLUGH
+	sed  $SEDB $f
+	echo $delim
+	test -x $f && echo "	chmod +x $f"
+	sed 's/^+//' <<- PLUGH
+		+	if test \`wc -c < $f\` -ne $tsize ; then
+		+		echo "file $f has been corrupted (should be $tsize bytes)"
+		+	fi
+		+fi
+	PLUGH
+
+done # for loop 
+defc

@@ -1,0 +1,19 @@
+xxx
+xxx # comments <zzz>
+	xxx1 -e "what is this string?" ; xxx2 -2 "what's # for?"
+	xxx1 -e "what \"is\" this string?" ; xxx2 -2 'what\'s # for?'
+	xxx1 -e 'what is this string?' ; xxx2 -2 'Say what?'
+xxx1 -e 1 && xxx2 -x ; xxx3
+xxx1 -e 1 || xxx2 -x && xxx3
+xxx < file
+xxx > file
+xxx >> file
+xxx < file1 > file2
+xxx 3> file3 2>>file2 1>&2
+xxx 3< file3
+xxx >&
+xxx <&
+xxx 2 2>&1 1
+xxx 2 2>& 1
+xxx 2>&1
+xxx1 2>&1 ; xxx2

@@ -1,0 +1,40 @@
+.\" USMID %W%
+.\" RCSID @(#)$Id: memdebug.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" LIBDIR
+.TH "MEMORY" "3rko" "12 May 1995"
+.SH NAME
+memory \- a set of macros that provides a front-end for the memory allocation
+routines to help find memory leaks.  Supports only the ANSI-C routines:
+.IR calloc , free , malloc , realloc.
+
+.SH SYNOPSIS
+
+ \.\.\. usual standard headers
+ #define MEMDEBUG
+ #include "librko.h"
+ \.\.\. code that calls the memory allocation routines
+
+.SH DESCRIPTION
+.I librko
+provides several front-end routines for the ANSI-C memory allocation
+routines.  It outputs the routine name, pointer(s), file name,
+and line number to stderr.  This can be analyzed to see that allocations
+are matched with deallocations.
+
+.SH SEE ALSO
+.\" crontab(1),stat(2),libmon(8)
+calloc(3), free(3), malloc(3), realloc(3)
+
+.SH NOTES
+Must define the macro MEMDEBUG before include the librko.h header.
+This header should be included after the standard headers, particularly
+stdlib.h which may be included in some of the other standard headers also.
+
+If the macro MEMDEBUG is not defined
+then nothing happens and the standard memory
+allocation calls are used.
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

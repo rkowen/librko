@@ -1,0 +1,41 @@
+.\" LIBDIR
+.TH "ISTEXT" "1rko" "21 May 1998"
+.SH NAME
+istext \- returns a status depending whether the file is purely text or not.
+.SH SYNOPSIS
+
+ istext \fR[\fB-v\fR|\fB-t\fR|\fB-b\fR][\fB-h\fR][\fB-t\fR] file [\.\.\.]
+
+.SH DESCRIPTION
+.I istext
+\- returns a status of either 0 or 1, depending whether the file(s)
+are entirely text or not.
+returns -1 if it can't open the file, and -2 if none on commandline.
+Other options will return only those file names that are entirely text
+.RI ( -t ),
+or are binary
+.RI ( -b ).
+
+.TP 15
+-v
+verbose (report filename and "is text"/"is binary"/"cannot open")
+.TP
+-t
+report only the filenames of text   files given on the commandline
+.TP
+-b
+report only the filenames of binary files given on the commandline
+.TP
+-h
+this helpful message
+.TP
+--
+stop option parsing (useful for filenames that start with `-')
+
+.SH SEE ALSO
+istext(3rko),ascii(7)
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

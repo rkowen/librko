@@ -1,0 +1,78 @@
+.\"
+.TH URAND 3 "23 August 1993"
+.SH NAME
+urand \- uniformly distributed pseudo\-random numbers
+.SH SYNOPSIS
+.LP
+.nf
+.ft B
+#include "librko.h"
+.ft
+.fi
+.LP
+.nf
+.TP 26
+INTEGER irand(void)
+\- returns INTEGER   in range [0,IRAND_MAX]
+.TP
+PRECISION urand(void)
+\- returns PRECISION in range [0,1.0)
+.TP
+void setseed(INTEGER ity)
+\- sets the seed to X
+.TP
+INTEGER getseed(void)
+\- gets the current seed
+.TP
+INTEGER getirand(void)
+\- returns last value returned from irand()
+.TP
+PRECISION geturand(void)
+\- returns last value returned from urand()
+.TP
+extern INTEGER IRAND_MAX
+\- the maximum value returned by irand
+it's only defined after a call to
+urand(), irand(), or setseed().
+
+.SH DESCRIPTION
+.B irand(\|)
+is a sequential congruential uniformly distributed
+pseudo-random number generator, where the mapping formula is
+i(n+1) = a * i(n) \+ c (mod m)
+where
+i(n+1)
+is the n-th number in the sequence and the entire 
+sequence is between 0 and IRAND_MAX.
+.B urand(\|)
+is the floating point equivalent where the values are contained
+between 0 and 1.0.
+
+The ``seed'' is the beginning integer seed (or i(1)).  The default
+is to start with a seed of 0 which results in the same sequence of
+pseudo-random numbers every time.  So it's a good idea to give it
+a seed if you want a fresh sequence and remember the seed if you
+want to duplicate the run later.
+
+The source code is written using a generic type for floating point numbers
+and integers to give it the maximum portability among differing machine
+architectures.
+The  header file
+.I librko.h
+contains
+.I PRECISION
+which is typedef'd to double as default if
+.I _PRECISION_
+is undefined.
+Similarly,
+.I INTEGER
+which is typedef'd to int as default if
+.I _INTEGER_
+is undefined.
+.SH AUTHOR
+R.K.Owen,Ph.D., transliterated from the Fortran
+.B URAND(\|)
+version from George E. Forsythe, Michael A. Malcolm, and Cleve B. Moler
+``Computer Methods for Mathematical Computations'', 1977.
+.SH SEE ALSO
+metropolis(3rko)

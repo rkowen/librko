@@ -1,0 +1,198 @@
+
+
+
+     METROPOLIS(3)    UNIX System V (23	August 1993)	 METROPOLIS(3)
+
+
+
+     NAME
+	  metropolis - Nicholas	Metropolis algorithm for combinatorial
+	  optimization
+
+     SYNOPSIS
+	  #include "metropolis.h"
+
+
+	  int metropolis(int flag, int maxstep,	int indexdim, int *index,
+			  PRECISION (*cost)(int,int*,swaptype,int,int),
+			  PRECISION (*invtemp)(int,int),
+			  PRECISION (*ranfn)(void));
+
+     DESCRIPTION
+	  metropolis() implements the Nicholas Metropolis algorithm,
+	  which	simply stated:	``Propose a move and either accept or
+	  reject it.''	This method is sometimes called	``simulated
+	  annealing'' and is ideal for doing combinatorial
+	  optimization,	or the optimization of a discrete ordering of
+	  objects.  An example of this is the traveling	salesman
+	  problem where	a salesman has N cities	to visit and the goal
+	  is to	``minimize'' the cost or distance traveled.  The
+	  number of paths that can be taken is N! and for finding the
+	  optimum route	becomes	prohibitively expensive	for larger N.
+	  The Metropolis algorithm starts with any route and
+	  rearranges the route until it	settles	into a minimum.	 It's
+	  not guaranteed to be the global minimum, but it will provide
+	  a good overall solution without breaking the computational
+	  bank.
+
+	  The metropolis() function will rearrange the entries in an
+	  index	array and needs	no other detailed information
+	  concerning the data, since ``communication'' with the	data
+	  is all done through user supplied functions.	The resultant
+	  index	array will contain an optimized	sequence of indices as
+	  determined by	the user ``cost'' or ``energy''	function which
+	  metropolis() is trying to minimize.
+
+	  PRECISION is typedef'd to double as default if _PRECISION_
+	  is undefined.	 However, if another type is to	be used, then
+	  a macro exp()	may need to be defined.	 See the source	code
+	  and header files for further documentation regarding this.
+
+	  metropolis() returns the number of steps, which should be
+	  equal	to maxstep, else it returns a negative value to
+	  indicate an error.
+
+	  The calling program for this function	must provide the
+	  following information:
+
+	  flag	    - which can	be any OR'd combination	of
+
+
+
+
+     Page 1					      (printed 2/3/94)
+
+
+
+
+
+
+     METROPOLIS(3)    UNIX System V (23	August 1993)	 METROPOLIS(3)
+
+
+
+		    Mpls_RAN_INDEX     metropolis() will generate a
+				       random index array unless
+				       Mpls_FIX_* is set, else the
+				       user must supply	a ``good''
+				       guess.  Good in the sense each
+				       index number is represented.
+
+		    Mpls_RAN_SWAP      use swapping of indices ( e.g.
+				       `abcdefg' -> `aecdbfg' ).
+
+		    Mpls_RAN_PERMUTE   randomly	cut ``string'' of
+				       indices and permute ( e.g.
+				       `abcdefg' -> `efgabcd' ).
+
+		    Mpls_RAN_REVERSE   randomly	cut ``string'' and
+				       reverse substring ( e.g.
+				       `abcdefg' -> `aedcbfg' ).
+
+		    Mpls_FIX_INITIAL   keep the	initial	index[0] fixed
+
+		    Mpls_FIX_FINAL     keep the	final index[indexdim-
+				       1] fixed
+
+		    If flag = Mpls_RAN_* | Mpls_FIX_* are set
+		    metropolis() will only randomize with respect to
+		    the	rest of	the indices. The user will have	to
+		    provide the	fixed indices and populate the rest of
+		    the	index array with appropriate values.
+
+	  maxstep   Stops metropolis() from performing more than
+		    maxstep steps (and must be a positive integer).
+
+	  indexdim  The	dimension of the index[] array.
+
+	  index	    Contains the ``string'' of indices to be shuffled.
+
+	  The following	are the	user supplied functions:
+		    PRECISION cost(int indexdim,int *index,swaptype
+		    swapmethod,	int swap1, int swap2)
+			    returns the	``cost'' or ``energy'' of the
+			    given configuration	where swap1,swap2 are
+			    the	indices	for the	last two entries in
+			    index[] that were swapped, permuted, or
+			    string reversed given by swapmethod.
+
+			    This may help cost() be more efficient,
+			    but	need not be used. However,
+			    metropolis() sets swap1=swap2=-1 for the
+			    first call to cost() and set
+			    swapmethod=_NONE.
+		    PRECISION invtemp(int maxstep,int current_step)
+			    returns the	``inverse temperature''	for
+
+
+
+     Page 2					      (printed 2/3/94)
+
+
+
+
+
+
+     METROPOLIS(3)    UNIX System V (23	August 1993)	 METROPOLIS(3)
+
+
+
+			    simulated annealing.  It should be a
+			    monotonically increasing function.
+		    PRECISION ranfn(void)
+			    a uniformly	distributed pseudo-random
+			    generator.	Seed initialization must be
+			    done prior to invoking metropolis().
+
+     FILES
+	  /u/wk/rkowen/lib/libmetropolis.a,/u/wk/rkowen/include/metropolis.h
+
+     AUTHOR
+	  R.K.Owen,Ph.D., based	on the paper ``Equation	of State
+	  Calculation by Fast Computing	Machines'' by Nicholas
+	  Metropolis, Arianna W. Rosenbluth, Marshall N. Rosenbluth,
+	  Augusta H. Teller, and Edward	Teller;	Jour. Chem. Physics 21
+	  (Sept. 1949) 1087
+
+     BUGS
+	  There	aren't any!
+
+     SEE ALSO
+	  urand(3)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     Page 3					      (printed 2/3/94)
+
+
+

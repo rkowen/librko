@@ -1,0 +1,60 @@
+	extern INTEGER iy;
+	extern INTEGER m;
+	extern INTEGER m2;
+	extern PRECISION s;
+	extern PRECISION halfm;
+	extern INTEGER ia, ic, mic;
+
+/*  IF FIRST ENTRY, COMPUTE URAND CONSTANTS */
+	if (m2 == 0) _set_rand();
+
+/*  COMPUTE NEXT RANDOM NUMBER */
+
+	iy *= ia;
+
+/*  THE FOLLOWING STATEMENT IS FOR COMPUTERS WHICH DO NOT ALLOW */
+/*  INTEGER OVERFLOW ON ADDITION */
+
+#ifndef NOINTOVF
+	if (iy > mic) {
+#  ifndef NOOPSUB
+		iy -= m2;
+		iy -= m2;
+#  else
+		iy ^= m;
+#  endif
+	}
+#endif
+	iy += ic;
+
+/*  THE FOLLOWING STATEMENT IS FOR COMPUTERS WHERE THE */
+/*  WORD LENGTH FOR ADDITION IS GREATER THAN FOR MULTIPLICATION */
+
+#ifndef NOADDMULT
+	if (
+#ifndef NODIV
+		(iy >> 1)
+#else
+		(iy/2)
+#endif
+	> m2) {
+#  ifndef NOOPSUB
+		iy -= m2;
+		iy -= m2;
+#  else
+		iy ^= m;
+#  endif
+	}
+#endif
+
+/*  THE FOLLOWING STATEMENT IS FOR COMPUTERS WHERE INTEGER */
+/*  OVERFLOW AFFECTS THE SIGN BIT */
+
+	if (iy < 0) {
+#ifndef NOOPADD
+		iy += m2;
+		iy += m2;
+#else
+		iy ^= m;
+#endif
+	}

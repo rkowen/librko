@@ -1,0 +1,61 @@
+.\" USMID %W%
+.\" RCSID @(#)$Id: strmem.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" LIBDIR
+.TH "STRMEM" "3rko" "12 May 1995"
+.SH NAME
+strmem \- allocates/deallocates collected string pool memory
+.SH SYNOPSIS
+
+ #include "librko.h"
+ int strmemalloc(char **ChArSpAcE, char ***charspace,
+                  size_t numstr, size_t maxstrlen);
+ void strmemfree(char **ChArSpAcE, char ***charspace);
+
+.SH DESCRIPTION
+.I strmem
+allocates/deallocates collected string pool memory.  Instead of
+allocating each individual string \.\.\. strmem does a single allocation
+to a pool of memory and allocates an array of pointers to within
+this pool.
+
+.I strmemalloc
+allocates a pool of memory for character strings which are assumed to be
+of uniform length.  The number of strings is given by numstr and the
+maximum length by maxstrlen.  A second array is defined which points
+to within this pool. maxstrlen is assumed to be consistent with the
+output given by strlen() (i.e. the '\0' is not counted).  Therefore,
+strmemalloc() will allocate numstr*(maxstrlen + 1) bytes.
+
+.I strmemfree
+deallocates the memory allocated by strmemalloc(),
+.TP 15
+ChArSpAcE
+pointer that receives a char memory pool allocation
+.TP
+charspace
+convenience array of ptrs to within the memory pool.
+The number of ptrs is numstr+1 and charspace[numstr] = (char *)NULL.
+Therefore, charspace is a vector similar to argv or envp.
+.TP
+numstr
+number of maxstrlen length strings
+.TP
+maxstrlen
+maximum string length
+
+.SH SEE ALSO
+rkoerror(3)
+.\" crontab(1),stat(2),libmon(8)
+
+.SH NOTES
+.I strmemalloc
+returns 0 on success, or else returns -1.
+see rkoerror(3) for the error message. 
+
+.SH DIAGNOSTICS
+Self explanatory.
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

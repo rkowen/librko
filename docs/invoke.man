@@ -1,0 +1,53 @@
+.\" USMID %W%
+.\" RCSID @(#)$Id: invoke.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" LIBDIR
+.TH "INVOKE" "3rko" "2 Jun 1995"
+.SH NAME
+invoke \- invokes a child process with no stdin input, the stdout stream
+for the process is returned.
+
+.SH SYNOPSIS
+
+ #include <stdio.h>
+ #include "librko.h"
+
+ FILE *invoke(char **argv);
+
+.SH DESCRIPTION
+.I invoke
+returns a file pointer to the stdout of the child process, unless
+there is an error, then it returns (FILE *) NULL.
+.I argv
+is a command vector, where argv[0] is the executable to run, and
+argv[1],... are the commandline options.
+Must have the last one argv[N] = NULL to terminate the vector.
+
+This is a better \`\`system( \.\.\. )\'\' function since the output
+is returned directly as a FILE stream.
+
+.SH SEE ALSO
+execvp(2),fork(2),pipe(2),fclose(3),wait(2),system(3)
+
+.SH NOTES
+
+After the output is read and an EOF is received, the calling program should
+close the file stream and wait for the child process.
+
+ FILE *childoutput;
+ ...
+ childoutput = invoke(argv);
+ ...
+ fclose(childoutput);
+ wait(NULL);
+
+.SH DIAGNOSTICS
+
+Any errors are output to stderr.
+
+.SH BUGS
+None discovered yet.
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

@@ -1,0 +1,25 @@
+.\" USMID %W%
+.\" LIBDIR
+.TH "XXX" "1rko" "12 May 1996"
+.SH NAME
+xxx \- xxx
+.SH SYNOPSIS
+
+ xxx \fR[\fB-xxx\fR][\fB-xxx\fR] \.\.\.
+
+.SH DESCRIPTION
+.I xxx
+
+.SH SEE ALSO
+.\" crontab(1),stat(2),libmon(8)
+
+.SH NOTES
+
+.SH DIAGNOSTICS
+
+.SH BUGS
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

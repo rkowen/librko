@@ -1,0 +1,92 @@
+static char USMID[]="%W%";
+static char RCSID[]="@(#)$Id: strdbecpy.c,v 1.1 1998/10/07 16:19:56 rk Exp $";
+static char AUTHOR[]="@(#)strdbecpy 1.1 11/14/97 R.K.Owen,PhD";
+
+/* strDBEcpy - breaks apart a UNIX filename into its path, basename, and
+ *	extension.  As an example: /dir1/dir2/file.d would be decomposed to
+ *	path = "/dir1/dir2/", base = "file", ext = ".d"
+ *	where the path is tagged by dirchar and the extension with extchar,
+ *	if they are NULL, then they will be set to the default of '/' & '.'
+ *	respectively.
+ *
+ * prototype:
+ * char *strDBEcpy(char *path, char *base, char *ext,
+ *			char dirchar, char extchar, const char *filename);
+ *
+ *	O path		character array to contain the path
+ *	O base		character array to contain the basename
+ *	O ext		character array to contain the extension
+ *	I dirchar	path character
+ *	I extchar	extension character
+ *	I filename	the filename to decompose
+ *
+ *	returns a pointer to filename
+ *
+ * author	R.K.Owen,Ph.D.	09/23/94
+ * modified	11/14/97
+ */
+/*
+ *********************************************************************
+ *
+ *     This software is copyrighted by R.K.Owen,Ph.D. 1997
+ *
+ * The author, R.K.Owen, of this software is not liable for any
+ * problems WHATSOEVER which may result from use  or  abuse  of
+ * this software. The author, R.K.Owen, grants unlimited rights
+ * to anyone who uses and modifies this  software  for  private
+ * non-commercial  use  as  long  as  this copyright and rights
+ * notice remains in this software and is made available to all
+ * recipients of this software.
+ *
+ * last known email: rkowen@kudonet.com
+ *                   rk@owen.sj.ca.us
+ *
+ *********************************************************************
+ */
+
+#include <stdio.h>
+#include <string.h>
+
+/* define default delimiters for directories & extensions */
+#define DIRCHAR '/'
+#define EXTCHAR '.'
+
+char *strDBEcpy(char *path, char *base, char *ext,
+	char dirchar, char extchar, const char *filename) {
+
+	const char *name = filename;
+	char *ptr;
+	size_t len;
+
+/* set defaults - if needed */
+	if (dirchar == '\0') dirchar = DIRCHAR;
+	if (extchar == '\0') extchar = EXTCHAR;
+
+/* find the path name */
+	ptr = strrchr(name, (int) dirchar);
+	if (ptr == (char *) NULL) {
+		*path = '\0';			/* no path found */
+	} else {
+		len = ptr - name + 1;
+		(void) strncpy(path, name, len);
+		path[len] = '\0';
+		name = ptr + 1;
+	}
+/* find the base name */
+	ptr = strrchr(name, (int) extchar);
+	if (ptr == (char *) NULL) {
+		(void) strcpy(base, name);	/* no extension found */
+	} else {
+		len = ptr - name;
+		(void) strncpy(base, name, len);
+		base[len] = '\0';
+		name = ptr;
+	}
+/* find the extension */
+	if (ptr == (char *) NULL) {
+		*ext = '\0';			/* no extension */
+	} else {
+		(void) strcpy(ext, name);
+	}
+	return (char *)filename;
+}

@@ -1,0 +1,123 @@
+: COMMAND :xxx
+: EOL :
+
+: COMMAND :xxx
+: START_COMMENT :#
+: EOL :
+
+: COMMAND :xxx1
+: WORD :-e
+: WORD :what is this string?
+: EOC :;
+: COMMAND :xxx2
+: WORD :-2
+: WORD :what's # for?
+: EOL :
+
+: COMMAND :xxx1
+: WORD :-e
+: WORD :what is this string?
+: EOC :;
+: COMMAND :xxx2
+: WORD :-2
+: WORD :Say what?
+: EOL :
+
+: COMMAND :xxx1
+: WORD :-e
+: WORD :1
+: AMPER_AMPER :&&
+: COMMAND :xxx2
+: WORD :-x
+: EOC :;
+: COMMAND :xxx3
+: EOL :
+
+: COMMAND :xxx1
+: WORD :-e
+: WORD :1
+: BAR_BAR :||
+: COMMAND :xxx2
+: WORD :-x
+: AMPER_AMPER :&&
+: COMMAND :xxx3
+: EOL :
+
+: COMMAND :xxx
+: LESS_THAN :<
+: WORD :file
+: EOL :
+
+: COMMAND :xxx
+: GREATER_THAN :>
+: WORD :file
+: EOL :
+
+: COMMAND :xxx
+: GREATER_GREATER :>>
+: WORD :file
+: EOL :
+
+: COMMAND :xxx
+: LESS_THAN :<
+: WORD :file1
+: GREATER_THAN :>
+: WORD :file2
+: EOL :
+
+: COMMAND :xxx
+: NUMBER :3
+: GREATER_THAN :>
+: WORD :file3
+: NUMBER :2
+: GREATER_GREATER :>>
+: WORD :file2
+: NUMBER :1
+: GREATER_AMPER :>&
+: NUMBER :2
+: EOL :
+
+: COMMAND :xxx
+: NUMBER :3
+: LESS_THAN :<
+: WORD :file3
+: EOL :
+
+: COMMAND :xxx
+: GREATER_AMPER :>&
+: EOL :
+
+: COMMAND :xxx
+: LESS_AMPER :<&
+: EOL :
+
+: COMMAND :xxx
+: WORD :2
+: NUMBER :2
+: GREATER_AMPER :>&
+: NUMBER :1
+: WORD :1
+: EOL :
+
+: COMMAND :xxx
+: WORD :2
+: NUMBER :2
+: GREATER_AMPER :>&
+: WORD :1
+: EOL :
+
+: COMMAND :xxx
+: NUMBER :2
+: GREATER_AMPER :>&
+: NUMBER :1
+: EOL :
+
+: COMMAND :xxx1
+: NUMBER :2
+: GREATER_AMPER :>&
+: NUMBER :1
+: EOC :;
+: COMMAND :xxx2
+: EOL :
+
+mini-sh.lex: end of input

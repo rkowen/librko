@@ -1,0 +1,84 @@
+.\" USMID %W%
+.\" RCSID @(#)$Id: nameread.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" LIBDIR
+.TH "nameread" "3rko" "12 May 1995"
+.SH NAME
+nameread \- a namelist-like reads a line of text for variables and values
+.SH SYNOPSIS
+
+ #include "librko.h"
+ defines the following
+ #define NAMETOL(a,b)	nametol(a,#b,&b)
+ #define NAMETOD(a,b)	nametod(a,#b,&b)
+
+ int nametol(const char *line, const char *name, long *value);
+ int nametod(const char *line, const char *name, double *value);
+
+.SH DESCRIPTION
+.I nameread
+\- reads a line of text and finds the integer or double variable name 
+and sets the value.
+This is somewhat simular to the FORTRAN NAMELIST functionality
+(but not really).
+It ignores any line that begins with '#' as the first non-white
+space character.
+nameread returns 0 if it doesn't match the variable name,
+returns 1 if it successfully matches and sets the value,
+and returns < 0 if an error occurs.
+
+.I nametol
+reads the line and parses for the name and if it matches then
+it deposits the long value into the variable.  Use the macro
+.I NAMETOL
+if the name and the variable's name match.
+
+.I nametod
+reads the line and parses for the name and if it matches then
+it deposits the double value into the variable.  Use the macro
+.I NAMETOD
+if the name and the variable's name match.
+
+.SH SEE ALSO
+atol(3),atof(3)
+
+.SH NOTES
+
+Example input file:
+    var	=	-1
+    set = -3
+    # a useless comment
+    index   =		3
+    r1=2.0
+    r2	=2.0
+    r3  =  3.00
+    # the following will have no effect
+    extra	= 4.
+
+The following code fragment demonstrates how to use the nameread
+functions.
+Note that for most efficient use is to read a line from the input
+file and to loop over the entire list of variables to parse.
+
+ #include <stdio.h>
+ #include "librko.h"
+
+ int main() {
+ long var=1, index=1, SET=1;
+ double r1=1., r2=1., R3=1.;
+ char buffer[200];
+ ...
+   while(fgets(buffer,200,inputfile),!feof(inputfile)) {
+       (void) NAMETOL(buffer, step);
+       (void) NAMETOL(buffer, index);
+       (void) nametol(buffer, "set", &SET);
+       (void) nametod(buffer, "r2", &R3);
+       (void) NAMETOD(buffer, r2);
+       (void) NAMETOD(buffer, r1);
+   }
+ ...
+ }
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

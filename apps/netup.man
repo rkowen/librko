@@ -1,0 +1,35 @@
+.\" LIBDIR
+.TH "NETUP" "1rko" "12 May 1996"
+.SH NAME
+netup \- connects to a host & port return status reflects success or failure
+.SH SYNOPSIS
+
+ netup \fR[\fB-v\fR][\fB-p port#\fR] hostname
+
+.SH DESCRIPTION
+.I netup
+- connects to a host & port number (defaults to ECHO_PORT)
+with the TCP protocol.  The hostname can either be
+host.domain or 4 octet IP address.  If the port number is
+the ECHO_PORT, then it tests the connection.  returns 0 if
+the connection is up, else returns > 0 otherwise.
+This is mostly useful for a SLIP connection to test whether
+it's still up or not and to take corrective action or not.
+.br
+The -v option causes some verbose output to stdout
+
+Why is
+.I netup
+necessary?
+Because
+.I ping
+often times does not return a failure status on many systems if it fails
+to establish a connection with a host.
+
+.SH SEE ALSO
+ping(1)
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

@@ -1,0 +1,76 @@
+#!/bin/sh
+#
+# simple script to ``automagically'' craft a Makefile for a given apps
+# package
+#
+usage() {
+	cat <<!
+
+setupmake - collects files & creates a generic Makefile for a given package
+
+usage: setupmake package_name files ...
+
+where package_name is the package/directory/executable name for
+the given application built on top of the librko library.
+
+!
+exit -1
+}
+
+if [ $# -eq 0 ]
+then
+	usage
+fi
+
+#strip away Package Name
+PkgNm=$1
+shift
+
+# copy all the files to the new directory
+mkdir $PkgNm
+cp $* $PkgNm
+
+# goto the new directory
+cd $PkgNm
+
+HPkg="`echo *.h | grep -v '*'`"
+Code="`echo *.c | grep -v '*'`"
+Pkg="$Code $HPkg"
+#echo Pkg = $Pkg
+#echo Code = $Code
+
+cat > Makefile <<!
+#
+# Generic Makefile for the $PkgNm package built on top of librko
+#  created by the setupmake script - `date`
+#
+
+ROOT	=	/usr/local
+NROFF	=	nroff
+
+all : $PkgNm $PkgNm.1
+
+install : all
+	-install -m 755 $PkgNm \$(ROOT)/bin
+	-install -m 644 $PkgNm.man \$(ROOT)/man/man1
+	-install -m 644 $PkgNm.1 \$(ROOT)/man/cat1
+
+uninstall :
+	-rm -f	\$(ROOT)/bin/$PkgNm		\\
+		\$(ROOT)/man/man1/$PkgNm.1 	\\
+		\$(ROOT)/man/cat1/$PkgNm.1
+
+$PkgNm : $Pkg
+	\$(CC) \$(CFLAGS) -o $PkgNm $Code
+
+$PkgNm.1 : $PkgNm.man
+	\$(NROFF) -man $PkgNm.man > $PkgNm.1
+
+clean :
+	-rm *.o a.out core
+
+clobber : clean
+	-rm $PkgNm $PkgNm.1
+
+!
+exit

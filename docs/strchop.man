@@ -1,0 +1,62 @@
+.\" USMID %W%
+.\" RCSID @(#)$Id: strchop.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" LIBDIR
+.TH "STRCHOP" "3rko" "05 Nov 1995"
+.SH NAME
+strchop \- chops a string at the spaces (as determined by isspace())
+and behaves in a similar manner to strtok in some aspects.
+.SH SYNOPSIS
+
+ #include "librko.h"
+ char *strchop(const char *string, int chop_len,
+	size_t *str_len, char **next);
+
+.SH DESCRIPTION
+.TP 15
+string
+The "string" to chop up else use NULL if continuing
+with the same one from a previous call.
+the "string" contents area can not be changed between
+successive calls of
+.IR strchop .
+.TP
+chop_len
+Maximum length of returned strings, if less than 0 then
+.I strchop
+frees up internal memory.
+.TP
+str_len
+returned string length if not NULL
+.TP
+next
+pointer to the start of next text area of "string"
+if not NULL.  If no more is left then returns NULL.
+.TP
+strchop
+returns a pointer to an internal area that contains
+the "chopped" string with length less than or equal to
+.I chop_len
+else returns NULL if no more to do or an error.
+.SH SEE ALSO
+rkoerror(3), strtok(3)
+.\" crontab(1),stat(2),libmon(8)
+.SH DIAGNOSTICS
+If compiled with
+.I rkoerror
+handling
+The error condition can be checked by first determining if
+.I rkoerrno
+is not equal to RKO_OK and then the error message can be sent to stderr
+with
+.IR rkoperror .
+This is the default behavior in librko.a
+.SH BUGS
+If the string contents are changed between successive calls to
+.I strchop
+the internal pointers are then meaningless and the output will reflect
+the current text within the string area.
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

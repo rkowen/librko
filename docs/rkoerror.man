@@ -1,0 +1,104 @@
+.\" USMID %W%
+.\" RCSID @(#)$Id: rkoerror.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" LIBDIR
+.TH "RKOERROR" "3rko" "12 May 1995"
+.SH NAME
+rkoerror \- a package of routines for handling error messages
+associated with the librko library.
+.SH SYNOPSIS
+
+ #include "librko.h"
+ extern int rkoerrno;
+
+ void rkoperror(const char *s);
+ char *rkostrerror(void);
+ char *rkocpyerror(const char *s);
+ char *rkocaterror(const char *s);
+ char *rkopsterror(const char *s);
+
+.SH DESCRIPTION
+.TP 15
+.I rkoperror
+Similar to
+.I perror
+and it prints the
+.I librko
+error message to stderr.
+
+.TP
+.I rkostrerror
+Similar to
+.I strerror
+in that it returns a pointer to the
+.I librko
+error message buffer.
+
+.TP
+.I rkocpyerror
+Copies the message to the 
+.I librko
+error message buffer.
+
+.TP
+.I rkocaterror
+Concatenate or appends the message to the 
+.I librko
+error message buffer.
+
+.TP
+.I rkopsterror
+Paste or prepend the message to the 
+.I librko
+error message buffer.
+
+.PP
+The following are the values that
+.I rkoerrno
+can take on.
+The purpose is to detect an error condition in cases when a librko function
+may not unambiguously indicate an error condition.
+An error condition is indicated when
+.I rkoerrno
+is non-zero.
+The list of acceptable values are given by the following macros in librko.h
+.TP 15
+RKO_OK
+Everything is OK ... no problems whatsoever
+.TP
+RKOGENERR
+A general error and also indicates exceptional conditions that should
+not ever be executed.
+.TP
+RKOSIGERR
+A signal error or signal function error.
+.TP
+RKOSIGNAL
+A signal has been sent.
+.TP
+RKOMEMERR
+A memory error, usually associated with the malloc-like functions.
+.TP
+RKOIOERR
+Indicates an input/output error of some type.
+.TP
+RKOUSEERR
+User error.  The input to the librko function includes some obviously incorrect
+values.
+
+.SH SEE ALSO
+perror(3),strerror(3)
+.\" crontab(1),stat(2),libmon(8)
+
+.SH NOTES
+Anything that may cause an overflow returns (char *) NULL.
+
+.SH BUGS
+The 
+.I librko
+error message buffer is only 1024 characters long and resulting error messages
+longer than this are truncated.
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

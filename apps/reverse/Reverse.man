@@ -1,0 +1,39 @@
+.\" USMID %W%
+.TH REVERSE 1 "24 Nov 1994"
+.SH NAME
+reverse \- reverse the order of lines from a
+bunch of files or from stdin.
+.SH SYNOPSIS
+.B reverse
+\fR[\fB\-h\fR][\fB\-\-\fR]
+.RB [ file
+.RB [ file ] \&.\|.\|. ]
+.SH DESCRIPTION
+.I reverse
+reads through the given files and collects the lines into memory and
+outputs all lines
+in reverse order to
+.IR stdout .
+It's the opposite of \`cat\'ing a file.
+.SH OPTIONS
+.TP 12
+.B \-h
+Printout the usage message to
+.IR stderr .
+.TP
+.B \-\-
+ends the options list so that files the begin with \`\-\' and be processed.
+.SH FILES
+.nf
+BINDIR/reverse
+.fi
+.SH SEE ALSO
+sort(1),cat(1),randomize(1)
+.SH AUTHOR
+R.K. Owen,Ph.D. (email: rkowen@nas.nasa.gov or rkowen@ames.arc.nasa.gov)
+.SH DIAGNOSTICS
+Lack of memory will give diagnostic messages and terminates further processing.
+Unreadable files also give messages, but does not stop further processing.
+.SH BUGS
+The input line length is limited to 2048 characters.  It does not notify
+whether the input line was truncated.

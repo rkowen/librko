@@ -1,0 +1,58 @@
+.\" USMID %W%
+.\" RCSID @(#)$Id: foptim.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" LIBDIR
+.TH "FOPTIM" "3rko" "12 May 1995"
+.SH NAME
+foptim \- finds the minimum or maximum of f(x) within the interval [ax,bx]
+.SH SYNOPSIS
+
+ #include "librko.h"
+ PRECISION foptim(int iopt, PRECISION ax, PRECISION bx,
+                 PRECISION (*f)(PRECISION), PRECISION tol);
+
+.SH DESCRIPTION
+.I foptim()
+returns the minimum or maximum of f(x) within the interval [ax,bx].
+.TP 15
+iopt
+=> 0 for maximum or < 0 for minimum
+.TP
+ax
+= left  endpoint of the initial interval
+.TP
+bx
+= right endpoint of the initial interval
+.TP
+f
+= function subprogram which evaluates f(x) for any x in
+the interval [ax,bx]
+.TP
+tol
+= desired length of the interval of uncertainty of any
+final result ( must be >= 0.)
+.TP
+return value
+= foptim ordinate approximating an optimum of f(x)
+in the interval [ax,bx]
+
+foptim returns an optimum in the given interval [ax,bx] to within a
+tolerance 3*sqrt(eps)*abs(x) + tol, where eps is the relative machine
+precision such that eps is the smallest number + 1 that is different
+from 1.
+
+.SH SEE ALSO
+fzeroin(3rko)
+
+.SH NOTES
+The type PRECISION is normally set to double in librko.h
+
+This is based on the Fortran subroutine FMIN() in FMMLIB presented in
+"Introduction to Numerical Analysis" by Forsythe, Malcolm, and Moler,
+which is a slightly modified translation of the ALGOL 60 procedure LOCALMIN
+given by Richard Brent, "Algorithms for Minimization without Derivatives",
+Prentice-Hall, Inc. (1973).
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

@@ -1,0 +1,17 @@
+#!/bin/sh
+# exec this script to awk since it's found at either /usr/bin or /bin
+# and will put the whatis.librko file into a man page friendly
+# format for librko.man
+#
+# by R.K.Owen,Ph.D. 11/19/97
+#
+exec awk '
+BEGIN{ FS="-" }
+/^ *$/{next}
+{	print ".TP 15"
+	print $1
+	printf "\\- %s", $2
+	for (i = 3; i <= NF; ++i) printf "-%s", $i;
+	print ""
+}
+' whatis.librko

@@ -1,0 +1,62 @@
+.\" USMID %W%
+.\" RCSID @(#)$Id: timedfgets.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" LIBDIR
+.TH "TIMEDFGETS" "3rko" "2 June 1995"
+.SH NAME
+timedfgets \- performs an fgets and times out if input is not received by the
+specified amount of time.
+
+.SH SYNOPSIS
+
+ #include <errno.h>
+ #include "librko.h"
+ int timedfgets(char *buf, int size, FILE *stream, int seconds);
+
+.SH DESCRIPTION
+.I timedfgets
+reads a line of input from stream and writes it to buf in accordance of
+the rules of fgets.  If it does not receive the input within
+the specified time, then it returns with a value of -1, and sets
+errno to EINTR.  If it receives an EOF instead, it returns -1 and sets
+errno to EIO.  If any other error is detected it sets
+.I rkoerrno
+to non-zero and writes a message that can be read with
+.I rkoperror
+or
+.IR rkostrerror .
+
+.SH SEE ALSO
+fgets(3), errno(2), rkoerror(3)
+
+.SH NOTES
+
+The typical usage is given as follows:
+
+ char buffer[512];
+ status = timedfgets(buffer,sizeof(buffer),stdin,seconds);
+
+ if (status < 0) {
+   if (rkoerrno == RKO_OK) {
+     if (errno == EINTR)
+       fprintf (stderr, "Time out!\\n");
+     if (errno == EIO)
+       fprintf (stderr, "No data read, hit EOF\\n");
+   } else {
+     rkoperror(ProgramName);
+   }
+ } else {
+   fprintf (stderr, "\\nInput received: %s", buffer);
+ }
+
+
+.SH DIAGNOSTICS
+
+If status < 0 then check rkoerrno.  If rkoerrno is 0 then check errno.
+
+.SH BUGS
+None detected yet.
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

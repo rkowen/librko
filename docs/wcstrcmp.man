@@ -1,0 +1,32 @@
+.\" USMID %W%
+.\" RCSID @(#)$Id: wcstrcmp.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" LIBDIR
+.TH "WCSTRCMP" "3rko" "12 May 1995"
+.SH NAME
+wcstrcmp \- compares two strings, one contains wildcard characters.
+.SH SYNOPSIS
+
+ #include "librko.h"
+ int wcstrcmp(const char *str, const char *wcstr);
+
+.SH DESCRIPTION
+.I wcstrcmp
+\- compares two strings, where one can contain wildcard characters.
+the allowed wild cards are '*' to match any number of characters and
+'?' to match a single character.  These wild card characters can be
+escaped by preceding them with a '\'.  A '\\' before a wild card has
+no effect on the wild card and the '\\' is treated as a single '\'
+(escaping the escape character).  Remember an extra '\' may be required
+for each of the '\' for the 'C' compilation parsing.
+If there is a match then it returns 0, else it is non-zero.
+
+.SH SEE ALSO
+strcmp(3)
+
+.SH DIAGNOSTICS
+Will printout an error message to stderr on an impossible error.
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
+
+.KEY WORDS

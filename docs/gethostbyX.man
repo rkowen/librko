@@ -1,0 +1,32 @@
+.\" USMID %W%
+.\" RCSID @(#)$Id: gethostbyX.man,v 1.1 1998/10/07 16:19:56 rk Exp $
+.\" LIBDIR
+.TH "GETHOSTBYX" "3rko" "26 Mar 1996"
+.SH NAME
+gethostbyX \- gets the host entry from either the hostname or IP address
+.SH SYNOPSIS
+
+ #include "librko.h"
+ struct hostent *gethostbyX(char *hostX);
+
+.SH DESCRIPTION
+.I gethostbyX
+is essentially a generalized replacement for
+.I gethostbyname()
+and
+.IR gethostbyaddr() .
+Either the hostname or IP address can be passed as character strings to
+.IR gethostbyX() .
+It returns a pointer to a hostent struct, which points to a internal
+storage area.  Subsequent calls to gethostby...() may overwrite this
+storage location.
+If there is a problem then a NULL will be returned for the hostent pointer.
+See the gethostby...() man pages concerning how to interpret
+.IR h_error ,
+which contains the error number.
+
+.SH SEE ALSO
+gethostbyname(3), gethostbyaddr(3)
+
+.SH AUTHOR
+R.K.Owen,Ph.D.
