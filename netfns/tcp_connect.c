@@ -1,5 +1,4 @@
 static const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: tcp_connect.c,v 1.2 1998/10/14 15:16:10 rk Exp $";
 static const char AUTHOR[]="@(#)tcp_connect 1.0 03/26/96 R.K.Owen,Ph.D.";
 
 /* tcp_connect - connects to a host & port number with the TCP protocol.
@@ -14,7 +13,7 @@ static const char AUTHOR[]="@(#)tcp_connect 1.0 03/26/96 R.K.Owen,Ph.D.";
 /*
  *********************************************************************
  *
- *     This software is copyrighted by R.K.Owen,Ph.D. 1997
+ *     This software is copyrighted by R.K.Owen,Ph.D. 1996
  *
  * The author, R.K.Owen, of this software is not liable for any
  * problems WHATSOEVER which may result from use  or  abuse  of
@@ -25,7 +24,8 @@ static const char AUTHOR[]="@(#)tcp_connect 1.0 03/26/96 R.K.Owen,Ph.D.";
  * recipients of this software.
  *
  * last known email: rk@owen.sj.ca.us
- *                   rkowen@ckns.net
+ *                   rkowen@kudonet.com
+ *                   smbd89a@prodigy.com
  *
  *********************************************************************
  */
@@ -41,9 +41,10 @@ static const char AUTHOR[]="@(#)tcp_connect 1.0 03/26/96 R.K.Owen,Ph.D.";
 #include <netinet/in.h>
 #include "librko.h"
 
-#define HERRNO_LEN 128
+#ifndef _CRAY
+#  define HERRNO_LEN 128
 /* quick routine that should have been provided with herror */
-static char * hstrerror() {
+static const char *hstrerror(int hh_errno) {
 	extern int h_errno;
 	char *ptr;
 
@@ -56,18 +57,20 @@ static char * hstrerror() {
 	}
 	return ptr;
 }
+#endif
 
 int tcp_connect(char *hostname, int port_num) {
 	struct hostent *hostinfo;
 	struct sockaddr_in sock_addr;
 	int sd, status;
+	extern int h_errno;
 
 	hostinfo = gethostbyX(hostname);
 
 	if (hostinfo == (struct hostent *)NULL) {
 #ifdef RKOERROR
 		rkocpyerror("tcp_connect : failed connection : ");
-		rkocaterror(hstrerror());
+		rkocaterror(hstrerror(h_errno));
 #endif
 		return -1;
 	}
@@ -75,7 +78,7 @@ int tcp_connect(char *hostname, int port_num) {
 	if (hostinfo->h_addrtype != AF_INET) {
 #ifdef RKOERROR
 		rkocpyerror("tcp_connect : not TCP/IP : ");
-		rkocaterror(hstrerror());
+		rkocaterror(hstrerror(h_errno));
 #endif
 		return -1;
 	}

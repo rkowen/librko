@@ -1,5 +1,5 @@
 static const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: timedfgets.c,v 1.2 1998/10/14 15:16:10 rk Exp $";
+static const char RCSID[]="@(#)$Id: timedfgets.c,v 1.3 1998/10/23 20:20:55 rk Exp $";
 static const char AUTHOR[]="@(#)timedfgets 1.0 03/26/96 R.K.Owen,Ph.D.";
 /* timedfgets  -  performs an fgets and times out if input is
  * not received by the specified amount of time.
@@ -32,6 +32,9 @@ static const char AUTHOR[]="@(#)timedfgets 1.0 03/26/96 R.K.Owen,Ph.D.";
 #ifdef RKOERROR
 #  include "librko.h"
 #endif
+#ifndef SA_RESTART
+#  define NO_SA_RESTART
+#endif
 
 static jmp_buf TFGSjumpbuffer;		/* longjump global variable */
 
@@ -53,7 +56,9 @@ int timedfgets(char *buf, int size, FILE *stream, int seconds) {
 	/* set-up interrupt for SIGALRM */
 	newsigalrm.sa_handler = TFGSsigalrm_handler;
 	sigemptyset(&newsigalrm.sa_mask);
+#ifndef NO_SA_RESTART
 	newsigalrm.sa_flags = SA_RESTART;
+#endif
 
 	if (sigaction(SIGALRM, &newsigalrm, &oldsigalrm) < 0) {
 #ifdef RKOERROR

@@ -1,6 +1,4 @@
-
 static const char USMID[]="%W%";
-static const char RCSID[]="@(#)$Id: gethostbyX.c,v 1.2 1998/10/14 15:16:09 rk Exp $";
 static const char AUTHOR[]="@(#)gethostbyX 1.0 03/26/96 R.K.Owen,Ph.D.";
 
 /* gethostbyX.c - accepts either input sutiable for gethostbyname
@@ -12,7 +10,7 @@ static const char AUTHOR[]="@(#)gethostbyX 1.0 03/26/96 R.K.Owen,Ph.D.";
 /*
  *********************************************************************
  *
- *     This software is copyrighted by R.K.Owen,Ph.D. 1997
+ *     This software is copyrighted by R.K.Owen,Ph.D. 1998
  *
  * The author, R.K.Owen, of this software is not liable for any
  * problems WHATSOEVER which may result from use  or  abuse  of
@@ -34,6 +32,7 @@ static const char AUTHOR[]="@(#)gethostbyX 1.0 03/26/96 R.K.Owen,Ph.D.";
 #endif
 
 #include <netdb.h>		/* gethostbyname, gethostbyaddr */
+#include <sys/types.h>		/* socket.h */
 #include <sys/socket.h>		/* inet_addr */
 #include <netinet/in.h>		/* inet_addr */
 #include <arpa/inet.h>		/* inet_addr */

@@ -27,48 +27,48 @@ sedlex () {
 #  need to make sure it's an isolated C name
 #	ppre="\([^a-zA-Z_]\)"
 #	ppost="\([^a-zA-Z_]\)"
-	ppre="\(\)\b"
-	ppost="\b\(\)"
+	ppre="\b"
+	ppost="\b"
 sed \
-	-e "s/${ppre}yyback${ppost}/\1${prefix}back\2/g" \
-	-e "s/${ppre}yybgin${ppost}/\1${prefix}bgin\2/g" \
-	-e "s/${ppre}yycrank${ppost}/\1${prefix}crank\2/g" \
-	-e "s/${ppre}yyerror${ppost}/\1${prefix}error\2/g" \
-	-e "s/${ppre}yyestate${ppost}/\1${prefix}estate\2/g" \
-	-e "s/${ppre}yyextra${ppost}/\1${prefix}extra\2/g" \
-	-e "s/${ppre}yyfnd${ppost}/\1${prefix}fnd\2/g" \
-	-e "s/${ppre}yyin${ppost}/\1${prefix}in\2/g" \
-	-e "s/${ppre}yyinput${ppost}/\1${prefix}input\2/g" \
-	-e "s/${ppre}yyleng${ppost}/\1${prefix}leng\2/g" \
-	-e "s/${ppre}yylex${ppost}/\1${prefix}lex\2/g" \
-	-e "s/${ppre}yylineno${ppost}/\1${prefix}lineno\2/g" \
-	-e "s/${ppre}yylook${ppost}/\1${prefix}look\2/g" \
-	-e "s/${ppre}yylsp${ppost}/\1${prefix}lsp\2/g" \
-	-e "s/${ppre}yylstate${ppost}/\1${prefix}lstate\2/g" \
-	-e "s/${ppre}yylval${ppost}/\1${prefix}lval\2/g" \
-	-e "s/${ppre}yymatch${ppost}/\1${prefix}match\2/g" \
-	-e "s/${ppre}yymorfg${ppost}/\1${prefix}morfg\2/g" \
-	-e "s/${ppre}yyolsp${ppost}/\1${prefix}olsp\2/g" \
-	-e "s/${ppre}yyout${ppost}/\1${prefix}out\2/g" \
-	-e "s/${ppre}yyoutput${ppost}/\1${prefix}output\2/g" \
-	-e "s/${ppre}yyprevious${ppost}/\1${prefix}previous\2/g" \
-	-e "s/${ppre}yysbuf${ppost}/\1${prefix}sbuf\2/g" \
-	-e "s/${ppre}yysptr${ppost}/\1${prefix}sptr\2/g" \
-	-e "s/${ppre}yysvec${ppost}/\1${prefix}svec\2/g" \
-	-e "s/${ppre}yytchar${ppost}/\1${prefix}tchar\2/g" \
-	-e "s/${ppre}yytext${ppost}/\1${prefix}text\2/g" \
-	-e "s/${ppre}yytop${ppost}/\1${prefix}top\2/g" \
-	-e "s/${ppre}yyunput${ppost}/\1${prefix}unput\2/g" \
-	-e "s/${ppre}yyvstop${ppost}/\1${prefix}vstop\2/g" \
-	-e "s/${ppre}yywrap${ppost}/\1${prefix}wrap\2/g" \
-	-e "s/${ppre}yy_create_buffer${ppost}/\1${prefix}_create_buffer\2/g" \
-	-e "s/${ppre}yy_delete_buffer${ppost}/\1${prefix}_delete_buffer\2/g" \
-	-e "s/${ppre}yy_flex_debug${ppost}/\1${prefix}_flex_debug\2/g" \
-	-e "s/${ppre}yy_init_buffer${ppost}/\1${prefix}_init_buffer\2/g" \
-	-e "s/${ppre}yy_flush_buffer${ppost}/\1${prefix}_flush_buffer\2/g" \
-	-e "s/${ppre}yy_load_buffer${ppost}/\1${prefix}_load_buffer\2/g" \
-	-e "s/${ppre}yy_switch_to_buffer${ppost}/\1${prefix}_switch_to_buffer\2/g" \
-	-e "s/${ppre}yyrestart${ppost}/\1${prefix}restart\2/g"
+	-e "s/${ppre}yyback${ppost}/${prefix}back/g" \
+	-e "s/${ppre}yybgin${ppost}/${prefix}bgin/g" \
+	-e "s/${ppre}yycrank${ppost}/${prefix}crank/g" \
+	-e "s/${ppre}yyerror${ppost}/${prefix}error/g" \
+	-e "s/${ppre}yyestate${ppost}/${prefix}estate/g" \
+	-e "s/${ppre}yyextra${ppost}/${prefix}extra/g" \
+	-e "s/${ppre}yyfnd${ppost}/${prefix}fnd/g" \
+	-e "s/${ppre}yyin${ppost}/${prefix}in/g" \
+	-e "s/${ppre}yyinput${ppost}/${prefix}input/g" \
+	-e "s/${ppre}yyleng${ppost}/${prefix}leng/g" \
+	-e "s/${ppre}yylex${ppost}/${prefix}lex/g" \
+	-e "s/${ppre}yylineno${ppost}/${prefix}lineno/g" \
+	-e "s/${ppre}yylook${ppost}/${prefix}look/g" \
+	-e "s/${ppre}yylsp${ppost}/${prefix}lsp/g" \
+	-e "s/${ppre}yylstate${ppost}/${prefix}lstate/g" \
+	-e "s/${ppre}yylval${ppost}/${prefix}lval/g" \
+	-e "s/${ppre}yymatch${ppost}/${prefix}match/g" \
+	-e "s/${ppre}yymorfg${ppost}/${prefix}morfg/g" \
+	-e "s/${ppre}yyolsp${ppost}/${prefix}olsp/g" \
+	-e "s/${ppre}yyout${ppost}/${prefix}out/g" \
+	-e "s/${ppre}yyoutput${ppost}/${prefix}output/g" \
+	-e "s/${ppre}yyprevious${ppost}/${prefix}previous/g" \
+	-e "s/${ppre}yysbuf${ppost}/${prefix}sbuf/g" \
+	-e "s/${ppre}yysptr${ppost}/${prefix}sptr/g" \
+	-e "s/${ppre}yysvec${ppost}/${prefix}svec/g" \
+	-e "s/${ppre}yytchar${ppost}/${prefix}tchar/g" \
+	-e "s/${ppre}yytext${ppost}/${prefix}text/g" \
+	-e "s/${ppre}yytop${ppost}/${prefix}top/g" \
+	-e "s/${ppre}yyunput${ppost}/${prefix}unput/g" \
+	-e "s/${ppre}yyvstop${ppost}/${prefix}vstop/g" \
+	-e "s/${ppre}yywrap${ppost}/${prefix}wrap/g" \
+	-e "s/${ppre}yy_create_buffer${ppost}/${prefix}_create_buffer/g" \
+	-e "s/${ppre}yy_delete_buffer${ppost}/${prefix}_delete_buffer/g" \
+	-e "s/${ppre}yy_flex_debug${ppost}/${prefix}_flex_debug/g" \
+	-e "s/${ppre}yy_init_buffer${ppost}/${prefix}_init_buffer/g" \
+	-e "s/${ppre}yy_flush_buffer${ppost}/${prefix}_flush_buffer/g" \
+	-e "s/${ppre}yy_load_buffer${ppost}/${prefix}_load_buffer/g" \
+	-e "s/${ppre}yy_switch_to_buffer${ppost}/${prefix}_switch_to_buffer/g" \
+	-e "s/${ppre}yyrestart${ppost}/${prefix}restart/g"
 }
 
 sedyacc () {
@@ -76,34 +76,34 @@ sedyacc () {
 #  need to make sure it's an isolated C name
 #	ppre="\([^a-zA-Z_]\)"
 #	ppost="\([^a-zA-Z_]\)"
-	ppre="\(\)\b"
-	ppost="\b\(\)"
+	ppre="\b"
+	ppost="\b"
 sed \
-	-e "s/${ppre}yyact${ppost}/\1${prefix}act\2/g" \
-	-e "s/${ppre}yychar${ppost}/\1${prefix}char\2/g" \
-	-e "s/${ppre}yychk${ppost}/\1${prefix}chk\2/g" \
-	-e "s/${ppre}yydebug${ppost}/\1${prefix}debug\2/g" \
-	-e "s/${ppre}yydef${ppost}/\1${prefix}def\2/g" \
-	-e "s/${ppre}yyerrflag${ppost}/\1${prefix}errflag\2/g" \
-	-e "s/${ppre}yyerror${ppost}/\1${prefix}error\2/g" \
-	-e "s/${ppre}yyexca${ppost}/\1${prefix}exca\2/g" \
-	-e "s/${ppre}yylex${ppost}/\1${prefix}lex\2/g" \
-	-e "s/${ppre}yylval${ppost}/\1${prefix}lval\2/g" \
-	-e "s/${ppre}yynerrs${ppost}/\1${prefix}nerrs\2/g" \
-	-e "s/${ppre}yypact${ppost}/\1${prefix}pact\2/g" \
-	-e "s/${ppre}yyparse${ppost}/\1${prefix}parse\2/g" \
-	-e "s/${ppre}yypgo${ppost}/\1${prefix}pgo\2/g" \
-	-e "s/${ppre}yyps${ppost}/\1${prefix}ps\2/g" \
-	-e "s/${ppre}yypv${ppost}/\1${prefix}pv\2/g" \
-	-e "s/${ppre}yyr1${ppost}/\1${prefix}r1\2/g" \
-	-e "s/${ppre}yyr2${ppost}/\1${prefix}r2\2/g" \
-	-e "s/${ppre}yyreds${ppost}/\1${prefix}reds\2/g" \
-	-e "s/${ppre}yys${ppost}/\1${prefix}s\2/g" \
-	-e "s/${ppre}yystate${ppost}/\1${prefix}state\2/g" \
-	-e "s/${ppre}yytmp${ppost}/\1${prefix}tmp\2/g" \
-	-e "s/${ppre}yytoks${ppost}/\1${prefix}toks\2/g" \
-	-e "s/${ppre}yyv${ppost}/\1${prefix}v\2/g" \
-	-e "s/${ppre}yyval${ppost}/\1${prefix}val\2/g"
+	-e "s/${ppre}yyact${ppost}/${prefix}act/g" \
+	-e "s/${ppre}yychar${ppost}/${prefix}char/g" \
+	-e "s/${ppre}yychk${ppost}/${prefix}chk/g" \
+	-e "s/${ppre}yydebug${ppost}/${prefix}debug/g" \
+	-e "s/${ppre}yydef${ppost}/${prefix}def/g" \
+	-e "s/${ppre}yyerrflag${ppost}/${prefix}errflag/g" \
+	-e "s/${ppre}yyerror${ppost}/${prefix}error/g" \
+	-e "s/${ppre}yyexca${ppost}/${prefix}exca/g" \
+	-e "s/${ppre}yylex${ppost}/${prefix}lex/g" \
+	-e "s/${ppre}yylval${ppost}/${prefix}lval/g" \
+	-e "s/${ppre}yynerrs${ppost}/${prefix}nerrs/g" \
+	-e "s/${ppre}yypact${ppost}/${prefix}pact/g" \
+	-e "s/${ppre}yyparse${ppost}/${prefix}parse/g" \
+	-e "s/${ppre}yypgo${ppost}/${prefix}pgo/g" \
+	-e "s/${ppre}yyps${ppost}/${prefix}ps/g" \
+	-e "s/${ppre}yypv${ppost}/${prefix}pv/g" \
+	-e "s/${ppre}yyr1${ppost}/${prefix}r1/g" \
+	-e "s/${ppre}yyr2${ppost}/${prefix}r2/g" \
+	-e "s/${ppre}yyreds${ppost}/${prefix}reds/g" \
+	-e "s/${ppre}yys${ppost}/${prefix}s/g" \
+	-e "s/${ppre}yystate${ppost}/${prefix}state/g" \
+	-e "s/${ppre}yytmp${ppost}/${prefix}tmp/g" \
+	-e "s/${ppre}yytoks${ppost}/${prefix}toks/g" \
+	-e "s/${ppre}yyv${ppost}/${prefix}v/g" \
+	-e "s/${ppre}yyval${ppost}/${prefix}val/g"
 }
 
 if [ $# -lt 2 ]; then
