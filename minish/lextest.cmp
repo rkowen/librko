@@ -58,6 +58,11 @@
 : EOL :
 
 : COMMAND :xxx
+: LESS_GREATER :<>
+: WORD :file
+: EOL :
+
+: COMMAND :xxx
 : LESS_THAN :<
 : WORD :file1
 : GREATER_THAN :>
@@ -79,6 +84,12 @@
 : COMMAND :xxx
 : NUMBER :3
 : LESS_THAN :<
+: WORD :file3
+: EOL :
+
+: COMMAND :xxx
+: NUMBER :3
+: LESS_GREATER :<>
 : WORD :file3
 : EOL :
 

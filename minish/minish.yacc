@@ -27,7 +27,7 @@ char **ptr;
 char buffer[20];
 
 uvec statement;
-uvec options;
+uvec minish_argv;
 
 void dbgstop(void) {
 	static int a=1;
@@ -60,8 +60,10 @@ command : COMMAND
 #ifdef YACCTEST
 			printf("command:%s\n", yytext);
 #endif
-			if (uvec_ctor(&options,10))
+			if (uvec_ctor(&minish_argv,10))
 				rkoperror("minish-yacc:o:ctor:");
+			if (uvec_add(&minish_argv,yytext))
+				rkoperror("minish-yacc:com:");
 			if (! uvec_exists(&statement)) {
 				if (uvec_ctor(&statement,10))
 					rkoperror("minish-yacc:s:ctor:");
@@ -78,7 +80,7 @@ options :	/* empty options */
 #ifdef YACCTEST
 			printf("option:%s\n", yytext);
 #endif
-			if (uvec_add(&options,yytext))
+			if (uvec_add(&minish_argv,yytext))
 				rkoperror("minish-yacc:option:");
 		}
 	;
@@ -131,6 +133,15 @@ redirect: GREATER_THAN
 #endif
 			if (uvec_add(&statement,yytext))
 				rkoperror("minish-yacc:red:");
+		}
+	| LESS_GREATER
+		{
+			fdnum = 0;	/* stdin */
+#ifdef YACCTEST
+			printf("redirect:%s\n", yytext);
+#endif
+			if (uvec_add(&statement,yytext))
+				rkoperror("minish-yacc:rw:");
 		}
 	;
 
@@ -193,51 +204,51 @@ eoc	: eol
 		{
 #ifdef YACCTEST
 			printf("eoc:%s\n", yytext);
-#endif
-			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:eoc:");
-
-			printf("options: ");
-			for (ptr = uvec_vector(&options);
+			printf("argv: ");
+			for (ptr = uvec_vector(&minish_argv);
 				*ptr != (char *) NULL; ++ptr) {
 				printf("%s ", *ptr);
 			}
 			printf("\n");
-			if (uvec_dtor(&options))
+#endif
+			if (uvec_add(&statement,yytext))
+				rkoperror("minish-yacc:eoc:");
+
+			if (uvec_dtor(&minish_argv))
 				rkoperror("minish-yacc:o:dtor:");
 		}
 	| BAR_BAR
 		{
 #ifdef YACCTEST
 			printf("eoc:%s\n", yytext);
-#endif
-			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:eoc:");
-
-			printf("options: ");
-			for (ptr = uvec_vector(&options);
+			printf("argv: ");
+			for (ptr = uvec_vector(&minish_argv);
 				*ptr != (char *) NULL; ++ptr) {
 				printf("%s ", *ptr);
 			}
 			printf("\n");
-			if (uvec_dtor(&options))
+#endif
+			if (uvec_add(&statement,yytext))
+				rkoperror("minish-yacc:eoc:");
+
+			if (uvec_dtor(&minish_argv))
 				rkoperror("minish-yacc:o:dtor:");
 		}
 	| AMPER_AMPER
 		{
 #ifdef YACCTEST
 			printf("eoc:%s\n", yytext);
-#endif
-			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:eoc:");
-
-			printf("options: ");
-			for (ptr = uvec_vector(&options);
+			printf("argv: ");
+			for (ptr = uvec_vector(&minish_argv);
 				*ptr != (char *) NULL; ++ptr) {
 				printf("%s ", *ptr);
 			}
 			printf("\n");
-			if (uvec_dtor(&options))
+#endif
+			if (uvec_add(&statement,yytext))
+				rkoperror("minish-yacc:eoc:");
+
+			if (uvec_dtor(&minish_argv))
 				rkoperror("minish-yacc:o:dtor:");
 		}
 	;
@@ -247,39 +258,39 @@ number	: NUMBER
 			$$ = $1;
 #ifdef YACCTEST
 			printf("number:%s\n", yytext);
-			strcpy(buffer, "<");
+#endif
+			strcpy(buffer, "(");
 			strcat(buffer, yytext);
-			strcat(buffer, ">");
+			strcat(buffer, ")");
 			if (uvec_add(&statement,buffer))
 				rkoperror("minish-yacc:number:");
-#endif
 		}
 
 word	: WORD
 		{
 #ifdef YACCTEST
 			printf("word:%s\n", yytext);
+#endif
 			if (uvec_add(&statement,yytext))
 				rkoperror("minish-yacc:word:");
-#endif
 		}
 
 eol	: EOL
 		{
 #ifdef YACCTEST
 			printf("eol: linenum = %d\n", ++linenum);
-#endif
-			if (uvec_add(&statement,yytext))
-				rkoperror("minish-yacc:eol:");
 			for (ptr = uvec_vector(&statement);
 				*ptr != (char *) NULL; ++ptr) {
 				printf("%s ", *ptr);
 			}
 			printf("\n");
+#endif
+			if (uvec_add(&statement,yytext))
+				rkoperror("minish-yacc:eol:");
 
 			if (uvec_dtor(&statement))
 				rkoperror("minish-yacc:s:dtor:");
-			if (uvec_dtor(&options))
+			if (uvec_dtor(&minish_argv))
 				rkoperror("minish-yacc:o:dtor:");
 		}
 	;

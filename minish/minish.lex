@@ -86,6 +86,10 @@ WS	[ \t]*
 			BEGIN OPT;
 			RETURN(LESS_THAN);
 		}
+<OPT,REDI>"<>"	{
+			BEGIN OPT;
+			RETURN(LESS_GREATER);
+		}
 <REDI>">&"	{
 			/* this means to close off this redirction - an error */
 			BEGIN OPT;
