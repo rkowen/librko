@@ -6,6 +6,9 @@
 #define RKOERROR
 #include "rkoerror.h"
 #include "list.h"
+#ifdef MEMDEBUG
+#  include "memdebug.h"
+#endif
 
 typedef struct mix mix;
 struct mix {
@@ -115,6 +118,10 @@ int main() {
 	const char tagflt[] = "FLOATS";
 	const char tagmix[] = "MIXED";
 	int results=0, count=0;
+
+#ifdef MEMDEBUG
+	memdebug_output(stdout);
+#endif
 
 /* add elements to int list */
 	_ZTEST(listobj, tagint, int_type, "=-1=",
