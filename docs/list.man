@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: list.man,v 1.2 1998/10/29 16:58:49 rk Exp $
+.\" RCSID @(#)$Id: list.man,v 1.3 2002/03/07 20:44:17 rk Exp $
 .\" LIBDIR
 .TH "LIST" "3rko" "31 October 1998"
 .SH NAME
@@ -50,10 +50,10 @@ int list_sizeof(list const *lst, const char *tag);
 int list_number(list const *lst, const char *tag);
 list_elem *list_first(list const *lst, const char *tag);
 list_elem *list_last(list const *lst, const char *tag);
-int list_add(list *lst, char const *tag, ...);
-int list_del(list *lst, char const *tag, ...);
 int list_push(list *lst, char const *tag, ...);
 int list_pop(list *lst, char const *tag, ...);
+int list_unshift(list *lst, char const *tag, ...);
+int list_shift(list *lst, char const *tag, ...);
 .fi
 
 .SH DESCRIPTION
@@ -79,7 +79,7 @@ return <0 if an error occured.
 The
 .I list_pop
 and
-.I list_del
+.I list_shift
 functions will return 1, if they're executed on an empty list.
 (This is not considered an error, but something the user may
 wish to know.)
@@ -112,22 +112,22 @@ It's intended for creating sequential access through the list.
 returns a pointer to the last list_elem in the list object.
 It's intended for creating sequential access through the list.
 .TP
-.I list_add
+.I list_push
 add an element to the end of the list.  It has a variable length
 argument, which is passed to the user-defined add-function,
 to allow data to be entered in the argument list.
 .TP
-.I list_del
+.I list_pop
 delete an element at the end of the list.  It has a variable
 length argument, which is passed to the user-define delete-function,
 to allow user data handling.
 .TP
-.I list_push
+.I list_unshift
 add an element to the beginning of the list.  It has a variable length
 argument, which is passed to the user-defined add-function,
 to allow data to be entered in the argument list.
 .TP
-.I list_pop
+.I list_shift
 delete an element at the end of the list.  It has a variable
 length argument, which is passed to the user-define delete-function,
 to allow user data handling.
@@ -145,13 +145,13 @@ a macro that ``returns'' a pointer to the previous list_elem
 the user function for adding data in a list element.
 It must return 0 if successful.
 It's advised to return a value less than -1 for errors, since
-list_add and list_push will return -1 on error.
+list_unshift and list_push will return -1 on error.
 .TP
 .I delfn(void **, va_list)
 the user function for deleting data in a list element.
 It must return 0 if successful.
 It's advised to return a value less than -1 for errors, since
-list_del and list_pop will return -1 on error
+list_shift and list_pop will return -1 on error
 (and 1 if the list is empty).
 
 .SH EXAMPLES
@@ -189,9 +189,9 @@ int main() {
 /* add elements to flt list */
 	if ((listobj = list_ctor(tagflt, addflt, delflt)) == (list *) NULL)
 		rkoperror("main");
-	if (list_add(listobj, tagflt, 3.3)) rkoperror("main");
-	if (list_add(listobj, tagflt, 2.2)) rkoperror("main");
-	if (list_add(listobj, tagflt, 1.1)) rkoperror("main");
+	if (list_unshift(listobj, tagflt, 3.3)) rkoperror("main");
+	if (list_unshift(listobj, tagflt, 2.2)) rkoperror("main");
+	if (list_unshift(listobj, tagflt, 1.1)) rkoperror("main");
 	if (list_push(listobj, tagflt, 2.2)) rkoperror("main");
 	if (list_push(listobj, tagflt, 1.1)) rkoperror("main");
 	
@@ -241,7 +241,7 @@ int delmix(void **ptr, va_list ap) {
 	return 0;
 }
  ...
-	if (list_add(listobj, tagmix, 1, 1.1)) rkoerror("main");
+	if (list_unshift(listobj, tagmix, 1, 1.1)) rkoerror("main");
  ...
 	printf(" %d | %3.1f :",
 		(((mix *)LIST_OBJECT(eptr))->ival),

@@ -131,44 +131,44 @@ int main() {
 	_NTEST(listobj, tagint, int_type, "=0=",
 		list_exists(listobj, tagint))
 	_ZTEST(listobj, tagint, int_type, "=1=3:",
-		list_add(listobj, tagint, 3))
+		list_push(listobj, tagint, 3))
 	_ZTEST(listobj, tagint, int_type, "=2=3:2:",
-		list_add(listobj, tagint, 2))
-	_ZTEST(listobj, tagint, int_type, "=3=3:2:1:",
-		list_add(listobj, tagint, 1))
-	_ZTEST(listobj, tagint, int_type, "=4=2:3:2:1:",
 		list_push(listobj, tagint, 2))
-	_ZTEST(listobj, tagint, int_type, "=5=1:2:3:2:1:",
+	_ZTEST(listobj, tagint, int_type, "=3=3:2:1:",
 		list_push(listobj, tagint, 1))
+	_ZTEST(listobj, tagint, int_type, "=4=2:3:2:1:",
+		list_unshift(listobj, tagint, 2))
+	_ZTEST(listobj, tagint, int_type, "=5=1:2:3:2:1:",
+		list_unshift(listobj, tagint, 1))
 	
 	_ZTEST(listobj, tagint, int_type, "=4=1:2:3:2:",
-		list_del(listobj, tagint))
+		list_pop(listobj, tagint))
 	_ZTEST(listobj, tagint, int_type, "=3=2:3:2:",
-		list_pop(listobj, tagint))
+		list_shift(listobj, tagint))
 	_ZTEST(listobj, tagint, int_type, "=2=2:3:",
-		list_del(listobj, tagint))
+		list_pop(listobj, tagint))
 	_ZTEST(listobj, tagint, int_type, "=1=3:",
-		list_pop(listobj, tagint))
+		list_shift(listobj, tagint))
 	_ZTEST(listobj, tagint, int_type, "=0=",
-		list_del(listobj, tagint))
-	_NTEST(listobj, tagint, int_type, "=0=",
 		list_pop(listobj, tagint))
+	_NTEST(listobj, tagint, int_type, "=0=",
+		list_shift(listobj, tagint))
 	_NTEST(listobj, tagint, int_type, "=0=",
 		((list_sizeof(listobj, tagint) - sizeof(listobj)) == 4))
 
 	_ZTEST(listobj, tagint, int_type, "=1=1:",
-		list_push(listobj, tagint, 1))
+		list_unshift(listobj, tagint, 1))
 	_ZTEST(listobj, tagint, int_type, "=0=",
-		list_pop(listobj, tagint))
+		list_shift(listobj, tagint))
 	_NTEST(listobj, tagint, int_type, "=0=",
-		list_del(listobj, tagint))
+		list_pop(listobj, tagint))
 	
 	_ZTEST(listobj, tagint, int_type, "=1=3:",
-		list_add(listobj, tagint, 3))
+		list_push(listobj, tagint, 3))
 	_ZTEST(listobj, tagint, int_type, "=2=3:2:",
-		list_add(listobj, tagint, 2))
+		list_push(listobj, tagint, 2))
 	_ZTEST(listobj, tagint, int_type, "=3=4:3:2:",
-		list_push(listobj, tagint, 4))
+		list_unshift(listobj, tagint, 4))
 	_ZTEST(listobj, tagint, int_type, "=-1=",
 		list_dtor(&listobj, tagint))
 
@@ -180,44 +180,44 @@ int main() {
 	_NTEST(listobj, tagflt, flt_type, "=0=",
 		list_exists(listobj, tagflt))
 	_ZTEST(listobj, tagflt, flt_type, "=1=3.3:",
-		list_add(listobj, tagflt, 3.3))
+		list_push(listobj, tagflt, 3.3))
 	_ZTEST(listobj, tagflt, flt_type, "=2=3.3:2.2:",
-		list_add(listobj, tagflt, 2.2))
-	_ZTEST(listobj, tagflt, flt_type, "=3=3.3:2.2:1.1:",
-		list_add(listobj, tagflt, 1.1))
-	_ZTEST(listobj, tagflt, flt_type, "=4=2.2:3.3:2.2:1.1:",
 		list_push(listobj, tagflt, 2.2))
-	_ZTEST(listobj, tagflt, flt_type, "=5=1.1:2.2:3.3:2.2:1.1:",
+	_ZTEST(listobj, tagflt, flt_type, "=3=3.3:2.2:1.1:",
 		list_push(listobj, tagflt, 1.1))
+	_ZTEST(listobj, tagflt, flt_type, "=4=2.2:3.3:2.2:1.1:",
+		list_unshift(listobj, tagflt, 2.2))
+	_ZTEST(listobj, tagflt, flt_type, "=5=1.1:2.2:3.3:2.2:1.1:",
+		list_unshift(listobj, tagflt, 1.1))
 	
 	_ZTEST(listobj, tagflt, flt_type, "=4=1.1:2.2:3.3:2.2:",
-		list_del(listobj, tagflt))
+		list_pop(listobj, tagflt))
 	_ZTEST(listobj, tagflt, flt_type, "=3=2.2:3.3:2.2:",
-		list_pop(listobj, tagflt))
+		list_shift(listobj, tagflt))
 	_ZTEST(listobj, tagflt, flt_type, "=2=2.2:3.3:",
-		list_del(listobj, tagflt))
+		list_pop(listobj, tagflt))
 	_ZTEST(listobj, tagflt, flt_type, "=1=3.3:",
-		list_pop(listobj, tagflt))
+		list_shift(listobj, tagflt))
 	_ZTEST(listobj, tagflt, flt_type, "=0=",
-		list_del(listobj, tagflt))
-	_NTEST(listobj, tagflt, flt_type, "=0=",
 		list_pop(listobj, tagflt))
+	_NTEST(listobj, tagflt, flt_type, "=0=",
+		list_shift(listobj, tagflt))
 	_NTEST(listobj, tagflt, flt_type, "=0=",
 		((list_sizeof(listobj, tagflt) - sizeof(listobj)) == 6))
 
 	_ZTEST(listobj, tagflt, flt_type, "=1=1.1:",
-		list_push(listobj, tagflt, 1.1))
+		list_unshift(listobj, tagflt, 1.1))
 	_ZTEST(listobj, tagflt, flt_type, "=0=",
-		list_pop(listobj, tagflt))
+		list_shift(listobj, tagflt))
 	_NTEST(listobj, tagflt, flt_type, "=0=",
-		list_del(listobj, tagflt))
+		list_pop(listobj, tagflt))
 	
 	_ZTEST(listobj, tagflt, flt_type, "=1=3.3:",
-		list_add(listobj, tagflt, 3.3))
+		list_push(listobj, tagflt, 3.3))
 	_ZTEST(listobj, tagflt, flt_type, "=2=3.3:2.2:",
-		list_add(listobj, tagflt, 2.2))
+		list_push(listobj, tagflt, 2.2))
 	_ZTEST(listobj, tagflt, flt_type, "=3=4.4:3.3:2.2:",
-		list_push(listobj, tagflt, 4.4))
+		list_unshift(listobj, tagflt, 4.4))
 	_ZTEST(listobj, tagflt, flt_type, "=-1=",
 		list_dtor(&listobj, tagflt))
 
@@ -229,44 +229,44 @@ int main() {
 	_NTEST(listobj, tagmix, mix_type, "=0=",
 		list_exists(listobj, tagmix))
 	_ZTEST(listobj, tagmix, mix_type, "=1=3|3.3:",
-		list_add(listobj, tagmix, 3, 3.3))
+		list_push(listobj, tagmix, 3, 3.3))
 	_ZTEST(listobj, tagmix, mix_type, "=2=3|3.3:2|2.2:",
-		list_add(listobj, tagmix, 2, 2.2))
-	_ZTEST(listobj, tagmix, mix_type, "=3=3|3.3:2|2.2:1|1.1:",
-		list_add(listobj, tagmix, 1, 1.1))
-	_ZTEST(listobj, tagmix, mix_type, "=4=2|2.2:3|3.3:2|2.2:1|1.1:",
 		list_push(listobj, tagmix, 2, 2.2))
-	_ZTEST(listobj, tagmix, mix_type, "=5=1|1.1:2|2.2:3|3.3:2|2.2:1|1.1:",
+	_ZTEST(listobj, tagmix, mix_type, "=3=3|3.3:2|2.2:1|1.1:",
 		list_push(listobj, tagmix, 1, 1.1))
+	_ZTEST(listobj, tagmix, mix_type, "=4=2|2.2:3|3.3:2|2.2:1|1.1:",
+		list_unshift(listobj, tagmix, 2, 2.2))
+	_ZTEST(listobj, tagmix, mix_type, "=5=1|1.1:2|2.2:3|3.3:2|2.2:1|1.1:",
+		list_unshift(listobj, tagmix, 1, 1.1))
 	
 	_ZTEST(listobj, tagmix, mix_type, "=4=1|1.1:2|2.2:3|3.3:2|2.2:",
-		list_del(listobj, tagmix))
+		list_pop(listobj, tagmix))
 	_ZTEST(listobj, tagmix, mix_type, "=3=2|2.2:3|3.3:2|2.2:",
-		list_pop(listobj, tagmix))
+		list_shift(listobj, tagmix))
 	_ZTEST(listobj, tagmix, mix_type, "=2=2|2.2:3|3.3:",
-		list_del(listobj, tagmix))
+		list_pop(listobj, tagmix))
 	_ZTEST(listobj, tagmix, mix_type, "=1=3|3.3:",
-		list_pop(listobj, tagmix))
+		list_shift(listobj, tagmix))
 	_ZTEST(listobj, tagmix, mix_type, "=0=",
-		list_del(listobj, tagmix))
-	_NTEST(listobj, tagmix, mix_type, "=0=",
 		list_pop(listobj, tagmix))
+	_NTEST(listobj, tagmix, mix_type, "=0=",
+		list_shift(listobj, tagmix))
 	_NTEST(listobj, tagmix, mix_type, "=0=",
 		((list_sizeof(listobj, tagmix) - sizeof(listobj)) == 5))
 
 	_ZTEST(listobj, tagmix, mix_type, "=1=1|1.1:",
-		list_push(listobj, tagmix, 1, 1.1))
+		list_unshift(listobj, tagmix, 1, 1.1))
 	_ZTEST(listobj, tagmix, mix_type, "=0=",
-		list_pop(listobj, tagmix))
+		list_shift(listobj, tagmix))
 	_NTEST(listobj, tagmix, mix_type, "=0=",
-		list_del(listobj, tagmix))
+		list_pop(listobj, tagmix))
 	
 	_ZTEST(listobj, tagmix, mix_type, "=1=3|3.3:",
-		list_add(listobj, tagmix, 3, 3.3))
+		list_push(listobj, tagmix, 3, 3.3))
 	_ZTEST(listobj, tagmix, mix_type, "=2=3|3.3:2|2.2:",
-		list_add(listobj, tagmix, 2, 2.2))
+		list_push(listobj, tagmix, 2, 2.2))
 	_ZTEST(listobj, tagmix, mix_type, "=3=4|4.4:3|3.3:2|2.2:",
-		list_push(listobj, tagmix, 4, 4.4))
+		list_unshift(listobj, tagmix, 4, 4.4))
 	_ZTEST(listobj, tagmix, mix_type, "=-1=",
 		list_dtor(&listobj, tagmix))
 

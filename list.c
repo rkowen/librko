@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: list.c,v 1.7 2002/02/15 23:01:55 rk Exp $";
+static const char RCSID[]="@(#)$Id: list.c,v 1.8 2002/03/07 20:44:17 rk Exp $";
 static const char AUTHOR[]="@(#)list 1.0 1998/10/31 R.K.Owen,Ph.D.";
 /* list.c -
  * This could have easily been made a C++ class, but is
@@ -197,104 +197,7 @@ list_elem *list_last(list const *lst, const char *tag) {
 }
 
 /* ---------------------------------------------------------------------- */
-/* list_add - add 1 element to the end of list */
-int list_add(list *lst, char const *tag, ...) {
-
-	int retval = 0;
-	void *ptr = (void *) NULL;
-	list_elem *eptr = (list_elem *) NULL;
-	va_list args;
-
-	if (!list_exists(lst, tag)) {
-#ifdef RKOERROR
-		(void) rkopsterror("list_add : ");
-#endif
-		return -1;
-	}
-
-	va_start(args, tag);	/* get ready to pass extra args */
-	if ((retval = (lst->addfn)(&ptr, args)) != 0) {
-#ifdef RKOERROR
-		(void) rkocpyerror("list_add : user function error!");
-		rkoerrno = RKOMEMERR;
-#endif
-		goto unwind;
-	}
-	if ((eptr = (list_elem *)malloc(sizeof(list_elem)))
-	== (list_elem *) NULL) {
-#ifdef RKOERROR
-		(void) rkocpyerror("list_add : malloc error!");
-		rkoerrno = RKOMEMERR;
-#endif
-		(void) (lst->delfn)(&ptr, args);
-		goto unwind;
-	}
-	eptr->object = ptr;
-	eptr->prev = (list_elem *) NULL;
-	eptr->next = (list_elem *) NULL;
-
-	if (lst->first == (list_elem *) NULL) {
-		lst->first = eptr;
-	}
-	if (lst->last != (list_elem *) NULL) {
-		eptr->prev = lst->last;
-		lst->last->next = eptr;
-	}
-	lst->last = eptr;
-	lst->number++;
-#ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#endif
-unwind: va_end(args);
-	return retval;
-}
-/* ---------------------------------------------------------------------- */
-/* list_del - delete off 1 element at the end of list */
-int list_del(list *lst, char const *tag, ...) {
-	int retval = 0;
-	void *ptr = (void *) NULL;
-	list_elem *eptr = (list_elem *) NULL;
-	va_list args;
-
-	if (!list_exists(lst, tag)) {
-#ifdef RKOERROR
-		(void) rkopsterror("list_del : ");
-#endif
-		return -1;
-	}
-
-	if (lst->last == (list_elem *) NULL) {		/* already empty */
-		return 1;				/* not an error */
-	}
-
-	eptr = lst->last;
-	ptr = eptr->object;
-
-	va_start(args, tag);	/* get ready to pass extra args */
-	if ((retval = (lst->delfn)(&ptr, args))) {
-#ifdef RKOERROR
-		(void) rkocpyerror("list_del : user function error!");
-		rkoerrno = RKOMEMERR;
-#endif
-		goto unwind;
-	}
-
-	lst->last = eptr->prev;
-	if (lst->last == (list_elem *) NULL) {
-		lst->first = (list_elem *) NULL;
-	} else {
-		lst->last->next = (list_elem *) NULL;
-	}
-	lst->number--;
-	free(eptr);
-#ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#endif
-unwind: va_end(args);
-	return retval;
-}
-/* ---------------------------------------------------------------------- */
-/* list_push - add 1 element to the beginning of list */
+/* list_push - add 1 element to the end of list */
 int list_push(list *lst, char const *tag, ...) {
 
 	int retval = 0;
@@ -330,6 +233,103 @@ int list_push(list *lst, char const *tag, ...) {
 	eptr->prev = (list_elem *) NULL;
 	eptr->next = (list_elem *) NULL;
 
+	if (lst->first == (list_elem *) NULL) {
+		lst->first = eptr;
+	}
+	if (lst->last != (list_elem *) NULL) {
+		eptr->prev = lst->last;
+		lst->last->next = eptr;
+	}
+	lst->last = eptr;
+	lst->number++;
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+unwind: va_end(args);
+	return retval;
+}
+/* ---------------------------------------------------------------------- */
+/* list_pop - delete off 1 element at the end of list */
+int list_pop(list *lst, char const *tag, ...) {
+	int retval = 0;
+	void *ptr = (void *) NULL;
+	list_elem *eptr = (list_elem *) NULL;
+	va_list args;
+
+	if (!list_exists(lst, tag)) {
+#ifdef RKOERROR
+		(void) rkopsterror("list_pop : ");
+#endif
+		return -1;
+	}
+
+	if (lst->last == (list_elem *) NULL) {		/* already empty */
+		return 1;				/* not an error */
+	}
+
+	eptr = lst->last;
+	ptr = eptr->object;
+
+	va_start(args, tag);	/* get ready to pass extra args */
+	if ((retval = (lst->delfn)(&ptr, args))) {
+#ifdef RKOERROR
+		(void) rkocpyerror("list_pop : user function error!");
+		rkoerrno = RKOMEMERR;
+#endif
+		goto unwind;
+	}
+
+	lst->last = eptr->prev;
+	if (lst->last == (list_elem *) NULL) {
+		lst->first = (list_elem *) NULL;
+	} else {
+		lst->last->next = (list_elem *) NULL;
+	}
+	lst->number--;
+	free(eptr);
+#ifdef RKOERROR
+	rkoerrno = RKO_OK;
+#endif
+unwind: va_end(args);
+	return retval;
+}
+/* ---------------------------------------------------------------------- */
+/* list_unshift - add 1 element to the beginning of list */
+int list_unshift(list *lst, char const *tag, ...) {
+
+	int retval = 0;
+	void *ptr = (void *) NULL;
+	list_elem *eptr = (list_elem *) NULL;
+	va_list args;
+
+	if (!list_exists(lst, tag)) {
+#ifdef RKOERROR
+		(void) rkopsterror("list_unshift : ");
+#endif
+		return -1;
+	}
+
+	va_start(args, tag);	/* get ready to pass extra args */
+	if ((retval = (lst->addfn)(&ptr, args)) != 0) {
+#ifdef RKOERROR
+		(void) rkocpyerror("list_unshift : user function error!");
+		rkoerrno = RKOMEMERR;
+#endif
+		goto unwind;
+	}
+	if ((eptr = (list_elem *)malloc(sizeof(list_elem)))
+	== (list_elem *) NULL) {
+#ifdef RKOERROR
+		(void) rkocpyerror("list_unshift : malloc error!");
+		rkoerrno = RKOMEMERR;
+#endif
+		(void) (lst->delfn)(&ptr, args);
+		goto unwind;
+	}
+	eptr->object = ptr;
+	eptr->prev = (list_elem *) NULL;
+	eptr->next = (list_elem *) NULL;
+
 	if (lst->first != (list_elem *) NULL) {
 		eptr->next = lst->first;
 		lst->first->prev = eptr;
@@ -346,8 +346,8 @@ unwind: va_end(args);
 	return retval;
 }
 /* ---------------------------------------------------------------------- */
-/* list_pop - delete off 1 element at the beginning of list */
-int list_pop(list *lst, char const *tag, ...) {
+/* list_shift - delete off 1 element at the beginning of list */
+int list_shift(list *lst, char const *tag, ...) {
 	int retval = 0;
 	void *ptr = (void *) NULL;
 	list_elem *eptr = (list_elem *) NULL;
@@ -355,7 +355,7 @@ int list_pop(list *lst, char const *tag, ...) {
 
 	if (!list_exists(lst, tag)) {
 #ifdef RKOERROR
-		(void) rkopsterror("list_pop : ");
+		(void) rkopsterror("list_shift : ");
 #endif
 		return -1;
 	}
@@ -370,7 +370,7 @@ int list_pop(list *lst, char const *tag, ...) {
 	va_start(args, tag);	/* get ready to pass extra args */
 	if ((retval = (lst->delfn)(&ptr, args)) != 0) {
 #ifdef RKOERROR
-		(void) rkocpyerror("list_pop : user function error!");
+		(void) rkocpyerror("list_shift : user function error!");
 		rkoerrno = RKOMEMERR;
 #endif
 		goto unwind;
