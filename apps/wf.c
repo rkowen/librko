@@ -18,10 +18,11 @@ void usage(char *ProgName) {
 "\n"
 "%s - does a word frequency count on the input text"
 "\n"
-"usage: %s [-h][-c][-n][-o output][--][input ...]\n"
+"usage: %s [-h][-c][-n][-l minlen][-o output][--][input ...]\n"
 "	-h		this helpful information\n"
 "	-c		do not convert to lowercase (case is important)\n"
 "	-n		last line shows aggregate and unique word count\n"
+"	-l minlen	minimum word length to consider (default = 0)\n"
 "	-o output	output file name (else defaults to stdout)\n"
 "	--		stops further option processing\n"
 "	input ...	one or more input file names (else defaults to stdin)\n"
@@ -32,14 +33,15 @@ void usage(char *ProgName) {
 }
 
 /* global values */
-#define WBUFSIZE 1024
+#define WBUFSIZE 1025
 char wbuf[WBUFSIZE];
 int keep_case = 0;
 int out_num = 0;
+int min_len = 0;
 avec *words;
 
 /* getopt misc. */
-static const char GETOPTstr[] = "hcno:";
+static const char GETOPTstr[] = "hcnl:o:";
 extern char *optarg;
 extern int optind, opterr, optopt;
 
@@ -51,13 +53,12 @@ int initial_word (void) {
 }
 
 int final_word (FILE *output) {
-	avec_element **waeptr = (avec_element **) NULL;
 	char const * const * vec;
 	uvec *uv;
 	char **ptr;
 	unsigned int   icount;
-	unsigned long  lcount;
 	unsigned short scount;
+	unsigned long  lcount;
 	unsigned long  wcount = 0, acount = 0;
 
 	/* get keys */
@@ -80,7 +81,6 @@ int final_word (FILE *output) {
 			lcount = scount;
 		} else if (sizeof(void *) == sizeof(unsigned long)) {
 			lcount = (unsigned long) avec_lookup(words,*ptr);
-		} else if (sizeof(void *) == sizeof(unsigned long)) {
 		}
 		acount += lcount;
 		fprintf(output,"%7ld\t%s\n", lcount, *ptr);
@@ -121,18 +121,18 @@ int count_words(FILE *input) {
 		}
 		/* search for strings */
 		ptr = wbuf;			/* look at full wbuf */
-		while (ptr - wptr < numread) {
+		while (ptr - wbuf < numread) {
 			if (!*ptr) {ptr++; continue;}	/* skip '\0's */
 
 			wlen = strlen(ptr);		/* length of string */
 
-			if (ptr - wptr + wlen >= wbufsize) {
+			if (ptr - wbuf + wlen >= wbufsize) {
 			/* at end of block and possibly a split word */
 				strcpy(wbuf, ptr);
 				wptr = wbuf + wlen;
 				ptr = wptr + numread;	/* end of block */
 			} else {
-				avec_insert(words,ptr);
+				if (wlen >= min_len) avec_insert(words,ptr);
 				ptr += wlen;
 				wlen = 0;
 			}
@@ -162,6 +162,13 @@ int main(int argc, char *argv[]) {
 			break;
 		case 'n':
 			out_num = 1;
+			break;
+		case 'l':
+			min_len = atoi(optarg);
+			if (min_len < 0) {
+				usage(PrgNm);
+				return 1;
+			}
 			break;
 		case 'o':
 			if (!(output = fopen(optarg, "w"))) {

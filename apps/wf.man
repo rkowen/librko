@@ -4,7 +4,7 @@
 wf \- performs a word frequency count on the input text files
 .SH SYNOPSIS
 
- wf \fR[\fB-h\fR][\fB-c\fR][\fB-n\fR][\fB-o\fR output ][\fB--\fR] [input \.\.\.]
+ wf \fR[\fB-h\fR][\fB-c\fR][\fB-n\fR][\fB-l minlen\fR][\fB-o\fR output ][\fB--\fR] [input \.\.\.]
 
 .SH DESCRIPTION
 .I wf
@@ -21,6 +21,9 @@ will force everything to lowercase).
 .TP
 -n
 output the aggregate word count and unique word count.
+.TP
+-l minlen
+minimum word length to consider (default = 0)
 .TP
 -o output
 send the output to this file
