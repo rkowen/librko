@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./tests/Makefile.am
-## Versions:    $Id: Makefile.am,v 1.1 2002/06/24 16:28:20 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.2 2002/06/24 17:04:51 rk Exp $
 ## Created:     2002/06/24
 ##
 ###########################################################################
@@ -36,7 +36,7 @@ kitty_SOURCES			= kitty.c
 birdy_SOURCES			= birdy.c
 
 # test programs
-tansi_x_seq_SOURCES		= tansi_seq.c
+tansi_seq_x_SOURCES		= tansi_seq.c
 tavec_x_SOURCES			= tavec.c
 tclocker_x_SOURCES		= tclocker.c
 tdirtree_x_SOURCES		= tdirtree.c

@@ -104,7 +104,7 @@ kitty_SOURCES = kitty.c
 birdy_SOURCES = birdy.c
 
 # test programs
-tansi_x_seq_SOURCES = tansi_seq.c
+tansi_seq_x_SOURCES = tansi_seq.c
 tavec_x_SOURCES = tavec.c
 tclocker_x_SOURCES = tclocker.c
 tdirtree_x_SOURCES = tdirtree.c
@@ -159,8 +159,8 @@ kitty_OBJECTS = $(am_kitty_OBJECTS)
 kitty_LDADD = $(LDADD)
 kitty_DEPENDENCIES = ../librko.a
 kitty_LDFLAGS =
-tansi_seq_x_SOURCES = tansi_seq.x.c
-tansi_seq_x_OBJECTS = tansi_seq.x.$(OBJEXT)
+am_tansi_seq_x_OBJECTS = tansi_seq.$(OBJEXT)
+tansi_seq_x_OBJECTS = $(am_tansi_seq_x_OBJECTS)
 tansi_seq_x_LDADD = $(LDADD)
 tansi_seq_x_DEPENDENCIES = ../librko.a
 tansi_seq_x_LDFLAGS =
@@ -283,7 +283,7 @@ LIBS = -lm
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
 DEP_FILES = ./$(DEPDIR)/birdy.Po ./$(DEPDIR)/doggy.Po \
-	./$(DEPDIR)/kitty.Po ./$(DEPDIR)/tansi_seq.x.Po \
+	./$(DEPDIR)/kitty.Po ./$(DEPDIR)/tansi_seq.Po \
 	./$(DEPDIR)/tavec.Po ./$(DEPDIR)/tclocker.Po \
 	./$(DEPDIR)/tdirtree.Po ./$(DEPDIR)/tfilter.Po \
 	./$(DEPDIR)/tfoptim.Po ./$(DEPDIR)/tfzeroin.Po \
@@ -301,7 +301,7 @@ CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 CFLAGS = -g -O2
 DIST_SOURCES = $(birdy_SOURCES) $(doggy_SOURCES) $(kitty_SOURCES) \
-	tansi_seq.x.c $(tavec_x_SOURCES) $(tclocker_x_SOURCES) \
+	$(tansi_seq_x_SOURCES) $(tavec_x_SOURCES) $(tclocker_x_SOURCES) \
 	$(tdirtree_x_SOURCES) $(tfilter_x_SOURCES) $(tfoptim_x_SOURCES) \
 	$(tfzeroin_x_SOURCES) $(tgcd_x_SOURCES) $(tinvoke_x_SOURCES) \
 	$(tiprime_x_SOURCES) $(tisqrt_x_SOURCES) $(tlist_x_SOURCES) \
@@ -311,7 +311,7 @@ DIST_SOURCES = $(birdy_SOURCES) $(doggy_SOURCES) $(kitty_SOURCES) \
 	$(tstrmalloc_x_SOURCES) $(tstrmem_x_SOURCES) \
 	$(ttfgets_x_SOURCES) $(tuvec_x_SOURCES) $(twcstrcmp_x_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(birdy_SOURCES) $(doggy_SOURCES) $(kitty_SOURCES) tansi_seq.x.c $(tavec_x_SOURCES) $(tclocker_x_SOURCES) $(tdirtree_x_SOURCES) $(tfilter_x_SOURCES) $(tfoptim_x_SOURCES) $(tfzeroin_x_SOURCES) $(tgcd_x_SOURCES) $(tinvoke_x_SOURCES) $(tiprime_x_SOURCES) $(tisqrt_x_SOURCES) $(tlist_x_SOURCES) $(tmacrosub_x_SOURCES) $(tmemdbg_x_SOURCES) $(tnameread_x_SOURCES) $(tspawn_x_SOURCES) $(tstrchop_x_SOURCES) $(tstrdbecpy_x_SOURCES) $(tstrmalloc_x_SOURCES) $(tstrmem_x_SOURCES) $(ttfgets_x_SOURCES) $(tuvec_x_SOURCES) $(twcstrcmp_x_SOURCES)
+SOURCES = $(birdy_SOURCES) $(doggy_SOURCES) $(kitty_SOURCES) $(tansi_seq_x_SOURCES) $(tavec_x_SOURCES) $(tclocker_x_SOURCES) $(tdirtree_x_SOURCES) $(tfilter_x_SOURCES) $(tfoptim_x_SOURCES) $(tfzeroin_x_SOURCES) $(tgcd_x_SOURCES) $(tinvoke_x_SOURCES) $(tiprime_x_SOURCES) $(tisqrt_x_SOURCES) $(tlist_x_SOURCES) $(tmacrosub_x_SOURCES) $(tmemdbg_x_SOURCES) $(tnameread_x_SOURCES) $(tspawn_x_SOURCES) $(tstrchop_x_SOURCES) $(tstrdbecpy_x_SOURCES) $(tstrmalloc_x_SOURCES) $(tstrmem_x_SOURCES) $(ttfgets_x_SOURCES) $(tuvec_x_SOURCES) $(twcstrcmp_x_SOURCES)
 
 all: all-am
 
@@ -413,7 +413,7 @@ distclean-compile:
 include ./$(DEPDIR)/birdy.Po
 include ./$(DEPDIR)/doggy.Po
 include ./$(DEPDIR)/kitty.Po
-include ./$(DEPDIR)/tansi_seq.x.Po
+include ./$(DEPDIR)/tansi_seq.Po
 include ./$(DEPDIR)/tavec.Po
 include ./$(DEPDIR)/tclocker.Po
 include ./$(DEPDIR)/tdirtree.Po

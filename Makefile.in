@@ -84,14 +84,21 @@ ACLOCAL_AMFLAGS = -I $(srcdir)/config
 
 INCLUDES = -I$(srcdir)/include -I$(srcdir)
 
+isqrt_srcs = \
+	isqrt/isqrt_lut.c				\
+	isqrt/chsqrt.c isqrt/hsqrt.c isqrt/isqrt.c	\
+	isqrt/lsqrt.c isqrt/scsqrt.c isqrt/ucsrt.c	\
+	isqrt/uhsqrt.c isqrt/uisqrt.c isqrt/ulsqrt.c
+
+
 uvec_srcs = \
-	uvec/str2uvec.c uvec/uvec2str.c uvec/uvec2uvec.c \
-	uvec/uvec_accessor.c uvec/uvec_add.c uvec/uvec_alloc.c \
-	uvec/uvec_close.c uvec/uvec_copy.c uvec/uvec_copy_str.c \
-	uvec/uvec_copy_vec.c uvec/uvec_count_tok.c uvec/uvec_ctor.c \
-	uvec/uvec_dealloc.c uvec/uvec_dtor.c uvec/uvec_init.c \
-	uvec/uvec_insert.c uvec/uvec_push.c uvec/uvec_randomize.c \
-	uvec/uvec_reverse.c uvec/uvec_shift.c uvec/uvec_sort.c \
+	uvec/str2uvec.c uvec/uvec2str.c uvec/uvec2uvec.c		\
+	uvec/uvec_accessor.c uvec/uvec_add.c uvec/uvec_alloc.c		\
+	uvec/uvec_close.c uvec/uvec_copy.c uvec/uvec_copy_str.c		\
+	uvec/uvec_copy_vec.c uvec/uvec_count_tok.c uvec/uvec_ctor.c	\
+	uvec/uvec_dealloc.c uvec/uvec_dtor.c uvec/uvec_init.c		\
+	uvec/uvec_insert.c uvec/uvec_push.c uvec/uvec_randomize.c	\
+	uvec/uvec_reverse.c uvec/uvec_shift.c uvec/uvec_sort.c		\
 	uvec/uvec_strfns.c uvec/vec2uvec.c
 
 
@@ -109,7 +116,7 @@ librko_a_SOURCES = \
 	gcd.c \
 	gethostbyX.c \
 	iprime.c \
-	isqrt.c \
+	$(isqrt_srcs) \
 	istext.c \
 	list.c \
 	macrosub.c \
@@ -150,7 +157,11 @@ LIBRARIES = $(lib_LIBRARIES)
 
 librko_a_AR = $(AR) cru
 librko_a_LIBADD =
-am__objects_1 = str2uvec.$(OBJEXT) uvec2str.$(OBJEXT) \
+am__objects_1 = isqrt_lut.$(OBJEXT) chsqrt.$(OBJEXT) hsqrt.$(OBJEXT) \
+	isqrt.$(OBJEXT) lsqrt.$(OBJEXT) scsqrt.$(OBJEXT) \
+	ucsrt.$(OBJEXT) uhsqrt.$(OBJEXT) uisqrt.$(OBJEXT) \
+	ulsqrt.$(OBJEXT)
+am__objects_2 = str2uvec.$(OBJEXT) uvec2str.$(OBJEXT) \
 	uvec2uvec.$(OBJEXT) uvec_accessor.$(OBJEXT) uvec_add.$(OBJEXT) \
 	uvec_alloc.$(OBJEXT) uvec_close.$(OBJEXT) uvec_copy.$(OBJEXT) \
 	uvec_copy_str.$(OBJEXT) uvec_copy_vec.$(OBJEXT) \
@@ -164,11 +175,11 @@ am_librko_a_OBJECTS = ansi_seq.$(OBJEXT) avec.$(OBJEXT) \
 	clocker.$(OBJEXT) coexec.$(OBJEXT) dirtree.$(OBJEXT) \
 	divdiff.$(OBJEXT) foptim.$(OBJEXT) fzeroin.$(OBJEXT) \
 	gcd.$(OBJEXT) gethostbyX.$(OBJEXT) iprime.$(OBJEXT) \
-	isqrt.$(OBJEXT) istext.$(OBJEXT) list.$(OBJEXT) \
+	$(am__objects_1) istext.$(OBJEXT) list.$(OBJEXT) \
 	macrosub.$(OBJEXT) memdbg.$(OBJEXT) memdebug.$(OBJEXT) \
 	nameread.$(OBJEXT) rkoerror.$(OBJEXT) strchop.$(OBJEXT) \
 	strdbecpy.$(OBJEXT) strmalloc.$(OBJEXT) strmem.$(OBJEXT) \
-	tcp_connect.$(OBJEXT) timedfgets.$(OBJEXT) $(am__objects_1) \
+	tcp_connect.$(OBJEXT) timedfgets.$(OBJEXT) $(am__objects_2) \
 	version.$(OBJEXT) wcstrcmp.$(OBJEXT)
 librko_a_OBJECTS = $(am_librko_a_OBJECTS)
 
@@ -180,19 +191,23 @@ LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/ansi_seq.Po ./$(DEPDIR)/avec.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/clocker.Po ./$(DEPDIR)/coexec.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/dirtree.Po ./$(DEPDIR)/divdiff.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/foptim.Po ./$(DEPDIR)/fzeroin.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/gcd.Po ./$(DEPDIR)/gethostbyX.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/chsqrt.Po ./$(DEPDIR)/clocker.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/coexec.Po ./$(DEPDIR)/dirtree.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/divdiff.Po ./$(DEPDIR)/foptim.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/fzeroin.Po ./$(DEPDIR)/gcd.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/gethostbyX.Po ./$(DEPDIR)/hsqrt.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/iprime.Po ./$(DEPDIR)/isqrt.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/istext.Po ./$(DEPDIR)/list.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/isqrt_lut.Po ./$(DEPDIR)/istext.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/list.Po ./$(DEPDIR)/lsqrt.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/macrosub.Po ./$(DEPDIR)/memdbg.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/memdebug.Po ./$(DEPDIR)/nameread.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/rkoerror.Po ./$(DEPDIR)/str2uvec.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/strchop.Po ./$(DEPDIR)/strdbecpy.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/strmalloc.Po ./$(DEPDIR)/strmem.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tcp_connect.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/timedfgets.Po ./$(DEPDIR)/uvec2str.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/rkoerror.Po ./$(DEPDIR)/scsqrt.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/str2uvec.Po ./$(DEPDIR)/strchop.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/strdbecpy.Po ./$(DEPDIR)/strmalloc.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/strmem.Po ./$(DEPDIR)/tcp_connect.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/timedfgets.Po ./$(DEPDIR)/ucsrt.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/uhsqrt.Po ./$(DEPDIR)/uisqrt.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ulsqrt.Po ./$(DEPDIR)/uvec2str.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/uvec2uvec.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/uvec_accessor.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/uvec_add.Po ./$(DEPDIR)/uvec_alloc.Po \
@@ -290,6 +305,16 @@ uninstall-libLIBRARIES:
 
 clean-libLIBRARIES:
 	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
+isqrt_lut.$(OBJEXT): isqrt/isqrt_lut.c
+chsqrt.$(OBJEXT): isqrt/chsqrt.c
+hsqrt.$(OBJEXT): isqrt/hsqrt.c
+isqrt.$(OBJEXT): isqrt/isqrt.c
+lsqrt.$(OBJEXT): isqrt/lsqrt.c
+scsqrt.$(OBJEXT): isqrt/scsqrt.c
+ucsrt.$(OBJEXT): isqrt/ucsrt.c
+uhsqrt.$(OBJEXT): isqrt/uhsqrt.c
+uisqrt.$(OBJEXT): isqrt/uisqrt.c
+ulsqrt.$(OBJEXT): isqrt/ulsqrt.c
 str2uvec.$(OBJEXT): uvec/str2uvec.c
 uvec2str.$(OBJEXT): uvec/uvec2str.c
 uvec2uvec.$(OBJEXT): uvec/uvec2uvec.c
@@ -326,6 +351,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ansi_seq.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/avec.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chsqrt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clocker.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/coexec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dirtree.Po@am__quote@
@@ -334,15 +360,19 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fzeroin.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gcd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gethostbyX.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hsqrt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/iprime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/isqrt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/isqrt_lut.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/istext.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lsqrt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/macrosub.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memdbg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memdebug.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nameread.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rkoerror.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scsqrt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/str2uvec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strchop.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strdbecpy.Po@am__quote@
@@ -350,6 +380,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strmem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tcp_connect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/timedfgets.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ucsrt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uhsqrt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uisqrt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ulsqrt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uvec2str.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uvec2uvec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uvec_accessor.Po@am__quote@
@@ -389,6 +423,126 @@ distclean-depend:
 @AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(COMPILE) -c `cygpath -w $<`
+
+isqrt_lut.o: isqrt/isqrt_lut.c
+@AMDEP_TRUE@	source='isqrt/isqrt_lut.c' object='isqrt_lut.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/isqrt_lut.Po' tmpdepfile='$(DEPDIR)/isqrt_lut.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o isqrt_lut.o `test -f isqrt/isqrt_lut.c || echo '$(srcdir)/'`isqrt/isqrt_lut.c
+
+isqrt_lut.obj: isqrt/isqrt_lut.c
+@AMDEP_TRUE@	source='isqrt/isqrt_lut.c' object='isqrt_lut.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/isqrt_lut.Po' tmpdepfile='$(DEPDIR)/isqrt_lut.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o isqrt_lut.obj `cygpath -w isqrt/isqrt_lut.c`
+
+chsqrt.o: isqrt/chsqrt.c
+@AMDEP_TRUE@	source='isqrt/chsqrt.c' object='chsqrt.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/chsqrt.Po' tmpdepfile='$(DEPDIR)/chsqrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o chsqrt.o `test -f isqrt/chsqrt.c || echo '$(srcdir)/'`isqrt/chsqrt.c
+
+chsqrt.obj: isqrt/chsqrt.c
+@AMDEP_TRUE@	source='isqrt/chsqrt.c' object='chsqrt.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/chsqrt.Po' tmpdepfile='$(DEPDIR)/chsqrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o chsqrt.obj `cygpath -w isqrt/chsqrt.c`
+
+hsqrt.o: isqrt/hsqrt.c
+@AMDEP_TRUE@	source='isqrt/hsqrt.c' object='hsqrt.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/hsqrt.Po' tmpdepfile='$(DEPDIR)/hsqrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o hsqrt.o `test -f isqrt/hsqrt.c || echo '$(srcdir)/'`isqrt/hsqrt.c
+
+hsqrt.obj: isqrt/hsqrt.c
+@AMDEP_TRUE@	source='isqrt/hsqrt.c' object='hsqrt.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/hsqrt.Po' tmpdepfile='$(DEPDIR)/hsqrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o hsqrt.obj `cygpath -w isqrt/hsqrt.c`
+
+isqrt.o: isqrt/isqrt.c
+@AMDEP_TRUE@	source='isqrt/isqrt.c' object='isqrt.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/isqrt.Po' tmpdepfile='$(DEPDIR)/isqrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o isqrt.o `test -f isqrt/isqrt.c || echo '$(srcdir)/'`isqrt/isqrt.c
+
+isqrt.obj: isqrt/isqrt.c
+@AMDEP_TRUE@	source='isqrt/isqrt.c' object='isqrt.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/isqrt.Po' tmpdepfile='$(DEPDIR)/isqrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o isqrt.obj `cygpath -w isqrt/isqrt.c`
+
+lsqrt.o: isqrt/lsqrt.c
+@AMDEP_TRUE@	source='isqrt/lsqrt.c' object='lsqrt.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/lsqrt.Po' tmpdepfile='$(DEPDIR)/lsqrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lsqrt.o `test -f isqrt/lsqrt.c || echo '$(srcdir)/'`isqrt/lsqrt.c
+
+lsqrt.obj: isqrt/lsqrt.c
+@AMDEP_TRUE@	source='isqrt/lsqrt.c' object='lsqrt.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/lsqrt.Po' tmpdepfile='$(DEPDIR)/lsqrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lsqrt.obj `cygpath -w isqrt/lsqrt.c`
+
+scsqrt.o: isqrt/scsqrt.c
+@AMDEP_TRUE@	source='isqrt/scsqrt.c' object='scsqrt.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/scsqrt.Po' tmpdepfile='$(DEPDIR)/scsqrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o scsqrt.o `test -f isqrt/scsqrt.c || echo '$(srcdir)/'`isqrt/scsqrt.c
+
+scsqrt.obj: isqrt/scsqrt.c
+@AMDEP_TRUE@	source='isqrt/scsqrt.c' object='scsqrt.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/scsqrt.Po' tmpdepfile='$(DEPDIR)/scsqrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o scsqrt.obj `cygpath -w isqrt/scsqrt.c`
+
+ucsrt.o: isqrt/ucsrt.c
+@AMDEP_TRUE@	source='isqrt/ucsrt.c' object='ucsrt.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/ucsrt.Po' tmpdepfile='$(DEPDIR)/ucsrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ucsrt.o `test -f isqrt/ucsrt.c || echo '$(srcdir)/'`isqrt/ucsrt.c
+
+ucsrt.obj: isqrt/ucsrt.c
+@AMDEP_TRUE@	source='isqrt/ucsrt.c' object='ucsrt.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/ucsrt.Po' tmpdepfile='$(DEPDIR)/ucsrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ucsrt.obj `cygpath -w isqrt/ucsrt.c`
+
+uhsqrt.o: isqrt/uhsqrt.c
+@AMDEP_TRUE@	source='isqrt/uhsqrt.c' object='uhsqrt.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/uhsqrt.Po' tmpdepfile='$(DEPDIR)/uhsqrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o uhsqrt.o `test -f isqrt/uhsqrt.c || echo '$(srcdir)/'`isqrt/uhsqrt.c
+
+uhsqrt.obj: isqrt/uhsqrt.c
+@AMDEP_TRUE@	source='isqrt/uhsqrt.c' object='uhsqrt.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/uhsqrt.Po' tmpdepfile='$(DEPDIR)/uhsqrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o uhsqrt.obj `cygpath -w isqrt/uhsqrt.c`
+
+uisqrt.o: isqrt/uisqrt.c
+@AMDEP_TRUE@	source='isqrt/uisqrt.c' object='uisqrt.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/uisqrt.Po' tmpdepfile='$(DEPDIR)/uisqrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o uisqrt.o `test -f isqrt/uisqrt.c || echo '$(srcdir)/'`isqrt/uisqrt.c
+
+uisqrt.obj: isqrt/uisqrt.c
+@AMDEP_TRUE@	source='isqrt/uisqrt.c' object='uisqrt.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/uisqrt.Po' tmpdepfile='$(DEPDIR)/uisqrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o uisqrt.obj `cygpath -w isqrt/uisqrt.c`
+
+ulsqrt.o: isqrt/ulsqrt.c
+@AMDEP_TRUE@	source='isqrt/ulsqrt.c' object='ulsqrt.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/ulsqrt.Po' tmpdepfile='$(DEPDIR)/ulsqrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ulsqrt.o `test -f isqrt/ulsqrt.c || echo '$(srcdir)/'`isqrt/ulsqrt.c
+
+ulsqrt.obj: isqrt/ulsqrt.c
+@AMDEP_TRUE@	source='isqrt/ulsqrt.c' object='ulsqrt.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/ulsqrt.Po' tmpdepfile='$(DEPDIR)/ulsqrt.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ulsqrt.obj `cygpath -w isqrt/ulsqrt.c`
 
 str2uvec.o: uvec/str2uvec.c
 @AMDEP_TRUE@	source='uvec/str2uvec.c' object='str2uvec.o' libtool=no @AMDEPBACKSLASH@
