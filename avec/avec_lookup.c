@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec_lookup.c,v 1.2 2003/09/05 05:02:00 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec_lookup.c,v 1.3 2005/08/18 22:30:44 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -31,7 +31,7 @@ static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
  * else returns NULL
  */
 void *avec_lookup(avec *av, char const *key) {
-	avec_element	**elem;		/* place to insert value */
+	avec_element	**elem;		/* pointer to value */
 	void *retval = (void *) NULL;
 
 	if (!(elem = avec_hash_search(AVEC_MATCH, av,key))) {
@@ -40,6 +40,6 @@ void *avec_lookup(avec *av, char const *key) {
 #endif
 		return retval;
 	}
-	return (*elem)->data;
+	return AVEC_DATA(*elem);
 }
 

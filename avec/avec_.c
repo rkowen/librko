@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec_.c,v 1.2 2003/09/05 05:02:00 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec_.c,v 1.3 2005/08/18 22:30:44 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -103,9 +103,9 @@ int avec_dealloc_element(avec_element **element) {
 #endif
 		return -1;
 	}
-	if ((*element)->key) {
-		free((void *)(*element)->key);
-		(*element)->key = '\0';
+	if (AVEC_KEY(*element)) {
+		free((void *)AVEC_KEY(*element));
+		AVEC_KEY(*element) = '\0';
 	}
 	free((void *) *element);
 	*element = (avec_element *) NULL;
@@ -139,7 +139,7 @@ int avec_alloc_element(char const *key, avec_element **element) {
 		goto unwind1;
 	}
 /* allocate the key string space */
-	if (!((*element)->key = malloc(strlen(key)+1))) {
+	if (!(AVEC_KEY(*element) = malloc(strlen(key)+1))) {
 #ifdef RKOERROR
 		rkoerrno = RKOMEMERR;
 		rkocpyerror("avec_alloc_element : key memory error");
@@ -148,7 +148,7 @@ int avec_alloc_element(char const *key, avec_element **element) {
 		goto unwind2;
 	}
 /* copy key over */
-	strcpy((char *)(*element)->key, key);
+	strcpy((char *)AVEC_KEY(*element), key);
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
@@ -200,7 +200,7 @@ avec_element **avec_hash_search(enum avec_search type,
 		if ((av->hash[hv] == &REMOVED) && (type == AVEC_NEXT))
 			return &(av->hash[hv]);
 
-		STRCMP(av->hash[hv]->key, key, tv);
+		STRCMP(AVEC_KEY(av->hash[hv]), key, tv);
 
 		if (!tv) {	/* found match */
 			if (type == AVEC_MATCH || type == AVEC_INSERT)
@@ -237,9 +237,9 @@ int avec_data_delrm(enum avec_delrm type,
 		return -1;
 	}
 	if (type == AVEC_DELETE) {
-		retval = (av->fns.data_del)(&((*elem)->data),vargs);
+		retval = (av->fns.data_del)(&(AVEC_DATA(*elem)),vargs);
 	} else {
-		retval = (av->fns.data_rm)(&((*elem)->data),vargs);
+		retval = (av->fns.data_rm)(&(AVEC_DATA(*elem)),vargs);
 	}
 	if (retval) {
 #ifdef RKOERROR
@@ -253,7 +253,7 @@ int avec_data_delrm(enum avec_delrm type,
 #endif
 		return retval;
 	}
-	(*elem)->data = (char *) NULL;
+	AVEC_DATA(*elem) = (char *) NULL;
 	(void) avec_dealloc_element(elem);
 	*elem = (avec_element *) &REMOVED;
 	av->number--;

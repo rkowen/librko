@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec_close.c,v 1.2 2003/09/05 05:02:00 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec_close.c,v 1.3 2005/08/18 22:30:44 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -47,7 +47,7 @@ int avec_close(avec *av, ...) {
 	/* walk through hash and free elements, first destroy data */
 	while ((aeptr = avec_walk_r(av,aeptr))) {
 		/* destroy data with data_rm */
-		if ((retval = (av->fns.data_rm)(&((*aeptr)->data), vargs))) {
+		if ((retval = (av->fns.data_rm)(&(AVEC_DATA(*aeptr)),vargs))) {
 #ifdef RKOERROR
 			if (rkostrerror()) {
 				(void) rkopsterror("avec_close : ");

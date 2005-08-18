@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec_resize.c,v 1.2 2003/09/05 05:02:00 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec_resize.c,v 1.3 2005/08/18 22:30:44 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -95,7 +95,7 @@ int avec_resize(avec *av, int newcap) {
 		if (*ptrptr && *ptrptr != &REMOVED) {
 			/* found an element */
 			if (!(elem = avec_hash_search(AVEC_NEXT, av,
-				(*ptrptr)->key))) {
+				AVEC_KEY(*ptrptr)))) {
 #ifdef RKOERROR
 				rkopsterror("avec_resize : ");
 #endif

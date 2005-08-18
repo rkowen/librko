@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec_walk.c,v 1.2 2003/09/05 05:02:00 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec_walk.c,v 1.3 2005/08/18 22:30:44 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -26,8 +26,8 @@ static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 #endif
 
 /* ---------------------------------------------------------------------- */
-/* avec_walk - returns all the keys in a NULL terminated vector
- * else returns NULL, but is not thread safe
+/* avec_walk - walks through all the enries in the hash object array
+ * else returns NULL when through, but is not thread safe
  * First call gives the avec, subsequent calls need to have NULL passed in.
  */
 avec_element **avec_walk(avec *av) {

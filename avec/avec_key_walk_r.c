@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec_keys.c,v 1.3 2005/08/18 22:30:44 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec_key_walk_r.c,v 1.1 2005/08/18 22:30:44 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -20,50 +20,43 @@ static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
-#ifdef MEMDEBUG
-#  include "memdebug.h"
-#endif
 #include "avec.h"
+#include "avec_.h"
 #ifdef RKOERROR
 #  include "rkoerror.h"
 #endif
 
 /* ---------------------------------------------------------------------- */
-/* avec_keys - returns all the keys in a NULL terminated vector
- * else returns NULL
+/* avec_key_walk_r - walks through the entries of the object hash array
+ * given by the key vector (NULL terminated list of keys)
+ * advances the key vector ptr by one key.
+ * else returns NULL when through.
  */
-char const * const *avec_keys(avec *av) {
-	char const * const *retval = (char const * const *) NULL;
-	char const **ptr;
-	avec_element **aeptr;
-
-	if (!avec_exists(av)) {
-#ifdef RKOERROR
-		(void) rkopsterror("avec_keys : ");
-#endif
-		return retval;
-	}
-	if (!(retval = (char const * const *)
-			calloc(av->number + 1, sizeof(char const *)))) {
-#ifdef RKOERROR
-		(void) rkocpyerror("avec_keys : malloc error!");
-		rkoerrno = RKOMEMERR;
-#endif
-		return retval;
-	}
-
-	if (!av->number) return retval;	/* empty vector */
-
-	aeptr = (avec_element **) NULL;
-	ptr = (char const **) retval;
-	while ((aeptr = avec_walk_r(av,aeptr))) {
-		*ptr = AVEC_KEY(*aeptr);
-		ptr++;
-	};
+avec_element *avec_key_walk_r(avec *av, char ***keyvec) {
+	avec_element *retval = (avec_element *) NULL;
 
 #ifdef RKOERROR
 	rkoerrno = RKO_OK;
 #endif
+	if (!avec_exists(av)) {
+#ifdef RKOERROR
+		(void) rkopsterror("avec_key_walk_r : ");
+#endif
+		return retval;
+	}
+
+	/* must have key vector */
+	if (!keyvec) {
+		(void) rkocpyerror("avec_key_walk_r : must give key vector");
+	}
+	/* if value is NULL then finished */
+	if (!*keyvec) {
+		return retval;
+	}
+
+	retval = *(avec_hash_search(AVEC_MATCH, av, **keyvec));
+	(*keyvec)++;
+
 	return retval;
 }
 
