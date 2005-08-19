@@ -20,37 +20,46 @@
 #  define strnmalloc(a,b)  strcpy((char *) malloc((b)),(a))
 #  define strfree(a)  (free(*a),0)
 #endif
-#include "uvec.h"
 #include "avec.h"
 
 char testbuf[512];
 
-int printout(avec *av, char const *head, int err, char const *ans) {
+int printout(avec *av, char const *head, int err, char const *ans, int itype) {
 	char const * const * vec;
 	char **vptr;
-	char *sptr;
-	uvec *uk;
+	avec_element *aeptr;
+	char ibuf[64];
+
 	sprintf(testbuf,"e:%d c:%d n:%d",
 		err, avec_capacity(av), avec_number(av));
 	if (avec_exists(av)) {
-		strcat(testbuf," k:");
 		vec = avec_keys(av);
-		uk = uvec_alloc();
-		uvec_copy_vec(uk, vec, 0);
-		uvec_sort(uk, UVEC_ASCEND);
-		strcat(testbuf, sptr = uvec2str(uk, "|"));
-		strfree(&sptr);
+		vec = avec_key_sort(vec, avec_key_cmp_ascend);
+		vptr = (char **) vec;
+		if (*vec) {
+			strcat(testbuf," k:");
+			while (*vptr) {
+				strcat(testbuf,*vptr);
+				vptr++;
+				if (*vptr) strcat(testbuf,"|");
+			}
+
+			strcat(testbuf," v:");
+			aeptr = avec_key_walk(av, vec);
+			if (aeptr) do {
+				if (itype) {
+				  sprintf(ibuf," %d", (int) AVEC_DATA(aeptr));
+				  strcat(testbuf,ibuf);
+				} else {
+				  strcat(testbuf,(char *) AVEC_DATA(aeptr));
+				  strcat(testbuf,"|");
+				}
+			} while (aeptr = avec_key_walk(NULL,NULL));
+			if (!itype) testbuf[strlen(testbuf)-1] = '\0';
+		} else
+			strcat(testbuf," k: v:");
+
 		free((void *)vec);
-
-		vptr = uvec_vector(uk);
-		strcat(testbuf," v:");
-		while (*vptr) {
-			strcat(testbuf,avec_lookup(av,*vptr));
-			vptr++;
-			if (*vptr) strcat(testbuf,"|");
-		}
-
-		uvec_dtor(&uk);
 	}
 	if (strcmp(testbuf, ans)) {
 		printf("FAIL:%-20s=\n    <\t%s\n    >\t%s\n",head,testbuf,ans);
@@ -66,34 +75,33 @@ int printout(avec *av, char const *head, int err, char const *ans) {
 # endif
 }
 
-int printcount(avec *av, char const *head, int err, char const *ans) {
-	char const * const * vec;
+int printkeys(avec *av, char const * const *vec,
+	char const *head, char const *ans, int itype) {
+
 	char **vptr;
-	char *sptr;
-	uvec *uk;
+	avec_element *aeptr;
 	char ibuf[64];
 
-	sprintf(testbuf,"e:%d c:%d n:%d",
-		err, avec_capacity(av), avec_number(av));
+	sprintf(testbuf,"c:%d n:%d ",
+		avec_capacity(av), avec_number(av));
 	if (avec_exists(av)) {
-		strcat(testbuf," k:");
-		vec = avec_keys(av);
-		uk = uvec_alloc();
-		uvec_copy_vec(uk, vec, 0);
-		uvec_sort(uk, UVEC_ASCEND);
-		strcat(testbuf, sptr = uvec2str(uk, "|"));
-		strfree(&sptr);
+		strcat(testbuf,"k|v ");
+		vptr = (char **) vec;
+		aeptr = avec_key_walk(av, vec);
+		if (aeptr) do {
+			strcat(testbuf,AVEC_KEY(aeptr));
+			strcat(testbuf,"|");
+			if (itype) {
+				sprintf(ibuf,"%d", (int) AVEC_DATA(aeptr));
+				strcat(testbuf,ibuf);
+			} else {
+				strcat(testbuf,(char *) AVEC_DATA(aeptr));
+			}
+			strcat(testbuf," ");
+		} while (aeptr = avec_key_walk(NULL,NULL));
+		testbuf[strlen(testbuf)-1] = '\0';
+
 		free((void *)vec);
-
-		vptr = uvec_vector(uk);
-		strcat(testbuf," v:");
-		while (*vptr) {
-			sprintf(ibuf, " %d", (int) avec_lookup(av,*vptr));
-			strcat(testbuf,ibuf);
-			vptr++;
-		}
-
-		uvec_dtor(&uk);
 	}
 	if (strcmp(testbuf, ans)) {
 		printf("FAIL:%-20s=\n    <\t%s\n    >\t%s\n",head,testbuf,ans);
@@ -140,8 +148,8 @@ int verify(avec *av, char const *head) {
 		head);
 	aeptr = avec_walk(av);
 	do {
-		key = (char *)(*aeptr)->key;
-		val = (char *)(*aeptr)->data;
+		key = (char *) AVEC_KEY(*aeptr);
+		val = (char *) AVEC_DATA(*aeptr);
 		ptr = keys;
 		index = 0;
 		while (*ptr) {	/* find the associatiate value */
@@ -194,11 +202,15 @@ int verify(avec *av, char const *head) {
 
 #define _CHECK(c, v, a) \
 	count++; estat = c; \
-	results += printout(&(v), #c, estat, a);
+	results += printout(&(v), #c, estat, a, 0);
 
 #define _COUNT(c, v, a) \
 	count++; estat = c; \
-	results += printcount(&(v), #c, estat, a);
+	results += printout(&(v), #c, estat, a, 1);
+
+#define _KEYS(c, v, i, a) \
+	count++; \
+	results += printkeys(&(v), c, #c, a, i);
 
 int str_Xmalloc (void **data, va_list ap) {
 	char *newstr;
@@ -271,6 +283,10 @@ int main () {
 	"e:0 c:23 n:5 k:fifth|first|fourth|second|third v:=5=|=1=|=4=|=2=|=3=");
 	_CHECK(avec_insert(x,"sixth","=6="),*x,
 	"e:0 c:23 n:6 k:fifth|first|fourth|second|sixth|third v:=5=|=1=|=4=|=2=|=6=|=3=");
+	_KEYS(avec_key_sort(avec_keys(x),avec_key_cmp_ascend), *x, 0,
+	"c:23 n:6 k|v fifth|=5= first|=1= fourth|=4= second|=2= sixth|=6= third|=3=");
+	_KEYS(avec_key_sort(avec_keys(x),avec_key_cmp_descend), *x, 0,
+	"c:23 n:6 k|v third|=3= sixth|=6= second|=2= fourth|=4= first|=1= fifth|=5=");
 	_CHECK(avec_delete(x,"forth"),*x,
 	"e:-1 c:23 n:6 k:fifth|first|fourth|second|sixth|third v:=5=|=1=|=4=|=2=|=6=|=3=");
 	_CHECK(avec_delete(x,"second"),*x,
@@ -330,6 +346,10 @@ int main () {
 	"e:0 c:23 n:5 k:fifth|first|fourth|second|third v:=5=|=1=|=4=|=2=|=3=");
 	_CHECK(avec_insert(y,"sixth","=6="),*y,
 	"e:0 c:23 n:6 k:fifth|first|fourth|second|sixth|third v:=5=|=1=|=4=|=2=|=6=|=3=");
+	_KEYS(avec_key_sort(avec_keys(y),avec_key_cmp_ascend), *y, 0,
+	"c:23 n:6 k|v fifth|=5= first|=1= fourth|=4= second|=2= sixth|=6= third|=3=");
+	_KEYS(avec_key_sort(avec_keys(y),avec_key_cmp_descend), *y, 0,
+	"c:23 n:6 k|v third|=3= sixth|=6= second|=2= fourth|=4= first|=1= fifth|=5=");
 	_CHECK(avec_delete(y,"forth"),*y,
 	"e:-1 c:23 n:6 k:fifth|first|fourth|second|sixth|third v:=5=|=1=|=4=|=2=|=6=|=3=");
 	_CHECK(avec_delete(y,"second"),*y,
@@ -382,6 +402,11 @@ int main () {
 		"e:0 c:11 n:2 k:first|second v: 2 1");
 	_COUNT(avec_insert(z,"foo"),*z,
 		"e:0 c:11 n:3 k:first|foo|second v: 2 1 1");
+	_KEYS(avec_key_sort(avec_keys(z),avec_key_cmp_ascend), *z, 1,
+	"c:11 n:3 k|v first|2 foo|1 second|1");
+	_KEYS(avec_key_sort(avec_keys(z),avec_key_cmp_descend), *z, 1,
+	"c:11 n:3 k|v second|1 foo|1 first|2");
+
 	_COUNT(avec_remove(z,"foo"),*z,
 		"e:0 c:11 n:2 k:first|second v: 2 1");
 	_COUNT(avec_insert(z,"first"),*z,

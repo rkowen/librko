@@ -1,7 +1,7 @@
 #ifndef _AVEC_H_
 #  define _AVEC_H_
 /* 
- * RCSID @(#)$Id: avec.h,v 1.10 2003/09/04 19:38:54 rk Exp $
+ * RCSID @(#)$Id: avec.h,v 1.11 2005/08/19 05:39:31 rk Exp $
  */
 /** ** Copyright *********************************************************** **
  ** 									     **
@@ -42,7 +42,7 @@ typedef struct {
 typedef struct {
 	char		  tag[5];	/* name tag for this type */
 	avec_element	**hash;		/* container for keys & data */
-	int		  number;	/* current number of hash */
+	int		  number;	/* current number in hash */
 	int		  capacity;	/* the possible capacity of hash */
 	int		  percentage;	/* percentage of capacity that
 					   forces a resize larger 
@@ -92,7 +92,19 @@ char const * const        *avec_keys(avec *av);
 void                     **avec_values(avec *av);
 avec_element const *const *avec_hash(avec *av);
 
+int    avec_key_cmp_ascend(void const *a, void const *b);
+int    avec_key_cmp_descend(void const *a, void const *b);
+#ifdef HAVE_STRCASECMP
+int    avec_key_cmp_case_ascend(void const *a, void const *b);
+int    avec_key_cmp_case_descend(void const *a, void const *b);
+#endif /* HAVE_STRCASECMP */
+
+char const * const        *avec_key_sort(char const * const *keys,
+	int (*cmp)(void const *a, void const *b));
+avec_element              *avec_key_walk_r(avec *av, char ***keyvec);
+avec_element              *avec_key_walk(avec *av, char const * const *keys);
+
 #  ifdef __cplusplus
-	}
+}
 #  endif
 #endif /* _AVEC_H_ */

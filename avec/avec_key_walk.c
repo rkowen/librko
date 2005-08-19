@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec_key_walk_r.c,v 1.2 2005/08/19 05:39:18 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec_key_walk.c,v 1.1 2005/08/19 05:39:18 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -21,42 +21,25 @@ static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 #  include "config.h"
 #endif
 #include "avec.h"
-#include "avec_.h"
 #ifdef RKOERROR
 #  include "rkoerror.h"
 #endif
 
 /* ---------------------------------------------------------------------- */
-/* avec_key_walk_r - walks through the entries of the object hash array
- * given by the key vector (NULL terminated list of keys)
- * advances the key vector ptr by one key.
- * else returns NULL when through.
+/* avec_key_walk - walks through all the entries given by the vector
+ * of keys returning an avec_elem * pointer,
+ * else returns NULL when through, but is not thread safe
+ * First call gives the avec and vector, but subsequent calls need to
+ * have NULL passed in for one or the other arguments (best if both).
  */
-avec_element *avec_key_walk_r(avec *av, char ***keyvec) {
-	avec_element *retval = (avec_element *) NULL;
-
-#ifdef RKOERROR
-	rkoerrno = RKO_OK;
-#endif
-	if (!avec_exists(av)) {
-#ifdef RKOERROR
-		(void) rkopsterror("avec_key_walk_r : ");
-#endif
-		return retval;
+avec_element *avec_key_walk(avec *av, char const * const *keys) {
+	static avec *av_;
+	static char **ptrptr_;
+	if (av && keys) {	/* first time through */
+		av_ = av;
+		ptrptr_ = (char **) keys;
 	}
 
-	/* must have key vector */
-	if (!keyvec || !*keyvec) {
-		(void) rkocpyerror("avec_key_walk_r : must give key vector");
-	}
-	/* if value is NULL then finished */
-	if (!**keyvec) {
-		return retval;
-	}
-
-	retval = *(avec_hash_search(AVEC_MATCH, av, **keyvec));
-	(*keyvec)++;
-
-	return retval;
+	return avec_key_walk_r(av_, &ptrptr_);
 }
 

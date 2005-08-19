@@ -1,0 +1,169 @@
+.\"
+.TH METROPOLIS 3 "23 August 1993"
+.SH NAME
+metropolis \- Nicholas Metropolis algorithm for combinatorial optimization
+.SH SYNOPSIS
+.LP
+.nf
+.ft B
+#include "librko.h"
+.ft
+.fi
+.LP
+.nf
+.BR
+int metropolis(int flag, int maxstep, int indexdim, int *index,
+                PRECISION (*cost)(int,int*,swaptype,int,int),
+                PRECISION (*invtemp)(int,int),
+                PRECISION (*ranfn)(void));
+.SH DESCRIPTION
+.B metropolis(\|)
+implements the Nicholas Metropolis algorithm, which simply stated:
+``Propose a move and either accept or reject it.''
+This method is sometimes called ``simulated annealing'' and is ideal
+for doing combinatorial optimization, or the optimization of a
+discrete ordering of objects.  An example of this is the traveling
+salesman problem where a salesman has N cities to visit and the goal
+is to ``minimize'' the cost or distance traveled.  The number of
+paths that can be taken is N! and for finding the optimum route
+becomes prohibitively expensive for larger N.  The Metropolis algorithm
+starts with any route and rearranges the route until it settles into
+a minimum.  It's not guaranteed to be the global minimum, but it will
+provide a good overall solution without breaking the computational bank.
+
+The
+.B metropolis(\|)
+function will rearrange the entries in an
+.I index
+array and needs no other detailed information concerning the data,
+since ``communication'' with the data is all done through user supplied
+functions.
+The resultant
+.I index
+array will contain an optimized sequence of indices as determined by
+the user ``cost'' or ``energy'' function which
+.B metropolis(\|)
+is trying to minimize.
+.LP
+.I PRECISION
+is typedef'd to double as default if
+.I _PRECISION_
+is undefined.  However, if another type is to be used, then a
+macro
+.I exp(\|)
+may need to be defined.  See the source code and header files for
+further documentation regarding this.
+.LP
+.B metropolis(\|)
+returns the number of steps, which should be equal to
+.BR maxstep ,
+else it returns a negative value to indicate an error.
+.LP
+The calling program for this function must provide the following
+information:
+.TP 10
+flag
+\- which can be any
+.IR OR 'd
+combination of
+.RS 10
+.TP 19
+Mpls_RAN_INDEX
+.B metropolis(\|)
+will generate a random index array
+unless Mpls_FIX_* is set,
+else the user must supply a ``good'' guess.
+Good in the sense each index number is represented.
+.TP
+Mpls_RAN_SWAP
+use swapping of indices
+(
+.I e.g.
+`abcdefg' \(-> `a\fIe\fRcd\fIb\fRfg' ).
+.TP
+Mpls_RAN_PERMUTE
+randomly cut ``string'' of indices and permute
+(
+.I e.g.
+`abcdefg' \(-> `\fIefg\fRabcd' ).
+.TP
+Mpls_RAN_REVERSE
+randomly cut ``string'' and reverse substring
+(
+.I e.g.
+`abcdefg' \(-> `a\fIedcb\fRfg' ).
+.TP
+Mpls_FIX_INITIAL
+keep the initial
+.B index[0]
+fixed
+.TP
+Mpls_FIX_FINAL
+keep the final
+.B index[indexdim-1]
+fixed
+.LP
+If flag = Mpls_RAN_* | Mpls_FIX_* are set
+.B metropolis(\|)
+will only randomize with respect to the rest of the
+indices. The user will have to provide the
+fixed indices and populate the rest of the
+index array with appropriate values.
+.RE
+.TP
+maxstep
+Stops
+.B metropolis(\|)
+from performing more than
+.B maxstep
+steps (and must be a positive integer).
+.TP
+indexdim
+The dimension of the
+.B index[]
+array.
+.TP
+index
+Contains the ``string'' of indices to be shuffled.
+.LP
+The following are the user supplied functions:
+.RS 10
+PRECISION cost(int indexdim,int *index,swaptype swapmethod,
+int swap1, int swap2)
+.RS 8
+returns the ``cost'' or ``energy'' of the given configuration
+where swap1,swap2 are the indices for the last
+two entries in index[] that were swapped,
+permuted, or string reversed given by
+swapmethod.
+.LP
+This may help cost() be more efficient, but
+need not be used. However,
+.B metropolis(\|)
+sets
+swap1=swap2=-1 for the first call to cost()
+and set swapmethod=_NONE.
+.RE
+PRECISION invtemp(int maxstep,int current_step)
+.RS 8
+returns the ``inverse temperature'' for
+simulated annealing.  It should be a
+monotonically increasing function.
+.RE
+PRECISION ranfn(void)
+.RS 8
+a uniformly distributed pseudo-random
+generator.  Seed initialization must be
+done prior to invoking
+.BR metropolis(\|) .
+.RE
+.RE
+.SH AUTHOR
+R.K.Owen,Ph.D., based on the paper ``Equation of State Calculation
+by Fast Computing Machines'' by Nicholas Metropolis, Arianna W. Rosenbluth,
+Marshall N. Rosenbluth, Augusta H. Teller, and Edward Teller;
+.I Jour. Chem. Physics
+.B 21
+(Sept. 1949) 1087
+.SH SEE ALSO
+urand(3rko)

@@ -1,4 +1,4 @@
-.\" RCSID @(#)$Id: avec.man,v 1.6 2003/09/04 19:38:54 rk Exp $
+.\" RCSID @(#)$Id: avec.man,v 1.7 2005/08/19 05:39:22 rk Exp $
 .\" LIBDIR
 .TH "avec" "3rko" "31 Oct 1997"
 .SH NAME
@@ -31,7 +31,7 @@ typedef struct {
 typedef struct {
 	char		  tag[5];	/* name tag for this type */
 	avec_element	**hash;		/* container for keys & data */
-	int		  number;	/* current number of hash */
+	int		  number;	/* current number in hash */
 	int		  capacity;	/* the possible capacity of hash */
 	int		  percentage;	/* percentage of capacity that
 					   forces a resize larger 
@@ -81,6 +81,18 @@ char const * const        *avec_keys(avec *av);
 void                     **avec_values(avec *av);
 avec_element const *const *avec_hash(avec *av);
 
+int    avec_key_cmp_ascend(void const *a, void const *b);
+int    avec_key_cmp_descend(void const *a, void const *b);
+#ifdef HAVE_STRCASECMP
+int    avec_key_cmp_case_ascend(void const *a, void const *b);
+int    avec_key_cmp_case_descend(void const *a, void const *b);
+#endif /* HAVE_STRCASECMP */
+                                                                                
+char const * const        *avec_key_sort(char const * const *keys,
+        int (*cmp)(void const *a, void const *b));
+avec_element              *avec_key_walk_r(avec *av, char ***keyvec);
+avec_element              *avec_key_walk(avec *av, char const * const *keys);
+                                                                                
 .fi
 
 .SH DESCRIPTION
@@ -276,7 +288,7 @@ returning a pointer to the avec_element that contains the
 key and the data.
 The first call must have av pointing to an avec object,
 and subsequent calls must have av=NULL.
-br
+.br
 This routine is not thread safe since it uses internal static variables.
 It should not be used at all.  Use
 .I avec_walk_r
@@ -298,6 +310,79 @@ The data values can be changed.
 .I avec_hash
 Returns pointer to the internal hash array.  This routine is only
 meant for those users that want to study the hashing distribution.
+
+.TP
+.I avec_key_cmp_ascend
+Comparison function for
+.I qsort()
+and
+.I avec_key_sort()
+arranges the keys in ascending order based on
+.I strcmp()
+
+.TP
+.I avec_key_cmp_descend
+Comparison function for
+.I qsort()
+and
+.I avec_key_sort()
+arranges the keys in descending order based on
+.I strcmp()
+
+.TP
+.I avec_key_cmp_case_ascend
+Comparison function for
+.I qsort()
+and
+.I avec_key_sort()
+arranges the keys in caseless ascending order based on
+.I strcasecmp()
+if it exists
+
+.TP
+.I avec_key_cmp_case_descend
+Comparison function for
+.I qsort()
+and
+.I avec_key_sort()
+arranges the keys in caseless descending order based on
+.I strcasecmp()
+if it exists
+
+.TP
+.I avec_key_sort
+sort a key vector, as returned by
+.I avec_keys()
+in the order specified via the given comparison function
+
+.TP
+.I avec_key_walk_r
+A re-entrant version of
+.I avec_key_walk
+which marches through all the entries of the object hash array
+given by the vector of keys with repeated calls,
+returning a pointer to the avec_element that contains the
+key and the data.
+.I avec_key_walk_r
+will return NULL when all the elements have been visited,
+and the vector pointer will be set to the end of NULL terminated vector.
+See the example.
+
+.TP
+.I avec_key_walk
+marches through all the entries of the object hash array
+given by the vector of keys with repeated calls,
+returning a pointer to the avec_element that contains the
+key and the data.
+The first call must have av pointing to an avec object,
+and must have a vector of keys.
+Subsequent calls must have either av=NULL or the vector= NULL
+(or ideally both should be NULL).
+.br
+This routine is not thread safe since it uses internal static variables.
+It should not be used at all.  Use
+.I avec_key_walk_r
+instead.  See the example.
 
 .SH AVEC_FNS
 
@@ -435,9 +520,11 @@ sources.)
 int main() {
 	avec *wordcount;
 	avec_element **elem = (avec_element **) NULL;
+	avec_element *e;
+	char **vec, **vptr;
 	int i;
 
-	if (avec_set_fns(AVEC_COUNT, NULL)) return -2;
+	if (avec_set_def_fns(AVEC_COUNT, NULL)) return -2;
 	if (!(wordcount = avec_ctor(50))) return -1;
 	if (avec_resize_percentage(wordcount,40)) return -3;
 
@@ -447,9 +534,18 @@ int main() {
 		avec_insert(wordcount,"third");
 	}
 
+	/* print list as it comes from the hash */
 	while ((elem = avec_walk_r(wordcount, elem))) {
 		printf("%s\t%d\n", AVEC_KEY(*elem), (int) AVEC_DATA(*elem));
 	}
+	printf("---\n");
+	/* print sorted list */
+	vptr = vec = (char **)
+		avec_key_sort(avec_keys(wordcount),avec_key_cmp_ascend);
+	while ((e = avec_key_walk_r(wordcount,&vptr))) {
+		printf("%s\t%d\n", AVEC_KEY(e), (int) AVEC_DATA(e));
+	}
+	free((void *) vec);
 
 	if(avec_dtor(&wordcount)) return -4;
 
@@ -459,9 +555,14 @@ int main() {
 .P
 Should get the following results:
 .nf
-first	1
-third	4
-second	4
+first   1
+third   4
+second  4
+---
+first   1
+second  4
+third   4
+
 .fi
 
 .SH SEE ALSO
@@ -477,6 +578,6 @@ mechanism, and should be self explanatory.
 .SH BUGS
 
 .SH AUTHOR
-R.K.Owen,Ph.D. 2002/02/14
+R.K.Owen,Ph.D. 2005/08/18
 
 .KEY WORDS

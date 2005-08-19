@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## File:        ./Makefile.am
-## Versions:    $Id: Makefile.am,v 1.22 2005/03/29 06:16:42 rk Exp $
+## Versions:    $Id: Makefile.am,v 1.23 2005/08/19 05:39:15 rk Exp $
 ## Created:     2002/06/14
 ##
 ###########################################################################
@@ -27,7 +27,8 @@ avec_srcs = 								\
 	avec/avec_init.c avec/avec_insert.c avec/avec_keys.c		\
 	avec/avec_lookup.c avec/avec_remove.c avec/avec_resize.c	\
 	avec/avec_resize_percentage.c avec/avec_set_fns.c		\
-	avec/avec_values.c avec/avec_walk.c avec/avec_walk_r.c
+	avec/avec_values.c avec/avec_walk.c avec/avec_walk_r.c		\
+	avec/avec_key_sort.c avec/avec_key_walk_r.c avec/avec_key_walk.c
 
 coexec_srcs = 								\
 	coexec/invoke.c coexec/postfilter.c coexec/postprocess.c	\
