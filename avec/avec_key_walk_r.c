@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: avec_key_walk_r.c,v 1.2 2005/08/19 05:39:18 rk Exp $";
+static const char RCSID[]="@(#)$Id: avec_key_walk_r.c,v 1.3 2005/08/19 15:51:05 rk Exp $";
 static const char AUTHOR[]="@(#)avec 1.0 2002/02/08 R.K.Owen,Ph.D.";
 /* avec.c -
  * This could have easily been made a C++ class, but is
@@ -47,7 +47,10 @@ avec_element *avec_key_walk_r(avec *av, char ***keyvec) {
 
 	/* must have key vector */
 	if (!keyvec || !*keyvec) {
+#ifdef RKOERROR
 		(void) rkocpyerror("avec_key_walk_r : must give key vector");
+#endif
+		return retval;
 	}
 	/* if value is NULL then finished */
 	if (!**keyvec) {
