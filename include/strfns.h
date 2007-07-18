@@ -1,7 +1,7 @@
 #ifndef _STRFNS_H_
 #  define _STRFNS_H_
 /* 
- * RCSID @(#)$Id: strfns.h,v 1.3 2003/09/05 05:02:00 rk Exp $
+ * RCSID @(#)$Id: strfns.h,v 1.4 2007/07/18 21:49:22 rk Exp $
  */
 /** ** Copyright *********************************************************** **
  ** 									     **
@@ -57,8 +57,10 @@ extern int MacroTrf[];
 
 #define NAMETOL(a,b)	nametol(a,#b,&b)
 #define NAMETOD(a,b)	nametod(a,#b,&b)
-int	 nametol(const char *line, const char *name, long *value);
-int	 nametod(const char *line, const char *name, double *value);
+#define NAMETOS(a,b,lb)	nametos(a,#b,b,lb)
+int	nametol(const char *line, const char *name, long *value);
+int	nametod(const char *line, const char *name, double *value);
+int	nametos(const char *line, const char *name, char *value, size_t n);
 
 avec *key_value(const char *string,
 	const char *pair_delim, const char *ref_delim, int nowhitespace);
