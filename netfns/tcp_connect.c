@@ -45,7 +45,7 @@ static const char AUTHOR[]="@(#)tcp_connect 1.0 03/26/96 R.K.Owen,Ph.D.";
 #include <netinet/in.h>
 #include "librko.h"
 
-#if	!(defined(_CRAY) || defined(_AIX))
+#if	!(defined(HAVE_HSTRERROR) || defined(_CRAY) || defined(_AIX))
 #  define HERRNO_LEN 128
 /* quick routine that should have been provided with herror */
 static char const *hstrerror(int hh_errno) {

@@ -1,6 +1,6 @@
 dnl
 dnl File:	configure.ac
-dnl Revision:	$Id: configure.ac,v 1.10 2005/08/19 15:51:05 rk Exp $
+dnl Revision:	$Id: configure.ac,v 1.11 2007/07/19 18:10:28 rk Exp $
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl You need autoconf 2.52 or better
@@ -111,7 +111,7 @@ AC_FUNC_MALLOC
 AC_FUNC_SETVBUF_REVERSED
 AC_FUNC_STAT
 AC_FUNC_STRTOD
-AC_CHECK_FUNCS([alarm dup2 getcwd gethostbyaddr gethostbyname inet_ntoa memmove memset socket sqrt strcasecmp strchr strpbrk strrchr strstr strtol])
+AC_CHECK_FUNCS([alarm dup2 getcwd gethostbyaddr gethostbyname hstrerror inet_ntoa memmove memset socket sqrt strcasecmp strchr strpbrk strrchr strstr strtol])
 
 AC_CONFIG_FILES([Makefile
                  tests/Makefile

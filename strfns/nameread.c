@@ -1,4 +1,4 @@
-static const char RCSID[]="@(#)$Id: nameread.c,v 1.7 2007/07/18 21:49:22 rk Exp $";
+static const char RCSID[]="@(#)$Id: nameread.c,v 1.8 2007/07/19 18:10:28 rk Exp $";
 static const char AUTHOR[]="@(#)nameread 1.0 01/01/94 R.K.Owen,Ph.D.";
 
 /* nameread.c - reads a line of text and finds the variable name 
@@ -36,7 +36,7 @@ static const char AUTHOR[]="@(#)nameread 1.0 01/01/94 R.K.Owen,Ph.D.";
  ** ************************************************************************ **/
 
 /* define TEST to create a stand-alone program to test the routine */
-#if 1
+#if 0
 #  define TEST
 #endif
 

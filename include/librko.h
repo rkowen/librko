@@ -1,7 +1,7 @@
 #ifndef _LIBRKO_H_
 #  define _LIBRKO_H_
 /* 
- * RCSID @(#)$Id: librko.h,v 1.25 2002/06/27 20:32:02 rk Exp $
+ * RCSID @(#)$Id: librko.h,v 1.26 2007/07/19 18:10:28 rk Exp $
  */
 /** ** Copyright *********************************************************** **
  ** 									     **
@@ -73,8 +73,10 @@ extern char *MacroStr[];
 extern int MacroTrf[];
 #define NAMETOL(a,b)	nametol(a,#b,&b)
 #define NAMETOD(a,b)	nametod(a,#b,&b)
+#define NAMETOS(a,b,n)	nametos(a,#b,b,n)
 int nametol(const char *line, const char *name, long *value);
 int nametod(const char *line, const char *name, double *value);
+int nametos(const char *line, const char *name, char *value, size_t n);
 PRECISION foptim(int iopt, PRECISION ax, PRECISION bx,
 	PRECISION (*f)(PRECISION), PRECISION tol);
 PRECISION fzeroin(PRECISION ax, PRECISION bx,
