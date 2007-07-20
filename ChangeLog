@@ -1,5 +1,1232 @@
-2002-10-22  R.K. Owen Ph.D.  <rk@owen.sj.ca.us>
+Do Not Edit!  This is a generated file.
+	You should edit the NEWS file instead.
 
-	* coexec/spawn3.c: (spawn3): fixed stderr buffering problem
-	* docs/spawn3.man: added working example
+2007-07-19 11:10  rk
+
+	* configure.ac, docs/nameread.man, include/librko.h,
+	netfns/tcp_connect.c, strfns/nameread.c, tests/tnameread.c: Updated
+	the nameread test.  Have configure test for hstrerror() for
+	netfns/tcp_connect.c
+
+2007-07-18 14:49  rk
+
+	* docs/nameread.man, include/strfns.h, strfns/nameread.c: modified
+	the nameread nameto*() functions to coalsce the code to a single
+	function for the various flavours, and added a new flavor.  Now
+	have long, double, and char*.
+
+2005-08-19 08:51  rk
+
+	* configure.ac, avec/avec_key_walk_r.c: Better docs and fixed
+	unprotected rkoerror reference.
+
+2005-08-18 22:39  rk
+
+	* Makefile.am, avec/avec_key_walk.c, avec/avec_key_walk_r.c,
+	docs/avec.man, docs/metropolis.man, include/avec.h, tests/tavec.c:
+	Added avec_key_walk() for simple non-threading marches through the
+	hash given a vector of keys.
+
+2005-08-18 15:30  rk
+
+	* avec/: avec_.c, avec_close.c, avec_insert.c, avec_key_sort.c,
+	avec_key_walk_r.c, avec_keys.c, avec_lookup.c, avec_resize.c,
+	avec_values.c, avec_walk.c, avec_walk_r.c: Added a sorted key walk
+	and cleaned up some of the other code.
+
+2005-03-28 22:16  rk
+
+	* Makefile.am: Added the metropolis sources to library.
+
+2005-03-05 18:58  rk
+
+	* metropolis/: .sed, Makefile, README, idxperm.c, idxrevr.c,
+	idxswap.c, metropolis.c, metropolis.h, metropolis.old.h,
+	ranindex.c, ranperm.c, ranswap.c: Changed the license terms to LGPL
+	and made the dates to 4 digit years.
+
+2003-09-05 10:00  rk
+
+	* Makefile.am: More selective on what gets into the dist-gzip
+
+2003-09-05 09:44  rk
+
+	* Makefile.am, uvec/uvec_insert.c, uvec/uvec_shift.c: Fixed some
+	short string inserts.
+
+2003-09-05 08:48  rk
+
+	* strfns/key_value.c, tests/Makefile.am, tests/tkey_value.c: Added
+	the key_value test, and fixed a small bug.
+
+2003-09-04 22:02  rk
+
+	* Makefile.am, avec/avec_.c, avec/avec_.h, avec/avec_accessor.c,
+	avec/avec_alloc.c, avec/avec_close.c, avec/avec_ctor.c,
+	avec/avec_dealloc.c, avec/avec_decrease.c, avec/avec_delete.c,
+	avec/avec_dtor.c, avec/avec_increase.c, avec/avec_init.c,
+	avec/avec_insert.c, avec/avec_keys.c, avec/avec_lookup.c,
+	avec/avec_remove.c, avec/avec_resize.c,
+	avec/avec_resize_percentage.c, avec/avec_set_fns.c,
+	avec/avec_values.c, avec/avec_walk.c, avec/avec_walk_r.c,
+	docs/key_value.man, include/strfns.h, strfns/key_value.c,
+	strfns/strmem.c, strfns/timedfgets.c: Added strfns/key_value() and
+	protected the config.h include in avec.
+
+2003-09-04 12:38  rk
+
+	* memdbg.c, avec/avec_alloc.c, avec/avec_ctor.c, avec/avec_init.c,
+	avec/avec_set_fns.c, docs/avec.man, include/avec.h, tests/tavec.c:
+	Improved the avec_fns handling ... this did change the avec
+	definition wrt avec_ctor_(), avec_alloc_(), and avec_init_().
+
+2003-09-04 12:37  rk
+
+	* uvec/uvec_add.c: Changed uvec_add to add 1 to strlen of added
+	string.
+
+2003-08-25 12:13  rk
+
+	* coexec/prefile.c: Need to declare strrchr() with <string.h> .
+
+2003-08-25 11:26  rk
+
+	* Makefile.am, docs/coexec.man: Added the prefile.man to the
+	installation process.
+
+2003-08-25 11:12  rk
+
+	* Makefile.am, configure.ac, coexec/invoke.c, coexec/postfilter.c,
+	coexec/postprocess.c, coexec/prefile.c, coexec/prefilter.c,
+	coexec/preprocess.c, config/librko.m4, docs/coexec.man,
+	docs/prefile.man, include/coexec.h, tests/Makefile.am,
+	tests/testtext2.gz, tests/testtext3.Z, tests/testtext4.z,
+	tests/tprefile.c: Added coexec/prefile for finding and handling
+	input files that may be compressed with gzip/compress/pack.
+
+2003-08-19 10:36  rk
+
+	* docs/spawn3.man: Updated spawn3 doc
+
+2002-10-22 14:49  rk
+
+	* .cvsignore: Have cvs ignore version.c & librko*tar.gz generated
+	files.
+
+2002-10-22 14:47  rk
+
+	* Makefile.am: Added ChangeLog & NEWS to be distributed too.
+
+2002-10-22 14:44  rk
+
+	* NEWS: Updated for 1.0.1
+
+2002-10-22 14:39  rk
+
+	* NEWS, configure.ac, coexec/spawn3.c, docs/spawn3.man: *
+	coexec/spawn3.c: (spawn3): fixed stderr buffering problem *
+	docs/spawn3.man: added working example * Added ChangeLog & NEWS
+
+2002-10-21 12:46  rk
+
+	* Makefile.am, configure.ac: Minor changes for 1.0.0 version.
+
+2002-10-21 12:42  rk
+
+	* Makefile.am, configure.ac, version.c, version.c.in,
+	docs/spawn3.man, tests/Makefile.am: Added spawn3 doc, and let
+	configure put the version info into version.c
+
+2002-10-21 10:17  rk
+
+	* .cvsignore, Makefile.am, coexec/spawn3.c, config/.cvsignore,
+	docs/spawn.man, include/coexec.h, tests/.cvsignore,
+	tests/Makefile.am, tests/Makefile.in, tests/tspawn3.c,
+	tests/tweety.c: Added spawn3 to tie into the child process
+	stdin/stdout/stderr.  Eliminated more of the generated files from
+	CVS.
+
+2002-10-11 14:53  rk
+
+	* uvec/: uvec_copy_str.c, uvec_strfree.c: Some minor mods to
+	eliminate any gcc -Wall warnings.
+
+2002-10-03 10:46  rk
+
+	* docs/uvec.man: Update uvec man page.
+
+2002-10-02 09:14  rk
+
+	* Makefile.am, Makefile.in, aclocal.m4, config.h.in, configure,
+	configure.ac, config/compile, config/depcomp, config/install-sh,
+	config/missing, config/mkinstalldirs: Removed auto-generated files.
+
+2002-09-12 18:50  rk
+
+	* Makefile.am, Makefile.in, ansi_seq.c, clocker.c, config.h.in,
+	configure, configure.ac, dirtree.c, memdbg.c, memdebug.c,
+	rkoerror.c, avec/avec_set_fns.c, include/uvec.h, tests/Makefile,
+	tests/tavec.c, tests/tuvec.c, uvec/uvec_copy_str.c,
+	uvec/uvec_copy_vec.c, uvec/uvec_strfns.c, uvec/uvec_strfree.c:
+	Added uvec_strfree to free up string returned by uvec2str.  Added
+	changes made for modules lib, mostly ways to set & retrieve the
+	strfn routines.
+
+2002-08-23 08:18  rk
+
+	* strfns/: nameread.c, strchop.c, strdbecpy.c, strmem.c,
+	timedfgets.c, wcstrcmp.c: Updated the copyright notice.
+
+2002-07-18 13:44  rk
+
+	* Makefile.am, Makefile.in, docs/list.man, include/list.h,
+	list/list_append.c, list/list_insert.c, list/list_qsort.c,
+	list/list_swap.c, tests/tlist.c: Added some useful features to the
+	list object - swapping and sorting.  Got the docs up-to-date too.
+
+2002-07-17 22:10  rk
+
+	* .cvsignore, Makefile.am, Makefile.in, include/list.h,
+	list/list_.c, list/list_.h, list/list_append.c, list/list_ctor.c,
+	list/list_delete.c, list/list_dtor.c, list/list_exists.c,
+	list/list_first.c, list/list_insert.c, list/list_last.c,
+	list/list_number.c, list/list_pop.c, list/list_push.c,
+	list/list_shift.c, list/list_sizeof.c, list/list_unshift.c,
+	netfns/.cvsignore, numfns/.cvsignore, tests/tlist.c,
+	urand/.cvsignore: Reworked the list code.
+
+2002-07-16 14:33  rk
+
+	* Makefile.am, Makefile.in, docs/avec.man, docs/list.man,
+	include/list.h, list/list_append.c, list/list_push.c: Adding a
+	list_append (and letting list_push call it) to add an element after
+	the current pointer element.
+
+2002-07-08 09:29  rk
+
+	* docs/strmalloc.man, strfns/strmalloc.c: Updated docs and fixed
+	slight problem.
+
+2002-07-08 08:55  rk
+
+	* Makefile.am, Makefile.in, config.h.in, configure.ac,
+	avec/avec_accessor.c, include/strfns.h, include/strmalloc.h,
+	strfns/macrosub.c, strfns/strmalloc.c, tests/tavec.c,
+	tests/tclocker.c, tests/tdirtree.c, tests/tfilter.c,
+	tests/tfoptim.c, tests/tfzeroin.c, tests/tigcd.c, tests/tinvoke.c,
+	tests/tiprime.c, tests/tisqrt.c, tests/tlist.c, tests/tmacrosub.c,
+	tests/tnameread.c, tests/tpopen.c, tests/tspawn.c,
+	tests/tstrchop.c, tests/tstrdbecpy.c, tests/tstrmalloc.c,
+	tests/tstrmem.c, tests/ttfgets.c, tests/ttuvec.c, tests/tuvec.c,
+	tests/twcstrcmp.c, urand/all.csh, urand/script.csh, urand/urand.h,
+	urand/urand.old.h, urand/urand_.c: Created new interface for
+	strmalloc.  Qualified most includes.  Lots of misc changes.
+
+2002-06-29 21:07  rk
+
+	* Makefile.am, Makefile.in, aclocal.m4, coexec.c, configure,
+	coexec/.cvsignore, coexec/invoke.c, coexec/postfilter.c,
+	coexec/postprocess.c, coexec/prefilter.c, coexec/preprocess.c,
+	coexec/spawn.c, include/numfns.h, include/strfns.h,
+	strfns/.cvsignore, tests/Makefile, tests/Makefile.in: Broke out
+	coexec.c .
+
+2002-06-27 15:21  rk
+
+	* avec/avec_.h, igcd/igcd_.h, include/uvec.h, iprime/iprime_.h,
+	isqrt/isqrt_.h, uvec/str2uvec.c, uvec/uvec2str.c, uvec/uvec2uvec.c,
+	uvec/uvec_accessor.c, uvec/uvec_add.c, uvec/uvec_alloc.c,
+	uvec/uvec_close.c, uvec/uvec_copy.c, uvec/uvec_copy_str.c,
+	uvec/uvec_copy_vec.c, uvec/uvec_count_tok.c, uvec/uvec_ctor.c,
+	uvec/uvec_dealloc.c, uvec/uvec_dtor.c, uvec/uvec_init.c,
+	uvec/uvec_insert.c, uvec/uvec_push.c, uvec/uvec_randomize.c,
+	uvec/uvec_reverse.c, uvec/uvec_shift.c, uvec/uvec_sort.c,
+	uvec/uvec_strfns.c, uvec/vec2uvec.c: Put #include "config.h" in
+	appropriate header files.
+
+2002-06-27 15:07  rk
+
+	* Makefile.am, Makefile.in, copyright2, list.c, include/list.h,
+	list/.cvsignore, list/list_ctor.c, list/list_dtor.c,
+	list/list_exists.c, list/list_first.c, list/list_last.c,
+	list/list_number.c, list/list_pop.c, list/list_push.c,
+	list/list_shift.c, list/list_sizeof.c, list/list_unshift.c,
+	strfns/macrosub.c, strfns/strmem.c, strfns/timedfgets.c,
+	strfns/wcstrcmp.c: Broke out list.c .
+
+2002-06-27 14:02  rk
+
+	* tests/tfoptim.c: The test eps is now computed like the those
+	contained in foptim.c .
+
+2002-06-27 13:32  rk
+
+	* include/: ansi_seq.h, clocker.h, coexec.h, igcd.h, iprime.h,
+	isqrt.h, librko.h, list.h, memdebug.h, rkoerror.h, urand.h: Updated
+	licenses to LGPL.
+
+2002-06-27 13:09  rk
+
+	* numfns/: divdiff.c, foptim.c, fzeroin.c: Updated the license to
+	GPL.
+
+2002-06-24 14:55  rk
+
+	* Makefile.am, Makefile.in, avec.c, avec/.cvsignore, avec/avec_.c,
+	avec/avec_.h, avec/avec_accessor.c, avec/avec_alloc.c,
+	avec/avec_close.c, avec/avec_ctor.c, avec/avec_dealloc.c,
+	avec/avec_decrease.c, avec/avec_delete.c, avec/avec_dtor.c,
+	avec/avec_increase.c, avec/avec_init.c, avec/avec_insert.c,
+	avec/avec_keys.c, avec/avec_lookup.c, avec/avec_remove.c,
+	avec/avec_resize.c, avec/avec_resize_percentage.c,
+	avec/avec_set_fns.c, avec/avec_values.c, avec/avec_walk.c,
+	avec/avec_walk_r.c: Broke out avec.c .
+
+2002-06-24 13:23  rk
+
+	* igcd/igcd_.h, iprime/iprime_.h, isqrt/isqrt_.h, uvec/str2uvec.c,
+	uvec/uvec2str.c, uvec/uvec2uvec.c, uvec/uvec_accessor.c,
+	uvec/uvec_add.c, uvec/uvec_alloc.c, uvec/uvec_close.c,
+	uvec/uvec_copy.c, uvec/uvec_copy_str.c, uvec/uvec_copy_vec.c,
+	uvec/uvec_count_tok.c, uvec/uvec_ctor.c, uvec/uvec_dealloc.c,
+	uvec/uvec_dtor.c, uvec/uvec_init.c, uvec/uvec_insert.c,
+	uvec/uvec_push.c, uvec/uvec_randomize.c, uvec/uvec_reverse.c,
+	uvec/uvec_shift.c, uvec/uvec_sort.c, uvec/uvec_strfns.c,
+	uvec/vec2uvec.c: Put #include "config.h" into sources and privately
+	shared header files.
+
+2002-06-24 12:20  rk
+
+	* Makefile.am, Makefile.in, aclocal.m4, config.h.in, configure,
+	configure.ac, gcd.c, iprime.c, config/compile, igcd/.cvsignore,
+	igcd/chgcd.c, igcd/hgcd.c, igcd/igcd.c, igcd/igcd_.h, igcd/lgcd.c,
+	igcd/scgcd.c, igcd/ucgcd.c, igcd/ugcd.c, igcd/uhgcd.c,
+	igcd/ulgcd.c, include/librko.h, iprime/.cvsignore,
+	iprime/chprime.c, iprime/hprime.c, iprime/iprime.c,
+	iprime/iprime_.h, iprime/iprime_lut.c, iprime/lprime.c,
+	iprime/scprime.c, iprime/ucprime.c, iprime/uhprime.c,
+	iprime/uiprime.c, iprime/ulprime.c, isqrt/.cvsignore,
+	tests/Makefile, tests/Makefile.am, tests/Makefile.in,
+	tests/tigcd.c, uvec/.cvsignore: Broke out iprime.c and gcd.c
+	(renamed to igcd.c).  More clean up and automake improvements.
+
+2002-06-24 10:19  rk
+
+	* config/: depcomp, install-sh, missing, mkinstalldirs: Necessary
+	support scripts included automake.
+
+2002-06-24 10:04  rk
+
+	* Makefile, Makefile.am, Makefile.in, isqrt.c, isqrt/chsqrt.c,
+	isqrt/hsqrt.c, isqrt/isqrt.c, isqrt/isqrt_.h, isqrt/isqrt_lut.c,
+	isqrt/lsqrt.c, isqrt/scsqrt.c, isqrt/ucsrt.c, isqrt/uhsqrt.c,
+	isqrt/uisqrt.c, isqrt/ulsqrt.c, tests/Makefile, tests/Makefile.am,
+	tests/Makefile.in: Further automake refinements.  Broke apart
+	isqrt.c.
+
+2002-06-24 09:28  rk
+
+	* .cvsignore, Makefile, Makefile.am, Makefile.in, aclocal.m4,
+	config.h.in, configure, configure.ac, uvec.c, version.c,
+	tests/.cvsignore, tests/Makefile, tests/Makefile.am,
+	tests/Makefile.in, tests/tavec.c, tests/tuvec.c: Moving over to the
+	automake/autoconf/configure mechanism.	Broke apart uvec.c into
+	uvec/
+
+2002-06-23 22:44  rk
+
+	* docs/uvec.man, include/uvec.h, uvec/str2uvec.c, uvec/uvec2str.c,
+	uvec/uvec2uvec.c, uvec/uvec_accessor.c, uvec/uvec_add.c,
+	uvec/uvec_alloc.c, uvec/uvec_close.c, uvec/uvec_copy.c,
+	uvec/uvec_copy_str.c, uvec/uvec_copy_vec.c, uvec/uvec_count_tok.c,
+	uvec/uvec_ctor.c, uvec/uvec_dealloc.c, uvec/uvec_dtor.c,
+	uvec/uvec_init.c, uvec/uvec_insert.c, uvec/uvec_push.c,
+	uvec/uvec_randomize.c, uvec/uvec_reverse.c, uvec/uvec_shift.c,
+	uvec/uvec_sort.c, uvec/uvec_strfns.c, uvec/vec2uvec.c: Broke apart
+	uvec.c into its constitients, so only those pieces that are
+	required will be loaded.  Added uvec_qsort(), and upgraded the man
+	page.
+
+2002-06-21 14:51  rk
+
+	* LICENSE.GPL, LICENSE.LGPL, avec.c, uvec.c, include/avec.h,
+	include/uvec.h: Converting the license over to a GPL version.
+
+2002-03-07 12:44  rk
+
+	* list.c, docs/list.man, include/list.h, tests/doggy.c,
+	tests/kitty.c, tests/tlist.c: Changed list.c such that
+	shift/unshift affects the start of the list, and pop/push the end -
+	conforming to Perl's convention.
+
+2002-03-01 15:06  rk
+
+	* avec.c: Fixed bug with stdc avec_str_fns.
+
+2002-03-01 10:26  rk
+
+	* Makefile: clobber removes librko_m.a also.
+
+2002-03-01 09:30  rk
+
+	* minish/minish-tab.h: Need this to avoid re-yacc-ing.
+
+2002-02-28 21:23  rk
+
+	* Makefile, Makefile.inc, coexec.c, invoke.c, spawn.c,
+	docs/coexec.man, docs/invoke.man, docs/spawn.man, include/coexec.h,
+	include/librko.h, minish/Makefile, minish/minish-lex.c,
+	tests/Makefile, tests/birdy.c, tests/postfilter.c,
+	tests/prefilter.c, tests/tfilter.c, tests/tinvoke.c,
+	tests/tspawn.c: Merged spawn,invoke, and the filter routines into
+	coexec.c, and fixed things up generally.
+
+2002-02-27 14:29  rk
+
+	* include/librko.h, tests/tfilter.c, tests/tinvoke.c,
+	tests/tspawn.c: Looking at the co-process type functions.
+
+2002-02-22 17:04  rk
+
+	* strfns/strmalloc.c: Fixed strmalloc to compile OK on Crays.
+
+2002-02-22 17:01  rk
+
+	* tests/tavec.c: Fixed to use sort order of keys, because machines
+	with different size ints will hash keys to different values.
+
+2002-02-22 14:04  rk
+
+	* .cvsignore, Makefile, FTP/.cvsignore, FTP/README,
+	apps/Makefile.memdebug, minish/.cvsignore,
+	minish/fdtest/.cvsignore, tests/.cvsignore, urand/.cvsignore:
+	Ignoring many of the generated files.
+
+2002-02-22 13:39  rk
+
+	* avec.c: The AIX compiler didn't like the (int) casts of a void *
+	as a lvalue.
+
+2002-02-22 12:09  rk
+
+	* minish/: Makefile, fdlist.c, minish-lex.c, minish-yacc.c,
+	minish.lex, minish.yacc, fdtest/cmp.fdtest.testout: Some work and
+	update of minish.
+
+2002-02-22 10:19  rk
+
+	* minish/: .cvsignore, minish-lex.c, minish-yacc.c, minish.yacc,
+	fdtest/.cvsignore, mtest/.cvsignore: Updated with fresh yacc/lex
+	versions.
+
+2002-02-22 09:15  rk
+
+	* tests/: Makefile, nnn.c, ttt.c: Miscellaneous changes.
+
+2002-02-22 09:14  rk
+
+	* tests/tuvec.c: Fixed up the test to be memdbg clean (no memory
+	leaks).
+
+2002-02-22 09:13  rk
+
+	* tests/tlist.c: Added MEMDEBUG capability.
+
+2002-02-22 09:13  rk
+
+	* include/list.h: No real change here.
+
+2002-02-22 09:11  rk
+
+	* include/memdebug.h: Included stdio.h to define FILE for
+	memdebug_output()
+
+2002-02-22 09:10  rk
+
+	* memdbg.c: Fixed error with alloc/free count difference.
+
+2002-02-22 09:08  rk
+
+	* avec.c, docs/avec.man, tests/tavec.c, include/avec.h: Added
+	avec_remove() which uses the str_fns.data_rm routine.
+
+2002-02-21 12:46  rk
+
+	* Makefile, memdbg.c, setupmake, docs/avec.man, docs/memdbg.man,
+	docs/memdebug.man, tests/tmemdebug.c: Set up memdbg as it's own
+	app.  Fixed up Makefile and setupmake.
+
+2002-02-21 10:05  rk
+
+	* Makefile, avec.c, memdbg.c, memdebug.c, uvec.c, docs/avec.man,
+	docs/memdebug.man, include/memdebug.h, strfns/strmalloc.c,
+	tests/Makefile, tests/tavec.c, tests/tmemdbg.c, tests/tuvec.c,
+	urand/Makefile: Fine tuning of avec. Uses the REMOVED element
+	placeholder for deleted elements, else can't get successive keys
+	that collide with a previous one.  Further advances in memdbg also.
+
+2002-02-18 18:29  rk
+
+	* tests/tavec.c: Trying to fix memory allocations.
+
+2002-02-18 18:28  rk
+
+	* apps/: wf.c, wf.man: Added option to select only words larger
+	than a given length.
+
+2002-02-18 18:27  rk
+
+	* Makefile, avec.c, memdbg.c: memdbg - parses the RKOMEM memory
+	messages matching allocs to frees based on the memory pointer.
+
+2002-02-15 15:01  rk
+
+	* Makefile, Makefile.inc, ansi_seq.c, avec.c, list.c, setupmake,
+	spawn.c, uvec.c, apps/color.c, apps/wf.c, apps/wf.man,
+	include/ansi_seq.h, include/avec.h, include/librko.h,
+	minish/Makefile, netfns/tcp_connect.c, numfns/divdiff.c,
+	strfns/macrosub.c, strfns/nameread.c, strfns/strchop.c,
+	strfns/strdbecpy.c, strfns/strmem.c, strfns/timedfgets.c,
+	strfns/wcstrcmp.c, tests/Makefile, tests/tansi_seq.c,
+	tests/tavec.c, urand/Makefile: Finished avec, added application wf
+	(word frequency count) based on avec.  The rest are clean-up of
+	misc. compiler warnings and adding MEMDEBUG capability.  Added
+	librko_m.a creation to Makefile, which creates objects with
+	MEMDEBUG.
+
+2002-02-14 21:30  rk
+
+	* Makefile, avec.c, docs/avec.man, include/avec.h, tests/tavec.c: A
+	fully working version of avec, and the start of the documentation.
+
+2002-02-14 13:11  rk
+
+	* avec.c, docs/uvec.man, include/avec.h: Mostly working version of
+	avec - just need docs and dtor.
+
+2002-02-13 15:00  rk
+
+	* .cvsignore, avec.c, include/avec.h, tests/.cvsignore: Further
+	progress on avec - got the resizing mostly working and added an
+	automatic resizing percentage.
+
+2002-02-12 15:00  rk
+
+	* avec.c, docs/uvec.man, include/avec.h: Good progress on avec -
+	has basic functionality.
+
+2002-02-11 22:03  rk
+
+	* Makefile, avec.c, include/avec.h: Further progress on avec.
+
+2002-02-10 00:02  rk
+
+	* clocker.c, list.c, docs/istext.man, include/clocker.h,
+	include/istext.h, include/librko.h, include/list.h,
+	include/memdebug.h, include/rkoerror.h, minish/minish-yacc.c,
+	tests/tclocker.c, tests/tlist.c, urand/urand.c: Further separation
+	of librko.h into pieces.
+
+2002-02-08 15:10  rk
+
+	* Makefile, Makefile.inc, avec.c, iprime.c, memdebug.c, uvec.c,
+	whatis.librko, docs/gcd.man, docs/iprime.man, docs/isqrt.man,
+	docs/memdebug.man, docs/strchop.man, docs/uvec.man, include/avec.h,
+	include/igcd.h, include/iprime.h, include/isqrt.h,
+	include/librko.h, include/memdebug.h, include/strchop.h,
+	include/uvec.h, minish/Makefile, minish/minish-lex.c,
+	minish/minish-yacc.c, strfns/strchop.c, tests/tigcd.c,
+	tests/tiprime.c, tests/tisqrt.c, tests/tstrchop.c: Adding avec (the
+	associative vector) and generally upgrading and improving the
+	librko library.
+
+2002-02-08 08:27  rk
+
+	* avec.c: Start of the associate array tool.
+
+2002-02-08 08:26  rk
+
+	* rkoerror.c, uvec.c, docs/rkoerror.man, docs/strmalloc.man,
+	docs/uvec.man, include/librko.h, include/rkoerror.h,
+	include/strmalloc.h, include/uvec.h, strfns/strmalloc.c,
+	minish/minish-lex.c, minish/minish-yacc.c, tests/tstrmalloc.c,
+	tests/tuvec.c: Made several changes & improvements prompted by the
+	linux fingers.	Will separate and divide the librko.h header file
+	to facilitate code re-use.
+
+2001-08-29 14:49  rk
+
+	* uvec.c, whatis.librko: Old changes
+
+2001-08-29 14:46  rk
+
+	* Makefile.inc, clocker.c: Fixed tics/sec ... use sysconf.
+
+1999-11-02 10:26  rk
+
+	* apps/istextmain.c: 
+	Fixed a syntax error to work on AIX.
+
+1999-11-02 10:23  rk
+
+	* clocker.c, netfns/tcp_connect.c, strfns/macrosub.c: 
+	Updated to work on AIX.
+
+1999-09-14 14:31  rk
+
+	* Makefile, clocker.c, whatis.librko, docs/clocker.man,
+	include/librko.h, minish/Makefile, minish/minish-lex.c,
+	minish/minish-yacc.c: 
+	Added a timer routine - loosely based on Std-C clock().
+
+1999-09-14 14:07  rk
+
+	* tests/: Makefile, tclocker.c: 
+	Added tests for clocker().
+
+1999-09-14 12:53  rk
+
+	* urand/: all.csh, script.csh, tmadd.c, tmdiv.c, tmsub.c, urand.c,
+	urand.h, urand_.c: 
+	Modified all the timing programs to use clocker(3rko) and to
+	compute the mean average for comparisons.
+
+1999-09-13 10:30  rk
+
+	* whatis.librko, docs/gcd.man, docs/iprime.man: 
+	Reformatting & misc.
+
+1999-09-11 01:02  rk
+
+	* Makefile, iprime.c, docs/iprime.man, include/librko.h,
+	tests/Makefile, tests/tiprime.c: 
+	Added an integer prime factor routine.
+
+1999-09-11 01:00  rk
+
+	* uvec.c, docs/uvec.man: 
+	Fixed a missing error message & fixed the man page.
+
+1999-09-11 00:30  rk
+
+	* docs/isqrt.man: 
+	fixed & formatted man page
+
+1999-09-09 15:27  rk
+
+	* isqrt.c: 
+	typo.
+
+1999-09-09 14:30  rk
+
+	* .sed, ansi_seq.c, copyright2, dirtree.c, gcd.c, invoke.c,
+	isqrt.c, list.c, include/librko.h, netfns/gethostbyX.c,
+	numfns/divdiff.c, numfns/foptim.c, numfns/fzeroin.c, coexec.c,
+	memdebug.c, rkoerror.c, spawn.c, uvec.c, strfns/macrosub.c,
+	strfns/nameread.c, strfns/strchop.c, strfns/strdbecpy.c,
+	strfns/strmalloc.c, strfns/strmem.c, strfns/timedfgets.c,
+	strfns/wcstrcmp.c, apps/netup.c, include/urand.h,
+	include/old/divdiff.h, include/old/gethostbyX.h,
+	include/old/memory.h, include/old/strmem.h,
+	include/old/tcp_connect.h, metropolis/Makefile,
+	metropolis/idxperm.c, metropolis/idxrevr.c, metropolis/idxswap.c,
+	metropolis/metropolis.c, metropolis/metropolis.old.h,
+	metropolis/ranindex.c, metropolis/ranperm.c, metropolis/ranswap.c,
+	minish/fdlist.c, minish/minish.h, minish/mshexec.c,
+	misc/strnchop.c, tests/nnn.c, tests/tnameread.c, urand/urand.c,
+	urand/urand.old.h: 
+	Updated the email address to librko@kooz.sj.ca.us
+
+1999-09-09 13:25  rk
+
+	* uvec.c, include/librko.h, tests/tuvec.c: Added uvec_find to
+	search the vector for a given string.
+
+1999-09-09 09:23  rk
+
+	* uvec.c, strfns/strmalloc.c, tests/tuvec.c: 
+	Use strmalloc() in librko.
+
+1999-09-08 22:47  rk
+
+	* minish/: minish-lex.c, minish-yacc.c: [no log message]
+
+1999-09-08 22:46  rk
+
+	* Makefile, docs/strmalloc.man, include/librko.h,
+	strfns/strmalloc.c, tests/Makefile, tests/tstrmalloc.c: 
+	Added a strdup-like function.
+
+1999-09-01 10:22  rk
+
+	* docs/uvec.man: 
+	Fixed \ escaping.
+
+1999-09-01 10:16  rk
+
+	* Makefile, minish/minish-lex.c, tests/Makefile, urand/Makefile: 
+	More help in the Makefiles.
+
+1999-03-26 13:28  rk
+
+	* Makefile, Makefile.inc, minish/Makefile, minish/minish-lex.c,
+	minish/tminish.c, urand/Makefile, urand/clean: 
+	Restructuring things such that the subdirectories can contain more
+	of the pieces.
+
+1999-03-26 09:19  rk
+
+	* minish/: minish-lex.c, minish-yacc.c: 
+	For maximum portability, include these preprocessed files, because
+	Cray yacc/flex/sed can't correctly make them.
+
+1999-03-25 07:08  rk
+
+	* .sed, ansi_seq.c, coexec.c, rkoerror.c, docs/Librko.man,
+	docs/ansi_seq.man, docs/divdiff.man, docs/filter.man,
+	docs/foptim.man, docs/fzeroin.man, docs/gethostbyX.man,
+	docs/invoke.man, docs/macrosub.man, docs/memdebug.man,
+	docs/nameread.man, docs/rkoerror.man, docs/strchop.man,
+	docs/strmem.man, docs/tcp_connect.man, docs/timedfgets.man,
+	docs/uvec.man, docs/wcstrcmp.man, include/librko.h,
+	netfns/gethostbyX.c, netfns/tcp_connect.c, numfns/divdiff.c,
+	numfns/foptim.c, numfns/fzeroin.c, strfns/nameread.c,
+	strfns/strchop.c, strfns/strmem.c, strfns/wcstrcmp.c,
+	apps/reverse/Reverse.man, apps/reverse/reverse.c, metropolis/.sed,
+	metropolis/Makefile, metropolis/idxperm.c, metropolis/idxrevr.c,
+	metropolis/idxswap.c, metropolis/metropolis.c,
+	metropolis/metropolis.h, metropolis/metropolis.old.h,
+	metropolis/ranindex.c, metropolis/ranperm.c, metropolis/ranswap.c,
+	misc/strnchop.c, tests/nnn.c, tests/tnameread.c, urand/urand.c: 
+	Removed all USMID %W% lines.  I will never use SCCS, so they were
+	unnecessary.
+
+1999-02-17 09:15  rk
+
+	* minish/: minish.lex, minish.yacc: 
+	Some pre-subshell modifications
+
+1999-02-17 09:10  rk
+
+	* apps/Tmpl.man: 
+	removed USMID
+
+1999-02-12 16:10  rk
+
+	* minish/Makefile: 
+	Fixed the minish-tab.h dependence.
+
+1998-11-25 08:05  rk
+
+	* tests/tisqrt.c: 
+	Got it working on Crays (64bit).
+
+1998-11-25 07:13  rk
+
+	* tests/tisqrt.c: 
+	Fixing round-off errors in the test
+
+1998-11-24 20:42  rk
+
+	* tests/tisqrt.c: 
+	Trying to fix comparison problems.
+
+1998-11-24 11:29  rk
+
+	* isqrt.c, docs/isqrt.man, tests/Makefile, tests/tisqrt.c: 
+	Got the isqrt() working for unsigned versions by calling the signed
+	versions and if in the "negative" range then let the unsigned
+	version do the work.  Also created the char versions.
+
+1998-11-23 21:57  rk
+
+	* Makefile, gcd.c, isqrt.c, docs/gcd.man, docs/isqrt.man,
+	include/librko.h, tests/tigcd.c, tests/tisqrt.c: 
+	Added 1st draft of isqrt() and modified gcd() to be name
+	consistent.  (use chsqrt() to avoid probable name collision with a
+	complex sqrt.)
+
+1998-11-23 08:32  rk
+
+	* Makefile: 
+	Fixed the man page install section.
+
+1998-11-23 07:55  rk
+
+	* dirtree.c: 
+	
+	Check all dir entries for "." || ".." and skip them.
+
+1998-11-21 07:04  rk
+
+	* gcd.c, whatis.librko, docs/gcd.man, tests/tigcd.c: 
+	Added the exceptional case of 0.
+
+1998-11-19 15:05  rk
+
+	* gcd.c, include/librko.h, tests/tigcd.c: 
+	Accommodate char & signed char's as distinct types.
+
+1998-11-19 14:58  rk
+
+	* Makefile, gcd.c, docs/gcd.man, include/librko.h, tests/Makefile,
+	tests/tigcd.c: 
+	Added Euclid's greatest common divisor algorithm.
+
+1998-11-19 13:31  rk
+
+	* strfns/timedfgets.c, tests/ttfgets.c: 
+	Fixed problem, when called multiple times the second time-out would
+	hang, because the signal mask was not being restored.
+
+1998-11-18 15:41  rk
+
+	* tests/: birdy.c, tspawn.c: 
+	fixed stdin issue with birdy
+
+1998-11-18 15:11  rk
+
+	* tests/tuvec.c: 
+	modified to use strcasecmp.
+
+1998-11-18 11:03  rk
+
+	* strfns/timedfgets.c: 
+	trivial removal of USMID
+
+1998-11-18 10:53  rk
+
+	* tests/tinvoke.c: 
+	use uvec_addl instead.
+
+1998-11-18 10:37  rk
+
+	* uvec.c, docs/uvec.man, include/librko.h, tests/kitty.c,
+	tests/tuvec.c: 
+	Added _addl to uvec
+
+1998-11-18 09:53  rk
+
+	* tests/: doggy.c, kitty.c: 
+	Added some comments.
+
+1998-11-18 08:12  rk
+
+	* tests/birdy.c: 
+	Added some comments
+
+1998-11-18 08:00  rk
+
+	* tests/: Makefile, birdy.c: 
+	Fixed birdy, so tinvoke.x will work properly
+
+1998-11-18 07:34  rk
+
+	* strfns/macrosub.c: 
+	removed USMID
+
+1998-11-15 20:25  rk
+
+	* invoke.c, spawn.c, docs/invoke.man, docs/uvec.man,
+	tests/Makefile, tests/birdy, tests/birdy.c, tests/doggy,
+	tests/doggy.c, tests/kitty, tests/kitty.c, tests/testtext,
+	tests/tinvoke.c, tests/tspawn.c: 
+	Further developed the one-way & two-way process communication, and
+	the associated tests.
+
+1998-11-12 14:26  rk
+
+	* dirtree.c, docs/dirtree.man, include/librko.h, tests/Makefile,
+	tests/tdir.tar, tests/tdirtree.c: 
+	Gave dirtree the ability to be selective as to how many dir levels
+	and soft links levels to descend.
+
+1998-11-11 13:18  rk
+
+	* memdebug.c, include/librko.h, tests/tmemdebug.c: 
+	updated memory debug routines, because a freed ptr can cause SIGSEG
+	errors.
+
+1998-11-11 08:53  rk
+
+	* Makefile, spawn.c, docs/spawn.man, tests/birdy: 
+	Adding a 2-way communication routine ... first draft.
+
+1998-11-06 16:33  rk
+
+	* tests/tuvec.c: 
+	More descriptive on FAILs.
+
+1998-11-06 16:20  rk
+
+	* strfns/macrosub.c, tests/tmemdebug.c, tests/tstrtok.c: 
+	fixed "off by one" bug in macrosub.c and some clean up.
+
+1998-11-06 13:39  rk
+
+	* dirtree.c: 
+	more on last bug.
+
+1998-11-06 13:31  rk
+
+	* dirtree.c: 
+	Fixed an annoyance if the user passes in a valid path with a
+	terminating '/'.
+
+1998-11-04 14:55  rk
+
+	* docs/dirtree.man, docs/strdbecpy.man, tests/tdirtree.c: 
+	Added the man page, further test cases.
+
+1998-11-04 12:57  rk
+
+	* docs/strdbecpy.man, strfns/strdbecpy.c, tests/tstrdbecpy.c: 
+	Upgraded function to be more flexible, such that the user can
+	select which component (dir, base, ext) to find by providing
+	storage for that element.
+
+1998-11-03 20:32  rk
+
+	* dirtree.c: 
+	Now works OK ... by passing full path to user dir & file fns.
+
+1998-11-01 21:54  rk
+
+	* dirtree.c, tests/Makefile, tests/tdirtree.c: 
+	Working to resolve cwd / directory path problems.
+
+1998-10-31 08:52  rk
+
+	* etc/cpset, tests/tlist.c: 
+	synchronizing.	tlist has the _sizeof test. cpset is modified to
+	handle no owner or group info in a graceful fashion.
+
+1998-10-31 08:43  rk
+
+	* Makefile, Makefile.inc, dirtree.c: 
+	adding dirtree.c to mix.
+
+1998-10-29 08:58  rk
+
+	* list.c, docs/list.man, include/librko.h: 
+	Added a list_sizeof() fn, and created a working example for the
+	list man page.
+
+1998-10-27 13:59  rk
+
+	* Makefile, Makefile.inc, list.c, docs/Tmpl.man, docs/list.man,
+	include/librko.h, tests/Makefile, tests/tlist.c: 
+	Officially adding "list" to library, and adding Makefile.inc for
+	"common" macros.
+
+1998-10-26 07:47  rk
+
+	* list.c: 
+	Removed the user addfn/delfn from each of the push/pop/add/del fns
+	and added to the ctor and save that info in the list "object".
+
+1998-10-25 22:11  rk
+
+	* list.c: 
+	Needed a general purpose list "object" for some upcoming projects. 
+	This is work-able, but need to move the add/del fns to the ctor.
+
+1998-10-23 13:28  rk
+
+	* minish/minish.yacc: 
+	Crays need minish_yacctest defined early.
+
+1998-10-23 13:20  rk
+
+	* Makefile, etc/yy-sed, netfns/gethostbyX.c, netfns/tcp_connect.c,
+	strfns/timedfgets.c: 
+	Modified things a bit to compile on a Cray J90.
+
+1998-10-23 13:18  rk
+
+	* minish/: Makefile, minish.yacc, mshexec.c: 
+	Reworked things a bit to compile on a Cray J90.
+
+1998-10-23 11:46  rk
+
+	* minish/fdtest/cmp.fdtest.testout: 
+	Can't assume pointers are initialized to 0 ... had modified
+	fdlist.c test.
+
+1998-10-23 11:43  rk
+
+	* minish/fdlist.c: 
+	Modified to compile on Crays.
+
+1998-10-23 07:41  rk
+
+	* minish/: Makefile, fdlist.c: 
+	Fixed some Makefile & fdlist issues.
+
+1998-10-22 20:12  rk
+
+	* minish/: Makefile, minish.c, minish.lex, shtest.dat,
+	cmp/shtest.cmp: 
+	Finished the minish() & tests.
+
+1998-10-22 19:08  rk
+
+	* etc/yy-sed, minish/Makefile, minish/lextest.dat,
+	minish/minish.lex, minish/minish.yacc, minish/mshexec.c: 
+	Finally got a working minish().  Reworked the lexer to skip blank
+	or comment only lines ... because I couldn't get the grammer to not
+	get a syntax error.
+
+1998-10-21 19:42  rk
+
+	* etc/yy-sed, minish/Makefile, minish/minish.lex,
+	minish/minish.yacc: 
+	Now uses the yy-sed script to rename the lex/yacc external
+	references to avoid collisions with other parsers.
+
+1998-10-21 17:18  rk
+
+	* etc/yy-sed: 
+	script/filter to change lex/yacc external references so they don't
+	clobber each other if mixing parsers.
+
+1998-10-21 15:30  rk
+
+	* uvec.c, include/librko.h, docs/uvec.man, minish/fdlist.c,
+	minish/minish.h, minish/mshexec.c, tests/tuvec.c: 
+	Made uvec & fdlist a little more sensible.  The current fns have
+	been renamed to _init & _close, and created _ctor & _dtor versions
+	that malloc & free on pointers.
+
+1998-10-15 17:39  rk
+
+	* minish/: Makefile, lextest.cmp, cmp/exectest.cmp,
+	cmp/lextest.cmp, cmp/yacctest.cmp: 
+	Consolidated "comparison" files to ./cmp .
+
+1998-10-15 17:31  rk
+
+	* minish/: Makefile, mshexec.c, mtest/right.c, mtest/rsignal.c,
+	mtest/wrong.c: 
+	Created minish_exec(), along with some testing capability.
+
+1998-10-15 12:53  rk
+
+	* minish/minish.yacc: 
+	Cleaned up yacctest code ... trimming tight.
+
+1998-10-15 12:28  rk
+
+	* minish/: fdlist.c, minish.txt, minish.yacc,
+	fdtest/cmp.fdtest.testout: 
+	Minor changes to format, and fixed "<>" redirection of stdin &
+	stdout.
+
+1998-10-14 23:28  rk
+
+	* minish/: Makefile, fdlist.c, minish.h, minish.yacc,
+	fdtest/fdtest.sh: 
+	Added fdlist component
+
+1998-10-14 20:25  rk
+
+	* minish/: fdlist.c, minish.h: 
+	Started process of splitting off the "public" interface into the
+	header
+
+1998-10-14 20:06  rk
+
+	* minish/: Makefile, fdlist.c: 
+	fdlist.c performs that task of collecting & processing file
+	operations
+
+1998-10-14 20:03  rk
+
+	* minish/fdtest/: cmp.fdtest.3inout, cmp.fdtest.4out,
+	cmp.fdtest.out, cmp.fdtest.testout, fdtest.sh, init.fdtest.4out: 
+	Tests out the fdlist.c test program - fdtest
+
+1998-10-14 08:16  rk
+
+	* .sed, ansi_seq.c, invoke.c, include/librko.h,
+	netfns/gethostbyX.c, numfns/divdiff.c, numfns/foptim.c,
+	numfns/fzeroin.c, strfns/macrosub.c, coexec.c, memdebug.c,
+	rkoerror.c, uvec.c, apps/netup.c, include/urand.h,
+	include/old/divdiff.h, include/old/gethostbyX.h,
+	include/old/memory.h, include/old/strmem.h,
+	include/old/tcp_connect.h, metropolis/Makefile,
+	metropolis/idxperm.c, metropolis/idxrevr.c, metropolis/idxswap.c,
+	metropolis/metropolis.c, metropolis/metropolis.old.h,
+	metropolis/ranindex.c, metropolis/ranperm.c, metropolis/ranswap.c,
+	misc/strnchop.c, netfns/tcp_connect.c, strfns/nameread.c,
+	strfns/strchop.c, strfns/strdbecpy.c, strfns/strmem.c,
+	strfns/timedfgets.c, strfns/wcstrcmp.c, tests/nnn.c,
+	tests/tnameread.c, urand/urand.c, urand/urand.old.h: 
+	added .sed for easy "global" changes, and updated the email address
+
+1998-10-12 08:01  rk
+
+	* minish/fdlist.c: 
+	Initial check-in of file descriptor list handler.
+
+1998-10-12 08:00  rk
+
+	* minish/: lextest.cmp, lextest.dat, minish.lex, minish.yacc: 
+	Added read-write "<>" capability.
+
+1998-10-12 07:58  rk
+
+	* uvec.c: 
+	Made things a little more bullet proof.  Should modify the tests to
+	check some exceptional cases to see if the error handling is
+	correct.
+
+1998-10-09 14:11  rk
+
+	* minish/: lextest.cmp, minish.lex, minish.yacc: 
+	Finally got the grammer & lex defined without any shift/reduce
+	conflicts
+
+1998-10-09 14:04  rk
+
+	* urand/urand.c,v: 
+	unnecessary RCS file
+
+1998-10-09 14:00  rk
+
+	* copyright2: 
+	update to this year
+
+1998-10-09 14:00  rk
+
+	* uvec.c: 
+	off by 1 in malloc of strlen(str)
+
+1998-10-08 14:28  rk
+
+	* minish/minish.yacc: 
+	rearranged things now only 1 shift/reduce conflict
+
+1998-10-08 09:45  rk
+
+	* minish/: Makefile, lextest.cmp, lextest.dat, minish.lex,
+	minish.txt, minish.yacc: 
+	Further work in getting minish to work.  The current grammer/lex is
+	functional, but has 3 shift/reduce conflicts.
+
+1998-10-07 10:50  rk
+
+	* Makefile, urand/.opt, urand/.opt.coff: 
+	Using GNU "make" tricks and removing unnecessary files
+
+1998-10-07 10:06  rk
+
+	* .ci.all, .sed, Makefile: 
+	unnecessary files now with CVS
+
+1998-10-07 10:01  rk
+
+	* minish/: FLEX, Makefile, usched.y: 
+	unnecessary files for minish
+
+1998-10-07 09:19  rk
+
+	* .ci.all, .sed, Makefile, ansi_seq.c, coexec.c, copyright2,
+	invoke.c, memdebug.c, rkoerror.c, setupmake, uvec.c, what2man,
+	whatis.librko, apps/Tmpl.man, apps/color.c, apps/color.man,
+	apps/istext.man, apps/istextmain.c, apps/mexpn.c, apps/mexpn.man,
+	apps/mexpn.new.c, apps/netup.c, apps/netup.man, apps/randomize.tgz,
+	apps/reverse.tgz, apps/whatis.all, apps/reverse/Makefile,
+	apps/reverse/README, apps/reverse/Reverse.man,
+	apps/reverse/reverse.c, apps/reverse/reverse.doc,
+	apps/reverse/test/-test1.dat, apps/reverse/test/test.csh,
+	apps/reverse/test/test1.dat, apps/reverse/test/test2.dat,
+	apps/reverse/test/ttt1, apps/reverse/test/ttt2,
+	apps/reverse/test/ttt3, apps/reverse/test/ttt4, docs/Librko.man,
+	docs/Tmpl.man, docs/ansi_seq.man, docs/divdiff.man,
+	docs/filter.man, docs/foptim.man, docs/fzeroin.man,
+	docs/gethostbyX.man, docs/invoke.man, docs/istext.man,
+	docs/macrosub.man, docs/memdebug.man, docs/nameread.man,
+	docs/rkoerror.man, docs/strchop.man, docs/strdbecpy.man,
+	docs/strmem.man, docs/tcp_connect.man, docs/timedfgets.man,
+	docs/urand.man, docs/uvec.man, docs/wcstrcmp.man, etc/cpset,
+	etc/mkshar, include/librko.h, include/urand.h,
+	include/old/ansi_seq.h, include/old/divdiff.h,
+	include/old/gethostbyX.h, include/old/memory.h,
+	include/old/strmem.h, include/old/tcp_connect.h, metropolis/.sed,
+	metropolis/Makefile, metropolis/README, metropolis/idxperm.c,
+	metropolis/idxrevr.c, metropolis/idxswap.c,
+	metropolis/metropolis.c, metropolis/metropolis.h,
+	metropolis/metropolis.man, metropolis/metropolis.old.h,
+	metropolis/metropolis.txt, metropolis/ranindex.c,
+	metropolis/ranperm.c, metropolis/ranswap.c, metropolis/trun.csh,
+	minish/FLEX, minish/Makefile, minish/lextest.cmp,
+	minish/lextest.dat, minish/minish.lex, minish/minish.txt,
+	minish/minish.yacc, minish/usched.y, misc/strnchop.c,
+	netfns/gethostbyX.c, netfns/tcp_connect.c, numfns/divdiff.c,
+	numfns/foptim.c, numfns/fzeroin.c, strfns/istext.c,
+	strfns/macrosub.c, strfns/nameread.c, strfns/strchop.c,
+	strfns/strdbecpy.c, strfns/strmem.c, strfns/timedfgets.c,
+	strfns/wcstrcmp.c, tests/Makefile, tests/doggy, tests/kitty,
+	tests/nnn.c, tests/postfilter.c, tests/prefilter.c,
+	tests/tansi_seq.c, tests/testtext, tests/tfilter.c,
+	tests/tfoptim.c, tests/tfzeroin.c, tests/tmacrosub.c,
+	tests/tmemdebug.c, tests/tnameread.c, tests/tpopen.c,
+	tests/tstrchop.c, tests/tstrdbecpy.c, tests/tstrmem.c,
+	tests/tstrtok.c, tests/ttfgets.c, tests/ttt.c, tests/ttuvec.c,
+	tests/tuvec.c, tests/twcstrcmp.c, urand/.opt, urand/.opt.coff,
+	urand/clean, urand/script.csh, urand/tmadd.c, urand/tmdiv.c,
+	urand/tmsub.c, urand/tovfadd.c, urand/urand.c, urand/urand.c,v,
+	urand/urand.h, urand/urand.in, urand/urand.old.h: 
+	Initial checkin of librko to CVS.
+
+1998-10-07 09:19  rk
+
+	* .ci.all, .sed, Makefile, ansi_seq.c, coexec.c, copyright2,
+	invoke.c, memdebug.c, rkoerror.c, setupmake, uvec.c, what2man,
+	whatis.librko, apps/Tmpl.man, apps/color.c, apps/color.man,
+	apps/istext.man, apps/istextmain.c, apps/mexpn.c, apps/mexpn.man,
+	apps/mexpn.new.c, apps/netup.c, apps/netup.man, apps/randomize.tgz,
+	apps/reverse.tgz, apps/whatis.all, apps/reverse/Makefile,
+	apps/reverse/README, apps/reverse/Reverse.man,
+	apps/reverse/reverse.c, apps/reverse/reverse.doc,
+	apps/reverse/test/-test1.dat, apps/reverse/test/test.csh,
+	apps/reverse/test/test1.dat, apps/reverse/test/test2.dat,
+	apps/reverse/test/ttt1, apps/reverse/test/ttt2,
+	apps/reverse/test/ttt3, apps/reverse/test/ttt4, docs/Librko.man,
+	docs/Tmpl.man, docs/ansi_seq.man, docs/divdiff.man,
+	docs/filter.man, docs/foptim.man, docs/fzeroin.man,
+	docs/gethostbyX.man, docs/invoke.man, docs/istext.man,
+	docs/macrosub.man, docs/memdebug.man, docs/nameread.man,
+	docs/rkoerror.man, docs/strchop.man, docs/strdbecpy.man,
+	docs/strmem.man, docs/tcp_connect.man, docs/timedfgets.man,
+	docs/urand.man, docs/uvec.man, docs/wcstrcmp.man, etc/cpset,
+	etc/mkshar, include/librko.h, include/urand.h,
+	include/old/ansi_seq.h, include/old/divdiff.h,
+	include/old/gethostbyX.h, include/old/memory.h,
+	include/old/strmem.h, include/old/tcp_connect.h, metropolis/.sed,
+	metropolis/Makefile, metropolis/README, metropolis/idxperm.c,
+	metropolis/idxrevr.c, metropolis/idxswap.c,
+	metropolis/metropolis.c, metropolis/metropolis.h,
+	metropolis/metropolis.man, metropolis/metropolis.old.h,
+	metropolis/metropolis.txt, metropolis/ranindex.c,
+	metropolis/ranperm.c, metropolis/ranswap.c, metropolis/trun.csh,
+	minish/FLEX, minish/Makefile, minish/lextest.cmp,
+	minish/lextest.dat, minish/minish.lex, minish/minish.txt,
+	minish/minish.yacc, minish/usched.y, misc/strnchop.c,
+	netfns/gethostbyX.c, netfns/tcp_connect.c, numfns/divdiff.c,
+	numfns/foptim.c, numfns/fzeroin.c, strfns/istext.c,
+	strfns/macrosub.c, strfns/nameread.c, strfns/strchop.c,
+	strfns/strdbecpy.c, strfns/strmem.c, strfns/timedfgets.c,
+	strfns/wcstrcmp.c, tests/Makefile, tests/doggy, tests/kitty,
+	tests/nnn.c, tests/postfilter.c, tests/prefilter.c,
+	tests/tansi_seq.c, tests/testtext, tests/tfilter.c,
+	tests/tfoptim.c, tests/tfzeroin.c, tests/tmacrosub.c,
+	tests/tmemdebug.c, tests/tnameread.c, tests/tpopen.c,
+	tests/tstrchop.c, tests/tstrdbecpy.c, tests/tstrmem.c,
+	tests/tstrtok.c, tests/ttfgets.c, tests/ttt.c, tests/ttuvec.c,
+	tests/tuvec.c, tests/twcstrcmp.c, urand/.opt, urand/.opt.coff,
+	urand/clean, urand/script.csh, urand/tmadd.c, urand/tmdiv.c,
+	urand/tmsub.c, urand/tovfadd.c, urand/urand.c, urand/urand.c,v,
+	urand/urand.h, urand/urand.in, urand/urand.old.h: Initial revision
 
